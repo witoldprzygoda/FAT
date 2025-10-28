@@ -1,0 +1,374 @@
+#ifndef PPIP_ID_H
+#define PPIP_ID_H
+
+#include "src/Base_ID.h"
+
+class PPip_ID : public Base_ID
+{
+public:
+
+    /*** isBest mult ***/
+
+    Float_t isBest;
+    Float_t totalmult;
+    Float_t hneg_mult;
+    Float_t hpos_mult;
+    Float_t lneg_mult;
+    Float_t lpos_mult;
+    Float_t runnumber;
+
+    /*** trigger ***/
+
+    Float_t trigbit;
+    Float_t trigdec;
+    Float_t trigdownscale;
+    Float_t trigdownscaleflag;
+
+    /*** event ***/
+
+    Float_t event;
+    Float_t evtFlashMDC;
+    Float_t evtGood;
+    Float_t evtGoodTrig;
+    Float_t evtLepMult;
+    Float_t evtMDCMult;
+    Float_t evtPileupMDC;
+    Float_t evtPileupMeta;
+    Float_t evtPileupStart;
+    Float_t evtStart;
+    Float_t evtVertCand;
+    Float_t evtVertClust;
+
+    /*** vertex ***/
+
+    Float_t eVertReco_x;
+    Float_t eVertReco_y;
+    Float_t eVertReco_z;
+    Float_t eVertReco_chi2;
+
+    /*** start ***/
+
+    Float_t start_cluster_size_1st;
+    Float_t start_cluster_size_2nd;
+    Float_t start_cluster_size_max;
+    Float_t start_corrflag;
+    Float_t start_counter;
+    Float_t start_flag;
+    Float_t start_module;
+    Float_t start_mult;
+    Float_t start_multipliticy;
+    Float_t start_resolution;
+    Float_t start_strip;
+    Float_t start_time;
+    Float_t start_time_2nd;
+    Float_t start_track;
+    Float_t start_width;
+
+    /*** fwdet ***/
+
+    Float_t fwdet_beta_1;
+    Float_t fwdet_beta_2;
+    Float_t fwdet_beta_3;
+    Float_t fwdet_chi2_1;
+    Float_t fwdet_chi2_2;
+    Float_t fwdet_chi2_3;
+    Float_t fwdet_counter;
+    Float_t fwdet_dist_tofhit_1;
+    Float_t fwdet_dist_tofhit_2;
+    Float_t fwdet_dist_tofhit_3;
+    Float_t fwdet_mass2_1;
+    Float_t fwdet_mass2_2;
+    Float_t fwdet_mass2_3;
+    Float_t fwdet_mass_1;
+    Float_t fwdet_mass_2;
+    Float_t fwdet_mass_3;
+    Float_t fwdet_mult;
+    Float_t fwdet_ndf_1;
+    Float_t fwdet_ndf_2;
+    Float_t fwdet_ndf_3;
+    Float_t fwdet_p_1;
+    Float_t fwdet_p_2;
+    Float_t fwdet_p_3;
+    Float_t fwdet_phi2_1;
+    Float_t fwdet_phi2_2;
+    Float_t fwdet_phi2_3;
+    Float_t fwdet_phi_1;
+    Float_t fwdet_phi_2;
+    Float_t fwdet_phi_3;
+    Float_t fwdet_q_1;
+    Float_t fwdet_q_2;
+    Float_t fwdet_q_3;
+    Float_t fwdet_r2_1;
+    Float_t fwdet_r2_2;
+    Float_t fwdet_r2_3;
+    Float_t fwdet_r_1;
+    Float_t fwdet_r_2;
+    Float_t fwdet_r_3;
+    Float_t fwdet_theta2_1;
+    Float_t fwdet_theta2_2;
+    Float_t fwdet_theta2_3;
+    Float_t fwdet_theta_1;
+    Float_t fwdet_theta_2;
+    Float_t fwdet_theta_3;
+    Float_t fwdet_tof_1;
+    Float_t fwdet_tof_2;
+    Float_t fwdet_tof_3;
+    Float_t fwdet_tofrec_1;
+    Float_t fwdet_tofrec_2;
+    Float_t fwdet_tofrec_3;
+    Float_t fwdet_z2_1;
+    Float_t fwdet_z2_2;
+    Float_t fwdet_z2_3;
+    Float_t fwdet_z_1;
+    Float_t fwdet_z_2;
+    Float_t fwdet_z_3;
+
+    /*** pi+ ***/
+
+    Float_t pip_beta;
+    Float_t pip_beta_new;
+    Float_t pip_beta_org;
+    Float_t pip_dedx_mdc;
+    Float_t pip_dedx_tof;
+    Float_t pip_delta_mass2_corr_em;
+    Float_t pip_delta_mass2_corr_ep;
+    Float_t pip_delta_mass2_corr_p;
+    Float_t pip_delta_mass2_corr_pim;
+    Float_t pip_delta_mass2_corr_pip;
+    Float_t pip_delta_phi;
+    Float_t pip_delta_theta;
+    Float_t pip_dist_to_metahit;
+    Float_t pip_dist_to_metahit_org;
+    Float_t pip_emc_cellpath;
+    Float_t pip_emc_energy;
+    Float_t pip_emc_metamatchquality;
+    Float_t pip_emc_metamatchradius;
+    Float_t pip_emc_ncells;
+    Float_t pip_emc_rkmetadx;
+    Float_t pip_emc_rkmetady;
+    Float_t pip_emc_time;
+    Float_t pip_id;
+    Float_t pip_isBT;
+    Float_t pip_isOffVertexClust;
+    Float_t pip_isPrimaryVertex;
+    Float_t pip_isUsedVertex;
+    Float_t pip_isemc;
+    Float_t pip_isemc_matchedrpc;
+    Float_t pip_isemc_matchedsamerpc;
+    Float_t pip_isemcused;
+    Float_t pip_ismdc1edge;
+    Float_t pip_ismdc2edge;
+    Float_t pip_ismdc3edge;
+    Float_t pip_ismdc4edge;
+    Float_t pip_ismdcedge;
+    Float_t pip_ismetaused;
+    Float_t pip_isnewrich;
+    Float_t pip_isprimaryvertex;
+    Float_t pip_isrichmatch_nomatch;
+    Float_t pip_isrichmatch_richmdc;
+    Float_t pip_isrichmatch_richrk;
+    Float_t pip_isring;
+    Float_t pip_isringmdc;
+    Float_t pip_isringnomatch;
+    Float_t pip_isringtrack;
+    Float_t pip_isrpcclstused;
+    Float_t pip_isshowerused;
+    Float_t pip_istofclstused;
+    Float_t pip_istofhitused;
+    Float_t pip_kIsLepton;
+    Float_t pip_kIsUsed;
+    Float_t pip_mass;
+    Float_t pip_mass2;
+    Float_t pip_mass2_corr_em;
+    Float_t pip_mass2_corr_ep;
+    Float_t pip_mass2_corr_p;
+    Float_t pip_mass2_corr_pim;
+    Float_t pip_mass2_corr_pip;
+    Float_t pip_mass2_em;
+    Float_t pip_mass2_ep;
+    Float_t pip_mass2_p;
+    Float_t pip_mass2_pim;
+    Float_t pip_mass2_pip;
+    Float_t pip_mdcinnerchi2;
+    Float_t pip_mdcouterchi2;
+    Float_t pip_metamatchquality;
+    Float_t pip_metamatchqualityshower;
+    Float_t pip_metamatchradius;
+    Float_t pip_metamatchradiusshower;
+    Float_t pip_metaselected;
+    Float_t pip_oa_hadr;
+    Float_t pip_oa_lept;
+    Float_t pip_p;
+    Float_t pip_p_corr_em;
+    Float_t pip_p_corr_ep;
+    Float_t pip_p_corr_p;
+    Float_t pip_p_corr_pim;
+    Float_t pip_p_corr_pip;
+    Float_t pip_p_org;
+    Float_t pip_phi;
+    Float_t pip_phi_rich;
+    Float_t pip_pid;
+    Float_t pip_q;
+    Float_t pip_r;
+    Float_t pip_resolution;
+    Float_t pip_resoultion;
+    Float_t pip_rich_amp;
+    Float_t pip_rich_avg_ringcharge;
+    Float_t pip_rich_centr;
+    Float_t pip_rich_houtra;
+    Float_t pip_rich_padnum;
+    Float_t pip_rich_patmat;
+    Float_t pip_rich_radius;
+    Float_t pip_richmatchquality;
+    Float_t pip_richmatchqualitynorm;
+    Float_t pip_ringchi2;
+    Float_t pip_rkchi2;
+    Float_t pip_rkmeta_dx;
+    Float_t pip_rkmeta_dy;
+    Float_t pip_rkmetamatch;
+    Float_t pip_sector;
+    Float_t pip_shw_deltasum;
+    Float_t pip_shw_sum0;
+    Float_t pip_shw_sum1;
+    Float_t pip_shw_sum2;
+    Float_t pip_system;
+    Float_t pip_theta;
+    Float_t pip_theta_rich;
+    Float_t pip_tof;
+    Float_t pip_tof_mom;
+    Float_t pip_tof_new;
+    Float_t pip_tof_rec;
+    Float_t pip_tofnorm;
+    Float_t pip_track_length;
+    Float_t pip_tracklength;
+    Float_t pip_z;
+
+    /*** p ***/
+
+    Float_t p_beta;
+    Float_t p_beta_new;
+    Float_t p_beta_org;
+    Float_t p_dedx_mdc;
+    Float_t p_dedx_tof;
+    Float_t p_delta_mass2_corr_em;
+    Float_t p_delta_mass2_corr_ep;
+    Float_t p_delta_mass2_corr_p;
+    Float_t p_delta_mass2_corr_pim;
+    Float_t p_delta_mass2_corr_pip;
+    Float_t p_delta_phi;
+    Float_t p_delta_theta;
+    Float_t p_dist_to_metahit;
+    Float_t p_dist_to_metahit_org;
+    Float_t p_emc_cellpath;
+    Float_t p_emc_energy;
+    Float_t p_emc_metamatchquality;
+    Float_t p_emc_metamatchradius;
+    Float_t p_emc_ncells;
+    Float_t p_emc_rkmetadx;
+    Float_t p_emc_rkmetady;
+    Float_t p_emc_time;
+    Float_t p_id;
+    Float_t p_isBT;
+    Float_t p_isOffVertexClust;
+    Float_t p_isPrimaryVertex;
+    Float_t p_isUsedVertex;
+    Float_t p_isemc;
+    Float_t p_isemc_matchedrpc;
+    Float_t p_isemc_matchedsamerpc;
+    Float_t p_isemcused;
+    Float_t p_ismdc1edge;
+    Float_t p_ismdc2edge;
+    Float_t p_ismdc3edge;
+    Float_t p_ismdc4edge;
+    Float_t p_ismdcedge;
+    Float_t p_ismetaused;
+    Float_t p_isnewrich;
+    Float_t p_isprimaryvertex;
+    Float_t p_isrichmatch_nomatch;
+    Float_t p_isrichmatch_richmdc;
+    Float_t p_isrichmatch_richrk;
+    Float_t p_isring;
+    Float_t p_isringmdc;
+    Float_t p_isringnomatch;
+    Float_t p_isringtrack;
+    Float_t p_isrpcclstused;
+    Float_t p_isshowerused;
+    Float_t p_istofclstused;
+    Float_t p_istofhitused;
+    Float_t p_kIsLepton;
+    Float_t p_kIsUsed;
+    Float_t p_mass;
+    Float_t p_mass2;
+    Float_t p_mass2_corr_em;
+    Float_t p_mass2_corr_ep;
+    Float_t p_mass2_corr_p;
+    Float_t p_mass2_corr_pim;
+    Float_t p_mass2_corr_pip;
+    Float_t p_mass2_em;
+    Float_t p_mass2_ep;
+    Float_t p_mass2_p;
+    Float_t p_mass2_pim;
+    Float_t p_mass2_pip;
+    Float_t p_mdcinnerchi2;
+    Float_t p_mdcouterchi2;
+    Float_t p_metamatchquality;
+    Float_t p_metamatchqualityshower;
+    Float_t p_metamatchradius;
+    Float_t p_metamatchradiusshower;
+    Float_t p_metaselected;
+    Float_t p_oa_hadr;
+    Float_t p_oa_lept;
+    Float_t p_p;
+    Float_t p_p_corr_em;
+    Float_t p_p_corr_ep;
+    Float_t p_p_corr_p;
+    Float_t p_p_corr_pim;
+    Float_t p_p_corr_pip;
+    Float_t p_p_org;
+    Float_t p_phi;
+    Float_t p_phi_rich;
+    Float_t p_pid;
+    Float_t p_q;
+    Float_t p_r;
+    Float_t p_resolution;
+    Float_t p_resoultion;
+    Float_t p_rich_amp;
+    Float_t p_rich_avg_ringcharge;
+    Float_t p_rich_centr;
+    Float_t p_rich_houtra;
+    Float_t p_rich_padnum;
+    Float_t p_rich_patmat;
+    Float_t p_rich_radius;
+    Float_t p_richmatchquality;
+    Float_t p_richmatchqualitynorm;
+    Float_t p_ringchi2;
+    Float_t p_rkchi2;
+    Float_t p_rkmeta_dx;
+    Float_t p_rkmeta_dy;
+    Float_t p_rkmetamatch;
+    Float_t p_sector;
+    Float_t p_shw_deltasum;
+    Float_t p_shw_sum0;
+    Float_t p_shw_sum1;
+    Float_t p_shw_sum2;
+    Float_t p_system;
+    Float_t p_theta;
+    Float_t p_theta_rich;
+    Float_t p_tof;
+    Float_t p_tof_mom;
+    Float_t p_tof_new;
+    Float_t p_tof_rec;
+    Float_t p_tofnorm;
+    Float_t p_track_length;
+    Float_t p_tracklength;
+    Float_t p_z;
+
+    PPip_ID(const char *treeName);
+    void Init();
+    void ProcessEntries();
+    void SetBranchAddresses();
+
+    ClassDef(PPip_ID, 1);
+};
+
+#endif // PPIP_ID_H
