@@ -12,9 +12,9 @@ CXXFLAGS   = -std=c++11 -Wall -Wextra -O2 $(ROOTCFLAGS) -I../src
 LDFLAGS    = $(ROOTLIBS) -lPhysics
 
 # Targets
-TARGETS    = PParticle_Usage_Examples
+TARGETS    = PParticle_Usage_Examples test_boost_sign_convention
 
-.PHONY: all clean test
+.PHONY: all clean test test-boost
 
 all: $(TARGETS)
 
@@ -23,6 +23,12 @@ PParticle_Usage_Examples: PParticle_Usage_Examples.cc ../src/PParticle.h ../src/
 	@echo "Compiling PParticle usage examples..."
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 	@echo "Build successful! Run with: ./PParticle_Usage_Examples"
+
+# Build the boost sign convention test
+test_boost_sign_convention: test_boost_sign_convention.cc ../src/PParticle.h ../src/BoostFrame.h
+	@echo "Compiling boost sign convention test..."
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+	@echo "Build successful! Run with: ./test_boost_sign_convention"
 
 # Run the examples
 test: PParticle_Usage_Examples
@@ -35,6 +41,15 @@ test: PParticle_Usage_Examples
 	@echo "======================================================"
 	@echo "All examples completed successfully!"
 	@echo "======================================================"
+
+# Run boost sign convention test
+test-boost: test_boost_sign_convention
+	@echo ""
+	@echo "======================================================"
+	@echo "Running Boost Sign Convention Test"
+	@echo "======================================================"
+	@./test_boost_sign_convention
+	@echo ""
 
 clean:
 	@echo "Cleaning up..."
