@@ -12,9 +12,9 @@ CXXFLAGS   = -std=c++11 -Wall -Wextra -O2 $(ROOTCFLAGS) -I../src
 LDFLAGS    = $(ROOTLIBS) -lPhysics
 
 # Targets
-TARGETS    = PParticle_Usage_Examples test_boost_sign_convention test_hntuple_improved_errors
+TARGETS    = PParticle_Usage_Examples test_boost_sign_convention test_hntuple_improved_errors test_improved_manager
 
-.PHONY: all clean test test-boost test-hntuple
+.PHONY: all clean test test-boost test-hntuple test-manager
 
 all: $(TARGETS)
 
@@ -35,6 +35,12 @@ test_hntuple_improved_errors: test_hntuple_improved_errors.cc ../src/hntuple.h .
 	@echo "Compiling HNtuple improved errors test..."
 	$(CXX) $(CXXFLAGS) -o $@ $< ../src/hntuple.cc $(LDFLAGS)
 	@echo "Build successful! Run with: ./test_hntuple_improved_errors"
+
+# Build the ImprovedManager test
+test_improved_manager: test_improved_manager.cc ../src/ImprovedManager.h ../src/HistogramRegistry.h ../src/HistogramFactory.h ../src/HistogramBuilder.h ../src/hntuple.h ../src/hntuple.cc
+	@echo "Compiling ImprovedManager test..."
+	$(CXX) $(CXXFLAGS) -o $@ $< ../src/hntuple.cc $(LDFLAGS)
+	@echo "Build successful! Run with: ./test_improved_manager"
 
 # Run the examples
 test: PParticle_Usage_Examples
@@ -64,6 +70,15 @@ test-hntuple: test_hntuple_improved_errors
 	@echo "Running HNtuple Improved Errors Test"
 	@echo "======================================================"
 	@./test_hntuple_improved_errors
+	@echo ""
+
+# Run ImprovedManager test
+test-manager: test_improved_manager
+	@echo ""
+	@echo "======================================================"
+	@echo "Running ImprovedManager Test"
+	@echo "======================================================"
+	@./test_improved_manager
 	@echo ""
 
 clean:
