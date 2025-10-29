@@ -12,9 +12,9 @@ CXXFLAGS   = -std=c++11 -Wall -Wextra -O2 $(ROOTCFLAGS) -I../src
 LDFLAGS    = $(ROOTLIBS) -lPhysics
 
 # Targets
-TARGETS    = PParticle_Usage_Examples test_boost_sign_convention
+TARGETS    = PParticle_Usage_Examples test_boost_sign_convention test_hntuple_improved_errors
 
-.PHONY: all clean test test-boost
+.PHONY: all clean test test-boost test-hntuple
 
 all: $(TARGETS)
 
@@ -29,6 +29,12 @@ test_boost_sign_convention: test_boost_sign_convention.cc ../src/PParticle.h ../
 	@echo "Compiling boost sign convention test..."
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 	@echo "Build successful! Run with: ./test_boost_sign_convention"
+
+# Build the HNtuple improved errors test
+test_hntuple_improved_errors: test_hntuple_improved_errors.cc ../src/hntuple.h ../src/hntuple.cc
+	@echo "Compiling HNtuple improved errors test..."
+	$(CXX) $(CXXFLAGS) -o $@ $< ../src/hntuple.cc $(LDFLAGS)
+	@echo "Build successful! Run with: ./test_hntuple_improved_errors"
 
 # Run the examples
 test: PParticle_Usage_Examples
@@ -49,6 +55,15 @@ test-boost: test_boost_sign_convention
 	@echo "Running Boost Sign Convention Test"
 	@echo "======================================================"
 	@./test_boost_sign_convention
+	@echo ""
+
+# Run HNtuple improved errors test
+test-hntuple: test_hntuple_improved_errors
+	@echo ""
+	@echo "======================================================"
+	@echo "Running HNtuple Improved Errors Test"
+	@echo "======================================================"
+	@./test_hntuple_improved_errors
 	@echo ""
 
 clean:

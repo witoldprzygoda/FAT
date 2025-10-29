@@ -23,6 +23,8 @@
 #include <iterator>
 #include <vector>
 #include <map>
+#include <iostream>
+#include <sstream>
 
 // ****************************************************************************
 class HNtuple: public TObject
@@ -49,6 +51,16 @@ public:
    const char* getTitle() const { return ptrNt->GetTitle(); }
    void setFile(TFile *ptrF) { outFile = ptrF; }
 
+   // Query methods for ntuple state
+   Bool_t isFrozen() const { return isNtuple; }
+   Int_t getNVariables() const { return varArrayN; }
+   std::vector<std::string> getVariableNames() const;
+   Bool_t hasVariable(const std::string& key) const;
+
+   // Diagnostics and debugging
+   void printStructure(std::ostream& os = std::cout) const;
+   std::string getStructureString() const;
+
 protected:
 
    TFile *outFile {nullptr};
@@ -63,6 +75,7 @@ protected:
 
    Bool_t isNtuple {kFALSE}; //! kTRUE if ntuple is defined
    Int_t varArrayN {0}; //! number of ntuple variables
+   Long64_t fillCount {0}; //! number of times fill() has been called
    std::vector<Float_t> varArray; //! table of values for ntuple to be filled with
    std::map<std::string, Float_t> vKeyValue; //! pair of a variable name and a value
    std::map<std::string, Int_t> vKeyOrder; //! pair of a variable name and its position in ntuple
