@@ -33,14 +33,15 @@ void ProcessEntries_Refactored()
         // ------------------------------------------------------------------------
         // 2. PARTICLE CREATION
         // Original: lines 62-69 (14 lines)
-        // Refactored: 2 lines
+        // Refactored: 4 lines (create + set corrected)
         // ------------------------------------------------------------------------
-        PParticle proton = ParticleFactory::createProton(p_p_corr_p, p_theta, p_phi);
-        PParticle pion = ParticleFactory::createPionPlus(pip_p_corr_pip, pip_theta, pip_phi);
+        // Create particles with reconstructed momentum (raw detector data)
+        PParticle proton = ParticleFactory::createProton(p_p, p_theta, p_phi);
+        PParticle pion = ParticleFactory::createPiPlus(pip_p, pip_theta, pip_phi);
 
-        // Optional: Set reconstructed momentum too (for resolution studies)
-        // proton.setFromSpherical(p_p, p_theta, p_phi, MomentumType::RECONSTRUCTED);
-        // pion.setFromSpherical(pip_p, pip_theta, pip_phi, MomentumType::RECONSTRUCTED);
+        // Set corrected momentum (energy loss corrected)
+        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
+        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, MomentumType::CORRECTED);
 
         // Optional: If MC data, set simulated momentum
         // if (isMC) {

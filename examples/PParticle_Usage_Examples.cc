@@ -72,19 +72,24 @@ void example1_particle_creation() {
     std::cout << "\n--- NEW WAY ---" << std::endl;
     {
         // Variables from TNtuple
-        double p_p_corr_p = 1580.0;
+        double p_p = 1550.0;          // Reconstructed
+        double p_p_corr_p = 1580.0;   // Corrected
         double p_theta = 45.0;
         double p_phi = 30.0;
-        double pip_p_corr_pip = 850.0;
+        double pip_p = 840.0;         // Reconstructed
+        double pip_p_corr_pip = 850.0;// Corrected
         double pip_theta = 60.0;
         double pip_phi = 120.0;
 
-        // One-line creation with automatic mass and coordinate conversion
-        PParticle proton = ParticleFactory::createProton(p_p_corr_p, p_theta, p_phi);
-        PParticle pion = ParticleFactory::createPionPlus(pip_p_corr_pip, pip_theta, pip_phi);
+        // Create with reconstructed momentum, then set corrected
+        PParticle proton = ParticleFactory::createProton(p_p, p_theta, p_phi);
+        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
 
-        std::cout << "Proton:  E = " << proton.energy() << " MeV" << std::endl;
-        std::cout << "Pion+:   E = " << pion.energy() << " MeV" << std::endl;
+        PParticle pion = ParticleFactory::createPiPlus(pip_p, pip_theta, pip_phi);
+        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, MomentumType::CORRECTED);
+
+        std::cout << "Proton:  E = " << proton.energy(MomentumType::CORRECTED) << " MeV" << std::endl;
+        std::cout << "Pion+:   E = " << pion.energy(MomentumType::CORRECTED) << " MeV" << std::endl;
     }
 
     // BENEFITS:
@@ -128,15 +133,57 @@ void example2_momentum_variants() {
 }
 
 // ============================================================================
-// EXAMPLE 3: Composite Particles - BEFORE vs AFTER
+// EXAMPLE 3: All Particle Types in Factory
 // ============================================================================
 
-void example3_composite_particles() {
-    std::cout << "\n=== EXAMPLE 3: Composite Particles ===" << std::endl;
+void example3_all_particle_types() {
+    std::cout << "\n=== EXAMPLE 3: All Particle Types ===" << std::endl;
+
+    // Demonstrate all available particle factory methods
+    std::cout << "\nCreating different particle types:" << std::endl;
+
+    // Baryons
+    PParticle proton = ParticleFactory::createProton(1580.0, 45.0, 30.0);
+    std::cout << "Proton (p):      mass = " << proton.mass() << " MeV/c^2" << std::endl;
+
+    // Mesons
+    PParticle pi_plus = ParticleFactory::createPiPlus(850.0, 60.0, 120.0);
+    std::cout << "Pion+ (pi+):     mass = " << pi_plus.mass() << " MeV/c^2" << std::endl;
+
+    PParticle pi_minus = ParticleFactory::createPiMinus(800.0, 55.0, 110.0);
+    std::cout << "Pion- (pi-):     mass = " << pi_minus.mass() << " MeV/c^2" << std::endl;
+
+    // Leptons
+    PParticle positron = ParticleFactory::createEPlus(200.0, 35.0, 80.0);
+    std::cout << "Positron (e+):   mass = " << positron.mass() << " MeV/c^2" << std::endl;
+
+    PParticle electron = ParticleFactory::createEMinus(180.0, 40.0, 85.0);
+    std::cout << "Electron (e-):   mass = " << electron.mass() << " MeV/c^2" << std::endl;
+
+    // Special beam/target
+    PParticle beam = ParticleFactory::createBeamProton(1580.0);
+    std::cout << "Beam proton:     pz = " << beam.vec().Pz() << " MeV/c" << std::endl;
+
+    PParticle target = ParticleFactory::createTargetProton();
+    std::cout << "Target proton:   p = " << target.momentum() << " MeV/c (at rest)" << std::endl;
+
+    // Example: photoproduction reaction γ + p → e+ + e- + p
+    std::cout << "\nExample photoproduction: γ + p → e+ + e- + p" << std::endl;
+    PParticle pair = positron + electron;
+    std::cout << "e+e- pair mass: " << pair.massGeV() * 1000.0 << " MeV/c^2" << std::endl;
+    std::cout << "Opening angle:  " << positron.openingAngle(electron) << " degrees" << std::endl;
+}
+
+// ============================================================================
+// EXAMPLE 4: Composite Particles - BEFORE vs AFTER
+// ============================================================================
+
+void example4_composite_particles() {
+    std::cout << "\n=== EXAMPLE 4: Composite Particles ===" << std::endl;
 
     // Create particles
     PParticle proton = ParticleFactory::createProton(1580.0, 45.0, 30.0);
-    PParticle pion = ParticleFactory::createPionPlus(850.0, 60.0, 120.0);
+    PParticle pion = ParticleFactory::createPiPlus(850.0, 60.0, 120.0);
     PParticle projectile = ParticleFactory::createBeamProton(1580.0);
     PParticle target = ParticleFactory::createTargetProton();
 
@@ -183,15 +230,15 @@ void example3_composite_particles() {
 }
 
 // ============================================================================
-// EXAMPLE 4: Reference Frame Boosts - BEFORE vs AFTER
+// EXAMPLE 5: Reference Frame Boosts - BEFORE vs AFTER
 // ============================================================================
 
-void example4_boosts() {
-    std::cout << "\n=== EXAMPLE 4: Reference Frame Boosts ===" << std::endl;
+void example5_boosts() {
+    std::cout << "\n=== EXAMPLE 5: Reference Frame Boosts ===" << std::endl;
 
     // Create particles
     PParticle proton = ParticleFactory::createProton(1580.0, 45.0, 30.0);
-    PParticle pion = ParticleFactory::createPionPlus(850.0, 60.0, 120.0);
+    PParticle pion = ParticleFactory::createPiPlus(850.0, 60.0, 120.0);
     PParticle projectile = ParticleFactory::createBeamProton(1580.0);
     PParticle target = ParticleFactory::createTargetProton();
     PParticle beam = projectile + target;
@@ -281,15 +328,15 @@ void example4_boosts() {
 }
 
 // ============================================================================
-// EXAMPLE 5: EventFrames - Managing All Frames Together
+// EXAMPLE 6: EventFrames - Managing All Frames Together
 // ============================================================================
 
-void example5_event_frames() {
-    std::cout << "\n=== EXAMPLE 5: EventFrames Manager ===" << std::endl;
+void example6_event_frames() {
+    std::cout << "\n=== EXAMPLE 6: EventFrames Manager ===" << std::endl;
 
     // Create particles
     PParticle proton = ParticleFactory::createProton(1580.0, 45.0, 30.0);
-    PParticle pion = ParticleFactory::createPionPlus(850.0, 60.0, 120.0);
+    PParticle pion = ParticleFactory::createPiPlus(850.0, 60.0, 120.0);
     PParticle projectile = ParticleFactory::createBeamProton(1580.0);
     PParticle target = ParticleFactory::createTargetProton();
 
@@ -313,11 +360,11 @@ void example5_event_frames() {
 }
 
 // ============================================================================
-// EXAMPLE 6: LAB Frame Preservation
+// EXAMPLE 7: LAB Frame Preservation
 // ============================================================================
 
-void example6_lab_frame() {
-    std::cout << "\n=== EXAMPLE 6: LAB Frame Preservation ===" << std::endl;
+void example7_lab_frame() {
+    std::cout << "\n=== EXAMPLE 7: LAB Frame Preservation ===" << std::endl;
 
     PParticle proton = ParticleFactory::createProton(1580.0, 45.0, 30.0);
 
@@ -344,20 +391,22 @@ void example6_lab_frame() {
 }
 
 // ============================================================================
-// EXAMPLE 7: Complete Event Analysis Pattern
+// EXAMPLE 8: Complete Event Analysis Pattern
 // ============================================================================
 
-void example7_complete_event_analysis() {
-    std::cout << "\n=== EXAMPLE 7: Complete Event Analysis ===" << std::endl;
+void example8_complete_event_analysis() {
+    std::cout << "\n=== EXAMPLE 8: Complete Event Analysis ===" << std::endl;
 
     // -----------------------------------------------------------------------
     // Simulating TNtuple input
     // -----------------------------------------------------------------------
     struct NTupleData {
-        float p_p_corr_p = 1580.0;
+        float p_p = 1550.0;          // Reconstructed
+        float p_p_corr_p = 1580.0;   // Corrected
         float p_theta = 45.0;
         float p_phi = 30.0;
-        float pip_p_corr_pip = 850.0;
+        float pip_p = 840.0;         // Reconstructed
+        float pip_p_corr_pip = 850.0;// Corrected
         float pip_theta = 60.0;
         float pip_phi = 120.0;
     } ntuple;
@@ -366,12 +415,16 @@ void example7_complete_event_analysis() {
     // Event reconstruction
     // -----------------------------------------------------------------------
 
-    // Create particles from TNtuple
+    // Create particles from TNtuple (reconstructed momentum first)
     PParticle proton = ParticleFactory::createProton(
-        ntuple.p_p_corr_p, ntuple.p_theta, ntuple.p_phi);
+        ntuple.p_p, ntuple.p_theta, ntuple.p_phi);
+    proton.setFromSpherical(
+        ntuple.p_p_corr_p, ntuple.p_theta, ntuple.p_phi, MomentumType::CORRECTED);
 
-    PParticle pion = ParticleFactory::createPionPlus(
-        ntuple.pip_p_corr_pip, ntuple.pip_theta, ntuple.pip_phi);
+    PParticle pion = ParticleFactory::createPiPlus(
+        ntuple.pip_p, ntuple.pip_theta, ntuple.pip_phi);
+    pion.setFromSpherical(
+        ntuple.pip_p_corr_pip, ntuple.pip_theta, ntuple.pip_phi, MomentumType::CORRECTED);
 
     // Beam setup
     PParticle projectile = ParticleFactory::createBeamProton(1580.0);
@@ -425,11 +478,12 @@ int main() {
 
     example1_particle_creation();
     example2_momentum_variants();
-    example3_composite_particles();
-    example4_boosts();
-    example5_event_frames();
-    example6_lab_frame();
-    example7_complete_event_analysis();
+    example3_all_particle_types();
+    example4_composite_particles();
+    example5_boosts();
+    example6_event_frames();
+    example7_lab_frame();
+    example8_complete_event_analysis();
 
     std::cout << "\n=====================================================" << std::endl;
     std::cout << "Summary of Improvements:" << std::endl;

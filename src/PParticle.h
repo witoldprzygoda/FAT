@@ -16,6 +16,8 @@ namespace Physics {
     constexpr double MASS_PION_PLUS  = 139.56995; // MeV/c^2
     constexpr double MASS_PION_MINUS = 139.56995; // MeV/c^2
     constexpr double MASS_PION_ZERO  = 134.9768;  // MeV/c^2
+    constexpr double MASS_ELECTRON   = 0.51099895; // MeV/c^2
+    constexpr double MASS_POSITRON   = 0.51099895; // MeV/c^2 (same as electron)
 
     constexpr double D2R = 1.74532925199432955e-02; // Degrees to radians
     constexpr double R2D = 57.2957795130823229;     // Radians to degrees
@@ -430,24 +432,67 @@ private:
 namespace ParticleFactory {
     /**
      * @brief Create proton from TNtuple variables
-     * @param p_corr Corrected momentum magnitude
+     * @param p Reconstructed momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as proton
+     * @return PParticle configured as proton (with RECONSTRUCTED momentum)
      */
-    inline PParticle createProton(double p_corr, double theta, double phi) {
+    inline PParticle createProton(double p, double theta, double phi) {
         PParticle proton(Physics::MASS_PROTON, "p");
-        proton.setFromSpherical(p_corr, theta, phi, MomentumType::CORRECTED);
+        proton.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
         return proton;
     }
 
     /**
      * @brief Create positive pion from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as pi+ (with RECONSTRUCTED momentum)
      */
-    inline PParticle createPionPlus(double p_corr, double theta, double phi) {
+    inline PParticle createPiPlus(double p, double theta, double phi) {
         PParticle pion(Physics::MASS_PION_PLUS, "pi+");
-        pion.setFromSpherical(p_corr, theta, phi, MomentumType::CORRECTED);
+        pion.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
         return pion;
+    }
+
+    /**
+     * @brief Create negative pion from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as pi- (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createPiMinus(double p, double theta, double phi) {
+        PParticle pion(Physics::MASS_PION_MINUS, "pi-");
+        pion.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return pion;
+    }
+
+    /**
+     * @brief Create positron (e+) from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as e+ (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createEPlus(double p, double theta, double phi) {
+        PParticle positron(Physics::MASS_POSITRON, "e+");
+        positron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return positron;
+    }
+
+    /**
+     * @brief Create electron (e-) from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as e- (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createEMinus(double p, double theta, double phi) {
+        PParticle electron(Physics::MASS_ELECTRON, "e-");
+        electron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return electron;
     }
 
     /**
