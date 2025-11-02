@@ -114,7 +114,36 @@ Float_t& HNtuple::operator[](const std::string& key)
       {
          return mIter->second;
       }
-      throw std::invalid_argument("A variable: \"" + key + "\" tried to be assigned after HNtuple was booked, that is, e.g after the first \"fill()\" call.");
+      // FROZEN: Build informative error message
+      std::ostringstream oss;
+      oss << "\n╔════════════════════════════════════════════════════════════════╗\n";
+      oss << "║  HNtuple ERROR: Cannot add new variable after freeze          ║\n";
+      oss << "╠════════════════════════════════════════════════════════════════╣\n";
+      oss << "║ Attempted to add: \"" << key << "\"\n";
+      oss << "║ NTuple name:      \"" << cname << "\"\n";
+      oss << "║ Fill count:       " << fillCount << " (frozen after fill #1)\n";
+      oss << "║\n";
+      oss << "║ The NTuple structure is FROZEN after the first fill() call.\n";
+      oss << "║ All variables must be defined BEFORE the first fill().\n";
+      oss << "║\n";
+      oss << "║ Current NTuple structure (" << varArrayN << " variables):\n";
+      oss << "║ ┌────────────────────────────────────────────────────────────┐\n";
+
+      std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
+      std::sort(sorted_vars.begin(), sorted_vars.end(),
+                [](const auto& a, const auto& b) { return a.second < b.second; });
+
+      for (const auto& var : sorted_vars) {
+         oss << "║ │ [" << var.second << "] " << var.first << "\n";
+      }
+      oss << "║ └────────────────────────────────────────────────────────────┘\n";
+      oss << "║\n";
+      oss << "║ SOLUTION:\n";
+      oss << "║   Add 'r[\"" << key << "\"] = value;' BEFORE the first fill() call,\n";
+      oss << "║   or check for typos in the variable name.\n";
+      oss << "╚════════════════════════════════════════════════════════════════╝\n";
+
+      throw std::runtime_error(oss.str());
    }
 
 return vKeyValue[key]; 
@@ -128,7 +157,20 @@ const Float_t &HNtuple::operator[](const std::string &key) const
    {
       return mcIter->second;
    }
-   throw std::invalid_argument("A variable: \"" + key + "\" tried to be assigned after HNtuple was booked, that is, e.g after the first \"fill()\" call.");
+
+   // Variable not found - build informative error
+   std::ostringstream oss;
+   oss << "\nHNtuple ERROR: Variable \"" << key << "\" not found in ntuple \"" << cname << "\".\n";
+   if (isNtuple) {
+      oss << "NTuple is frozen (fill count: " << fillCount << "). Available variables:\n";
+      std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
+      std::sort(sorted_vars.begin(), sorted_vars.end(),
+                [](const auto& a, const auto& b) { return a.second < b.second; });
+      for (const auto& var : sorted_vars) {
+         oss << "  [" << var.second << "] " << var.first << "\n";
+      }
+   }
+   throw std::runtime_error(oss.str());
 }
 
 // ---------------------------------------------------------------------------------
@@ -139,6 +181,7 @@ Int_t HNtuple::fill()
 
    if (isNtuple==kTRUE)
    {
+      // Already frozen - just fill with current values
       std::fill(varArray.begin(), varArray.end(), 0.0);
       for (auto& pair : vKeyValue) {
          varArray[vKeyOrder[pair.first]] = pair.second;
@@ -148,9 +191,16 @@ Int_t HNtuple::fill()
    }
    else
    {
-      // ntuple not booked yet, we create it here based on variables 
-      // set with the function setVal or operator[]
-      
+      // First fill() - create and freeze the ntuple structure
+
+      // Validation: check if any variables were set
+      if (vKeyValue.empty()) {
+         throw std::runtime_error("HNtuple ERROR: Attempting to fill() without setting any variables!\n"
+                                  "NTuple \"" + std::string(cname) + "\" has no variables defined.\n"
+                                  "Use: r[\"variable_name\"] = value; before calling fill().");
+      }
+
+      // Build variable list
       std::string vList;
       for (const auto &pair : vKeyValue)
       {
@@ -158,7 +208,7 @@ Int_t HNtuple::fill()
       }
       vList.erase(vList.find_last_of(":"),1);
 
-      //-------- here a part of NTuple Ctor
+      //-------- Create TNtuple
       if (outFile)
       {
          outFile->cd();
@@ -167,10 +217,32 @@ Int_t HNtuple::fill()
       {
          throw std::runtime_error("NTuple booked but not attached to any file. Forgot to call: void setFile(TFile *ptrF) for this ntuple?");
       }
+
       ptrNt = std::make_unique<TNtuple>(cname, ctitle, vList.c_str(), cbufsize);
       isNtuple = kTRUE;
       setMap(vList, isNtuple);
-	 //-------- fill
+
+      // Print structure info on first fill
+      std::cout << "╔════════════════════════════════════════════════════════════════╗\n";
+      std::cout << "║  HNtuple FROZEN: Structure locked after first fill()          ║\n";
+      std::cout << "╠════════════════════════════════════════════════════════════════╣\n";
+      std::cout << "║ NTuple name: \"" << cname << "\"\n";
+      std::cout << "║ Variables:   " << varArrayN << "\n";
+      std::cout << "║ ┌────────────────────────────────────────────────────────────┐\n";
+
+      std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
+      std::sort(sorted_vars.begin(), sorted_vars.end(),
+                [](const auto& a, const auto& b) { return a.second < b.second; });
+
+      for (const auto& var : sorted_vars) {
+         std::cout << "║ │ [" << var.second << "] " << var.first << "\n";
+      }
+      std::cout << "║ └────────────────────────────────────────────────────────────┘\n";
+      std::cout << "║\n";
+      std::cout << "║ This structure is now FROZEN. No new variables can be added.\n";
+      std::cout << "╚════════════════════════════════════════════════════════════════╝\n";
+
+      //-------- Fill first entry
       std::fill(varArray.begin(), varArray.end(), 0.0f);
       for (auto& pair : vKeyValue) {
          varArray[vKeyOrder[pair.first]] = pair.second;
@@ -179,9 +251,76 @@ Int_t HNtuple::fill()
       }
    }
 
+   // Increment fill counter
+   fillCount++;
+
    // filling the ROOT ntuple
    return ptrNt->Fill(varArray.data());
 }
+
+// ---------------------------------------------------------------------------------
+std::vector<std::string> HNtuple::getVariableNames() const
+{
+   std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
+   std::sort(sorted_vars.begin(), sorted_vars.end(),
+             [](const auto& a, const auto& b) { return a.second < b.second; });
+
+   std::vector<std::string> names;
+   names.reserve(sorted_vars.size());
+   for (const auto& var : sorted_vars) {
+      names.push_back(var.first);
+   }
+   return names;
+}
+
+// ---------------------------------------------------------------------------------
+Bool_t HNtuple::hasVariable(const std::string& key) const
+{
+   return vKeyOrder.find(key) != vKeyOrder.end();
+}
+
+// ---------------------------------------------------------------------------------
+void HNtuple::printStructure(std::ostream& os) const
+{
+   os << "╔════════════════════════════════════════════════════════════════╗\n";
+   os << "║  HNtuple Structure                                             ║\n";
+   os << "╠════════════════════════════════════════════════════════════════╣\n";
+   os << "║ Name:        \"" << cname << "\"\n";
+   os << "║ Title:       \"" << ctitle << "\"\n";
+   os << "║ Status:      " << (isNtuple ? "FROZEN" : "UNFROZEN (can add variables)") << "\n";
+   os << "║ Fill count:  " << fillCount << "\n";
+   os << "║ Variables:   " << varArrayN << "\n";
+
+   if (!vKeyOrder.empty()) {
+      os << "║ ┌────────────────────────────────────────────────────────────┐\n";
+
+      std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
+      std::sort(sorted_vars.begin(), sorted_vars.end(),
+                [](const auto& a, const auto& b) { return a.second < b.second; });
+
+      for (const auto& var : sorted_vars) {
+         os << "║ │ [" << var.second << "] " << var.first;
+         if (isNtuple) {
+            auto it = vKeyValue.find(var.first);
+            if (it != vKeyValue.end()) {
+               os << " = " << it->second;
+            }
+         }
+         os << "\n";
+      }
+      os << "║ └────────────────────────────────────────────────────────────┘\n";
+   }
+   os << "╚════════════════════════════════════════════════════════════════╝\n";
+}
+
+// ---------------------------------------------------------------------------------
+std::string HNtuple::getStructureString() const
+{
+   std::ostringstream oss;
+   printStructure(oss);
+   return oss.str();
+}
+
 // ****************************************************************************
 
 
