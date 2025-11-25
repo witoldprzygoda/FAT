@@ -1,7 +1,7 @@
 #ifndef BOOSTFRAME_H
 #define BOOSTFRAME_H
 
-#include "PParticle.h"
+#include "pparticle.h"
 #include <vector>
 #include <memory>
 

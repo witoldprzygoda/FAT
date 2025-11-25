@@ -47,8 +47,8 @@ public:
    const Float_t& operator[](const std::string& key) const; // the way of variable value reading
    Int_t fill(); // fills tuple, if not defined, constructs it first
    void SetDirectory(TDirectory* dir); 
-   const char* getName() const { return ptrNt->GetName(); }
-   const char* getTitle() const { return ptrNt->GetTitle(); }
+   const char* getName() const { return cname; }
+   const char* getTitle() const { return ctitle; }
    void setFile(TFile *ptrF) { outFile = ptrF; }
 
    // Query methods for ntuple state
@@ -68,8 +68,10 @@ protected:
    HNtuple& operator=(const HNtuple& src) const; 
    void setMap(const std::string& varList, Bool_t& kPair); // creates a map from variable string
 
-   const char* cname; //!
-   const char* ctitle; //!
+   std::string cname_str; //! Stored name
+   std::string ctitle_str; //! Stored title
+   const char* cname; //! Pointer to name (for compatibility)
+   const char* ctitle; //! Pointer to title (for compatibility)
    Int_t cbufsize; //!
    std::unique_ptr<TNtuple> ptrNt; //!
 
@@ -86,4 +88,3 @@ ClassDef(HNtuple, 0)
 
 
 #endif /*!HNTUPLE_H*/
-

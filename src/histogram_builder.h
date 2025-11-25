@@ -36,7 +36,7 @@
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TH3F.h>
-#include "HistogramRegistry.h"
+#include "histogram_registry.h"
 
 // ============================================================================
 // HistogramBuilder: Fluent interface for histogram creation

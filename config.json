@@ -1,0 +1,15 @@
+{
+    "input": {
+        "source": "h68_10.list",
+        "tree_name": "PPip_ID",
+        "start_event": 0,
+        "max_events": -1
+    },
+    "output": {
+        "filename": "output_ppip.root",
+        "option": "RECREATE"
+    },
+    "beam": {
+        "kinetic_energy": 1580.0
+    }
+}

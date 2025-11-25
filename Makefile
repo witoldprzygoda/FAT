@@ -1,11 +1,15 @@
 # Compiler and Flags
 CXX    = g++ 
-CFLAGS = $(shell root-config --cflags) -O3 -Wall -fPIC
+CFLAGS = $(shell root-config --cflags) -std=c++17 -g -Wall -fPIC -I./src
 LIBS   = $(shell root-config --libs) -lProof -lEG
 
 # Source and header files
-SOURCES = main.cc src/manager.cc datamanager.cc src/Base_ID.cc PPip_ID.cc src/hntuple.cc
-HEADERS = data.h src/manager.h src/datamanager.h src/Base_ID.h PPip_ID.h src/hntuple.h
+SOURCES = main.cc src/hntuple.cc
+HEADERS = src/hntuple.h src/manager.h src/histogram_registry.h \
+          src/histogram_factory.h src/histogram_builder.h \
+          src/pparticle.h src/boost_frame.h \
+          src/ntuple_reader.h src/cut_manager.h src/analysis_config.h \
+          src/progressbar.h
 OBJECTS = $(SOURCES:.cc=.o)
 DICT    = MyDict.cc
 DICTOBJ = $(DICT:.cc=.o)
@@ -31,4 +35,3 @@ $(DICT): $(HEADERS) $(LINKDEF)
 # Cleanup
 clean:
 	rm -f $(EXECUTABLE) $(OBJECTS) $(DICT) $(DICTOBJ) *.pcm
-

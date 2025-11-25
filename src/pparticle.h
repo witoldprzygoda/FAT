@@ -11,13 +11,17 @@
 // Particle Physics Constants (PDG 2024 values)
 // ============================================================================
 namespace Physics {
-    constexpr double MASS_PROTON   = 938.27231;   // MeV/c^2
-    constexpr double MASS_NEUTRON  = 939.56542;   // MeV/c^2
-    constexpr double MASS_PION_PLUS  = 139.56995; // MeV/c^2
-    constexpr double MASS_PION_MINUS = 139.56995; // MeV/c^2
-    constexpr double MASS_PION_ZERO  = 134.9768;  // MeV/c^2
-    constexpr double MASS_ELECTRON   = 0.51099895; // MeV/c^2
-    constexpr double MASS_POSITRON   = 0.51099895; // MeV/c^2 (same as electron)
+    constexpr double MASS_PROTON     = 938.27231;   // MeV/c^2, sim id = 14
+    constexpr double MASS_NEUTRON    = 939.56542;   // MeV/c^2, sim id = 13
+    constexpr double MASS_PION_PLUS  = 139.56995;   // MeV/c^2, sim id = 8
+    constexpr double MASS_PION_MINUS = 139.56995;   // MeV/c^2, sim id = 9
+    constexpr double MASS_PION_ZERO  = 134.9768;    // MeV/c^2, sim id = 7
+    constexpr double MASS_ELECTRON   = 0.51099895;  // MeV/c^2, sim id = 3
+    constexpr double MASS_POSITRON   = 0.51099895;  // MeV/c^2, sim id = 2
+    constexpr double MASS_MUON_PLUS  = 105.6583745; // MeV/c^2, sim id = 5
+    constexpr double MASS_MUON_MINUS = 105.6583745; // MeV/c^2, sim id = 6
+    constexpr double MASS_DEUTERON   = 1875.61;     // MeV/c^2, sim id = 45
+    constexpr double MASS_TRITON     = 2808.92;     // MeV/c^2, sim id = 46
 
     constexpr double D2R = 1.74532925199432955e-02; // Degrees to radians
     constexpr double R2D = 57.2957795130823229;     // Radians to degrees
@@ -493,6 +497,58 @@ namespace ParticleFactory {
         PParticle electron(Physics::MASS_ELECTRON, "e-");
         electron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
         return electron;
+    }
+
+    /**
+     * @brief Create positive muon (mu+) from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as mu+ (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createMuPlus(double p, double theta, double phi) {
+        PParticle muon(Physics::MASS_MUON_PLUS, "mu+");
+        muon.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return muon;
+    }
+
+    /**
+     * @brief Create negative muon (mu-) from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as mu- (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createMuMinus(double p, double theta, double phi) {
+        PParticle muon(Physics::MASS_MUON_MINUS, "mu-");
+        muon.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return muon;
+    }
+
+    /**
+     * @brief Create deuteron from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as deuteron (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createDeuteron(double p, double theta, double phi) {
+        PParticle deuteron(Physics::MASS_DEUTERON, "d");
+        deuteron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return deuteron;
+    }
+
+    /**
+     * @brief Create triton from TNtuple variables
+     * @param p Reconstructed momentum magnitude
+     * @param theta Polar angle in degrees
+     * @param phi Azimuthal angle in degrees
+     * @return PParticle configured as triton (with RECONSTRUCTED momentum)
+     */
+    inline PParticle createTriton(double p, double theta, double phi) {
+        PParticle triton(Physics::MASS_TRITON, "t");
+        triton.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        return triton;
     }
 
     /**

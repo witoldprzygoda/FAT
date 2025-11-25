@@ -125,7 +125,9 @@ public:
             throw std::runtime_error("HistogramRegistry::addNtuple() - Cannot add null ntuple!");
         }
 
-        std::string name = ntuple->getName();
+        // Copy strings before moving the ntuple
+        std::string name(ntuple->getName());
+        std::string title(ntuple->getTitle());
 
         if (ntuples_.find(name) != ntuples_.end()) {
             throw std::runtime_error("HistogramRegistry::addNtuple() - Ntuple '" +
@@ -135,7 +137,7 @@ public:
         NtupleMetadata meta;
         meta.name = name;
         meta.folder = folder;
-        meta.description = description.empty() ? ntuple->getTitle() : description;
+        meta.description = description.empty() ? title : description;
 
         ntuples_[name] = std::move(ntuple);
         ntuple_metadata_[name] = meta;
@@ -274,6 +276,8 @@ public:
                 // Write to root directory
                 file->cd();
                 histograms_[name]->Write();
+                // Release ownership - ROOT now owns this histogram
+                histograms_[name].release();
             } else {
                 folder_contents[folder].push_back(name);
             }
@@ -291,11 +295,13 @@ public:
             // Write all histograms in this folder
             for (const auto& name : hist_names) {
                 histograms_[name]->Write();
+                // Release ownership - ROOT now owns this histogram
+                histograms_[name].release();
             }
         }
 
         // Write ntuples
-        for (const auto& pair : ntuples_) {
+        for (auto& pair : ntuples_) {
             const std::string& name = pair.first;
             const auto& meta = ntuple_metadata_[name];
 
@@ -307,6 +313,8 @@ public:
             }
 
             pair.second->Write();
+            // Release ownership - ROOT now owns this ntuple
+            pair.second.release();
         }
 
         // Return to root directory
@@ -320,8 +328,12 @@ public:
         os << "╔════════════════════════════════════════════════════════════════╗\n";
         os << "║  HistogramRegistry Summary                                     ║\n";
         os << "╠════════════════════════════════════════════════════════════════╣\n";
-        os << "║ Total histograms: " << histograms_.size() << "\n";
-        os << "║ Total ntuples:    " << ntuples_.size() << "\n";
+        // Dynamic padding for Total histograms
+        os << "║ Total histograms: " << histograms_.size() 
+           << std::string(45 - std::to_string(histograms_.size()).length(), ' ') << "║\n";
+        // Dynamic padding for Total ntuples
+        os << "║ Total ntuples:    " << ntuples_.size() 
+           << std::string(45 - std::to_string(ntuples_.size()).length(), ' ') << "║\n";
 
         // Count by folder
         std::map<std::string, int> folder_counts;
@@ -330,10 +342,14 @@ public:
             folder_counts[folder.empty() ? "[root]" : folder]++;
         }
 
-        os << "║\n";
-        os << "║ Histograms by folder:\n";
+        os << "║                                                                ║\n";
+        os << "║ Histograms by folder:                                          ║\n";
         for (const auto& fc : folder_counts) {
-            os << "║   " << fc.first << ": " << fc.second << "\n";
+            // Calculate exact padding: 66 total chars - 1(║) - 3(spaces) - folder - 2(": ") - number - 1(║)
+            // = 66 - 7 - folder - number = 59 - folder - number
+            int padding = 59 - fc.first.length() - std::to_string(fc.second).length();
+            os << "║   " << fc.first << ": " << fc.second 
+               << std::string(padding, ' ') << "║\n";
         }
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
@@ -402,11 +418,11 @@ private:
         return current;
     }
 
-    // Private constructor for singleton (optional usage)
-    HistogramRegistry() = default;
-
 public:
-    // Allow non-singleton usage
+    // Default constructor - public for non-singleton usage
+    HistogramRegistry() = default;
+    
+    // Delete copy/move for safety
     HistogramRegistry(const HistogramRegistry&) = delete;
     HistogramRegistry& operator=(const HistogramRegistry&) = delete;
 };

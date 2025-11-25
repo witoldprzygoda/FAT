@@ -32,16 +32,20 @@ HNtuple::HNtuple() : cname(nullptr), ctitle(nullptr), cbufsize(0)
 // variables which have been set 
 // ---------------------------------------------------------------------------------
 HNtuple::HNtuple(const char* name, const char* title, Int_t bufsize) : 
-	cname(name), ctitle(title == nullptr ? name : title), cbufsize(bufsize)
+	cname_str(name), ctitle_str(title == nullptr ? name : title), cbufsize(bufsize)
 {
+   cname = cname_str.c_str();
+   ctitle = ctitle_str.c_str();
 }
 
 // ---------------------------------------------------------------------------------
 // Basic ntuple constructor with exactly the same parameters as in the case of ROOT TNtuple
 // ---------------------------------------------------------------------------------
 HNtuple::HNtuple(const char* name, const char* title, const char* varlist, Int_t bufsize) :
-	cname(name), ctitle(title), cbufsize(bufsize)
+	cname_str(name), ctitle_str(title), cbufsize(bufsize)
 {
+   cname = cname_str.c_str();
+   ctitle = ctitle_str.c_str();
    ptrNt = std::make_unique<TNtuple>(name, title, varlist, bufsize);
    setMap(varlist, isNtuple);
 }
@@ -224,22 +228,38 @@ Int_t HNtuple::fill()
 
       // Print structure info on first fill
       std::cout << "╔════════════════════════════════════════════════════════════════╗\n";
-      std::cout << "║  HNtuple FROZEN: Structure locked after first fill()          ║\n";
+      std::cout << "║  HNtuple FROZEN: Structure locked after first fill()           ║\n";
       std::cout << "╠════════════════════════════════════════════════════════════════╣\n";
-      std::cout << "║ NTuple name: \"" << cname << "\"\n";
-      std::cout << "║ Variables:   " << varArrayN << "\n";
-      std::cout << "║ ┌────────────────────────────────────────────────────────────┐\n";
+      
+      // Name line: Total 66 - "║" (1) - " NTuple name: \"" (15) - name - "\"" (1) - " " - "║" (1)
+      std::string name_str(cname);
+      int name_padding = 66 - 1 - 15 - name_str.length() - 1 - 1;
+      std::cout << "║ NTuple name: \"" << cname << "\"" 
+                << std::string(name_padding, ' ') << "║\n";
+      
+      // Variables line: Total 66 - "║" (1) - " Variables:   " (14) - number - " " - "║" (1)
+      std::string var_num_str = std::to_string(varArrayN);
+      int var_padding = 66 - 1 - 14 - var_num_str.length() - 1;
+      std::cout << "║ Variables:   " << varArrayN 
+                << std::string(var_padding, ' ') << "║\n";
+      
+      // Inner box top: "║ ┌" + 60 dashes + "┐ ║" = 66
+      std::cout << "║ ┌────────────────────────────────────────────────────────────┐ ║\n";
 
       std::vector<std::pair<std::string, Int_t>> sorted_vars(vKeyOrder.begin(), vKeyOrder.end());
       std::sort(sorted_vars.begin(), sorted_vars.end(),
                 [](const auto& a, const auto& b) { return a.second < b.second; });
 
       for (const auto& var : sorted_vars) {
-         std::cout << "║ │ [" << var.second << "] " << var.first << "\n";
+         // Each line: "║ │ " + content + padding + " │ ║" = 66
+         // "║ │ " = 4 chars, " │ ║" = 4 chars, content area = 66 - 8 = 58 chars
+         std::string var_line = "[" + std::to_string(var.second) + "] " + var.first;
+         int padding = 58 - var_line.length();
+         std::cout << "║ │ " << var_line << std::string(padding, ' ') << " │ ║\n";
       }
-      std::cout << "║ └────────────────────────────────────────────────────────────┘\n";
-      std::cout << "║\n";
-      std::cout << "║ This structure is now FROZEN. No new variables can be added.\n";
+      std::cout << "║ └────────────────────────────────────────────────────────────┘ ║\n";
+      std::cout << "║                                                                ║\n";
+      std::cout << "║ This structure is now FROZEN. No new variables can be added.   ║\n";
       std::cout << "╚════════════════════════════════════════════════════════════════╝\n";
 
       //-------- Fill first entry
@@ -322,6 +342,3 @@ std::string HNtuple::getStructureString() const
 }
 
 // ****************************************************************************
-
-
-

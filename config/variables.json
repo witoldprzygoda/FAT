@@ -1,0 +1,98 @@
+{
+    // ============================================================================
+    // NTUPLE VARIABLE DEFINITIONS
+    // Variable names grouped by particle type (prefixes from PAT code)
+    // ============================================================================
+    
+    // Proton variables (prefix: p_)
+    "proton": {
+        "prefix": "p_",
+        "variables": [
+            "p_p", "p_theta", "p_phi",
+            "p_px", "p_py", "p_pz",
+            "p_pcor", "p_thetacor", "p_phicor",
+            "p_beta", "p_mass2",
+            "p_charge", "p_chi2",
+            "p_sec", "p_sys", "p_tof",
+            "p_rich_qual", "p_mdcdedx"
+        ]
+    },
+    
+    // Positive pion variables (prefix: pip_)
+    "pion_plus": {
+        "prefix": "pip_",
+        "variables": [
+            "pip_p", "pip_theta", "pip_phi",
+            "pip_px", "pip_py", "pip_pz",
+            "pip_pcor", "pip_thetacor", "pip_phicor",
+            "pip_beta", "pip_mass2",
+            "pip_charge", "pip_chi2",
+            "pip_sec", "pip_sys", "pip_tof"
+        ]
+    },
+    
+    // Negative pion variables (prefix: pim_)
+    "pion_minus": {
+        "prefix": "pim_",
+        "variables": [
+            "pim_p", "pim_theta", "pim_phi",
+            "pim_px", "pim_py", "pim_pz",
+            "pim_pcor", "pim_thetacor", "pim_phicor",
+            "pim_beta", "pim_mass2",
+            "pim_charge", "pim_chi2",
+            "pim_sec", "pim_sys", "pim_tof"
+        ]
+    },
+    
+    // Electron variables (prefix: em_)
+    "electron": {
+        "prefix": "em_",
+        "variables": [
+            "em_p", "em_theta", "em_phi",
+            "em_px", "em_py", "em_pz",
+            "em_pcor", "em_thetacor", "em_phicor",
+            "em_beta", "em_mass2",
+            "em_charge", "em_chi2",
+            "em_sec", "em_sys",
+            "em_rich_qual", "em_rich_np",
+            "em_mdcdedx"
+        ]
+    },
+    
+    // Positron variables (prefix: ep_)
+    "positron": {
+        "prefix": "ep_",
+        "variables": [
+            "ep_p", "ep_theta", "ep_phi",
+            "ep_px", "ep_py", "ep_pz",
+            "ep_pcor", "ep_thetacor", "ep_phicor",
+            "ep_beta", "ep_mass2",
+            "ep_charge", "ep_chi2",
+            "ep_sec", "ep_sys",
+            "ep_rich_qual", "ep_rich_np",
+            "ep_mdcdedx"
+        ]
+    },
+    
+    // Event-level variables
+    "event": {
+        "prefix": "",
+        "variables": [
+            "trg", "day", "hour",
+            "evtnbr", "seqnbr",
+            "vtx_x", "vtx_y", "vtx_z",
+            "vtx_chi2",
+            "weight"
+        ]
+    },
+    
+    // Reaction variables (computed quantities)
+    "reaction": {
+        "prefix": "",
+        "variables": [
+            "miss_mass", "miss_p", "miss_theta", "miss_phi",
+            "inv_mass_pp", "inv_mass_ppip",
+            "opening_angle"
+        ]
+    }
+}
