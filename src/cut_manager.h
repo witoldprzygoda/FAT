@@ -344,8 +344,8 @@ public:
         os << "╔════════════════════════════════════════════════════════════════╗\n";
         os << "║                       CUT FLOW SUMMARY                         ║\n";
         os << "╠════════════════════════════════════════════════════════════════╣\n";
-        os << "║ Cut Name                   │ Tested   │ Passed   │ Efficiency ║\n";
-        os << "╠────────────────────────────┼──────────┼──────────┼────────────╣\n";
+        os << "║ Cut Name                   │ Tested   │ Passed   │ Efficiency  ║\n";
+        os << "╠────────────────────────────┼──────────┼──────────┼─────────────╣\n";
         
         // Range cuts
         for (const auto& p : range_cuts_) {
@@ -354,7 +354,7 @@ public:
                << " │ " << std::right << std::setw(8) << c.tested
                << " │ " << std::setw(8) << c.passed
                << " │ " << std::setw(9) << std::fixed << std::setprecision(2) 
-               << (c.efficiency() * 100) << "% ║\n";
+               << (c.efficiency() * 100) << "%  ║\n";
         }
         
         // Trigger cuts
@@ -364,7 +364,7 @@ public:
                << " │ " << std::right << std::setw(8) << c.tested
                << " │ " << std::setw(8) << c.passed
                << " │ " << std::setw(9) << std::fixed << std::setprecision(2) 
-               << (c.efficiency() * 100) << "% ║\n";
+               << (c.efficiency() * 100) << "%  ║\n";
         }
         
         // Graphical cuts
@@ -374,7 +374,7 @@ public:
                << " │ " << std::right << std::setw(8) << c.tested
                << " │ " << std::setw(8) << c.passed
                << " │ " << std::setw(9) << std::fixed << std::setprecision(2) 
-               << (c.efficiency() * 100) << "% ║\n";
+               << (c.efficiency() * 100) << "%  ║\n";
         }
         
         os << "╚════════════════════════════════════════════════════════════════╝\n";

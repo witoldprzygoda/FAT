@@ -7,6 +7,7 @@
 //
 // Setup code is in separate files:
 // - src/setup_histograms.h: Histogram definitions
+// - src/setup_ntuples.h: Ntuple definitions
 // - src/setup_cuts.h: Cut definitions
 //
 // Usage:
@@ -25,6 +26,7 @@
 #include "src/cut_manager.h"
 #include "src/analysis_config.h"
 #include "src/setup_histograms.h"
+#include "src/setup_ntuples.h"
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
 #include <iostream>
@@ -201,6 +203,73 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Gottfried-Jackson: angle relative to beam in composite frame
     double gj_angle = pip_in_ppip.vec().Angle(proj_in_ppip.vec().Vect());
     mgr.fill("pwa_pip_gj_ppip", cos(gj_angle));
+    
+    // ========================================================================
+    // 8. FILL OUTPUT NTUPLES
+    // ========================================================================
+    // Two ntuples demonstrate multiple TTree→TNtuple handling
+    
+    // --- Ntuple 1: Basic particle observables ---
+    DynamicHNtuple& nt_particles = mgr.getDynamicNtuple("nt_particles");
+    
+    // Proton observables (LAB)
+    nt_particles["p_p"] = proton.momentum();
+    nt_particles["p_theta"] = proton.theta();
+    nt_particles["p_phi"] = proton.phi();
+    nt_particles["p_mass"] = m_p;
+    
+    // Pion observables (LAB)
+    nt_particles["pip_p"] = pion.momentum();
+    nt_particles["pip_theta"] = pion.theta();
+    nt_particles["pip_phi"] = pion.phi();
+    nt_particles["pip_mass"] = m_pip;
+    
+    // Neutron observables (missing mass)
+    nt_particles["n_p"] = neutron.momentum();
+    nt_particles["n_theta"] = neutron.theta();
+    nt_particles["n_phi"] = neutron.phi();
+    nt_particles["n_mass"] = m_n;
+    
+    // Event weight
+    nt_particles["weight"] = weight;
+    
+    nt_particles.fill();
+    
+    // --- Ntuple 2: Compound observables ---
+    DynamicHNtuple& nt_compound = mgr.getDynamicNtuple("nt_compound");
+    
+    // Composite masses
+    nt_compound["m_deltaPP"] = m_deltaPP;
+    nt_compound["m_deltaP"] = deltaP.massGeV();
+    nt_compound["m_ppip"] = p_pip.massGeV();
+    nt_compound["m_npip"] = n_pip.massGeV();
+    nt_compound["m_pn"] = pn.massGeV();
+    
+    // CMS angles (composite particles)
+    nt_compound["cos_th_deltaPP_cms"] = deltaPP_cms.cosTheta();
+    nt_compound["cos_th_deltaP_cms"] = deltaP_cms.cosTheta();
+    nt_compound["cos_th_p_cms"] = p_cms.cosTheta();
+    nt_compound["cos_th_pip_cms"] = pip_cms.cosTheta();
+    nt_compound["cos_th_n_cms"] = n_cms.cosTheta();
+    
+    // Opening angles
+    nt_compound["oa_ppip"] = proton.openingAngle(pion);
+    nt_compound["oa_npip"] = neutron.openingAngle(pion);
+    nt_compound["oa_pn"] = proton.openingAngle(neutron);
+    
+    // PWA variables (helicity and Gottfried-Jackson angles)
+    nt_compound["pip_helicity"] = pip_in_ppip.cosTheta();
+    nt_compound["pip_gj"] = cos(gj_angle);
+    nt_compound["n_helicity"] = n_in_ppip.cosTheta();
+    
+    // Dalitz plot variables (squared masses)
+    nt_compound["m2_ppip"] = m2_ppip;
+    nt_compound["m2_npip"] = m2_npip;
+    
+    // Event weight
+    nt_compound["weight"] = weight;
+    
+    nt_compound.fill();
 }
 
 // ============================================================================
@@ -215,7 +284,7 @@ int main(int argc, char* argv[]) {
     std::cout << "╔══════════════════════════════════════════════════════════════════╗\n";
     std::cout << "║                                                                  ║\n";
     std::cout << "║     FAT Framework - Final Analysis Tool                          ║\n";
-    std::cout << "║     pp → ppπ+ (n missing) Analysis                               ║\n";
+    std::cout << "║     pp → npπ+ (n missing) Analysis                               ║\n";
     std::cout << "║                                                                  ║\n";
     std::cout << "╚══════════════════════════════════════════════════════════════════╝\n\n";
     
@@ -290,21 +359,8 @@ int main(int argc, char* argv[]) {
     // Setup histograms (defined in src/setup_histograms.h)
     setupHistograms(manager);
     
-    // Setup output ntuple
-    manager.createNtuple("nt_ppip", "PPip analysis ntuple", "ntuples");
-    HNtuple* nt = manager.getNtuple("nt_ppip");
-    
-    // Define ntuple variables
-    (*nt)["event"] = 0;
-    (*nt)["m_n"] = 0;
-    (*nt)["m_deltaPP"] = 0;
-    (*nt)["m_deltaP"] = 0;
-    (*nt)["cos_th_deltaPP"] = 0;
-    (*nt)["p_p"] = 0;
-    (*nt)["p_theta"] = 0;
-    (*nt)["pip_p"] = 0;
-    (*nt)["pip_theta"] = 0;
-    (*nt)["weight"] = 0;
+    // Setup ntuples (defined in src/setup_ntuples.h)
+    setupNtuples(manager, config);
     
     // ========================================================================
     // 5. SETUP CUTS
@@ -344,7 +400,6 @@ int main(int argc, char* argv[]) {
     std::cout << "\n";
     
     Long64_t processed = 0;
-    Long64_t passed = 0;
     bool was_interrupted = false;
     
     // Progress bar with time estimation
@@ -367,7 +422,6 @@ int main(int argc, char* argv[]) {
         // Process event
         try {
             processEvent(reader, manager, cuts, beam, projectile, frames, use_corrected);
-            ++passed;
         } catch (const std::exception& e) {
             // Skip events with missing variables
             continue;
@@ -384,11 +438,6 @@ int main(int argc, char* argv[]) {
         std::cout << "Processing complete!\n";
     }
     std::cout << "  Events processed: " << processed << "\n";
-    std::cout << "  Passed cuts: " << passed << "\n";
-    if (processed > 0) {
-        std::cout << "  Efficiency: " << std::fixed << std::setprecision(2) 
-                 << (100.0 * passed / processed) << "%\n";
-    }
     
     // ========================================================================
     // 7. PRINT CUT FLOW

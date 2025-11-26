@@ -28,6 +28,7 @@
 #include <TH2.h>
 #include <TH3.h>
 #include "hntuple.h"
+#include "dynamic_hntuple.h"
 #include "histogram_registry.h"
 #include "histogram_factory.h"
 #include "histogram_builder.h"
@@ -48,6 +49,13 @@ public:
     // Destructor (RAII - automatic cleanup)
     // ------------------------------------------------------------------------
     ~Manager() {
+        // Finalize any dynamic ntuples before closing
+        for (auto& pair : dynamic_ntuples_) {
+            if (!pair.second->isFinalized()) {
+                pair.second->finalize();
+            }
+        }
+        
         // Registry uses smart pointers, so cleanup is automatic!
         // No memory leaks (unlike original Manager with commented-out delete)
         if (file_ && file_->IsOpen()) {
@@ -91,6 +99,13 @@ public:
     void closeFile() {
         if (!file_ || !file_->IsOpen()) {
             throw std::runtime_error("Manager::closeFile() - No file is open!");
+        }
+
+        // Finalize all dynamic ntuples (TTree → TNtuple conversion)
+        for (auto& pair : dynamic_ntuples_) {
+            if (!pair.second->isFinalized()) {
+                pair.second->finalize();
+            }
         }
 
         // Write all histograms to file with folder organization
@@ -199,7 +214,7 @@ public:
     // ------------------------------------------------------------------------
 
     /**
-     * @brief Create and register ntuple
+     * @brief Create and register ntuple (original HNtuple - requires prebooking)
      *
      * Example:
      *   manager.createNtuple("events", "Event data", "ntuples");
@@ -217,6 +232,81 @@ public:
         ntuple->setFile(file_.get());
 
         registry_.addNtuple(std::move(ntuple), folder, title);
+    }
+
+    // ------------------------------------------------------------------------
+    // DynamicHNtuple management (RECOMMENDED - no prebooking needed!)
+    // ------------------------------------------------------------------------
+
+    /**
+     * @brief Create DynamicHNtuple - add variables at ANY time!
+     *
+     * Unlike regular HNtuple, DynamicHNtuple allows adding variables at any
+     * point during processing. The structure is finalized at closeFile().
+     *
+     * Example:
+     *   auto& nt = manager.createDynamicNtuple("events", "Event data");
+     *   // In event loop - add ANY variable at ANY time:
+     *   nt["mass"] = mass_value;
+     *   nt["event"] = event_num;
+     *   if (has_rare_condition) {
+     *       nt["rare_var"] = value;  // OK even if first time!
+     *   }
+     *   nt.fill();
+     *
+     * @param name Name of the ntuple
+     * @param title Title/description
+     * @param missing_value Value for variables not set in an event (default: -1)
+     * @param keep_intermediate Keep intermediate TTree file (default: false)
+     * @return Reference to DynamicHNtuple for direct access
+     */
+    DynamicHNtuple& createDynamicNtuple(const std::string& name,
+                                        const std::string& title = "",
+                                        Float_t missing_value = -1.0f,
+                                        bool keep_intermediate = false)
+    {
+        if (!file_ || !file_->IsOpen()) {
+            throw std::runtime_error("Manager::createDynamicNtuple() - No file open! Call openFile() first.");
+        }
+
+        if (dynamic_ntuples_.find(name) != dynamic_ntuples_.end()) {
+            throw std::runtime_error("Manager::createDynamicNtuple() - DynamicNtuple '" + 
+                                   name + "' already exists!");
+        }
+
+        auto ntuple = std::make_unique<DynamicHNtuple>(
+            name, 
+            title.empty() ? name : title,
+            file_.get(),
+            missing_value,
+            keep_intermediate
+        );
+
+        dynamic_ntuples_[name] = std::move(ntuple);
+        return *dynamic_ntuples_[name];
+    }
+
+    /**
+     * @brief Get DynamicHNtuple by name (reference for clean syntax)
+     *
+     * Example:
+     *   auto& nt = manager.getDynamicNtuple("events");
+     *   nt["var"] = value;  // Clean syntax without (*nt)["var"]
+     */
+    DynamicHNtuple& getDynamicNtuple(const std::string& name) {
+        auto it = dynamic_ntuples_.find(name);
+        if (it == dynamic_ntuples_.end()) {
+            throw std::runtime_error("Manager::getDynamicNtuple() - DynamicNtuple '" +
+                                   name + "' not found!");
+        }
+        return *(it->second);
+    }
+
+    /**
+     * @brief Check if DynamicHNtuple exists
+     */
+    bool hasDynamicNtuple(const std::string& name) const {
+        return dynamic_ntuples_.find(name) != dynamic_ntuples_.end();
     }
 
     // ------------------------------------------------------------------------
@@ -304,10 +394,17 @@ public:
     }
 
     /**
-     * @brief Get number of ntuples
+     * @brief Get number of ntuples (HNtuple only)
      */
     size_t ntupleCount() const {
         return registry_.ntupleCount();
+    }
+
+    /**
+     * @brief Get number of dynamic ntuples
+     */
+    size_t dynamicNtupleCount() const {
+        return dynamic_ntuples_.size();
     }
 
     /**
@@ -348,6 +445,9 @@ private:
 
     // Centralized histogram/ntuple storage
     HistogramRegistry registry_;
+
+    // Dynamic ntuples (managed separately due to finalization needs)
+    std::map<std::string, std::unique_ptr<DynamicHNtuple>> dynamic_ntuples_;
 };
 
 #endif // MANAGER_H

@@ -467,6 +467,22 @@ public:
         return config_["output"]["option"].asString("RECREATE");
     }
     
+    /**
+     * @brief Get whether to keep intermediate TTree file
+     * @return true to keep, false to delete after conversion (default: false)
+     */
+    bool getKeepIntermediateTree() const {
+        return config_["output"]["keep_intermediate_tree"].asBool(false);
+    }
+    
+    /**
+     * @brief Get missing value for DynamicHNtuple
+     * @return Sentinel value for missing variables (default: -1.0)
+     */
+    Float_t getMissingValue() const {
+        return static_cast<Float_t>(config_["output"]["missing_value"].asDouble(-1.0));
+    }
+    
     // ========================================================================
     // Beam Configuration
     // ========================================================================
