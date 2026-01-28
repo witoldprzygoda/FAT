@@ -352,7 +352,7 @@ public:
     // ------------------------------------------------------------------------
 
     /**
-     * @brief Fill 1D histogram (shorthand)
+     * @brief Fill 1D histogram (shorthand, no weight)
      *
      * Example:
      *   manager.fill("h_theta", 45.0);
@@ -362,17 +362,46 @@ public:
     }
 
     /**
-     * @brief Fill 2D histogram (shorthand)
+     * @brief Fill 1D histogram with weight
+     *
+     * Example:
+     *   manager.fillw("h_theta", 45.0, weight);
+     *   // Or for cross-section normalization:
+     *   manager.fillw("h_theta", 45.0, event_weight * luminosity);
+     */
+    void fillw(const std::string& name, double value, double weight) {
+        getHistogram(name)->Fill(value, weight);
+    }
+
+    /**
+     * @brief Fill 2D histogram (shorthand, no weight)
      */
     void fill(const std::string& name, double x, double y) {
         getHistogramAs<TH2>(name)->Fill(x, y);
     }
 
     /**
-     * @brief Fill 3D histogram (shorthand)
+     * @brief Fill 2D histogram with weight
+     *
+     * Example:
+     *   manager.fillw("h_xy", x, y, weight);
+     */
+    void fillw(const std::string& name, double x, double y, double weight) {
+        getHistogramAs<TH2>(name)->Fill(x, y, weight);
+    }
+
+    /**
+     * @brief Fill 3D histogram (shorthand, no weight)
      */
     void fill(const std::string& name, double x, double y, double z) {
         getHistogramAs<TH3>(name)->Fill(x, y, z);
+    }
+
+    /**
+     * @brief Fill 3D histogram with weight
+     */
+    void fillw(const std::string& name, double x, double y, double z, double weight) {
+        getHistogramAs<TH3>(name)->Fill(x, y, z, weight);
     }
 
     // ------------------------------------------------------------------------

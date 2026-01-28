@@ -30,6 +30,12 @@
 #include <algorithm>
 #include <cctype>
 
+// Forward declare KinematicType (defined in pparticle.h)
+enum class KinematicType;
+
+// Forward declare ConsoleBox (defined in console_box.h)
+class ConsoleBox;
+
 // ============================================================================
 // Simple JSON Value (lightweight implementation)
 // ============================================================================
@@ -491,6 +497,145 @@ public:
         return config_["beam"]["kinetic_energy"].asDouble(1580.0);
     }
     
+    /**
+     * @brief Get luminosity scaling factor for histograms
+     * @return Luminosity factor (default: 1.0 = no scaling)
+     * 
+     * Used to normalize histograms to absolute cross-section units.
+     * Example: If luminosity = 2.5e-3, all histogram fills will be scaled
+     * by this factor when using weighted fill methods.
+     */
+    double getLuminosity() const {
+        return config_["beam"]["luminosity"].asDouble(1.0);
+    }
+    
+    // ========================================================================
+    // Kinematics Configuration
+    // ========================================================================
+    
+    /**
+     * @brief Check if RECONSTRUCTED kinematic type is enabled
+     * @return true if reconstructed data should be loaded (default: true)
+     */
+    bool hasReconstructed() const {
+        return config_["kinematics"]["reconstructed"].asBool(true);
+    }
+    
+    /**
+     * @brief Check if CORRECTED kinematic type is enabled
+     * @return true if corrected data should be loaded (default: true)
+     */
+    bool hasCorrected() const {
+        return config_["kinematics"]["corrected"].asBool(true);
+    }
+    
+    /**
+     * @brief Check if SIMULATED kinematic type is enabled
+     * @return true if simulated data should be loaded (default: false)
+     */
+    bool hasSimulated() const {
+        return config_["kinematics"]["simulated"].asBool(false);
+    }
+    
+    /**
+     * @brief Get the kinematic type to use for analysis
+     * 
+     * Returns the type specified in config.json under kinematics.analysis_type.
+     * Valid values: "reconstructed", "corrected", "simulated"
+     * Default: RECONSTRUCTED
+     * 
+     * @return KinematicType enum value
+     */
+    KinematicType getAnalysisKinematicType() const {
+        std::string type_str = config_["kinematics"]["analysis_type"].asString("reconstructed");
+        
+        // Convert to lowercase for comparison
+        std::string lower;
+        for (char c : type_str) {
+            lower += std::tolower(static_cast<unsigned char>(c));
+        }
+        
+        if (lower == "corrected") {
+            return KinematicType::CORRECTED;
+        } else if (lower == "simulated") {
+            return KinematicType::SIMULATED;
+        }
+        // Default to RECONSTRUCTED
+        return KinematicType::RECONSTRUCTED;
+    }
+    
+    // ========================================================================
+    // Forward Tracker Configuration
+    // ========================================================================
+    
+    /**
+     * @brief Check if Forward Tracker hit 1 is enabled
+     * @return true if fwdet_1 should be loaded (default: false)
+     */
+    bool hasFwdet1() const {
+        return config_["forward_tracker"]["fwdet_1"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if Forward Tracker hit 2 is enabled
+     * @return true if fwdet_2 should be loaded (default: false)
+     */
+    bool hasFwdet2() const {
+        return config_["forward_tracker"]["fwdet_2"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if Forward Tracker hit 3 is enabled
+     * @return true if fwdet_3 should be loaded (default: false)
+     */
+    bool hasFwdet3() const {
+        return config_["forward_tracker"]["fwdet_3"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if any Forward Tracker hit is enabled
+     * @return true if at least one fwdet is enabled
+     */
+    bool hasAnyFwdet() const {
+        return hasFwdet1() || hasFwdet2() || hasFwdet3();
+    }
+    
+    // ========================================================================
+    // ECAL (Electromagnetic Calorimeter) Configuration
+    // ========================================================================
+    
+    /**
+     * @brief Check if ECAL hit 1 is enabled
+     * @return true if ecal_1 should be loaded (default: false)
+     */
+    bool hasEcal1() const {
+        return config_["ecal"]["ecal_1"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if ECAL hit 2 is enabled
+     * @return true if ecal_2 should be loaded (default: false)
+     */
+    bool hasEcal2() const {
+        return config_["ecal"]["ecal_2"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if ECAL hit 3 is enabled
+     * @return true if ecal_3 should be loaded (default: false)
+     */
+    bool hasEcal3() const {
+        return config_["ecal"]["ecal_3"].asBool(false);
+    }
+    
+    /**
+     * @brief Check if any ECAL hit is enabled
+     * @return true if at least one ecal is enabled
+     */
+    bool hasAnyEcal() const {
+        return hasEcal1() || hasEcal2() || hasEcal3();
+    }
+    
     // ========================================================================
     // Cut Configuration
     // ========================================================================
@@ -621,31 +766,54 @@ public:
     
     void print(std::ostream& os = std::cout) const {
         os << "\n";
+        
+        // Title
         os << "╔════════════════════════════════════════════════════════════════╗\n";
         os << "║                   ANALYSIS CONFIGURATION                       ║\n";
         os << "╠════════════════════════════════════════════════════════════════╣\n";
+        
+        // Config file
         os << "║ Config file: " << std::left << std::setw(50) << config_file_ << "║\n";
         os << "║                                                                ║\n";
+        
+        // Input section
         os << "║ Input:                                                         ║\n";
         std::string source_info = getInputSource();
         if (isInputRootFile()) source_info += " (ROOT file)";
         else if (isInputFileList()) source_info += " (file list)";
-        os << "║   Source: " << std::left << std::setw(53) << source_info << "║\n";
-        os << "║   Tree: " << std::left << std::setw(55) << getInputTreeName() << "║\n";
-        os << "║   Start event: " << std::left << std::setw(48) << getStartEvent() << "║\n";
-        os << "║   Max events: " << std::left << std::setw(49) << getMaxEvents() << "║\n";
+        printConfigLine(os, "Source", source_info);
+        printConfigLine(os, "Tree", getInputTreeName());
+        printConfigLine(os, "Start event", std::to_string(getStartEvent()));
+        printConfigLine(os, "Max events", std::to_string(getMaxEvents()));
         os << "║                                                                ║\n";
+        
+        // Output section
         os << "║ Output:                                                        ║\n";
-        os << "║   File: " << std::left << std::setw(55) << getOutputFilename() << "║\n";
+        printConfigLine(os, "File", getOutputFilename());
         os << "║                                                                ║\n";
+        
+        // Beam section
         os << "║ Beam:                                                          ║\n";
         std::ostringstream ke_str;
         ke_str << getBeamKineticEnergy() << " MeV";
-        os << "║   Kinetic energy: " << std::left << std::setw(45) << ke_str.str() << "║\n";
+        printConfigLine(os, "Kinetic energy", ke_str.str());
+        
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
 
 private:
+    static constexpr int BOX_INNER_WIDTH = 64;  // Inner width of config box
+    
+    void printConfigLine(std::ostream& os, const std::string& label, 
+                        const std::string& value) const {
+        std::string line = "  " + label + ": " + value;
+        int padding = BOX_INNER_WIDTH - static_cast<int>(line.length());
+        if (padding < 0) padding = 0;
+        os << "║" << line;
+        for (int i = 0; i < padding; ++i) os << ' ';
+        os << "║\n";
+    }
+    
     void validate() const {
         // Check for required sections
         if (!config_.has("input")) {

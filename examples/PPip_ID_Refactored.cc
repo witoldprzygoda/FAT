@@ -40,13 +40,13 @@ void ProcessEntries_Refactored()
         PParticle pion = ParticleFactory::createPiPlus(pip_p, pip_theta, pip_phi);
 
         // Set corrected momentum (energy loss corrected)
-        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
-        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, MomentumType::CORRECTED);
+        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, KinematicType::CORRECTED);
+        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, KinematicType::CORRECTED);
 
         // Optional: If MC data, set simulated momentum
         // if (isMC) {
-        //     proton.setFromSpherical(sim_p_p, sim_p_theta, sim_p_phi, MomentumType::SIMULATED);
-        //     pion.setFromSpherical(sim_pip_p, sim_pip_theta, sim_pip_phi, MomentumType::SIMULATED);
+        //     proton.setFromSpherical(sim_p_p, sim_p_theta, sim_p_phi, KinematicType::SIMULATED);
+        //     pion.setFromSpherical(sim_pip_p, sim_pip_theta, sim_pip_phi, KinematicType::SIMULATED);
         // }
 
         // ------------------------------------------------------------------------

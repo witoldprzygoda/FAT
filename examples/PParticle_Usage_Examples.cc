@@ -83,13 +83,13 @@ void example1_particle_creation() {
 
         // Create with reconstructed momentum, then set corrected
         PParticle proton = ParticleFactory::createProton(p_p, p_theta, p_phi);
-        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
+        proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, KinematicType::CORRECTED);
 
         PParticle pion = ParticleFactory::createPiPlus(pip_p, pip_theta, pip_phi);
-        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, MomentumType::CORRECTED);
+        pion.setFromSpherical(pip_p_corr_pip, pip_theta, pip_phi, KinematicType::CORRECTED);
 
-        std::cout << "Proton:  E = " << proton.energy(MomentumType::CORRECTED) << " MeV" << std::endl;
-        std::cout << "Pion+:   E = " << pion.energy(MomentumType::CORRECTED) << " MeV" << std::endl;
+        std::cout << "Proton:  E = " << proton.energy(KinematicType::CORRECTED) << " MeV" << std::endl;
+        std::cout << "Pion+:   E = " << pion.energy(KinematicType::CORRECTED) << " MeV" << std::endl;
     }
 
     // BENEFITS:
@@ -111,24 +111,24 @@ void example2_momentum_variants() {
     PParticle proton(MASS_PROTON, "p");
 
     // Set reconstructed momentum (raw detector data)
-    proton.setFromSpherical(1550.0, 45.0, 30.0, MomentumType::RECONSTRUCTED);
+    proton.setFromSpherical(1550.0, 45.0, 30.0, KinematicType::RECONSTRUCTED);
 
     // Set corrected momentum (energy loss corrected)
-    proton.setFromSpherical(1580.0, 45.0, 30.0, MomentumType::CORRECTED);
+    proton.setFromSpherical(1580.0, 45.0, 30.0, KinematicType::CORRECTED);
 
     // Set simulated momentum (MC truth, if available)
-    proton.setFromSpherical(1575.0, 45.2, 30.1, MomentumType::SIMULATED);
+    proton.setFromSpherical(1575.0, 45.2, 30.1, KinematicType::SIMULATED);
 
     // Access any representation transparently
-    std::cout << "Reconstructed E: " << proton.energy(MomentumType::RECONSTRUCTED) << " MeV" << std::endl;
-    std::cout << "Corrected E:     " << proton.energy(MomentumType::CORRECTED) << " MeV" << std::endl;
-    std::cout << "Simulated E:     " << proton.energy(MomentumType::SIMULATED) << " MeV" << std::endl;
+    std::cout << "Reconstructed E: " << proton.energy(KinematicType::RECONSTRUCTED) << " MeV" << std::endl;
+    std::cout << "Corrected E:     " << proton.energy(KinematicType::CORRECTED) << " MeV" << std::endl;
+    std::cout << "Simulated E:     " << proton.energy(KinematicType::SIMULATED) << " MeV" << std::endl;
 
     // Default is RECONSTRUCTED
     std::cout << "Default E:       " << proton.energy() << " MeV" << std::endl;
 
     // Use corrected for analysis (typical workflow)
-    double analysis_momentum = proton.momentum(MomentumType::CORRECTED);
+    double analysis_momentum = proton.momentum(KinematicType::CORRECTED);
     std::cout << "Analysis momentum: " << analysis_momentum << " MeV/c" << std::endl;
 }
 
@@ -419,12 +419,12 @@ void example8_complete_event_analysis() {
     PParticle proton = ParticleFactory::createProton(
         ntuple.p_p, ntuple.p_theta, ntuple.p_phi);
     proton.setFromSpherical(
-        ntuple.p_p_corr_p, ntuple.p_theta, ntuple.p_phi, MomentumType::CORRECTED);
+        ntuple.p_p_corr_p, ntuple.p_theta, ntuple.p_phi, KinematicType::CORRECTED);
 
     PParticle pion = ParticleFactory::createPiPlus(
         ntuple.pip_p, ntuple.pip_theta, ntuple.pip_phi);
     pion.setFromSpherical(
-        ntuple.pip_p_corr_pip, ntuple.pip_theta, ntuple.pip_phi, MomentumType::CORRECTED);
+        ntuple.pip_p_corr_pip, ntuple.pip_theta, ntuple.pip_phi, KinematicType::CORRECTED);
 
     // Beam setup
     PParticle projectile = ParticleFactory::createBeamProton(1580.0);

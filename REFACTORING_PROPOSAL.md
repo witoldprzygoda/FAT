@@ -167,14 +167,14 @@ Your analysis code (`PPip_ID.cc`, 1,593 total lines) exhibits several patterns t
 PParticle proton(Physics::MASS_PROTON, "p");
 
 // Set different momentum types
-proton.setFromSpherical(1550, 45, 30, MomentumType::RECONSTRUCTED);
-proton.setFromSpherical(1580, 45, 30, MomentumType::CORRECTED);
-proton.setFromSpherical(1575, 45.2, 30.1, MomentumType::SIMULATED);
+proton.setFromSpherical(1550, 45, 30, KinematicType::RECONSTRUCTED);
+proton.setFromSpherical(1580, 45, 30, KinematicType::CORRECTED);
+proton.setFromSpherical(1575, 45.2, 30.1, KinematicType::SIMULATED);
 
 // Access transparently
-double E_reco = proton.energy(MomentumType::RECONSTRUCTED);
-double E_corr = proton.energy(MomentumType::CORRECTED);
-double E_sim = proton.energy(MomentumType::SIMULATED);
+double E_reco = proton.energy(KinematicType::RECONSTRUCTED);
+double E_corr = proton.energy(KinematicType::CORRECTED);
+double E_sim = proton.energy(KinematicType::SIMULATED);
 
 // Default is RECONSTRUCTED
 double E_default = proton.energy();

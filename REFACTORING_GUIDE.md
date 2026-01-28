@@ -61,7 +61,7 @@ v0.SetXYZ(
 
 **After**:
 ```cpp
-proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
+proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, KinematicType::CORRECTED);
 ```
 
 **Impact**: 6 lines → 1 line, eliminates duplicate conversion code.
@@ -78,13 +78,13 @@ Float_t p_sim_p;       // Simulated (if available)
 **After**: Single object with multiple representations:
 ```cpp
 PParticle proton(MASS_PROTON);
-proton.setFromSpherical(p_p, p_theta, p_phi, MomentumType::RECONSTRUCTED);
-proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, MomentumType::CORRECTED);
-proton.setFromSpherical(p_sim_p, p_theta, p_phi, MomentumType::SIMULATED);
+proton.setFromSpherical(p_p, p_theta, p_phi, KinematicType::RECONSTRUCTED);
+proton.setFromSpherical(p_p_corr_p, p_theta, p_phi, KinematicType::CORRECTED);
+proton.setFromSpherical(p_sim_p, p_theta, p_phi, KinematicType::SIMULATED);
 
 // Transparent access
-double E_reco = proton.energy(MomentumType::RECONSTRUCTED);
-double E_corr = proton.energy(MomentumType::CORRECTED);
+double E_reco = proton.energy(KinematicType::RECONSTRUCTED);
+double E_corr = proton.energy(KinematicType::CORRECTED);
 ```
 
 ### 4. Boost Operations
@@ -686,15 +686,15 @@ std::vector<PParticle> boosted = beam_frame.boost(particles);
 
 ```cpp
 // Use corrected for physics analysis
-double E_analysis = proton.energy(MomentumType::CORRECTED);
+double E_analysis = proton.energy(KinematicType::CORRECTED);
 
 // Compare with reconstructed for resolution studies
-double E_reco = proton.energy(MomentumType::RECONSTRUCTED);
+double E_reco = proton.energy(KinematicType::RECONSTRUCTED);
 double resolution = (E_analysis - E_reco) / E_analysis;
 
 // Compare with MC truth (if available)
 if (/* is MC */) {
-    double E_true = proton.energy(MomentumType::SIMULATED);
+    double E_true = proton.energy(KinematicType::SIMULATED);
     double efficiency = E_analysis / E_true;
 }
 ```
@@ -708,13 +708,13 @@ if (/* is MC */) {
 **Error**: `undefined reference to TLorentzVector`
 **Solution**: Ensure ROOT libraries linked: `-lPhysics` in Makefile
 
-**Error**: `'MomentumType' was not declared in this scope`
-**Solution**: Add `#include "src/PParticle.h"`
+**Error**: `'KinematicType' was not declared in this scope`
+**Solution**: Add `#include "src/pparticle.h"`
 
 ### Runtime Errors
 
 **Error**: `Corrected momentum not set`
-**Solution**: Ensure you call `setFromSpherical(..., MomentumType::CORRECTED)` before accessing
+**Solution**: Ensure you call `setFromSpherical(..., KinematicType::CORRECTED)` before accessing
 
 **Error**: `Frame not found: ppip`
 **Solution**: Call `event_frames_.addCompositeFrame("ppip", ...)` before `getFrame("ppip")`

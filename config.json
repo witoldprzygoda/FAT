@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "h68_10.list",  // Can be: .list file, single .root file, or full path
+        "source": "h68_10.list",
         "tree_name": "PPip_ID",
         "start_event": 0,
         "max_events": -1
@@ -12,7 +12,23 @@
         "missing_value": -1.0
     },
     "beam": {
-        // "kinetic_energy": 1580.0
-        "kinetic_energy": 4500.0
+        "kinetic_energy": 4500.0,
+        "luminosity": 1.0
+    },
+    "kinematics": {
+        "reconstructed": true,
+        "corrected": true,
+        "simulated": false,
+        "analysis_type": "reconstructed"
+    },
+    "forward_tracker": {
+        "fwdet_1": false,
+        "fwdet_2": false,
+        "fwdet_3": false
+    },
+    "ecal": {
+        "ecal_1": false,
+        "ecal_2": false,
+        "ecal_3": false
     }
 }

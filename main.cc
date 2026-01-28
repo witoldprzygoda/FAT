@@ -21,6 +21,8 @@
 
 #include "src/manager.h"
 #include "src/pparticle.h"
+#include "src/pparticle_fwd.h"
+#include "src/pparticle_ecal.h"
 #include "src/boost_frame.h"
 #include "src/ntuple_reader.h"
 #include "src/cut_manager.h"
@@ -29,6 +31,8 @@
 #include "src/setup_ntuples.h"
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
+#include "src/console_box.h"
+#include "src/reactionvertexfind.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -53,26 +57,89 @@ using namespace Physics;
 
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const PParticle& beam, const PParticle& projectile,
-                 EventFrames& frames, bool use_corrected) {
+                 EventFrames& frames, const AnalysisConfig& config) {
+    
+    // Get which kinematic type to use for analysis (from config)
+    KinematicType analysis_type = config.getAnalysisKinematicType();
     
     // ========================================================================
-    // 1. READ KINEMATIC VARIABLES FROM NTUPLE
+    // 1. CREATE PARTICLE SHELLS (just mass, no kinematics yet)
     // ========================================================================
-    // These are the ONLY places where reader["..."] is needed.
-    // Variable names must exactly match your tree branch names.
     
-    // Proton kinematics
-    double p_p = use_corrected ? reader["p_p_corr_p"] : reader["p_p"];
-    double p_theta = reader["p_theta"];
-    double p_phi = reader["p_phi"];
+    PParticle proton(Physics::MASS_PROTON, "p");
+    PParticle pion(Physics::MASS_PION_PLUS, "pi+");
     
-    // Pion kinematics
-    double pip_p = use_corrected ? reader["pip_p_corr_pip"] : reader["pip_p"];
-    double pip_theta = reader["pip_theta"];
-    double pip_phi = reader["pip_phi"];
+    // Forward Tracker particles (assume proton mass hypothesis)
+    PParticleFwd fw_p1(Physics::MASS_PROTON, "fw_p1");
+    PParticleFwd fw_p2(Physics::MASS_PROTON, "fw_p2");
+    PParticleFwd fw_p3(Physics::MASS_PROTON, "fw_p3");
     
-    // Event weight (optional)
-    double weight = reader.hasVariable("weight") ? reader["weight"] : 1.0;
+    // ECAL neutral particles (default: photon hypothesis, mass = 0)
+    PParticleEcal ecal_n1(0.0, "ecal_n1");
+    PParticleEcal ecal_n2(0.0, "ecal_n2");
+    PParticleEcal ecal_n3(0.0, "ecal_n3");
+    
+    // ========================================================================
+    // 2. FILL KINEMATIC TYPES BASED ON CONFIG
+    // ========================================================================
+    // Each PParticle can hold multiple representations (RECONSTRUCTED, CORRECTED, SIMULATED)
+    // The config determines which types are populated from the ntuple
+    
+    // --- RECONSTRUCTED kinematics (spherical: p, theta, phi) ---
+    if (config.hasReconstructed()) {
+        proton.setFromSpherical(reader["p_p"], reader["p_theta"], reader["p_phi"],
+                                KinematicType::RECONSTRUCTED);
+        pion.setFromSpherical(reader["pip_p"], reader["pip_theta"], reader["pip_phi"],
+                              KinematicType::RECONSTRUCTED);
+    }
+    
+    // --- CORRECTED kinematics (spherical: only momentum corrected, same angles) ---
+    if (config.hasCorrected()) {
+        proton.setFromSpherical(reader["p_p_corr_p"], reader["p_theta"], reader["p_phi"],
+                                KinematicType::CORRECTED);
+        pion.setFromSpherical(reader["pip_p_corr_pip"], reader["pip_theta"], reader["pip_phi"],
+                              KinematicType::CORRECTED);
+    }
+    
+    // --- SIMULATED kinematics (Cartesian: px, py, pz) ---
+    if (config.hasSimulated()) {
+        proton.setFromCartesian(reader["p_sim_px"], reader["p_sim_py"], reader["p_sim_pz"],
+                                KinematicType::SIMULATED);
+        pion.setFromCartesian(reader["pip_sim_px"], reader["pip_sim_py"], reader["pip_sim_pz"],
+                              KinematicType::SIMULATED);
+    }
+    
+    // --- Forward Tracker particles (if enabled in config) ---
+    // Currently only RECONSTRUCTED; CORRECTED/SIMULATED prepared for future
+    if (config.hasFwdet1()) {
+        fw_p1.setFromReader(reader, 1, KinematicType::RECONSTRUCTED);
+    }
+    if (config.hasFwdet2()) {
+        fw_p2.setFromReader(reader, 2, KinematicType::RECONSTRUCTED);
+    }
+    if (config.hasFwdet3()) {
+        fw_p3.setFromReader(reader, 3, KinematicType::RECONSTRUCTED);
+    }
+    
+    // --- ECAL particles (if enabled in config) ---
+    // Default: photon hypothesis (mass=0, uses energy as momentum)
+    // Currently only RECONSTRUCTED; CORRECTED/SIMULATED prepared for future
+    if (config.hasEcal1()) {
+        ecal_n1.setFromReader(reader, 1, KinematicType::RECONSTRUCTED);
+    }
+    if (config.hasEcal2()) {
+        ecal_n2.setFromReader(reader, 2, KinematicType::RECONSTRUCTED);
+    }
+    if (config.hasEcal3()) {
+        ecal_n3.setFromReader(reader, 3, KinematicType::RECONSTRUCTED);
+    }
+    
+    // ========================================================================
+    // WEIGHTING: Combine event weight with luminosity for cross-section scaling
+    // ========================================================================
+    double event_weight = reader.hasVariable("weight") ? reader["weight"] : 1.0;
+    double luminosity = config.getLuminosity();  // From config.json
+    double weight = event_weight * luminosity;   // Combined weight for all histograms
     
     // Vertex (optional)
     if (reader.hasVariable("eVertX")) {
@@ -80,14 +147,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         mgr.fill("eVertY", reader["eVertY"]);
         mgr.fill("eVertZ", reader["eVertZ"]);
     }
-    
-    // ========================================================================
-    // 2. CREATE PARTICLES
-    // ========================================================================
-    // From here on, use regular C++ variables - no more reader["..."]
-    
-    PParticle proton = ParticleFactory::createProton(p_p, p_theta, p_phi);
-    PParticle pion = ParticleFactory::createPiPlus(pip_p, pip_theta, pip_phi);
     
     // Missing mass technique for neutron
     PParticle neutron = beam - proton - pion;
@@ -102,14 +161,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ========================================================================
     // 3. QUALITY HISTOGRAMS (before cuts)
     // ========================================================================
+    // All getters use analysis_type to select which kinematic representation to use
     
-    double m_n = neutron.massGeV();
-    double m_p = proton.massGeV();
-    double m_pip = pion.massGeV();
+    double m_n = neutron.massGeV(analysis_type);
+    double m_p = proton.massGeV(analysis_type);
+    double m_pip = pion.massGeV(analysis_type);
     
-    mgr.fill("mass_n", m_n);
-    mgr.fill("mass_p", m_p);
-    mgr.fill("mass_pip", m_pip);
+    mgr.fillw("mass_n", m_n, weight);
+    mgr.fillw("mass_p", m_p, weight);
+    mgr.fillw("mass_pip", m_pip, weight);
     
     // ========================================================================
     // 4. APPLY CUTS
@@ -121,10 +181,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     }
     
     // Fill after neutron cut
-    mgr.fill("mass_n_cut", m_n);
+    mgr.fillw("mass_n_cut", m_n, weight);
     
     // Delta++ mass cut
-    double m_deltaPP = deltaPP.massGeV();
+    double m_deltaPP = deltaPP.massGeV(analysis_type);
     if (cuts.hasRangeCut("deltaPP_mass")) {
         if (!cuts.passRangeCut("deltaPP_mass", m_deltaPP)) return;
     }
@@ -144,46 +204,47 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ========================================================================
     // 6. FILL HISTOGRAMS
     // ========================================================================
+    // All accessors use analysis_type to select which kinematic representation
     
     // Composite masses
-    mgr.fill("mass_deltaPP", m_deltaPP);
-    mgr.fill("mass_deltaP", deltaP.massGeV());
-    mgr.fill("mass_ppip", p_pip.massGeV());
-    mgr.fill("mass_npip", n_pip.massGeV());
-    mgr.fill("mass_pn", pn.massGeV());
+    mgr.fillw("mass_deltaPP", m_deltaPP, weight);
+    mgr.fillw("mass_deltaP", deltaP.massGeV(analysis_type), weight);
+    mgr.fillw("mass_ppip", p_pip.massGeV(analysis_type), weight);
+    mgr.fillw("mass_npip", n_pip.massGeV(analysis_type), weight);
+    mgr.fillw("mass_pn", pn.massGeV(analysis_type), weight);
     
     // LAB frame kinematics
-    mgr.fill("p_p_lab", proton.momentum());
-    mgr.fill("pip_p_lab", pion.momentum());
-    mgr.fill("n_p_lab", neutron.momentum());
+    mgr.fillw("p_p_lab", proton.momentum(analysis_type), weight);
+    mgr.fillw("pip_p_lab", pion.momentum(analysis_type), weight);
+    mgr.fillw("n_p_lab", neutron.momentum(analysis_type), weight);
     
-    mgr.fill("p_theta_lab", proton.theta());
-    mgr.fill("pip_theta_lab", pion.theta());
-    mgr.fill("n_theta_lab", neutron.theta());
+    mgr.fillw("p_theta_lab", proton.theta(analysis_type), weight);
+    mgr.fillw("pip_theta_lab", pion.theta(analysis_type), weight);
+    mgr.fillw("n_theta_lab", neutron.theta(analysis_type), weight);
     
     // CMS kinematics
-    mgr.fill("cos_theta_deltaPP_cms", deltaPP_cms.cosTheta());
-    mgr.fill("cos_theta_deltaP_cms", deltaP_cms.cosTheta());
-    mgr.fill("cos_theta_p_cms", p_cms.cosTheta());
-    mgr.fill("cos_theta_pip_cms", pip_cms.cosTheta());
-    mgr.fill("cos_theta_n_cms", n_cms.cosTheta());
+    mgr.fillw("cos_theta_deltaPP_cms", deltaPP_cms.cosTheta(analysis_type), weight);
+    mgr.fillw("cos_theta_deltaP_cms", deltaP_cms.cosTheta(analysis_type), weight);
+    mgr.fillw("cos_theta_p_cms", p_cms.cosTheta(analysis_type), weight);
+    mgr.fillw("cos_theta_pip_cms", pip_cms.cosTheta(analysis_type), weight);
+    mgr.fillw("cos_theta_n_cms", n_cms.cosTheta(analysis_type), weight);
     
-    mgr.fill("p_p_cms", p_cms.momentum());
-    mgr.fill("pip_p_cms", pip_cms.momentum());
-    mgr.fill("n_p_cms", n_cms.momentum());
+    mgr.fillw("p_p_cms", p_cms.momentum(analysis_type), weight);
+    mgr.fillw("pip_p_cms", pip_cms.momentum(analysis_type), weight);
+    mgr.fillw("n_p_cms", n_cms.momentum(analysis_type), weight);
     
     // Opening angles
-    mgr.fill("oa_ppip", proton.openingAngle(pion));
-    mgr.fill("oa_npip", neutron.openingAngle(pion));
-    mgr.fill("oa_pn", proton.openingAngle(neutron));
+    mgr.fillw("oa_ppip", proton.openingAngle(pion, analysis_type), weight);
+    mgr.fillw("oa_npip", neutron.openingAngle(pion, analysis_type), weight);
+    mgr.fillw("oa_pn", proton.openingAngle(neutron, analysis_type), weight);
     
     // 2D correlations
     double m2_ppip = p_pip.mass() * p_pip.mass() / 1e6;  // GeV^2
     double m2_npip = n_pip.mass() * n_pip.mass() / 1e6;  // GeV^2
-    mgr.fill("dalitz_ppip_npip", m2_ppip, m2_npip);
+    mgr.fillw("dalitz_ppip_npip", m2_ppip, m2_npip, weight);
     
-    mgr.fill("mass_vs_costh_deltaPP", m_deltaPP, deltaPP_cms.cosTheta());
-    mgr.fill("theta_p_vs_pip_lab", pion.theta(), proton.theta());
+    mgr.fillw("mass_vs_costh_deltaPP", m_deltaPP, deltaPP_cms.cosTheta(), weight);
+    mgr.fillw("theta_p_vs_pip_lab", pion.theta(), proton.theta(), weight);
     
     // ========================================================================
     // 7. PWA VARIABLES (in composite rest frames)
@@ -197,12 +258,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     PParticle proj_in_ppip = ppip_frame.boost(projectile);
     
     // Helicity angle: pion angle relative to beam direction in ppip frame
-    mgr.fill("pwa_pip_helicity_ppip", pip_in_ppip.cosTheta());
-    mgr.fill("pwa_n_helicity_ppip", n_in_ppip.cosTheta());
+    mgr.fillw("pwa_pip_helicity_ppip", pip_in_ppip.cosTheta(), weight);
+    mgr.fillw("pwa_n_helicity_ppip", n_in_ppip.cosTheta(), weight);
     
     // Gottfried-Jackson: angle relative to beam in composite frame
     double gj_angle = pip_in_ppip.vec().Angle(proj_in_ppip.vec().Vect());
-    mgr.fill("pwa_pip_gj_ppip", cos(gj_angle));
+    mgr.fillw("pwa_pip_gj_ppip", cos(gj_angle), weight);
     
     // ========================================================================
     // 8. FILL OUTPUT NTUPLES
@@ -270,6 +331,98 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_compound["weight"] = weight;
     
     nt_compound.fill();
+    
+    // ========================================================================
+    // 9. REACTION VERTEX FINDING (OPTIONAL - uncomment to use)
+    // ========================================================================
+    // Calculate vertex from track closest approach to beam axis (x=y=0).
+    // Each track has (r, z) = closest distance and z-position to beam axis.
+    // ReactionVertexFind combines N tracks (N >= 2) to find the common vertex.
+    //
+    // UNCOMMENT THE BLOCK BELOW AND ADAPT VARIABLE NAMES TO YOUR NTUPLE:
+    //
+    // /*
+    // // --- Vertex finder setup (can be moved outside event loop for efficiency) ---
+    // static ReactionVertexFind vtxFinder;
+    // 
+    // // Configure cuts (do once, or per-event if needed)
+    // // setCuts(minZ, maxZ, maxR) - z and r acceptance
+    // vtxFinder.setCuts(-120., 20., 15.);  // Default: z in [-120, 20] mm, r < 15 mm
+    // 
+    // // setQualityCuts(maxRKChi2, maxSegChi2, minBeta, maxBeta)
+    // vtxFinder.setQualityCuts(100., 6., 0., 1.2);  // Default quality cuts
+    // 
+    // // To disable all cuts (for testing):
+    // // vtxFinder.setCuts(-1000., 1000., 1000.);       // z: any, r: any
+    // // vtxFinder.setQualityCuts(1e9, 1e9, -10., 10.); // chi2: any, beta: any
+    // 
+    // // --- Set tracks from ntuple (2-track example: proton + pion) ---
+    // // Variable names must match your ntuple branches!
+    // vtxFinder.setTracks2(
+    //     reader["p_r"],   reader["p_z"],   reader["p_theta"],   reader["p_phi"],
+    //     reader["p_rkchi2"],   reader["p_mdcinnerchi2"],   reader["p_beta"],
+    //     reader["pip_r"], reader["pip_z"], reader["pip_theta"], reader["pip_phi"],
+    //     reader["pip_rkchi2"], reader["pip_mdcinnerchi2"], reader["pip_beta"]
+    // );
+    // 
+    // // --- Alternative: 3 tracks (p, pip, pim) ---
+    // // vtxFinder.setTracks3(
+    // //     reader["p_r"],   reader["p_z"],   reader["p_theta"],   reader["p_phi"],
+    // //     reader["p_rkchi2"],   reader["p_mdcinnerchi2"],   reader["p_beta"],
+    // //     reader["pip_r"], reader["pip_z"], reader["pip_theta"], reader["pip_phi"],
+    // //     reader["pip_rkchi2"], reader["pip_mdcinnerchi2"], reader["pip_beta"],
+    // //     reader["pim_r"], reader["pim_z"], reader["pim_theta"], reader["pim_phi"],
+    // //     reader["pim_rkchi2"], reader["pim_mdcinnerchi2"], reader["pim_beta"]
+    // // );
+    // 
+    // // --- Alternative: 4 tracks (pim, pip, em, ep) ---
+    // // vtxFinder.setTracks4(
+    // //     reader["pim_r"], reader["pim_z"], reader["pim_theta"], reader["pim_phi"],
+    // //     reader["pim_rkchi2"], reader["pim_mdcinnerchi2"], reader["pim_beta"],
+    // //     reader["pip_r"], reader["pip_z"], reader["pip_theta"], reader["pip_phi"],
+    // //     reader["pip_rkchi2"], reader["pip_mdcinnerchi2"], reader["pip_beta"],
+    // //     reader["em_r"],  reader["em_z"],  reader["em_theta"],  reader["em_phi"],
+    // //     reader["em_rkchi2"],  reader["em_mdcinnerchi2"],  reader["em_beta"],
+    // //     reader["ep_r"],  reader["ep_z"],  reader["ep_theta"],  reader["ep_phi"],
+    // //     reader["ep_rkchi2"],  reader["ep_mdcinnerchi2"],  reader["ep_beta"]
+    // // );
+    // 
+    // // --- Find vertex and get results ---
+    // if (vtxFinder.findVertex()) {
+    //     // Vertex position
+    //     Float_t vx = vtxFinder.getVx();
+    //     Float_t vy = vtxFinder.getVy();
+    //     Float_t vz = vtxFinder.getVz();
+    //     
+    //     // Quality parameters
+    //     Float_t chi2     = vtxFinder.getChi2();
+    //     Float_t rVertex  = vtxFinder.getRVertex();  // sqrt(vx^2 + vy^2)
+    //     Float_t sumW     = vtxFinder.getSumOfWeights();
+    //     Float_t zSpread  = vtxFinder.getZSpread();
+    //     Int_t   nIter    = vtxFinder.getIterations();
+    //     
+    //     // Per-track info: track index 0 = proton, 1 = pion (order of setTracks2)
+    //     Float_t p_dca   = vtxFinder.getTrackDCA(0);    // Proton distance to vertex
+    //     Float_t pip_dca = vtxFinder.getTrackDCA(1);    // Pion distance to vertex
+    //     
+    //     // Quality check (recommended: chi2 < 2, rVertex < 3 mm)
+    //     Bool_t isGood = vtxFinder.isGoodVertex(2.0, 3.0);
+    //     
+    //     // Fill histograms (create these in setup_histograms.h first!)
+    //     // mgr.fillw("vtx_x", vx, weight);
+    //     // mgr.fillw("vtx_y", vy, weight);
+    //     // mgr.fillw("vtx_z", vz, weight);
+    //     // mgr.fillw("vtx_r", rVertex, weight);
+    //     // mgr.fillw("vtx_chi2", chi2, weight);
+    //     // mgr.fillw("vtx_xy", vx, vy, weight);  // 2D
+    //     
+    //     // Add to ntuple
+    //     // nt_particles["vtx_x"] = vx;
+    //     // nt_particles["vtx_y"] = vy;
+    //     // nt_particles["vtx_z"] = vz;
+    //     // nt_particles["vtx_chi2"] = chi2;
+    // }
+    // */
 }
 
 // ============================================================================
@@ -280,13 +433,10 @@ int main(int argc, char* argv[]) {
     // Install signal handler for graceful Ctrl+C termination
     SignalHandler::install();
     
-    std::cout << "\n";
-    std::cout << "╔══════════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                                                                  ║\n";
-    std::cout << "║     FAT Framework - Final Analysis Tool                          ║\n";
-    std::cout << "║     pp → npπ+ (n missing) Analysis                               ║\n";
-    std::cout << "║                                                                  ║\n";
-    std::cout << "╚══════════════════════════════════════════════════════════════════╝\n\n";
+    ConsoleBox::newLine();
+    ConsoleBox::printHeader("FAT Framework - Final Analysis Tool",
+                           "pp → npπ+ (n missing) Analysis");
+    ConsoleBox::newLine();
     
     // ========================================================================
     // 1. LOAD CONFIGURATION
@@ -386,18 +536,11 @@ int main(int argc, char* argv[]) {
     
     Long64_t events_to_process = end_event - start_event;
     
-    // User decides which momentum to use in processEvent()
-    // Set this flag based on your analysis needs:
-    bool use_corrected = true;  // Change to false for raw momentum
-    
-    std::cout << "\n";
-    std::cout << "┌───────────────────────────────────────────────────────────────┐\n";
-    std::cout << "│  Press Ctrl+C at any time to stop and save partial results    │\n";
-    std::cout << "└───────────────────────────────────────────────────────────────┘\n";
-    std::cout << "\n";
+    ConsoleBox::newLine();
+    ConsoleBox::printInfoBox("Press Ctrl+C at any time to stop and save partial results");
+    ConsoleBox::newLine();
     std::cout << "Processing events " << start_event << " to " << end_event 
-              << " (" << events_to_process << " events)...\n";
-    std::cout << "\n";
+              << " (" << events_to_process << " events)...\n\n";
     
     Long64_t processed = 0;
     bool was_interrupted = false;
@@ -421,7 +564,7 @@ int main(int argc, char* argv[]) {
         
         // Process event
         try {
-            processEvent(reader, manager, cuts, beam, projectile, frames, use_corrected);
+            processEvent(reader, manager, cuts, beam, projectile, frames, config);
         } catch (const std::exception& e) {
             // Skip events with missing variables
             continue;
@@ -453,11 +596,9 @@ int main(int argc, char* argv[]) {
     manager.printSummary();
     manager.closeFile();
     
-    std::cout << "\n";
-    std::cout << "╔══════════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                     Analysis Complete!                           ║\n";
-    std::cout << "╚══════════════════════════════════════════════════════════════════╝\n";
-    std::cout << "\n";
+    ConsoleBox::newLine();
+    ConsoleBox::printStatus("Analysis Complete!");
+    ConsoleBox::newLine();
     
     return 0;
 }

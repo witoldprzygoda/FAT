@@ -44,7 +44,7 @@ public:
      * @param type Which momentum representation to use
      */
     explicit BoostFrame(const PParticle& reference,
-                       MomentumType type = MomentumType::RECONSTRUCTED)
+                       KinematicType type = KinematicType::RECONSTRUCTED)
         : boost_vector_(-reference.boostVector(type)),
           name_(reference.name() + "_frame") {}
 

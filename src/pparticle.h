@@ -28,10 +28,27 @@ namespace Physics {
 }
 
 // ============================================================================
-// Momentum Type Enumeration
+// Kinematic Type Enumeration
 // ============================================================================
-enum class MomentumType {
-    RECONSTRUCTED,  // Default: measured momentum from detector
+/**
+ * @brief Type of kinematic quantities (p, theta, phi)
+ * 
+ * PParticle can store up to 3 representations of kinematic quantities:
+ * - RECONSTRUCTED: Raw detector measurement
+ * - CORRECTED: Energy loss corrected values
+ * - SIMULATED: MC truth (available in simulation)
+ * 
+ * Which types are active is controlled by config.json:
+ * @code
+ * "kinematics": {
+ *     "reconstructed": true,
+ *     "corrected": true,
+ *     "simulated": false
+ * }
+ * @endcode
+ */
+enum class KinematicType {
+    RECONSTRUCTED,  // Default: measured from detector
     CORRECTED,      // Energy loss corrected
     SIMULATED       // MC truth (if available)
 };
@@ -54,8 +71,8 @@ enum class MomentumType {
  * @code
  *   // Create proton from spherical coordinates
  *   PParticle proton(Physics::MASS_PROTON);
- *   proton.setFromSpherical(1580, 45.0, 30.0, MomentumType::RECONSTRUCTED);
- *   proton.setFromSpherical(1590, 45.0, 30.0, MomentumType::CORRECTED);
+ *   proton.setFromSpherical(1580, 45.0, 30.0, KinematicType::RECONSTRUCTED);
+ *   proton.setFromSpherical(1590, 45.0, 30.0, KinematicType::CORRECTED);
  *
  *   // Boost to beam rest frame
  *   TVector3 beam_beta(0, 0, 0.85);
@@ -114,7 +131,7 @@ public:
      * @param type Which momentum representation to set
      */
     void setFromSpherical(double p, double theta_deg, double phi_deg,
-                         MomentumType type = MomentumType::RECONSTRUCTED) {
+                         KinematicType type = KinematicType::RECONSTRUCTED) {
         TVector3 p3 = sphericalToCartesian(p, theta_deg, phi_deg);
         setFromVector(p3, type);
     }
@@ -122,23 +139,23 @@ public:
     /**
      * @brief Set momentum from 3-vector
      * @param p3 Three-momentum vector
-     * @param type Which momentum representation to set
+     * @param type Which kinematic representation to set
      */
     void setFromVector(const TVector3& p3,
-                      MomentumType type = MomentumType::RECONSTRUCTED) {
+                      KinematicType type = KinematicType::RECONSTRUCTED) {
         TLorentzVector p4;
         p4.SetVectM(p3, mass_);
 
         switch (type) {
-            case MomentumType::RECONSTRUCTED:
+            case KinematicType::RECONSTRUCTED:
                 p4_reconstructed_ = p4;
                 lab_frame_reconstructed_ = p4;
                 break;
-            case MomentumType::CORRECTED:
+            case KinematicType::CORRECTED:
                 p4_corrected_ = p4;
                 lab_frame_corrected_ = p4;
                 break;
-            case MomentumType::SIMULATED:
+            case KinematicType::SIMULATED:
                 p4_simulated_ = p4;
                 lab_frame_simulated_ = p4;
                 break;
@@ -148,10 +165,10 @@ public:
     /**
      * @brief Set momentum from Cartesian coordinates
      * @param px, py, pz Momentum components in MeV/c
-     * @param type Which momentum representation to set
+     * @param type Which kinematic representation to set
      */
     void setFromCartesian(double px, double py, double pz,
-                         MomentumType type = MomentumType::RECONSTRUCTED) {
+                         KinematicType type = KinematicType::RECONSTRUCTED) {
         TVector3 p3(px, py, pz);
         setFromVector(p3, type);
     }
@@ -166,15 +183,15 @@ public:
      * @return Const reference to TLorentzVector
      * @throws std::runtime_error if requested type not set
      */
-    const TLorentzVector& vec(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    const TLorentzVector& vec(KinematicType type = KinematicType::RECONSTRUCTED) const {
         switch (type) {
-            case MomentumType::RECONSTRUCTED:
+            case KinematicType::RECONSTRUCTED:
                 return p4_reconstructed_;
-            case MomentumType::CORRECTED:
+            case KinematicType::CORRECTED:
                 if (p4_corrected_.E() == 0)
                     throw std::runtime_error("Corrected momentum not set for " + name_);
                 return p4_corrected_;
-            case MomentumType::SIMULATED:
+            case KinematicType::SIMULATED:
                 if (p4_simulated_.E() == 0)
                     throw std::runtime_error("Simulated momentum not set for " + name_);
                 return p4_simulated_;
@@ -186,22 +203,22 @@ public:
      * @brief Get mutable reference to four-momentum
      * @warning Use sparingly; prefer immutable interface
      */
-    TLorentzVector& vecMutable(MomentumType type = MomentumType::RECONSTRUCTED) {
+    TLorentzVector& vecMutable(KinematicType type = KinematicType::RECONSTRUCTED) {
         return const_cast<TLorentzVector&>(vec(type));
     }
 
     /**
      * @brief Get LAB frame momentum (before any boosts)
-     * @param type Momentum representation to retrieve
+     * @param type Kinematic representation to retrieve
      * @return Const reference to LAB frame TLorentzVector
      */
-    const TLorentzVector& labFrame(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    const TLorentzVector& labFrame(KinematicType type = KinematicType::RECONSTRUCTED) const {
         switch (type) {
-            case MomentumType::RECONSTRUCTED:
+            case KinematicType::RECONSTRUCTED:
                 return lab_frame_reconstructed_;
-            case MomentumType::CORRECTED:
+            case KinematicType::CORRECTED:
                 return lab_frame_corrected_;
-            case MomentumType::SIMULATED:
+            case KinematicType::SIMULATED:
                 return lab_frame_simulated_;
         }
         return lab_frame_reconstructed_;
@@ -241,7 +258,7 @@ public:
      * @param type Which momentum representation to use for boost
      */
     void boostToRestFrame(const PParticle& reference_system,
-                         MomentumType type = MomentumType::RECONSTRUCTED) {
+                         KinematicType type = KinematicType::RECONSTRUCTED) {
         TVector3 boost_vec = -reference_system.vec(type).BoostVector();
         boost(boost_vec);
     }
@@ -305,43 +322,56 @@ public:
     // Kinematic Accessors (shortcuts to most common quantities)
     // ========================================================================
 
-    double mass(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double mass(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).M();
     }
 
-    double massGeV(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double massGeV(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).M() / 1000.0;
     }
 
-    double momentum(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double momentum(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).P();
     }
 
-    double energy(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double energy(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).E();
     }
 
-    double theta(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double theta(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).Theta() * Physics::R2D;
     }
 
-    double phi(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double phi(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).Phi() * Physics::R2D;
     }
 
-    double cosTheta(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double cosTheta(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).CosTheta();
     }
 
-    double rapidity(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    // Cartesian momentum components
+    double px(KinematicType type = KinematicType::RECONSTRUCTED) const {
+        return vec(type).Px();
+    }
+
+    double py(KinematicType type = KinematicType::RECONSTRUCTED) const {
+        return vec(type).Py();
+    }
+
+    double pz(KinematicType type = KinematicType::RECONSTRUCTED) const {
+        return vec(type).Pz();
+    }
+
+    double rapidity(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).Rapidity();
     }
 
-    double beta(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    double beta(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).Beta();
     }
 
-    TVector3 boostVector(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    TVector3 boostVector(KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).BoostVector();
     }
 
@@ -356,18 +386,18 @@ public:
      * @return Opening angle in degrees
      */
     double openingAngle(const PParticle& other,
-                       MomentumType type = MomentumType::RECONSTRUCTED) const {
+                       KinematicType type = KinematicType::RECONSTRUCTED) const {
         return vec(type).Angle(other.vec(type).Vect()) * Physics::R2D;
     }
 
     /**
      * @brief Calculate relative angle in azimuthal plane
      * @param other Another particle
-     * @param type Momentum representation to use
+     * @param type Kinematic representation to use
      * @return Delta phi in degrees
      */
     double deltaPhi(const PParticle& other,
-                   MomentumType type = MomentumType::RECONSTRUCTED) const {
+                   KinematicType type = KinematicType::RECONSTRUCTED) const {
         double dphi = vec(type).Phi() - other.vec(type).Phi();
         // Wrap to [-pi, pi]
         while (dphi > TMath::Pi()) dphi -= 2*TMath::Pi();
@@ -381,7 +411,7 @@ public:
     /**
      * @brief Print particle information (for debugging)
      */
-    void print(MomentumType type = MomentumType::RECONSTRUCTED) const {
+    void print(KinematicType type = KinematicType::RECONSTRUCTED) const {
         const TLorentzVector& p4 = vec(type);
         std::cout << "PParticle: " << name_ << std::endl;
         std::cout << "  Mass: " << mass_ << " MeV/c^2" << std::endl;
@@ -436,118 +466,136 @@ private:
 namespace ParticleFactory {
     /**
      * @brief Create proton from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as proton (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as proton
      */
-    inline PParticle createProton(double p, double theta, double phi) {
+    inline PParticle createProton(double p, double theta, double phi,
+                                  KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle proton(Physics::MASS_PROTON, "p");
-        proton.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        proton.setFromSpherical(p, theta, phi, type);
         return proton;
     }
 
     /**
      * @brief Create positive pion from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as pi+ (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as pi+
      */
-    inline PParticle createPiPlus(double p, double theta, double phi) {
+    inline PParticle createPiPlus(double p, double theta, double phi,
+                                  KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle pion(Physics::MASS_PION_PLUS, "pi+");
-        pion.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        pion.setFromSpherical(p, theta, phi, type);
         return pion;
     }
 
     /**
      * @brief Create negative pion from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as pi- (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as pi-
      */
-    inline PParticle createPiMinus(double p, double theta, double phi) {
+    inline PParticle createPiMinus(double p, double theta, double phi,
+                                   KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle pion(Physics::MASS_PION_MINUS, "pi-");
-        pion.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        pion.setFromSpherical(p, theta, phi, type);
         return pion;
     }
 
     /**
      * @brief Create positron (e+) from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as e+ (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as e+
      */
-    inline PParticle createEPlus(double p, double theta, double phi) {
+    inline PParticle createEPlus(double p, double theta, double phi,
+                                 KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle positron(Physics::MASS_POSITRON, "e+");
-        positron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        positron.setFromSpherical(p, theta, phi, type);
         return positron;
     }
 
     /**
      * @brief Create electron (e-) from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as e- (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as e-
      */
-    inline PParticle createEMinus(double p, double theta, double phi) {
+    inline PParticle createEMinus(double p, double theta, double phi,
+                                  KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle electron(Physics::MASS_ELECTRON, "e-");
-        electron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        electron.setFromSpherical(p, theta, phi, type);
         return electron;
     }
 
     /**
      * @brief Create positive muon (mu+) from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as mu+ (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as mu+
      */
-    inline PParticle createMuPlus(double p, double theta, double phi) {
+    inline PParticle createMuPlus(double p, double theta, double phi,
+                                  KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle muon(Physics::MASS_MUON_PLUS, "mu+");
-        muon.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        muon.setFromSpherical(p, theta, phi, type);
         return muon;
     }
 
     /**
      * @brief Create negative muon (mu-) from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as mu- (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as mu-
      */
-    inline PParticle createMuMinus(double p, double theta, double phi) {
+    inline PParticle createMuMinus(double p, double theta, double phi,
+                                   KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle muon(Physics::MASS_MUON_MINUS, "mu-");
-        muon.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        muon.setFromSpherical(p, theta, phi, type);
         return muon;
     }
 
     /**
      * @brief Create deuteron from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as deuteron (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as deuteron
      */
-    inline PParticle createDeuteron(double p, double theta, double phi) {
+    inline PParticle createDeuteron(double p, double theta, double phi,
+                                    KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle deuteron(Physics::MASS_DEUTERON, "d");
-        deuteron.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        deuteron.setFromSpherical(p, theta, phi, type);
         return deuteron;
     }
 
     /**
      * @brief Create triton from TNtuple variables
-     * @param p Reconstructed momentum magnitude
+     * @param p Momentum magnitude
      * @param theta Polar angle in degrees
      * @param phi Azimuthal angle in degrees
-     * @return PParticle configured as triton (with RECONSTRUCTED momentum)
+     * @param type Kinematic type (default: RECONSTRUCTED)
+     * @return PParticle configured as triton
      */
-    inline PParticle createTriton(double p, double theta, double phi) {
+    inline PParticle createTriton(double p, double theta, double phi,
+                                  KinematicType type = KinematicType::RECONSTRUCTED) {
         PParticle triton(Physics::MASS_TRITON, "t");
-        triton.setFromSpherical(p, theta, phi, MomentumType::RECONSTRUCTED);
+        triton.setFromSpherical(p, theta, phi, type);
         return triton;
     }
 

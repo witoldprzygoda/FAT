@@ -58,7 +58,7 @@ The **negative sign** is essential!
 
 ```cpp
 explicit BoostFrame(const PParticle& reference,
-                   MomentumType type = MomentumType::RECONSTRUCTED)
+                   KinematicType type = KinematicType::RECONSTRUCTED)
     : boost_vector_(-reference.boostVector(type)),  // ← NEGATIVE SIGN HERE!
       name_(reference.name() + "_frame") {}
 ```
@@ -155,7 +155,7 @@ BoostFrame ppip_frame(p_pip);
 
 **Inside BoostFrame constructor:**
 ```cpp
-boost_vector_ = -p_pip.boostVector(MomentumType::RECONSTRUCTED);
+boost_vector_ = -p_pip.boostVector(KinematicType::RECONSTRUCTED);
 ```
 
 If `p_pip.boostVector()` returns `(0.1, 0.2, 0.3)`, then:
