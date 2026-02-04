@@ -1,6 +1,6 @@
 /**
  * @file setup_ntuples.h
- * @brief Ntuple definitions for the analysis
+ * @brief Ntuple definitions for the e+e- dilepton analysis with ECAL photons
  *
  * This file defines all output ntuples for the analysis.
  * Similar to setup_histograms.h, it keeps ntuple definitions
@@ -28,7 +28,7 @@
 #include "analysis_config.h"
 
 /**
- * @brief Setup all output ntuples
+ * @brief Setup all output ntuples for e+e- dilepton analysis with ECAL
  *
  * Define your analysis ntuples here. Each ntuple:
  * - Uses intermediate TTree (supports dynamic variable addition)
@@ -38,50 +38,72 @@
  * @param manager Reference to the Manager
  * @param config Reference to AnalysisConfig (for missing_value and keep_intermediate options)
  *
- * Example adding a new ntuple:
- * @code
- *   manager.createDynamicNtuple(
- *       "nt_systematics",           // name
- *       "Systematic checks",        // title
- *       config.getMissingValue(),   // sentinel for missing values
- *       config.getKeepIntermediateTree()  // keep TTree file?
- *   );
- * @endcode
+ * Ntuple contents:
+ *
+ * nt_particles:
+ *   - ep_p, ep_theta, ep_phi, ep_mass      (positron)
+ *   - em_p, em_theta, em_phi, em_mass      (electron)
+ *   - ee_p, ee_theta, ee_phi, ee_mass      (dilepton)
+ *   - oa_epem                               (opening angle)
+ *   - n_gamma, n_gamma_good                 (photon multiplicity)
+ *   - g1_energy, g1_theta, g1_phi, g1_good  (gamma1)
+ *   - g2_energy, g2_theta, g2_phi, g2_good  (gamma2)
+ *   - g3_energy, g3_theta, g3_phi, g3_good  (gamma3)
+ *   - weight
+ *
+ * nt_compound:
+ *   - m_ee, ee_pt, ee_rapidity              (dilepton)
+ *   - cos_th_ee_cms, cos_th_ep_cms, cos_th_em_cms  (CMS angles)
+ *   - oa_epem                               (opening angle)
+ *   - m_eeg1, m_eeg2, m_eeg3                (e+e-gamma invariant masses)
+ *   - m_gg, oa_gg, pi0_energy, pi0_theta    (pi0 reconstruction from gamma-gamma)
+ *   - ep_helicity, ep_gj, em_helicity       (PWA variables)
+ *   - weight
  */
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
-    
+
     // ========================================================================
-    // Ntuple 1: Basic particle observables (p, π+, n)
+    // Ntuple 1: Basic particle observables (e+, e-, e+e-, gammas)
     // ========================================================================
-    // Contains: momenta, angles, masses of individual particles
-    
+    // Contains: momenta, angles, masses of individual leptons, dilepton,
+    // and ECAL photon candidates
+
     manager.createDynamicNtuple(
         "nt_particles",
-        "Basic particle observables",
+        "Lepton and photon observables",
         config.getMissingValue(),
         config.getKeepIntermediateTree()
     );
-    
+
     // ========================================================================
-    // Ntuple 2: Compound observables (Δ++, Δ+, pπ+, etc.)
+    // Ntuple 2: Compound observables (dilepton kinematics, e+e-gamma, PWA)
     // ========================================================================
-    // Contains: composite masses, CMS angles, opening angles, PWA variables
-    
+    // Contains: dilepton mass, pt, rapidity, CMS angles, e+e-gamma masses,
+    // PWA variables
+
     manager.createDynamicNtuple(
         "nt_compound",
-        "Compound particle observables",
+        "Dilepton and e+e-gamma observables",
         config.getMissingValue(),
         config.getKeepIntermediateTree()
     );
-    
+
     // ========================================================================
     // Additional ntuples (examples - uncomment to use)
     // ========================================================================
-    
+
     // Control distributions ntuple
     // manager.createDynamicNtuple(
     //     "nt_control",
     //     "Control distributions",
+    //     config.getMissingValue(),
+    //     config.getKeepIntermediateTree()
+    // );
+
+    // Efficiency ntuple (for acceptance studies)
+    // manager.createDynamicNtuple(
+    //     "nt_efficiency",
+    //     "Efficiency variables",
     //     config.getMissingValue(),
     //     config.getKeepIntermediateTree()
     // );

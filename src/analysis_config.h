@@ -398,33 +398,82 @@ public:
     // ========================================================================
     
     /**
-     * @brief Get input source path (can be .root file or .list file)
-     * @return Path to input source
+     * @brief Get input source path (can be .root file, .list file, or comma-separated .root files)
+     * @return Path to input source (first file if multiple)
+     *
+     * Supported formats:
+     * - Single ROOT file: "source": "file.root"
+     * - File list: "source": "files.list"
+     * - Comma-separated: "source": "file1.root, file2.root, file3.root"
+     * - JSON array: "source": ["file1.root", "file2.root"]
      */
     std::string getInputSource() const {
-        return config_["input"]["source"].asString();
+        // Check if source is a JSON array
+        const JsonValue& source_val = config_["input"]["source"];
+        if (source_val.isArray() && source_val.size() > 0) {
+            return source_val[0].asString();
+        }
+        return source_val.asString();
     }
-    
+
     /**
-     * @brief Check if input is a single ROOT file
-     * @return true if source ends with .root
+     * @brief Check if input is ROOT file(s) - single, comma-separated, or array
+     * @return true if any source contains .root
      */
     bool isInputRootFile() const {
-        std::string source = getInputSource();
-        return source.size() >= 5 && 
-               source.substr(source.size() - 5) == ".root";
+        const JsonValue& source_val = config_["input"]["source"];
+
+        // JSON array of ROOT files
+        if (source_val.isArray()) {
+            if (source_val.size() > 0) {
+                std::string first = source_val[0].asString();
+                return first.size() >= 5 && first.substr(first.size() - 5) == ".root";
+            }
+            return false;
+        }
+
+        // String - could be single file, list, or comma-separated
+        std::string source = source_val.asString();
+
+        // Check for comma-separated (contains comma and .root)
+        if (source.find(',') != std::string::npos && source.find(".root") != std::string::npos) {
+            return true;
+        }
+
+        // Single file ending with .root
+        return source.size() >= 5 && source.substr(source.size() - 5) == ".root";
     }
-    
+
     /**
-     * @brief Check if input is a file list
+     * @brief Check if input is a file list (.list file)
      * @return true if source ends with .list
      */
     bool isInputFileList() const {
-        std::string source = getInputSource();
-        return source.size() >= 5 && 
+        const JsonValue& source_val = config_["input"]["source"];
+        if (source_val.isArray()) return false;
+
+        std::string source = source_val.asString();
+        return source.size() >= 5 &&
                source.substr(source.size() - 5) == ".list";
     }
-    
+
+    /**
+     * @brief Check if input is multiple ROOT files (comma-separated or array)
+     * @return true if multiple ROOT files specified
+     */
+    bool isInputMultipleRootFiles() const {
+        const JsonValue& source_val = config_["input"]["source"];
+
+        // JSON array with multiple files
+        if (source_val.isArray() && source_val.size() > 1) {
+            return true;
+        }
+
+        // Comma-separated string
+        std::string source = source_val.asString();
+        return source.find(',') != std::string::npos && source.find(".root") != std::string::npos;
+    }
+
     /**
      * @brief Get input file list path (for backward compatibility)
      * @return Path if source is .list file, empty otherwise
@@ -432,16 +481,57 @@ public:
     std::string getInputFileList() const {
         return isInputFileList() ? getInputSource() : "";
     }
-    
+
     /**
-     * @brief Get input files as vector
-     * @return Vector with single .root file or empty if using .list
+     * @brief Get all input ROOT files as vector
+     * @return Vector of ROOT file paths (handles single, comma-separated, and array formats)
+     *
+     * Examples:
+     * - "file.root" → ["file.root"]
+     * - "a.root, b.root" → ["a.root", "b.root"]
+     * - ["a.root", "b.root"] → ["a.root", "b.root"]
      */
     std::vector<std::string> getInputFiles() const {
         std::vector<std::string> files;
-        if (isInputRootFile()) {
-            files.push_back(getInputSource());
+        const JsonValue& source_val = config_["input"]["source"];
+
+        // JSON array format
+        if (source_val.isArray()) {
+            for (size_t i = 0; i < source_val.size(); ++i) {
+                std::string file = source_val[i].asString();
+                // Trim whitespace
+                file.erase(0, file.find_first_not_of(" \t"));
+                file.erase(file.find_last_not_of(" \t") + 1);
+                if (!file.empty()) {
+                    files.push_back(file);
+                }
+            }
+            return files;
         }
+
+        // String format
+        std::string source = source_val.asString();
+
+        // Check for comma-separated files
+        if (source.find(',') != std::string::npos && source.find(".root") != std::string::npos) {
+            std::stringstream ss(source);
+            std::string file;
+            while (std::getline(ss, file, ',')) {
+                // Trim whitespace
+                file.erase(0, file.find_first_not_of(" \t"));
+                file.erase(file.find_last_not_of(" \t") + 1);
+                if (!file.empty()) {
+                    files.push_back(file);
+                }
+            }
+            return files;
+        }
+
+        // Single ROOT file
+        if (isInputRootFile()) {
+            files.push_back(source);
+        }
+
         return files;
     }
     
@@ -778,10 +868,16 @@ public:
         
         // Input section
         os << "║ Input:                                                         ║\n";
-        std::string source_info = getInputSource();
-        if (isInputRootFile()) source_info += " (ROOT file)";
-        else if (isInputFileList()) source_info += " (file list)";
-        printConfigLine(os, "Source", source_info);
+        if (isInputMultipleRootFiles()) {
+            std::vector<std::string> files = getInputFiles();
+            std::string source_info = std::to_string(files.size()) + " ROOT files (chain)";
+            printConfigLine(os, "Source", source_info);
+        } else {
+            std::string source_info = getInputSource();
+            if (isInputRootFile()) source_info += " (ROOT file)";
+            else if (isInputFileList()) source_info += " (file list)";
+            printConfigLine(os, "Source", source_info);
+        }
         printConfigLine(os, "Tree", getInputTreeName());
         printConfigLine(os, "Start event", std::to_string(getStartEvent()));
         printConfigLine(os, "Max events", std::to_string(getMaxEvents()));
