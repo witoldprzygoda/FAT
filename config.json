@@ -3,10 +3,10 @@
         "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/epem_049_01_pid.root",
         "tree_name": "EpEm_ID",
         "start_event": 0,
-        "max_events": -1
+        "max_events": 10000
     },
     "output": {
-        "filename": "output_epem.root",
+        "filename": "output_tutorial.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
@@ -17,7 +17,7 @@
     },
     "kinematics": {
         "reconstructed": true,
-        "corrected": true,
+        "corrected": false,
         "simulated": false,
         "analysis_type": "reconstructed"
     },
@@ -27,8 +27,8 @@
         "fwdet_3": false
     },
     "ecal": {
-        "ecal_1": true,
-        "ecal_2": true,
-        "ecal_3": true
+        "ecal_1": false,
+        "ecal_2": false,
+        "ecal_3": false
     }
 }
