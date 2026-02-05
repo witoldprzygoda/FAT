@@ -5,6 +5,7 @@
 //
 // Step 0: Empty framework - just reads events, does nothing
 // Step 1: Create e+ and e- particles from ntuple variables
+// Step 1b: Add CORRECTED kinematics (energy-loss corrected momentum)
 //
 // Usage:
 //   ./ana [config.json]
@@ -60,13 +61,27 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
                               KinematicType::RECONSTRUCTED);
 
-    // Now positron and electron have their 4-momenta set.
-    // We can access their properties:
-    //   positron.momentum()  - |p| in MeV/c
-    //   positron.theta()     - polar angle in degrees
-    //   positron.phi()       - azimuthal angle in degrees
-    //   positron.energy()    - E in MeV
-    //   positron.mass()      - invariant mass in MeV/c²
+    // ========================================================================
+    // STEP 1b: Add CORRECTED kinematics
+    // ========================================================================
+    // Energy-loss corrected momentum - same angles, different |p|
+    // The correction accounts for energy lost in detector material.
+    //
+    // PParticle can store MULTIPLE kinematic representations simultaneously!
+    // This allows comparing reconstructed vs corrected in the same analysis.
+
+    positron.setFromSpherical(reader["ep_p_corr_ep"], reader["ep_theta"], reader["ep_phi"],
+                              KinematicType::CORRECTED);
+
+    electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
+                              KinematicType::CORRECTED);
+
+    // Now each particle has TWO momentum representations:
+    //   positron.momentum(KinematicType::RECONSTRUCTED)  - raw measurement
+    //   positron.momentum(KinematicType::CORRECTED)      - energy-loss corrected
+    //
+    // Default (no argument) uses RECONSTRUCTED:
+    //   positron.momentum() == positron.momentum(KinematicType::RECONSTRUCTED)
 
 }
 

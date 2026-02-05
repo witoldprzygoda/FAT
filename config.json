@@ -17,7 +17,7 @@
     },
     "kinematics": {
         "reconstructed": true,
-        "corrected": false,
+        "corrected": true,
         "simulated": false,
         "analysis_type": "reconstructed"
     },
