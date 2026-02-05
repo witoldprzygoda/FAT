@@ -3,7 +3,7 @@
         "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/epem_049_01_pid.root",
         "tree_name": "EpEm_ID",
         "start_event": 0,
-        "max_events": 10000
+        "max_events": 1000000
     },
     "output": {
         "filename": "output_tutorial.root",

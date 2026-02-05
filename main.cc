@@ -6,6 +6,8 @@
 // Step 0: Empty framework - just reads events, does nothing
 // Step 1: Create e+ and e- particles from ntuple variables
 // Step 1b: Add CORRECTED kinematics (energy-loss corrected momentum)
+// Step 2: Add first histograms (lepton momentum)
+// Step 2b: Add 2D histograms (momentum correction vs momentum)
 //
 // Usage:
 //   ./ana [config.json]
@@ -82,6 +84,34 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //
     // Default (no argument) uses RECONSTRUCTED:
     //   positron.momentum() == positron.momentum(KinematicType::RECONSTRUCTED)
+
+    // ========================================================================
+    // STEP 2: Fill histograms
+    // ========================================================================
+    // mgr.fill(histogram_name, value) - fill histogram with value
+    //
+    // We use positron.momentum() which returns |p| in MeV/c
+
+    mgr.fill("ep_p", positron.momentum());   // positron momentum
+    mgr.fill("em_p", electron.momentum());   // electron momentum
+
+    // ========================================================================
+    // STEP 2b: Fill 2D histograms - momentum correction
+    // ========================================================================
+    // mgr.fill(histogram_name, x_value, y_value) - fill 2D histogram
+    //
+    // Calculate: delta_p = p_corrected - p_reconstructed
+
+    double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
+    double ep_p_cor = positron.momentum(KinematicType::CORRECTED);
+    double ep_dp = ep_p_cor - ep_p_rec;
+
+    double em_p_rec = electron.momentum(KinematicType::RECONSTRUCTED);
+    double em_p_cor = electron.momentum(KinematicType::CORRECTED);
+    double em_dp = em_p_cor - em_p_rec;
+
+    mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);   // positron correction vs p
+    mgr.fill("em_dp_vs_p", em_p_rec, em_dp);   // electron correction vs p
 
 }
 
