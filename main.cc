@@ -1,9 +1,10 @@
 // ========================================================================
-// FAT Framework - Tutorial Starting Point
+// FAT Framework - Tutorial
 // ========================================================================
-// This is a minimal analysis skeleton for the step-by-step tutorial.
+// Step-by-step analysis development.
 //
 // Step 0: Empty framework - just reads events, does nothing
+// Step 1: Create e+ and e- particles from ntuple variables
 //
 // Usage:
 //   ./ana [config.json]
@@ -38,10 +39,34 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
     // ========================================================================
-    // STEP 0: Empty - just count events
+    // STEP 1: Create e+ and e- particles
     // ========================================================================
-    // The framework reads each event, but we don't do anything yet.
-    // This is the starting point for the tutorial.
+    // PParticle is a class that represents a particle with 4-momentum.
+    // We create "shells" with the particle mass, then fill kinematics.
+    //
+    // The EpEm_ID ntuple contains:
+    //   ep_p, ep_theta, ep_phi  - positron momentum (MeV/c) and angles (deg)
+    //   em_p, em_theta, em_phi  - electron momentum (MeV/c) and angles (deg)
+
+    // Create particle shells (just mass, no kinematics yet)
+    PParticle positron(MASS_ELECTRON, "e+");   // e+ has same mass as e-
+    PParticle electron(MASS_ELECTRON, "e-");
+
+    // Fill kinematics from ntuple variables
+    // setFromSpherical(momentum, theta, phi, kinematic_type)
+    positron.setFromSpherical(reader["ep_p"], reader["ep_theta"], reader["ep_phi"],
+                              KinematicType::RECONSTRUCTED);
+
+    electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
+                              KinematicType::RECONSTRUCTED);
+
+    // Now positron and electron have their 4-momenta set.
+    // We can access their properties:
+    //   positron.momentum()  - |p| in MeV/c
+    //   positron.theta()     - polar angle in degrees
+    //   positron.phi()       - azimuthal angle in degrees
+    //   positron.energy()    - E in MeV
+    //   positron.mass()      - invariant mass in MeV/c²
 
 }
 
