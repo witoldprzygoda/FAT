@@ -80,14 +80,14 @@ struct TriggerCut {
     int mask;
     bool require_all = false;  // AND vs OR logic
     bool active = true;
-    
+
     mutable Long64_t tested = 0;
     mutable Long64_t passed = 0;
-    
+
     TriggerCut() : mask(0) {}
     TriggerCut(const std::string& n, int m, bool all = false, const std::string& desc = "")
         : name(n), description(desc), mask(m), require_all(all) {}
-    
+
     bool pass(int trigger) const {
         ++tested;
         bool result;
@@ -99,11 +99,104 @@ struct TriggerCut {
         if (result) ++passed;
         return result || !active;
     }
-    
+
     double efficiency() const {
         return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
     }
-    
+
+    void reset() { tested = passed = 0; }
+};
+
+/**
+ * @struct ValueCut
+ * @brief Exact value match (value == target)
+ */
+struct ValueCut {
+    std::string name;
+    std::string description;
+    double target;
+    bool active = true;
+
+    mutable Long64_t tested = 0;
+    mutable Long64_t passed = 0;
+
+    ValueCut() : target(0) {}
+    ValueCut(const std::string& n, double t, const std::string& desc = "")
+        : name(n), description(desc), target(t) {}
+
+    bool pass(double value) const {
+        ++tested;
+        bool result = (value == target);
+        if (result) ++passed;
+        return result || !active;
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
+    void reset() { tested = passed = 0; }
+};
+
+/**
+ * @struct MinCut
+ * @brief Lower bound cut (value > min)
+ */
+struct MinCut {
+    std::string name;
+    std::string description;
+    double min;
+    bool active = true;
+
+    mutable Long64_t tested = 0;
+    mutable Long64_t passed = 0;
+
+    MinCut() : min(0) {}
+    MinCut(const std::string& n, double m, const std::string& desc = "")
+        : name(n), description(desc), min(m) {}
+
+    bool pass(double value) const {
+        ++tested;
+        bool result = (value > min);
+        if (result) ++passed;
+        return result || !active;
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
+    void reset() { tested = passed = 0; }
+};
+
+/**
+ * @struct MaxCut
+ * @brief Upper bound cut (value < max)
+ */
+struct MaxCut {
+    std::string name;
+    std::string description;
+    double max;
+    bool active = true;
+
+    mutable Long64_t tested = 0;
+    mutable Long64_t passed = 0;
+
+    MaxCut() : max(0) {}
+    MaxCut(const std::string& n, double m, const std::string& desc = "")
+        : name(n), description(desc), max(m) {}
+
+    bool pass(double value) const {
+        ++tested;
+        bool result = (value < max);
+        if (result) ++passed;
+        return result || !active;
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
     void reset() { tested = passed = 0; }
 };
 
@@ -229,7 +322,97 @@ public:
         }
         return it->second.pass(trigger);
     }
-    
+
+    // ========================================================================
+    // Value Cuts (exact match: value == target)
+    // ========================================================================
+
+    /**
+     * @brief Define a value cut (exact equality)
+     */
+    void defineValueCut(const std::string& name, double target,
+                        const std::string& description = "") {
+        if (value_cuts_.find(name) != value_cuts_.end()) {
+            std::cerr << "Warning: Overwriting existing value cut '" << name << "'\n";
+        }
+        value_cuts_[name] = ValueCut(name, target, description);
+    }
+
+    /**
+     * @brief Test value against value cut
+     */
+    bool passValueCut(const std::string& name, double value) const {
+        auto it = value_cuts_.find(name);
+        if (it == value_cuts_.end()) {
+            throw std::runtime_error("CutManager::passValueCut() - Cut '" + name + "' not defined!");
+        }
+        return it->second.pass(value);
+    }
+
+    bool hasValueCut(const std::string& name) const {
+        return value_cuts_.find(name) != value_cuts_.end();
+    }
+
+    // ========================================================================
+    // Min Cuts (lower bound: value > min)
+    // ========================================================================
+
+    /**
+     * @brief Define a min cut (value > threshold)
+     */
+    void defineMinCut(const std::string& name, double min,
+                      const std::string& description = "") {
+        if (min_cuts_.find(name) != min_cuts_.end()) {
+            std::cerr << "Warning: Overwriting existing min cut '" << name << "'\n";
+        }
+        min_cuts_[name] = MinCut(name, min, description);
+    }
+
+    /**
+     * @brief Test value against min cut
+     */
+    bool passMinCut(const std::string& name, double value) const {
+        auto it = min_cuts_.find(name);
+        if (it == min_cuts_.end()) {
+            throw std::runtime_error("CutManager::passMinCut() - Cut '" + name + "' not defined!");
+        }
+        return it->second.pass(value);
+    }
+
+    bool hasMinCut(const std::string& name) const {
+        return min_cuts_.find(name) != min_cuts_.end();
+    }
+
+    // ========================================================================
+    // Max Cuts (upper bound: value < max)
+    // ========================================================================
+
+    /**
+     * @brief Define a max cut (value < threshold)
+     */
+    void defineMaxCut(const std::string& name, double max,
+                      const std::string& description = "") {
+        if (max_cuts_.find(name) != max_cuts_.end()) {
+            std::cerr << "Warning: Overwriting existing max cut '" << name << "'\n";
+        }
+        max_cuts_[name] = MaxCut(name, max, description);
+    }
+
+    /**
+     * @brief Test value against max cut
+     */
+    bool passMaxCut(const std::string& name, double value) const {
+        auto it = max_cuts_.find(name);
+        if (it == max_cuts_.end()) {
+            throw std::runtime_error("CutManager::passMaxCut() - Cut '" + name + "' not defined!");
+        }
+        return it->second.pass(value);
+    }
+
+    bool hasMaxCut(const std::string& name) const {
+        return max_cuts_.find(name) != max_cuts_.end();
+    }
+
     // ========================================================================
     // 2D Graphical Cuts (TCutG)
     // ========================================================================
@@ -321,6 +504,9 @@ public:
         for (auto& p : range_cuts_) p.second.active = active;
         for (auto& p : trigger_cuts_) p.second.active = active;
         for (auto& p : graphical_cuts_) p.second.active = active;
+        for (auto& p : value_cuts_) p.second.active = active;
+        for (auto& p : min_cuts_) p.second.active = active;
+        for (auto& p : max_cuts_) p.second.active = active;
     }
     
     // ========================================================================
@@ -334,6 +520,9 @@ public:
         for (auto& p : range_cuts_) p.second.reset();
         for (auto& p : trigger_cuts_) p.second.reset();
         for (auto& p : graphical_cuts_) p.second.reset();
+        for (auto& p : value_cuts_) p.second.reset();
+        for (auto& p : min_cuts_) p.second.reset();
+        for (auto& p : max_cuts_) p.second.reset();
     }
     
     /**
@@ -367,16 +556,46 @@ public:
                << (c.efficiency() * 100) << "%  ║\n";
         }
         
+        // Value cuts
+        for (const auto& p : value_cuts_) {
+            const auto& c = p.second;
+            os << "║ " << std::left << std::setw(26) << c.name
+               << " │ " << std::right << std::setw(8) << c.tested
+               << " │ " << std::setw(8) << c.passed
+               << " │ " << std::setw(9) << std::fixed << std::setprecision(2)
+               << (c.efficiency() * 100) << "%  ║\n";
+        }
+
+        // Min cuts
+        for (const auto& p : min_cuts_) {
+            const auto& c = p.second;
+            os << "║ " << std::left << std::setw(26) << c.name
+               << " │ " << std::right << std::setw(8) << c.tested
+               << " │ " << std::setw(8) << c.passed
+               << " │ " << std::setw(9) << std::fixed << std::setprecision(2)
+               << (c.efficiency() * 100) << "%  ║\n";
+        }
+
+        // Max cuts
+        for (const auto& p : max_cuts_) {
+            const auto& c = p.second;
+            os << "║ " << std::left << std::setw(26) << c.name
+               << " │ " << std::right << std::setw(8) << c.tested
+               << " │ " << std::setw(8) << c.passed
+               << " │ " << std::setw(9) << std::fixed << std::setprecision(2)
+               << (c.efficiency() * 100) << "%  ║\n";
+        }
+
         // Graphical cuts
         for (const auto& p : graphical_cuts_) {
             const auto& c = p.second;
-            os << "║ " << std::left << std::setw(26) << c.name 
+            os << "║ " << std::left << std::setw(26) << c.name
                << " │ " << std::right << std::setw(8) << c.tested
                << " │ " << std::setw(8) << c.passed
-               << " │ " << std::setw(9) << std::fixed << std::setprecision(2) 
+               << " │ " << std::setw(9) << std::fixed << std::setprecision(2)
                << (c.efficiency() * 100) << "%  ║\n";
         }
-        
+
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
     
@@ -406,6 +625,36 @@ public:
             }
         }
         
+        if (!value_cuts_.empty()) {
+            os << "Value Cuts:\n";
+            for (const auto& p : value_cuts_) {
+                os << "  " << p.first << ": == " << p.second.target;
+                if (!p.second.description.empty()) os << "  (" << p.second.description << ")";
+                if (!p.second.active) os << " (DISABLED)";
+                os << "\n";
+            }
+        }
+
+        if (!min_cuts_.empty()) {
+            os << "Min Cuts:\n";
+            for (const auto& p : min_cuts_) {
+                os << "  " << p.first << ": > " << p.second.min;
+                if (!p.second.description.empty()) os << "  (" << p.second.description << ")";
+                if (!p.second.active) os << " (DISABLED)";
+                os << "\n";
+            }
+        }
+
+        if (!max_cuts_.empty()) {
+            os << "Max Cuts:\n";
+            for (const auto& p : max_cuts_) {
+                os << "  " << p.first << ": < " << p.second.max;
+                if (!p.second.description.empty()) os << "  (" << p.second.description << ")";
+                if (!p.second.active) os << " (DISABLED)";
+                os << "\n";
+            }
+        }
+
         if (!graphical_cuts_.empty()) {
             os << "Graphical Cuts:\n";
             for (const auto& p : graphical_cuts_) {
@@ -442,6 +691,9 @@ private:
     std::map<std::string, RangeCut> range_cuts_;
     std::map<std::string, TriggerCut> trigger_cuts_;
     std::map<std::string, GraphicalCut> graphical_cuts_;
+    std::map<std::string, ValueCut> value_cuts_;
+    std::map<std::string, MinCut> min_cuts_;
+    std::map<std::string, MaxCut> max_cuts_;
 };
 
 // ============================================================================

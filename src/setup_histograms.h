@@ -53,6 +53,15 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create2D("em_dp_vs_p", "e^{-}: #Deltap vs p;p_{rec} [MeV/c];p_{corr} - p_{rec} [MeV/c]",
                  100, 0, 2000, 100, 0, 10, "corrections");
 
+    // ========================================================================
+    // STEP 3: Dilepton invariant mass
+    // ========================================================================
+    // The dilepton (e+e-) invariant mass is the key observable.
+    // M = sqrt((E_ep + E_em)² - (p_ep + p_em)²)
+
+    mgr.create1D("mass_ee", "e^{+}e^{-} invariant mass;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "dilepton");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 

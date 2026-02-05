@@ -1,9 +1,8 @@
 /**
  * @file setup_cuts.h
- * @brief Cut definitions - Tutorial Starting Point
+ * @brief Cut definitions - Tutorial
  *
  * This file defines all cuts for the analysis.
- * Currently empty - we will add cuts step by step.
  *
  * @author Witold Przygoda (witold.przygoda@uj.edu.pl)
  * @date 2025
@@ -18,18 +17,29 @@
 /**
  * @brief Define cuts for the analysis
  * @param cuts CutManager object for cut definition
- *
- * TUTORIAL: We will add cuts here step by step.
  */
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
     // ========================================================================
-    // STEP 0: No cuts yet
+    // STEP 4a: Event-level cuts
     // ========================================================================
-    // We will add cuts as we develop the analysis.
+    // These cuts are applied at the BEGINNING of processEvent(),
+    // BEFORE creating any particles. If an event fails, we skip it entirely.
+    //
+    // Cut types:
+    //   defineValueCut(name, target, desc)  - value == target
+    //   defineMinCut(name, min, desc)       - value > min
+    //   defineMaxCut(name, max, desc)       - value < max
+    //   defineRangeCut(name, min, max, desc) - min <= value <= max
 
-    std::cout << "  (No cuts defined yet - Step 0)\n";
+    // Best candidate selection (isBest must equal 1)
+    cuts.defineValueCut("isBest", 1, "Best candidate selection");
+
+    // Vertex Z quality (must be > -500 mm)
+    cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
+
+    cuts.printDefinedCuts();
 }
 
 #endif // SETUP_CUTS_H

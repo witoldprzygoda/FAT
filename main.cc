@@ -8,6 +8,7 @@
 // Step 1b: Add CORRECTED kinematics (energy-loss corrected momentum)
 // Step 2: Add first histograms (lepton momentum)
 // Step 2b: Add 2D histograms (momentum correction vs momentum)
+// Step 3: Compound object - dilepton (e+ + e-)
 //
 // Usage:
 //   ./ana [config.json]
@@ -40,6 +41,16 @@ using namespace Physics;
 
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
+
+    // ========================================================================
+    // STEP 4a: Event-level cuts
+    // ========================================================================
+    // These cuts are applied FIRST, BEFORE creating any particles.
+    // If an event fails these cuts, we skip it entirely (return early).
+    // This is efficient because we avoid creating unnecessary objects.
+
+    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
+    if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
     // ========================================================================
     // STEP 1: Create e+ and e- particles
@@ -112,6 +123,27 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);   // positron correction vs p
     mgr.fill("em_dp_vs_p", em_p_rec, em_dp);   // electron correction vs p
+
+    // ========================================================================
+    // STEP 3: Compound object - dilepton
+    // ========================================================================
+    // PParticle supports operator+ to create composite particles.
+    // The result is a new PParticle with combined 4-momentum.
+    //
+    // dilepton = e+ + e-  (virtual photon)
+    //
+    // The invariant mass M = sqrt(E² - p²) gives the dilepton mass.
+
+    PParticle dilepton = positron + electron;
+
+    // The dilepton inherits BOTH kinematic types from its parents:
+    //   dilepton.mass(KinematicType::RECONSTRUCTED)
+    //   dilepton.mass(KinematicType::CORRECTED)
+
+    // Get invariant mass in GeV/c² (massGeV divides by 1000)
+    double m_ee = dilepton.massGeV();  // uses RECONSTRUCTED by default
+
+    mgr.fill("mass_ee", m_ee);
 
 }
 
