@@ -41,7 +41,7 @@ namespace Physics {
  */
 inline double openingAngle(const PParticle& p1, const PParticle& p2,
                            KinematicType type = KinematicType::RECONSTRUCTED) {
-    return p1.vec(type).Angle(p2.vec(type)) * TMath::RadToDeg();
+    return p1.vec(type).Vect().Angle(p2.vec(type).Vect()) * TMath::RadToDeg();
 }
 
 }  // namespace Physics

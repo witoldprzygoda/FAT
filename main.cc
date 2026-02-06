@@ -138,8 +138,22 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double oa = Physics::openingAngle(positron, electron);
     mgr.fill("opening_angle", oa);
 
+    // ========================================================================
+    // STEP 5b: Before/after histograms
+    // ========================================================================
+    // Calculate mass BEFORE the cut to fill "before" histogram.
+    // Then apply cut, and fill "after" histogram only for passing events.
+    // Comparing these shows what the opening angle cut removes.
+
+    PParticle dilepton = positron + electron;
+    double m_ee = dilepton.massGeV();  // uses RECONSTRUCTED by default
+
+    mgr.fill("mass_ee_before_oa", m_ee);  // BEFORE opening angle cut
+
     // Apply cut: reject close pairs (e.g., from conversions)
     if (!cuts.passMinCut("opening_angle", oa)) return;
+
+    mgr.fill("mass_ee_after_oa", m_ee);   // AFTER opening angle cut
 
     // ========================================================================
     // STEP 3: Compound object - dilepton
@@ -150,15 +164,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // dilepton = e+ + e-  (virtual photon)
     //
     // The invariant mass M = sqrt(E² - p²) gives the dilepton mass.
-
-    PParticle dilepton = positron + electron;
+    //
+    // (dilepton already created above for Step 5b)
 
     // The dilepton inherits BOTH kinematic types from its parents:
     //   dilepton.mass(KinematicType::RECONSTRUCTED)
     //   dilepton.mass(KinematicType::CORRECTED)
 
     // Get invariant mass in GeV/c² (massGeV divides by 1000)
-    double m_ee = dilepton.massGeV();  // uses RECONSTRUCTED by default
+    // (m_ee already calculated above for Step 5b)
 
     mgr.fill("mass_ee", m_ee);
 

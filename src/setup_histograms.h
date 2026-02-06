@@ -71,6 +71,18 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
                  180, 0, 180, "dilepton");
 
+    // ========================================================================
+    // STEP 5b: Before/after histograms for opening angle cut
+    // ========================================================================
+    // Compare mass distribution before and after the opening angle cut.
+    // This shows what the cut removes from the mass spectrum.
+
+    mgr.create1D("mass_ee_before_oa", "M_{ee} before OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "dilepton");
+
+    mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "dilepton");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 
