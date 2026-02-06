@@ -12,6 +12,8 @@
 // Step 4a: Event-level cuts (isBest, vertex_z)
 // Step 4b: CutSet for particle-level cuts (implemented in cut_manager.h)
 // Step 5a: Opening angle cut
+// Step 5b: Before/after histograms
+// Step 6: Output ntuple with dilepton variables
 //
 // Usage:
 //   ./ana [config.json]
@@ -150,8 +152,45 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     mgr.fill("mass_ee_before_oa", m_ee);  // BEFORE opening angle cut
 
+    // ========================================================================
+    // STEP 6: Fill output ntuple (before applying OA cut)
+    // ========================================================================
+    // DynamicHNtuple uses operator[] to set variables.
+    // Variables are automatically discovered on first use.
+    // Fill ntuple BEFORE the OA cut to store all events with cut decisions.
+
+    // Check OA cut but store decision as flag (don't apply yet)
+    bool oa_pass = cuts.passMinCut("opening_angle", oa);
+
+    auto& nt = mgr.getDynamicNtuple("dilepton_nt");
+
+    // Positron variables
+    nt["ep_p_rec"] = ep_p_rec;
+    nt["ep_p_cor"] = ep_p_cor;
+    nt["ep_theta"] = positron.theta();
+    nt["ep_phi"] = positron.phi();
+    nt["ep_theta_rich"] = reader["ep_theta_rich"];
+    nt["ep_phi_rich"] = reader["ep_phi_rich"];
+
+    // Electron variables
+    nt["em_p_rec"] = em_p_rec;
+    nt["em_p_cor"] = em_p_cor;
+    nt["em_theta"] = electron.theta();
+    nt["em_phi"] = electron.phi();
+    nt["em_theta_rich"] = reader["em_theta_rich"];
+    nt["em_phi_rich"] = reader["em_phi_rich"];
+
+    // Dilepton variables
+    nt["oa"] = oa;
+    nt["m_ee"] = m_ee;
+
+    // Cut decisions (0 = fail, 1 = pass)
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;
+
+    nt.fill();
+
     // Apply cut: reject close pairs (e.g., from conversions)
-    if (!cuts.passMinCut("opening_angle", oa)) return;
+    if (!oa_pass) return;
 
     mgr.fill("mass_ee_after_oa", m_ee);   // AFTER opening angle cut
 

@@ -324,16 +324,17 @@ public:
     // ------------------------------------------------------------------------
     // Print summary of registry contents
     // ------------------------------------------------------------------------
-    void printSummary(std::ostream& os = std::cout) const {
+    void printSummary(std::ostream& os = std::cout, size_t dynamic_ntuple_count = 0) const {
         os << "╔════════════════════════════════════════════════════════════════╗\n";
         os << "║  HistogramRegistry Summary                                     ║\n";
         os << "╠════════════════════════════════════════════════════════════════╣\n";
         // Dynamic padding for Total histograms
-        os << "║ Total histograms: " << histograms_.size() 
+        os << "║ Total histograms: " << histograms_.size()
            << std::string(45 - std::to_string(histograms_.size()).length(), ' ') << "║\n";
-        // Dynamic padding for Total ntuples
-        os << "║ Total ntuples:    " << ntuples_.size() 
-           << std::string(45 - std::to_string(ntuples_.size()).length(), ' ') << "║\n";
+        // Dynamic padding for Total ntuples (HNtuple + DynamicHNtuple)
+        size_t total_ntuples = ntuples_.size() + dynamic_ntuple_count;
+        os << "║ Total ntuples:    " << total_ntuples
+           << std::string(45 - std::to_string(total_ntuples).length(), ' ') << "║\n";
 
         // Count by folder
         std::map<std::string, int> folder_counts;

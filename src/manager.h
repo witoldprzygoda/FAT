@@ -412,7 +412,7 @@ public:
      * @brief Print summary of all managed histograms/ntuples
      */
     void printSummary(std::ostream& os = std::cout) const {
-        registry_.printSummary(os);
+        registry_.printSummary(os, dynamic_ntuples_.size());
     }
 
     /**

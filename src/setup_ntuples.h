@@ -27,11 +27,20 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
     // ========================================================================
-    // STEP 0: No ntuples yet
+    // STEP 6: Output ntuple with dilepton variables
     // ========================================================================
-    // We will add ntuples as we develop the analysis.
+    // DynamicHNtuple allows adding variables at any time via operator[].
+    // Variables are automatically discovered and stored.
+    //
+    // Naming convention:
+    //   ep_*  - positron variables
+    //   em_*  - electron variables
+    //   oa    - opening angle
+    //   m_ee  - dilepton invariant mass
 
-    std::cout << "  (No ntuples defined yet - Step 0)\n";
+    manager.createDynamicNtuple("dilepton_nt", "Dilepton event data");
+
+    std::cout << "  Created output ntuple 'dilepton_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H
