@@ -29,6 +29,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <iomanip>
+#include <variant>
+#include <initializer_list>
 #include <TFile.h>
 #include <TCutG.h>
 #include <TKey.h>
@@ -62,11 +64,16 @@ struct RangeCut {
         if (result) ++passed;
         return result || !active;
     }
-    
+
+    /// Check without incrementing statistics (for use in OrGroup)
+    bool checkOnly(double value) const {
+        return (value >= min && value <= max);
+    }
+
     double efficiency() const {
         return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
     }
-    
+
     void reset() { tested = passed = 0; }
 };
 
@@ -131,6 +138,11 @@ struct ValueCut {
         return result || !active;
     }
 
+    /// Check without incrementing statistics (for use in OrGroup)
+    bool checkOnly(double value) const {
+        return (value == target);
+    }
+
     double efficiency() const {
         return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
     }
@@ -162,6 +174,11 @@ struct MinCut {
         return result || !active;
     }
 
+    /// Check without incrementing statistics (for use in OrGroup)
+    bool checkOnly(double value) const {
+        return (value > min);
+    }
+
     double efficiency() const {
         return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
     }
@@ -191,6 +208,48 @@ struct MaxCut {
         bool result = (value < max);
         if (result) ++passed;
         return result || !active;
+    }
+
+    /// Check without incrementing statistics (for use in OrGroup)
+    bool checkOnly(double value) const {
+        return (value < max);
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
+    void reset() { tested = passed = 0; }
+};
+
+/**
+ * @struct ExcludeRangeCut
+ * @brief Inverse range cut - passes if value is OUTSIDE range (value < min || value > max)
+ */
+struct ExcludeRangeCut {
+    std::string name;
+    std::string description;
+    double min;
+    double max;
+    bool active = true;
+
+    mutable Long64_t tested = 0;
+    mutable Long64_t passed = 0;
+
+    ExcludeRangeCut() : min(0), max(0) {}
+    ExcludeRangeCut(const std::string& n, double lo, double hi, const std::string& desc = "")
+        : name(n), description(desc), min(lo), max(hi) {}
+
+    bool pass(double value) const {
+        ++tested;
+        bool result = (value < min || value > max);
+        if (result) ++passed;
+        return result || !active;
+    }
+
+    /// Check without incrementing statistics (for use in OrGroup)
+    bool checkOnly(double value) const {
+        return (value < min || value > max);
     }
 
     double efficiency() const {
@@ -247,6 +306,218 @@ struct GraphicalCut {
     }
     
     void reset() { tested = passed = 0; }
+};
+
+// ============================================================================
+// CutVariant and CutSet for grouped particle-level cuts
+// ============================================================================
+
+/// Variant to hold any cut type within a CutSet
+using CutVariant = std::variant<RangeCut, ValueCut, MinCut, MaxCut, ExcludeRangeCut>;
+
+/**
+ * @struct OrGroup
+ * @brief Group of cuts with OR logic - value passes if ANY alternative passes
+ *
+ * Used within CutSet for conditions like "x < -10 OR x > 20"
+ */
+struct OrGroup {
+    std::string name;
+    std::string description;
+    std::vector<CutVariant> alternatives;  ///< Any one passing = group passes
+    bool active = true;
+
+    mutable Long64_t tested = 0;
+    mutable Long64_t passed = 0;
+
+    OrGroup() = default;
+    OrGroup(const std::string& n, const std::string& desc = "")
+        : name(n), description(desc) {}
+
+    /// Pass if ANY alternative passes (OR logic) - same value tested against all
+    bool pass(double value) const {
+        ++tested;
+        for (const auto& alt : alternatives) {
+            bool ok = std::visit([&](const auto& cut) {
+                return cut.checkOnly(value);  // Don't increment individual stats
+            }, alt);
+            if (ok) {
+                ++passed;
+                return true;  // Short-circuit: first passing alternative wins
+            }
+        }
+        return !active;  // None passed - return false unless inactive
+    }
+
+    /// Check without incrementing statistics
+    bool checkOnly(double value) const {
+        for (const auto& alt : alternatives) {
+            bool ok = std::visit([&](const auto& cut) {
+                return cut.checkOnly(value);
+            }, alt);
+            if (ok) return true;
+        }
+        return false;
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
+    void reset() { tested = passed = 0; }
+};
+
+/// Extended variant including OrGroup
+using CutVariantEx = std::variant<RangeCut, ValueCut, MinCut, MaxCut, ExcludeRangeCut, OrGroup>;
+
+/**
+ * @struct CutSet
+ * @brief Named group of cuts that all must pass (AND logic)
+ *
+ * Used for particle-level quality cuts. Each cut is evaluated in order,
+ * and statistics are tracked for each cut individually.
+ *
+ * Example:
+ * @code
+ *   cuts.defineCutSet("gamma_quality", "Photon selection")
+ *       .addMinCut("energy", 50, "E > 50 MeV")
+ *       .addMaxCut("chi2", 100, "Chi2 < 100")
+ *       .addRangeCut("beta", 0.9, 1.1, "0.9 < beta < 1.1");
+ *
+ *   if (!cuts.passCutSet("gamma_quality",
+ *       {gamma.energy, gamma.chi2, gamma.beta})) return;
+ * @endcode
+ */
+struct CutSet {
+    std::string name;
+    std::string description;
+    std::vector<std::pair<std::string, CutVariantEx>> cuts;  ///< (field_name, cut)
+
+    mutable Long64_t tested = 0;  ///< Total times CutSet was tested
+    mutable Long64_t passed = 0;  ///< Times all cuts passed
+
+    CutSet() = default;
+    CutSet(const std::string& n, const std::string& desc = "")
+        : name(n), description(desc) {}
+
+    // ========================================================================
+    // Builder pattern methods
+    // ========================================================================
+
+    CutSet& addMinCut(const std::string& field, double min,
+                      const std::string& desc = "") {
+        MinCut cut;
+        cut.name = field;
+        cut.description = desc;
+        cut.min = min;
+        cuts.push_back({field, cut});
+        return *this;
+    }
+
+    CutSet& addMaxCut(const std::string& field, double max,
+                      const std::string& desc = "") {
+        MaxCut cut;
+        cut.name = field;
+        cut.description = desc;
+        cut.max = max;
+        cuts.push_back({field, cut});
+        return *this;
+    }
+
+    CutSet& addRangeCut(const std::string& field, double min, double max,
+                        const std::string& desc = "") {
+        RangeCut cut;
+        cut.name = field;
+        cut.description = desc;
+        cut.min = min;
+        cut.max = max;
+        cuts.push_back({field, cut});
+        return *this;
+    }
+
+    CutSet& addExcludeRangeCut(const std::string& field, double min, double max,
+                               const std::string& desc = "") {
+        ExcludeRangeCut cut;
+        cut.name = field;
+        cut.description = desc;
+        cut.min = min;
+        cut.max = max;
+        cuts.push_back({field, cut});
+        return *this;
+    }
+
+    CutSet& addValueCut(const std::string& field, double target,
+                        const std::string& desc = "") {
+        ValueCut cut;
+        cut.name = field;
+        cut.description = desc;
+        cut.target = target;
+        cuts.push_back({field, cut});
+        return *this;
+    }
+
+    /**
+     * @brief Add an OR group for "outside range" pattern (value < min OR value > max)
+     */
+    CutSet& addOrGroup(const std::string& field, double excludeMin, double excludeMax,
+                       const std::string& desc = "") {
+        OrGroup og;
+        og.name = field;
+        og.description = desc.empty() ?
+            "< " + std::to_string(static_cast<int>(excludeMin)) +
+            " OR > " + std::to_string(static_cast<int>(excludeMax)) : desc;
+
+        // Add alternatives: value < excludeMin OR value > excludeMax
+        MaxCut low;
+        low.name = field + "_low";
+        low.max = excludeMin;
+        og.alternatives.push_back(low);
+
+        MinCut high;
+        high.name = field + "_high";
+        high.min = excludeMax;
+        og.alternatives.push_back(high);
+
+        cuts.push_back({field, og});
+        return *this;
+    }
+
+    // ========================================================================
+    // Evaluation
+    // ========================================================================
+
+    /**
+     * @brief Test all cuts with values in definition order
+     * @param values Values corresponding to each cut in order
+     * @return true if ALL cuts pass (AND logic)
+     */
+    bool passAll(const std::vector<double>& values) const {
+        if (values.size() != cuts.size()) {
+            std::cerr << "CutSet '" << name << "': expected " << cuts.size()
+                      << " values, got " << values.size() << std::endl;
+            return false;
+        }
+        ++tested;
+        for (size_t i = 0; i < cuts.size(); ++i) {
+            bool ok = std::visit([&](auto& cut) {
+                return cut.pass(values[i]);
+            }, cuts[i].second);
+            if (!ok) return false;
+        }
+        ++passed;
+        return true;
+    }
+
+    double efficiency() const {
+        return tested > 0 ? static_cast<double>(passed) / tested : 0.0;
+    }
+
+    void reset() {
+        tested = passed = 0;
+        for (auto& p : cuts) {
+            std::visit([](auto& cut) { cut.reset(); }, p.second);
+        }
+    }
 };
 
 // ============================================================================
@@ -414,6 +685,77 @@ public:
     }
 
     // ========================================================================
+    // CutSets (grouped particle-level cuts)
+    // ========================================================================
+
+    /**
+     * @brief Define a CutSet (group of cuts with AND logic)
+     * @param name Name of the CutSet
+     * @param description Optional description
+     * @return Reference to the CutSet for builder pattern
+     *
+     * Example:
+     * @code
+     *   cuts.defineCutSet("gamma_quality", "Photon selection")
+     *       .addMinCut("energy", 50)
+     *       .addMaxCut("chi2", 100);
+     * @endcode
+     */
+    CutSet& defineCutSet(const std::string& name,
+                         const std::string& description = "") {
+        if (cutsets_.find(name) != cutsets_.end()) {
+            std::cerr << "Warning: Overwriting existing CutSet '" << name << "'\n";
+        }
+        cutsets_[name] = CutSet(name, description);
+        return cutsets_[name];
+    }
+
+    /**
+     * @brief Test values against a CutSet
+     * @param name CutSet name
+     * @param values Values in definition order
+     * @return true if ALL cuts pass
+     */
+    bool passCutSet(const std::string& name,
+                    std::initializer_list<double> values) const {
+        auto it = cutsets_.find(name);
+        if (it == cutsets_.end()) {
+            throw std::runtime_error("CutManager::passCutSet() - CutSet '" + name + "' not defined!");
+        }
+        return it->second.passAll(std::vector<double>(values));
+    }
+
+    /**
+     * @brief Test values against a CutSet (vector version)
+     */
+    bool passCutSet(const std::string& name,
+                    const std::vector<double>& values) const {
+        auto it = cutsets_.find(name);
+        if (it == cutsets_.end()) {
+            throw std::runtime_error("CutManager::passCutSet() - CutSet '" + name + "' not defined!");
+        }
+        return it->second.passAll(values);
+    }
+
+    /**
+     * @brief Check if CutSet exists
+     */
+    bool hasCutSet(const std::string& name) const {
+        return cutsets_.find(name) != cutsets_.end();
+    }
+
+    /**
+     * @brief Get reference to CutSet
+     */
+    CutSet& getCutSet(const std::string& name) {
+        auto it = cutsets_.find(name);
+        if (it == cutsets_.end()) {
+            throw std::runtime_error("CutManager::getCutSet() - CutSet '" + name + "' not defined!");
+        }
+        return it->second;
+    }
+
+    // ========================================================================
     // 2D Graphical Cuts (TCutG)
     // ========================================================================
     
@@ -507,6 +849,12 @@ public:
         for (auto& p : value_cuts_) p.second.active = active;
         for (auto& p : min_cuts_) p.second.active = active;
         for (auto& p : max_cuts_) p.second.active = active;
+        // CutSets: set each internal cut active/inactive
+        for (auto& p : cutsets_) {
+            for (auto& c : p.second.cuts) {
+                std::visit([active](auto& cut) { cut.active = active; }, c.second);
+            }
+        }
     }
     
     // ========================================================================
@@ -523,6 +871,7 @@ public:
         for (auto& p : value_cuts_) p.second.reset();
         for (auto& p : min_cuts_) p.second.reset();
         for (auto& p : max_cuts_) p.second.reset();
+        for (auto& p : cutsets_) p.second.reset();
     }
     
     /**
@@ -596,6 +945,25 @@ public:
                << (c.efficiency() * 100) << "%  ║\n";
         }
 
+        // CutSets
+        for (const auto& p : cutsets_) {
+            const auto& cs = p.second;
+            // Separator line for CutSet
+            os << "╠────────────────────────────┼──────────┼──────────┼─────────────╣\n";
+            os << "║ [" << std::left << std::setw(24) << cs.name << "]"
+               << std::right << std::setw(35) << " ║\n";
+            // Individual cuts within the set
+            for (const auto& c : cs.cuts) {
+                std::visit([&os, &c](const auto& cut) {
+                    os << "║   " << std::left << std::setw(24) << c.first
+                       << " │ " << std::right << std::setw(8) << cut.tested
+                       << " │ " << std::setw(8) << cut.passed
+                       << " │ " << std::setw(9) << std::fixed << std::setprecision(2)
+                       << (cut.efficiency() * 100) << "%  ║\n";
+                }, c.second);
+            }
+        }
+
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
     
@@ -663,6 +1031,37 @@ public:
                 os << "\n";
             }
         }
+
+        if (!cutsets_.empty()) {
+            os << "Cut Sets:\n";
+            for (const auto& p : cutsets_) {
+                const auto& cs = p.second;
+                os << "  [" << cs.name << "]";
+                if (!cs.description.empty()) os << " - " << cs.description;
+                os << "\n";
+                for (const auto& c : cs.cuts) {
+                    os << "    " << c.first << ": ";
+                    std::visit([&os](const auto& cut) {
+                        using T = std::decay_t<decltype(cut)>;
+                        if constexpr (std::is_same_v<T, MinCut>) {
+                            os << "> " << cut.min;
+                        } else if constexpr (std::is_same_v<T, MaxCut>) {
+                            os << "< " << cut.max;
+                        } else if constexpr (std::is_same_v<T, RangeCut>) {
+                            os << "[" << cut.min << ", " << cut.max << "]";
+                        } else if constexpr (std::is_same_v<T, ExcludeRangeCut>) {
+                            os << "< " << cut.min << " OR > " << cut.max;
+                        } else if constexpr (std::is_same_v<T, ValueCut>) {
+                            os << "== " << cut.target;
+                        } else if constexpr (std::is_same_v<T, OrGroup>) {
+                            os << "(OR group)";
+                        }
+                        if (!cut.description.empty()) os << "  (" << cut.description << ")";
+                    }, c.second);
+                    os << "\n";
+                }
+            }
+        }
     }
     
     // ========================================================================
@@ -694,6 +1093,7 @@ private:
     std::map<std::string, ValueCut> value_cuts_;
     std::map<std::string, MinCut> min_cuts_;
     std::map<std::string, MaxCut> max_cuts_;
+    std::map<std::string, CutSet> cutsets_;
 };
 
 // ============================================================================
