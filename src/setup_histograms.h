@@ -62,6 +62,15 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("mass_ee", "e^{+}e^{-} invariant mass;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
 
+    // ========================================================================
+    // STEP 5a: Opening angle histogram
+    // ========================================================================
+    // The opening angle between e+ and e- momentum vectors.
+    // Filled BEFORE the opening angle cut, to see full distribution.
+
+    mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
+                 180, 0, 180, "dilepton");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 

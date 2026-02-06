@@ -9,6 +9,9 @@
 // Step 2: Add first histograms (lepton momentum)
 // Step 2b: Add 2D histograms (momentum correction vs momentum)
 // Step 3: Compound object - dilepton (e+ + e-)
+// Step 4a: Event-level cuts (isBest, vertex_z)
+// Step 4b: CutSet for particle-level cuts (implemented in cut_manager.h)
+// Step 5a: Opening angle cut
 //
 // Usage:
 //   ./ana [config.json]
@@ -19,6 +22,7 @@
 
 #include "src/manager.h"
 #include "src/pparticle.h"
+#include "src/physics_utils.h"
 #include "src/ntuple_reader.h"
 #include "src/cut_manager.h"
 #include "src/analysis_config.h"
@@ -123,6 +127,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);   // positron correction vs p
     mgr.fill("em_dp_vs_p", em_p_rec, em_dp);   // electron correction vs p
+
+    // ========================================================================
+    // STEP 5a: Opening angle cut
+    // ========================================================================
+    // The opening angle is the angle between e+ and e- momentum vectors.
+    // Must be calculated BEFORE combining into dilepton (operator+ loses info).
+    // Physics::openingAngle() is a symmetric function from physics_utils.h.
+
+    double oa = Physics::openingAngle(positron, electron);
+    mgr.fill("opening_angle", oa);
+
+    // Apply cut: reject close pairs (e.g., from conversions)
+    if (!cuts.passMinCut("opening_angle", oa)) return;
 
     // ========================================================================
     // STEP 3: Compound object - dilepton

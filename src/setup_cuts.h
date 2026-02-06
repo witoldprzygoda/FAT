@@ -39,6 +39,14 @@ inline void setupCuts(CutManager& cuts) {
     // Vertex Z quality (must be > -500 mm)
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
+    // ========================================================================
+    // STEP 5a: Opening angle cut
+    // ========================================================================
+    // Applied AFTER creating particles but BEFORE combining them.
+    // Rejects close e+e- pairs (e.g., from conversions or Dalitz decays).
+
+    cuts.defineMinCut("opening_angle", 9.0, "Opening angle > 9 deg");
+
     cuts.printDefinedCuts();
 }
 
