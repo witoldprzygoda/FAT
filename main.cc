@@ -14,6 +14,7 @@
 // Step 5a: Opening angle cut
 // Step 5b: Before/after histograms
 // Step 6: Output ntuple with dilepton variables
+// Step 7: CMS boost - transform dilepton to center of mass frame
 //
 // Usage:
 //   ./ana [config.json]
@@ -25,6 +26,7 @@
 #include "src/manager.h"
 #include "src/pparticle.h"
 #include "src/physics_utils.h"
+#include "src/boost_frame.h"
 #include "src/ntuple_reader.h"
 #include "src/cut_manager.h"
 #include "src/analysis_config.h"
@@ -153,6 +155,32 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     mgr.fill("mass_ee_before_oa", m_ee);  // BEFORE opening angle cut
 
     // ========================================================================
+    // STEP 7: CMS boost - transform dilepton to center of mass frame
+    // ========================================================================
+    // The beam-target CMS frame is where total momentum is zero.
+    // This is the natural frame for studying the reaction dynamics.
+    //
+    // EventFrames uses the beam kinetic energy from config to create
+    // the proper boost vector. Then we boost a COPY of the dilepton
+    // (original stays in LAB frame for other uses).
+    //
+    // Key CMS observables:
+    //   y_cms    - rapidity (centered around 0 in symmetric collisions)
+    //   pt       - transverse momentum (same in LAB and CMS)
+    //   theta_cms - polar angle in CMS (different from LAB theta)
+
+    EventFrames frames;
+    frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
+
+    // Boost dilepton to CMS (creates a COPY, original unchanged)
+    PParticle dilepton_cms = frames.getFrame("beam").boost(dilepton);
+
+    // Extract CMS quantities
+    double y_cms = dilepton_cms.rapidity();
+    double pt = dilepton_cms.vec().Pt();       // transverse momentum
+    double theta_cms = dilepton_cms.theta();   // polar angle in CMS
+
+    // ========================================================================
     // STEP 6: Fill output ntuple (before applying OA cut)
     // ========================================================================
     // DynamicHNtuple uses operator[] to set variables.
@@ -180,9 +208,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["em_theta_rich"] = reader["em_theta_rich"];
     nt["em_phi_rich"] = reader["em_phi_rich"];
 
-    // Dilepton variables
+    // Dilepton variables (LAB frame)
     nt["oa"] = oa;
     nt["m_ee"] = m_ee;
+
+    // CMS variables (Step 7)
+    nt["y_cms"] = y_cms;
+    nt["pt"] = pt;
+    nt["theta_cms"] = theta_cms;
 
     // Cut decisions (0 = fail, 1 = pass)
     nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;
@@ -193,6 +226,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     if (!oa_pass) return;
 
     mgr.fill("mass_ee_after_oa", m_ee);   // AFTER opening angle cut
+
+    // ========================================================================
+    // STEP 7: Fill CMS histograms (after OA cut)
+    // ========================================================================
+    // These histograms show the physics observables for good dilepton pairs.
+
+    mgr.fill("rapidity_cms", y_cms);
+    mgr.fill("pt_cms", pt);
+    mgr.fill("theta_cms", theta_cms);
+    mgr.fill("rapidity_vs_mass", m_ee, y_cms);  // 2D: mass vs rapidity
 
     // ========================================================================
     // STEP 3: Compound object - dilepton

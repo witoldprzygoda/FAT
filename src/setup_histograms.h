@@ -83,6 +83,30 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
 
+    // ========================================================================
+    // STEP 7: CMS (center of mass) histograms
+    // ========================================================================
+    // Variables after boosting dilepton to the beam-target CMS frame.
+    // In CMS frame: total momentum is zero, rapidity is centered around 0.
+    //
+    // Key observables in CMS:
+    //   y_cms    - rapidity (velocity-like variable, Lorentz additive)
+    //   pt       - transverse momentum (invariant under z-boost)
+    //   theta_cms - polar angle in CMS
+
+    mgr.create1D("rapidity_cms", "Dilepton rapidity in CMS;y_{CMS};Counts",
+                 100, -2.0, 2.0, "cms");
+
+    mgr.create1D("pt_cms", "Dilepton transverse momentum;p_{T} [MeV/c];Counts",
+                 100, 0, 1500, "cms");
+
+    mgr.create1D("theta_cms", "Dilepton polar angle in CMS;#theta_{CMS} [deg];Counts",
+                 90, 0, 180, "cms");
+
+    // 2D: rapidity vs mass (useful for physics interpretation)
+    mgr.create2D("rapidity_vs_mass", "y_{CMS} vs M_{ee};M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
+                 100, 0.0, 1.0, 100, -2.0, 2.0, "cms");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 
