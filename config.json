@@ -27,8 +27,8 @@
         "fwdet_3": false
     },
     "ecal": {
-        "ecal_1": false,
-        "ecal_2": false,
-        "ecal_3": false
+        "ecal_1": true,
+        "ecal_2": true,
+        "ecal_3": true
     }
 }

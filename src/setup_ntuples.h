@@ -41,6 +41,25 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     manager.createDynamicNtuple("dilepton_nt", "Dilepton event data");
 
     std::cout << "  Created output ntuple 'dilepton_nt'\n";
+
+    // ========================================================================
+    // STEP 8: ECAL ntuple
+    // ========================================================================
+    // Separate ntuple for ECAL detector variables.
+    // Variables are indexed 1, 2, 3 for each ECAL hit.
+    //
+    // Naming convention:
+    //   ecal_mult       - number of ECAL hits (0-3)
+    //   ecal_beta_N     - velocity (beta = v/c)
+    //   ecal_pid_N      - particle ID
+    //   ecal_energy_N   - energy from calorimeter [MeV]
+    //   ecal_theta_N    - polar angle [deg]
+    //   ecal_phi_N      - azimuthal angle [deg]
+    //   ecal_chi2_N     - fit quality
+
+    manager.createDynamicNtuple("ecal_nt", "ECAL detector data");
+
+    std::cout << "  Created output ntuple 'ecal_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H

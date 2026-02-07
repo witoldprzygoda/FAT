@@ -47,6 +47,22 @@ inline void setupCuts(CutManager& cuts) {
 
     cuts.defineMinCut("opening_angle", 9.0, "Opening angle > 9 deg");
 
+    // ========================================================================
+    // STEP 8b: ECAL quality cuts
+    // ========================================================================
+    // CutSet for ECAL particle quality selection.
+    // All cuts must pass (AND logic).
+    //
+    // Order matters! Values passed to passCutSet() must match this order:
+    //   1. ecal_pid (exact match = 1)
+    //   2. ecal_beta (range 0.8 - 1.2)
+    //   3. ecal_energy (min > 100 MeV)
+
+    cuts.defineCutSet("ecal_quality", "ECAL particle quality")
+        .addValueCut("ecal_pid", 1.0, "PID == 1")
+        .addRangeCut("ecal_beta", 0.8, 1.2, "0.8 < beta < 1.2")
+        .addMinCut("ecal_energy", 100.0, "Energy > 100 MeV");
+
     cuts.printDefinedCuts();
 }
 

@@ -15,6 +15,8 @@
 // Step 5b: Before/after histograms
 // Step 6: Output ntuple with dilepton variables
 // Step 7: CMS boost - transform dilepton to center of mass frame
+// Step 8: ECAL objects - create particle objects from ECAL detector
+// Step 8b: ECAL quality cuts (pid==1, 0.8<beta<1.2, energy>100)
 //
 // Usage:
 //   ./ana [config.json]
@@ -25,6 +27,7 @@
 
 #include "src/manager.h"
 #include "src/pparticle.h"
+#include "src/pparticle_ecal.h"
 #include "src/physics_utils.h"
 #include "src/boost_frame.h"
 #include "src/ntuple_reader.h"
@@ -36,6 +39,7 @@
 #include "src/progressbar.h"
 #include "src/console_box.h"
 #include <iostream>
+#include <vector>
 
 // Use Physics namespace for mass constants
 using namespace Physics;
@@ -257,6 +261,104 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // (m_ee already calculated above for Step 5b)
 
     mgr.fill("mass_ee", m_ee);
+
+    // ========================================================================
+    // STEP 8: ECAL objects
+    // ========================================================================
+    // Create particle objects from ECAL (electromagnetic calorimeter).
+    // ECAL can detect various particles: photons, neutrons, pions, electrons, etc.
+    // neutr_mult tells us how many ECAL hits are present (0-3).
+    //
+    // PParticleEcal extends PParticle with ECAL-specific data:
+    //   - Works with operator+ for composite particle creation
+    //   - Stores all ECAL detector variables (energy, chi2, tof, etc.)
+
+    int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+
+    std::vector<PParticleEcal> ecal_objects;
+    ecal_objects.reserve(neutr_mult);
+
+    for (int i = 1; i <= neutr_mult && i <= 3; ++i) {
+        // Create ECAL particle with photon hypothesis (mass = 0)
+        PParticleEcal ecal_obj(0.0, "ecal" + std::to_string(i));
+
+        // Fill from ntuple variables (neutr_*_N where N = i)
+        if (ecal_obj.setFromReader(reader, i)) {
+            ecal_objects.push_back(ecal_obj);
+        }
+    }
+
+    // ecal_objects now contains 0-3 valid ECAL particles
+    // These can be combined with other PParticles:
+    //   PParticle composite = dilepton + ecal_objects[0];
+
+    // Fill ECAL ntuple with detector variables
+    auto& ecal_nt = mgr.getDynamicNtuple("ecal_nt");
+
+    ecal_nt["ecal_mult"] = neutr_mult;
+
+    // ECAL hit 1
+    if (ecal_objects.size() >= 1) {
+        // STEP 8b: Check ECAL quality cuts (pid==1, 0.8<beta<1.2, energy>100)
+        bool ecal_pass_1 = cuts.passCutSet("ecal_quality", {
+            static_cast<double>(ecal_objects[0].ecal_pid),
+            ecal_objects[0].ecal_beta,
+            ecal_objects[0].ecal_energy
+        });
+        ecal_nt["ecal_pass_1"] = ecal_pass_1 ? 1.0f : 0.0f;
+
+        ecal_nt["ecal_beta_1"] = ecal_objects[0].ecal_beta;
+        ecal_nt["ecal_pid_1"] = ecal_objects[0].ecal_pid;
+        ecal_nt["ecal_energy_1"] = ecal_objects[0].ecal_energy;
+        ecal_nt["ecal_theta_1"] = ecal_objects[0].ecal_theta;
+        ecal_nt["ecal_phi_1"] = ecal_objects[0].ecal_phi;
+        ecal_nt["ecal_chi2_1"] = ecal_objects[0].ecal_chi2;
+        ecal_nt["ecal_tof_1"] = ecal_objects[0].ecal_tof;
+        ecal_nt["ecal_r_1"] = ecal_objects[0].ecal_r;
+        ecal_nt["ecal_z_1"] = ecal_objects[0].ecal_z;
+    }
+
+    // ECAL hit 2
+    if (ecal_objects.size() >= 2) {
+        bool ecal_pass_2 = cuts.passCutSet("ecal_quality", {
+            static_cast<double>(ecal_objects[1].ecal_pid),
+            ecal_objects[1].ecal_beta,
+            ecal_objects[1].ecal_energy
+        });
+        ecal_nt["ecal_pass_2"] = ecal_pass_2 ? 1.0f : 0.0f;
+
+        ecal_nt["ecal_beta_2"] = ecal_objects[1].ecal_beta;
+        ecal_nt["ecal_pid_2"] = ecal_objects[1].ecal_pid;
+        ecal_nt["ecal_energy_2"] = ecal_objects[1].ecal_energy;
+        ecal_nt["ecal_theta_2"] = ecal_objects[1].ecal_theta;
+        ecal_nt["ecal_phi_2"] = ecal_objects[1].ecal_phi;
+        ecal_nt["ecal_chi2_2"] = ecal_objects[1].ecal_chi2;
+        ecal_nt["ecal_tof_2"] = ecal_objects[1].ecal_tof;
+        ecal_nt["ecal_r_2"] = ecal_objects[1].ecal_r;
+        ecal_nt["ecal_z_2"] = ecal_objects[1].ecal_z;
+    }
+
+    // ECAL hit 3
+    if (ecal_objects.size() >= 3) {
+        bool ecal_pass_3 = cuts.passCutSet("ecal_quality", {
+            static_cast<double>(ecal_objects[2].ecal_pid),
+            ecal_objects[2].ecal_beta,
+            ecal_objects[2].ecal_energy
+        });
+        ecal_nt["ecal_pass_3"] = ecal_pass_3 ? 1.0f : 0.0f;
+
+        ecal_nt["ecal_beta_3"] = ecal_objects[2].ecal_beta;
+        ecal_nt["ecal_pid_3"] = ecal_objects[2].ecal_pid;
+        ecal_nt["ecal_energy_3"] = ecal_objects[2].ecal_energy;
+        ecal_nt["ecal_theta_3"] = ecal_objects[2].ecal_theta;
+        ecal_nt["ecal_phi_3"] = ecal_objects[2].ecal_phi;
+        ecal_nt["ecal_chi2_3"] = ecal_objects[2].ecal_chi2;
+        ecal_nt["ecal_tof_3"] = ecal_objects[2].ecal_tof;
+        ecal_nt["ecal_r_3"] = ecal_objects[2].ecal_r;
+        ecal_nt["ecal_z_3"] = ecal_objects[2].ecal_z;
+    }
+
+    ecal_nt.fill();
 
 }
 
