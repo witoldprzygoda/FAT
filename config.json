@@ -21,14 +21,6 @@
         "simulated": false,
         "analysis_type": "reconstructed"
     },
-    "forward_tracker": {
-        "fwdet_1": false,
-        "fwdet_2": false,
-        "fwdet_3": false
-    },
-    "ecal": {
-        "ecal_1": true,
-        "ecal_2": true,
-        "ecal_3": true
-    }
+    "fwdet": true,
+    "ecal": true
 }

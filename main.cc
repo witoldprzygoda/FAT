@@ -16,7 +16,8 @@
 // Step 6: Output ntuple with dilepton variables
 // Step 7: CMS boost - transform dilepton to center of mass frame
 // Step 8: ECAL objects - create particle objects from ECAL detector
-// Step 8b: ECAL quality cuts (pid==1, 0.8<beta<1.2, energy>100)
+// Step 8b: ECAL quality cuts (pid==1, 0.8<beta<1.2, cluster_energy>100)
+// Step 9: Forward Tracker objects - create particle objects from FT detector
 //
 // Usage:
 //   ./ana [config.json]
@@ -28,6 +29,7 @@
 #include "src/manager.h"
 #include "src/pparticle.h"
 #include "src/pparticle_ecal.h"
+#include "src/pparticle_fwd.h"
 #include "src/physics_utils.h"
 #include "src/boost_frame.h"
 #include "src/ntuple_reader.h"
@@ -267,98 +269,156 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ========================================================================
     // Create particle objects from ECAL (electromagnetic calorimeter).
     // ECAL can detect various particles: photons, neutrons, pions, electrons, etc.
-    // neutr_mult tells us how many ECAL hits are present (0-3).
+    // neutr_mult tells us how many ECAL hits are present (0-5).
     //
     // PParticleEcal extends PParticle with ECAL-specific data:
     //   - Works with operator+ for composite particle creation
     //   - Stores all ECAL detector variables (energy, chi2, tof, etc.)
+    //   - Uses cluster reconstruction (neutr_cluster_*) for kinematics
+    //
+    // Controlled by config.json: "ecal": true/false
 
-    int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+    if (config.isEcalEnabled()) {
+        int neutr_mult = static_cast<int>(reader["neutr_mult"]);
 
-    std::vector<PParticleEcal> ecal_objects;
-    ecal_objects.reserve(neutr_mult);
+        std::vector<PParticleEcal> ecal_objects;
+        ecal_objects.reserve(neutr_mult);
 
-    for (int i = 1; i <= neutr_mult && i <= 3; ++i) {
-        // Create ECAL particle with photon hypothesis (mass = 0)
-        PParticleEcal ecal_obj(0.0, "ecal" + std::to_string(i));
+        for (int i = 1; i <= neutr_mult && i <= 5; ++i) {
+            // Create ECAL particle with photon hypothesis (mass = 0)
+            PParticleEcal ecal_obj(0.0, "ecal" + std::to_string(i));
 
-        // Fill from ntuple variables (neutr_*_N where N = i)
-        if (ecal_obj.setFromReader(reader, i)) {
-            ecal_objects.push_back(ecal_obj);
+            // Fill from ntuple variables (neutr_*_N where N = i)
+            // Uses cluster_theta/phi for PParticle kinematics
+            if (ecal_obj.setFromReader(reader, i)) {
+                ecal_objects.push_back(ecal_obj);
+            }
         }
+
+        // ecal_objects now contains 0-5 valid ECAL particles
+        // These can be combined with other PParticles:
+        //   PParticle composite = dilepton + ecal_objects[0];
+
+        // Fill ECAL ntuple with detector variables
+        auto& ecal_nt = mgr.getDynamicNtuple("ecal_nt");
+
+        ecal_nt["ecal_mult"] = neutr_mult;
+
+        // Helper lambda to fill ntuple for each ECAL hit
+        auto fillEcalHit = [&](size_t idx, const std::string& suffix) {
+            if (ecal_objects.size() > idx) {
+                const auto& obj = ecal_objects[idx];
+
+                // STEP 8b: Check ECAL quality cuts
+                bool pass = cuts.passCutSet("ecal_quality", {
+                    static_cast<double>(obj.ecal_pid),
+                    obj.ecal_beta,
+                    obj.cluster_energy
+                });
+                ecal_nt["ecal_pass" + suffix] = pass ? 1.0f : 0.0f;
+
+                // Cluster reconstruction (used for kinematics)
+                ecal_nt["cluster_energy" + suffix] = obj.cluster_energy;
+                ecal_nt["cluster_theta" + suffix] = obj.cluster_theta;
+                ecal_nt["cluster_phi" + suffix] = obj.cluster_phi;
+
+                // Primary reconstruction
+                ecal_nt["ecal_beta" + suffix] = obj.ecal_beta;
+                ecal_nt["ecal_pid" + suffix] = obj.ecal_pid;
+                ecal_nt["ecal_energy" + suffix] = obj.ecal_energy;
+                ecal_nt["ecal_theta" + suffix] = obj.ecal_theta;
+                ecal_nt["ecal_phi" + suffix] = obj.ecal_phi;
+                ecal_nt["ecal_chi2" + suffix] = obj.ecal_chi2;
+                ecal_nt["ecal_tof" + suffix] = obj.ecal_tof;
+                ecal_nt["ecal_r" + suffix] = obj.ecal_r;
+                ecal_nt["ecal_z" + suffix] = obj.ecal_z;
+            }
+        };
+
+        // ECAL hits 1-5
+        fillEcalHit(0, "_1");
+        fillEcalHit(1, "_2");
+        fillEcalHit(2, "_3");
+        fillEcalHit(3, "_4");
+        fillEcalHit(4, "_5");
+
+        ecal_nt.fill();
     }
 
-    // ecal_objects now contains 0-3 valid ECAL particles
-    // These can be combined with other PParticles:
-    //   PParticle composite = dilepton + ecal_objects[0];
+    // ========================================================================
+    // STEP 9: Forward Tracker objects
+    // ========================================================================
+    // Create particle objects from Forward Tracker detector.
+    // FT can detect hadrons (protons, pions, etc.) in the forward direction.
+    // fwdet_mult tells us how many FT hits are present (0-3).
+    //
+    // PParticleFwd extends PParticle with FT-specific data:
+    //   - Works with operator+ for composite particle creation
+    //   - Stores all FT detector variables (beta, chi2, mass, etc.)
+    //   - Uses fwdet_p, fwdet_theta, fwdet_phi for kinematics
+    //
+    // Controlled by config.json: "fwdet": true/false
 
-    // Fill ECAL ntuple with detector variables
-    auto& ecal_nt = mgr.getDynamicNtuple("ecal_nt");
+    if (config.isFwdEnabled()) {
+        int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
 
-    ecal_nt["ecal_mult"] = neutr_mult;
+        std::vector<PParticleFwd> fwd_objects;
+        fwd_objects.reserve(fwdet_mult);
 
-    // ECAL hit 1
-    if (ecal_objects.size() >= 1) {
-        // STEP 8b: Check ECAL quality cuts (pid==1, 0.8<beta<1.2, energy>100)
-        bool ecal_pass_1 = cuts.passCutSet("ecal_quality", {
-            static_cast<double>(ecal_objects[0].ecal_pid),
-            ecal_objects[0].ecal_beta,
-            ecal_objects[0].ecal_energy
-        });
-        ecal_nt["ecal_pass_1"] = ecal_pass_1 ? 1.0f : 0.0f;
+        for (int i = 1; i <= fwdet_mult && i <= 3; ++i) {
+            // Create FT particle with proton hypothesis (most common)
+            PParticleFwd fwd_obj(MASS_PROTON, "fwd" + std::to_string(i));
 
-        ecal_nt["ecal_beta_1"] = ecal_objects[0].ecal_beta;
-        ecal_nt["ecal_pid_1"] = ecal_objects[0].ecal_pid;
-        ecal_nt["ecal_energy_1"] = ecal_objects[0].ecal_energy;
-        ecal_nt["ecal_theta_1"] = ecal_objects[0].ecal_theta;
-        ecal_nt["ecal_phi_1"] = ecal_objects[0].ecal_phi;
-        ecal_nt["ecal_chi2_1"] = ecal_objects[0].ecal_chi2;
-        ecal_nt["ecal_tof_1"] = ecal_objects[0].ecal_tof;
-        ecal_nt["ecal_r_1"] = ecal_objects[0].ecal_r;
-        ecal_nt["ecal_z_1"] = ecal_objects[0].ecal_z;
+            // Fill from ntuple variables (fwdet_*_N where N = i)
+            if (fwd_obj.setFromReader(reader, i)) {
+                fwd_objects.push_back(fwd_obj);
+            }
+        }
+
+        // fwd_objects now contains 0-3 valid FT particles
+        // These can be combined with other PParticles:
+        //   PParticle composite = dilepton + fwd_objects[0];
+
+        // Fill FT ntuple with detector variables
+        auto& fwd_nt = mgr.getDynamicNtuple("fwdet_nt");
+
+        fwd_nt["fwd_mult"] = fwdet_mult;
+
+        // Helper lambda to fill ntuple for each FT hit
+        auto fillFwdHit = [&](size_t idx, const std::string& suffix) {
+            if (fwd_objects.size() > idx) {
+                const auto& obj = fwd_objects[idx];
+
+                // Kinematics
+                fwd_nt["fwd_p" + suffix] = obj.momentum();
+                fwd_nt["fwd_theta" + suffix] = obj.fwd_theta;
+                fwd_nt["fwd_phi" + suffix] = obj.fwd_phi;
+
+                // Measured quantities
+                fwd_nt["fwd_beta" + suffix] = obj.fwd_beta;
+                fwd_nt["fwd_mass" + suffix] = obj.fwd_mass;
+                fwd_nt["fwd_mass2" + suffix] = obj.fwd_mass2;
+                fwd_nt["fwd_charge" + suffix] = obj.fwd_charge;
+
+                // Quality
+                fwd_nt["fwd_chi2" + suffix] = obj.fwd_chi2;
+                fwd_nt["fwd_ndf" + suffix] = obj.fwd_ndf;
+                fwd_nt["fwd_chi2ndf" + suffix] = obj.fwd_chi2ndf;
+
+                // Position
+                fwd_nt["fwd_r" + suffix] = obj.fwd_r;
+                fwd_nt["fwd_z" + suffix] = obj.fwd_z;
+                fwd_nt["fwd_distToRpc" + suffix] = obj.fwd_distToRpc;
+            }
+        };
+
+        // FT hits 1-3
+        fillFwdHit(0, "_1");
+        fillFwdHit(1, "_2");
+        fillFwdHit(2, "_3");
+
+        fwd_nt.fill();
     }
-
-    // ECAL hit 2
-    if (ecal_objects.size() >= 2) {
-        bool ecal_pass_2 = cuts.passCutSet("ecal_quality", {
-            static_cast<double>(ecal_objects[1].ecal_pid),
-            ecal_objects[1].ecal_beta,
-            ecal_objects[1].ecal_energy
-        });
-        ecal_nt["ecal_pass_2"] = ecal_pass_2 ? 1.0f : 0.0f;
-
-        ecal_nt["ecal_beta_2"] = ecal_objects[1].ecal_beta;
-        ecal_nt["ecal_pid_2"] = ecal_objects[1].ecal_pid;
-        ecal_nt["ecal_energy_2"] = ecal_objects[1].ecal_energy;
-        ecal_nt["ecal_theta_2"] = ecal_objects[1].ecal_theta;
-        ecal_nt["ecal_phi_2"] = ecal_objects[1].ecal_phi;
-        ecal_nt["ecal_chi2_2"] = ecal_objects[1].ecal_chi2;
-        ecal_nt["ecal_tof_2"] = ecal_objects[1].ecal_tof;
-        ecal_nt["ecal_r_2"] = ecal_objects[1].ecal_r;
-        ecal_nt["ecal_z_2"] = ecal_objects[1].ecal_z;
-    }
-
-    // ECAL hit 3
-    if (ecal_objects.size() >= 3) {
-        bool ecal_pass_3 = cuts.passCutSet("ecal_quality", {
-            static_cast<double>(ecal_objects[2].ecal_pid),
-            ecal_objects[2].ecal_beta,
-            ecal_objects[2].ecal_energy
-        });
-        ecal_nt["ecal_pass_3"] = ecal_pass_3 ? 1.0f : 0.0f;
-
-        ecal_nt["ecal_beta_3"] = ecal_objects[2].ecal_beta;
-        ecal_nt["ecal_pid_3"] = ecal_objects[2].ecal_pid;
-        ecal_nt["ecal_energy_3"] = ecal_objects[2].ecal_energy;
-        ecal_nt["ecal_theta_3"] = ecal_objects[2].ecal_theta;
-        ecal_nt["ecal_phi_3"] = ecal_objects[2].ecal_phi;
-        ecal_nt["ecal_chi2_3"] = ecal_objects[2].ecal_chi2;
-        ecal_nt["ecal_tof_3"] = ecal_objects[2].ecal_tof;
-        ecal_nt["ecal_r_3"] = ecal_objects[2].ecal_r;
-        ecal_nt["ecal_z_3"] = ecal_objects[2].ecal_z;
-    }
-
-    ecal_nt.fill();
 
 }
 

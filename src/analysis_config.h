@@ -659,71 +659,23 @@ public:
     // ========================================================================
     
     /**
-     * @brief Check if Forward Tracker hit 1 is enabled
-     * @return true if fwdet_1 should be loaded (default: false)
+     * @brief Check if Forward Tracker processing is enabled
+     * @return true if FWD objects should be built (default: false)
      */
-    bool hasFwdet1() const {
-        return config_["forward_tracker"]["fwdet_1"].asBool(false);
+    bool isFwdEnabled() const {
+        return config_["fwdet"].asBool(false);
     }
-    
-    /**
-     * @brief Check if Forward Tracker hit 2 is enabled
-     * @return true if fwdet_2 should be loaded (default: false)
-     */
-    bool hasFwdet2() const {
-        return config_["forward_tracker"]["fwdet_2"].asBool(false);
-    }
-    
-    /**
-     * @brief Check if Forward Tracker hit 3 is enabled
-     * @return true if fwdet_3 should be loaded (default: false)
-     */
-    bool hasFwdet3() const {
-        return config_["forward_tracker"]["fwdet_3"].asBool(false);
-    }
-    
-    /**
-     * @brief Check if any Forward Tracker hit is enabled
-     * @return true if at least one fwdet is enabled
-     */
-    bool hasAnyFwdet() const {
-        return hasFwdet1() || hasFwdet2() || hasFwdet3();
-    }
-    
+
     // ========================================================================
     // ECAL (Electromagnetic Calorimeter) Configuration
     // ========================================================================
-    
+
     /**
-     * @brief Check if ECAL hit 1 is enabled
-     * @return true if ecal_1 should be loaded (default: false)
+     * @brief Check if ECAL processing is enabled
+     * @return true if ECAL objects should be built (default: false)
      */
-    bool hasEcal1() const {
-        return config_["ecal"]["ecal_1"].asBool(false);
-    }
-    
-    /**
-     * @brief Check if ECAL hit 2 is enabled
-     * @return true if ecal_2 should be loaded (default: false)
-     */
-    bool hasEcal2() const {
-        return config_["ecal"]["ecal_2"].asBool(false);
-    }
-    
-    /**
-     * @brief Check if ECAL hit 3 is enabled
-     * @return true if ecal_3 should be loaded (default: false)
-     */
-    bool hasEcal3() const {
-        return config_["ecal"]["ecal_3"].asBool(false);
-    }
-    
-    /**
-     * @brief Check if any ECAL hit is enabled
-     * @return true if at least one ecal is enabled
-     */
-    bool hasAnyEcal() const {
-        return hasEcal1() || hasEcal2() || hasEcal3();
+    bool isEcalEnabled() const {
+        return config_["ecal"].asBool(false);
     }
     
     // ========================================================================
