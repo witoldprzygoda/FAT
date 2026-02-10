@@ -127,10 +127,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt.fill();
 
     // Apply opening angle cut (reject close pairs)
-    if (!oa_pass) return;
-
-    mgr.fill("mass_ee_after_oa", m_ee);
-
+    // if (!oa_pass) return;
+    if (oa_pass) {
+    // Still fill histograms for failed OA cut for comparison
+        mgr.fill("mass_ee_after_oa", m_ee);
+    }
     // CMS histograms (after OA cut)
     mgr.fill("rapidity_cms", y_cms);
     mgr.fill("pt_cms", pt);
