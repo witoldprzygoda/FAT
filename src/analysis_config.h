@@ -538,7 +538,31 @@ public:
     std::string getInputTreeName() const {
         return config_["input"]["tree_name"].asString("PPip_ID");
     }
-    
+
+    /**
+     * @brief Get channel name (e.g., "EpEm", "EpEp", "EmEm")
+     * @return Channel name from config, empty string if not set
+     */
+    std::string getChannelName() const {
+        return config_["input"]["channel"].asString("");
+    }
+
+    /**
+     * @brief Get lepton prefix replacements for channel-transparent analysis
+     * @return Pair of {prefix1, prefix2} replacing canonical "ep"/"em" prefixes
+     *
+     * Used to run the same analysis code on different trees (EpEm, EpEp, EmEm).
+     * In config: "lepton_prefixes": ["ep1", "ep2"]  (for EpEp channel)
+     * If not set, returns empty pair (no prefix mapping needed).
+     */
+    std::pair<std::string, std::string> getLeptonPrefixes() const {
+        const JsonValue& arr = config_["input"]["lepton_prefixes"];
+        if (arr.isArray() && arr.size() >= 2) {
+            return {arr[0].asString(), arr[1].asString()};
+        }
+        return {"", ""};
+    }
+
     /**
      * @brief Get starting event number
      * @return Starting event index (default 0)

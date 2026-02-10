@@ -87,6 +87,29 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
 
     std::cout << "  Created output ntuple 'fwdet_nt'\n";
+
+    // ========================================================================
+    // STEP 11: e+e-gamma compound ntuple
+    // ========================================================================
+    // One entry per (event, passing gamma) combination.
+    // Used for pi0 Dalitz decay identification: pi0 -> e+e-gamma
+    //
+    // Naming convention:
+    //   epemg_mass     - invariant mass of e+e-gamma [GeV/c^2]
+    //   epemg_rapidity - rapidity in CMS frame
+    //   epemg_pt       - transverse momentum in CMS [MeV/c]
+    //   epemg_theta    - polar angle in LAB [deg]
+    //   epemg_phi      - azimuthal angle in LAB [deg]
+    //   ee_oa          - e+e- opening angle [deg]
+    //   ee_mass        - e+e- invariant mass [GeV/c^2]
+    //   gamma_energy   - cluster energy [MeV]
+    //   gamma_theta    - cluster theta [deg]
+    //   gamma_phi      - cluster phi [deg]
+    //   gamma_index    - ECAL hit index (1-5)
+
+    manager.createDynamicNtuple("epemg_nt", "e+e-gamma compound data");
+
+    std::cout << "  Created output ntuple 'epemg_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H

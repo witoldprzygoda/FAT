@@ -5,6 +5,7 @@
  * Provides flexible reading of ROOT TTrees/TNtuples with:
  * - Lazy branch binding (bind on first access)
  * - Named variable access via operator[]
+ * - Variable aliasing for channel-transparent analysis
  * - Support for TChain (multiple files)
  * - Automatic type handling for Float_t branches
  *
@@ -229,9 +230,13 @@ public:
         if (it != branch_values_.end()) {
             return it->second;
         }
-        
+
+        // Resolve prefix mapping: ep_xxx -> prefix1_xxx, em_xxx -> prefix2_xxx
+        std::string branch_name = resolveVariable(varname);
+
         // Lazy binding - bind branch on first access
-        return bindBranch(varname);
+        // Store under logical name so subsequent lookups are fast
+        return bindBranch(varname, branch_name);
     }
     
     /**
@@ -247,11 +252,12 @@ public:
     }
     
     /**
-     * @brief Check if variable exists in tree
+     * @brief Check if variable exists in tree (resolves aliases)
      */
     bool hasVariable(const std::string& varname) const {
         if (!tree_) return false;
-        return tree_->GetLeaf(varname.c_str()) != nullptr;
+        std::string actual = resolveVariable(varname);
+        return tree_->GetLeaf(actual.c_str()) != nullptr;
     }
     
     /**
@@ -277,9 +283,42 @@ public:
      */
     void bindVariables(const std::vector<std::string>& varnames) {
         for (const auto& var : varnames) {
-            bindBranch(var);
+            (*this)[var];  // Use operator[] to resolve aliases
         }
     }
+
+    // ========================================================================
+    // Variable Prefix Mapping (Step 10)
+    // ========================================================================
+
+    /**
+     * @brief Set lepton prefix replacements for channel-transparent analysis
+     * @param prefix1 Replacement for canonical "ep_" prefix (e.g., "ep1" for EpEp)
+     * @param prefix2 Replacement for canonical "em_" prefix (e.g., "ep2" for EpEp)
+     *
+     * All variables starting with "ep_" will have the prefix replaced with
+     * prefix1 + "_", and variables starting with "em_" with prefix2 + "_".
+     * Variables with other prefixes (neutr_, fwdet_, isBest, etc.) pass through
+     * unchanged.
+     *
+     * Example:
+     * @code
+     *   reader.setLeptonPrefixes("ep1", "ep2");  // for EpEp channel
+     *   // Now reader["ep_p"] reads from branch "ep1_p"
+     *   // and reader["em_p"] reads from branch "ep2_p"
+     *   // while reader["neutr_mult"] still reads "neutr_mult"
+     * @endcode
+     */
+    void setLeptonPrefixes(const std::string& prefix1, const std::string& prefix2) {
+        lepton_prefix_1_ = prefix1;
+        lepton_prefix_2_ = prefix2;
+        has_prefix_mapping_ = true;
+    }
+
+    /**
+     * @brief Check if prefix mapping is active
+     */
+    bool hasPrefixMapping() const { return has_prefix_mapping_; }
     
     // ========================================================================
     // Accessors
@@ -306,6 +345,10 @@ public:
         os << "  Type: " << (is_chain_ ? "TChain" : "TTree") << "\n";
         os << "  Entries: " << (tree_ ? tree_->GetEntries() : 0) << "\n";
         os << "  Bound variables: " << branch_values_.size() << "\n";
+        if (has_prefix_mapping_) {
+            os << "  Prefix mapping: ep_ -> " << lepton_prefix_1_
+               << "_, em_ -> " << lepton_prefix_2_ << "_\n";
+        }
         if (!branch_values_.empty()) {
             os << "  Variables:\n";
             for (const auto& pair : branch_values_) {
@@ -321,33 +364,64 @@ private:
     
     /**
      * @brief Bind branch to internal storage
+     * @param logical_name Name used for lookup in branch_values_ (what the code uses)
+     * @param branch_name Actual branch name in the ROOT tree (may differ if aliased)
      */
-    Float_t& bindBranch(const std::string& varname) {
+    Float_t& bindBranch(const std::string& logical_name, const std::string& branch_name) {
         if (!tree_) {
             throw std::runtime_error("NTupleReader::bindBranch() - No tree loaded!");
         }
-        
-        // Check if branch exists
-        TBranch* branch = tree_->GetBranch(varname.c_str());
+
+        // Check if branch exists (using physical branch name)
+        TBranch* branch = tree_->GetBranch(branch_name.c_str());
         if (!branch) {
             // Try leaf (for TNtuple with combined branches)
-            TLeaf* leaf = tree_->GetLeaf(varname.c_str());
+            TLeaf* leaf = tree_->GetLeaf(branch_name.c_str());
             if (!leaf) {
-                throw std::runtime_error("NTupleReader::bindBranch() - Variable '" + 
-                                       varname + "' not found in tree '" + treename_ + "'");
+                std::string msg = "NTupleReader::bindBranch() - Variable '" + logical_name + "'";
+                if (logical_name != branch_name) {
+                    msg += " (aliased to '" + branch_name + "')";
+                }
+                msg += " not found in tree '" + treename_ + "'";
+                throw std::runtime_error(msg);
             }
         }
-        
-        // Create storage and bind
-        branch_values_[varname] = 0.0f;
-        tree_->SetBranchAddress(varname.c_str(), &branch_values_[varname]);
-        
+
+        // Create storage under logical name, bind to physical branch
+        branch_values_[logical_name] = 0.0f;
+        tree_->SetBranchAddress(branch_name.c_str(), &branch_values_[logical_name]);
+
         // Re-read current entry to get value
         if (current_entry_ >= 0) {
             tree_->GetEntry(current_entry_);
         }
-        
-        return branch_values_[varname];
+
+        return branch_values_[logical_name];
+    }
+
+    /// @brief Convenience overload (no alias)
+    Float_t& bindBranch(const std::string& varname) {
+        return bindBranch(varname, varname);
+    }
+
+    /**
+     * @brief Resolve variable name through prefix mapping
+     *
+     * If prefix mapping is active:
+     *   "ep_xxx" -> "prefix1_xxx"  (e.g., "ep_p" -> "ep1_p")
+     *   "em_xxx" -> "prefix2_xxx"  (e.g., "em_p" -> "ep2_p")
+     * Other variables pass through unchanged (neutr_, fwdet_, isBest, etc.)
+     */
+    std::string resolveVariable(const std::string& varname) const {
+        if (!has_prefix_mapping_) return varname;
+
+        if (varname.compare(0, 3, "ep_") == 0) {
+            return lepton_prefix_1_ + varname.substr(2);  // "ep_xxx" -> "prefix1_xxx"
+        }
+        if (varname.compare(0, 3, "em_") == 0) {
+            return lepton_prefix_2_ + varname.substr(2);  // "em_xxx" -> "prefix2_xxx"
+        }
+        return varname;  // non-lepton variables pass through
     }
     
     // ========================================================================
@@ -364,6 +438,11 @@ private:
     
     // Storage for branch values (reflection map)
     std::map<std::string, Float_t> branch_values_;
+
+    // Lepton prefix mapping (Step 10): ep_ -> prefix1_, em_ -> prefix2_
+    std::string lepton_prefix_1_ = "ep";   // replacement for "ep" prefix
+    std::string lepton_prefix_2_ = "em";   // replacement for "em" prefix
+    bool has_prefix_mapping_ = false;
 };
 
 #endif // NTUPLE_READER_H

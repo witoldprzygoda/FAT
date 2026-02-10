@@ -18,6 +18,8 @@
 // Step 8: ECAL objects - create particle objects from ECAL detector
 // Step 8b: ECAL quality cuts (pid==1, 0.8<beta<1.2, cluster_energy>100)
 // Step 9: Forward Tracker objects - create particle objects from FT detector
+// Step 10: Combinatorial background - variable aliases for like-sign pairs
+// Step 11: Compound objects e+e-gamma for pi0 Dalitz decay identification
 //
 // Usage:
 //   ./ana [config.json]
@@ -296,8 +298,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
 
         // ecal_objects now contains 0-5 valid ECAL particles
-        // These can be combined with other PParticles:
-        //   PParticle composite = dilepton + ecal_objects[0];
+
+        // STEP 8b: Check ECAL quality cuts for each object
+        // Store pass/fail flags for use by both ecal_nt and Step 11 compounds
+        std::vector<bool> ecal_pass(ecal_objects.size(), false);
+        for (size_t j = 0; j < ecal_objects.size(); ++j) {
+            const auto& obj = ecal_objects[j];
+            ecal_pass[j] = cuts.passCutSet("ecal_quality", {
+                static_cast<double>(obj.ecal_pid),
+                obj.ecal_beta,
+                obj.cluster_energy
+            });
+        }
 
         // Fill ECAL ntuple with detector variables
         auto& ecal_nt = mgr.getDynamicNtuple("ecal_nt");
@@ -309,13 +321,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             if (ecal_objects.size() > idx) {
                 const auto& obj = ecal_objects[idx];
 
-                // STEP 8b: Check ECAL quality cuts
-                bool pass = cuts.passCutSet("ecal_quality", {
-                    static_cast<double>(obj.ecal_pid),
-                    obj.ecal_beta,
-                    obj.cluster_energy
-                });
-                ecal_nt["ecal_pass" + suffix] = pass ? 1.0f : 0.0f;
+                ecal_nt["ecal_pass" + suffix] = ecal_pass[idx] ? 1.0f : 0.0f;
 
                 // Cluster reconstruction (used for kinematics)
                 ecal_nt["cluster_energy" + suffix] = obj.cluster_energy;
@@ -343,6 +349,73 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         fillEcalHit(4, "_5");
 
         ecal_nt.fill();
+
+        // ====================================================================
+        // STEP 11: Compound objects e+e-gamma (pi0 Dalitz candidates)
+        // ====================================================================
+        // For each ECAL photon passing quality cuts, build compound:
+        //   epemg = dilepton + gamma
+        // One ntuple entry per passing gamma combination.
+        // Goal: identify pi0 from Dalitz decay (pi0 -> e+e-gamma)
+
+        auto& epemg_nt = mgr.getDynamicNtuple("epemg_nt");
+
+        // Count passing gammas and build energy-ranked index
+        int gamma_pass_mult = std::count(ecal_pass.begin(), ecal_pass.end(), true);
+
+        // Build sorted indices of passing gammas by descending cluster energy
+        std::vector<size_t> pass_indices;
+        for (size_t j = 0; j < ecal_objects.size(); ++j) {
+            if (ecal_pass[j]) pass_indices.push_back(j);
+        }
+        std::sort(pass_indices.begin(), pass_indices.end(),
+                  [&](size_t a, size_t b) {
+                      return ecal_objects[a].cluster_energy > ecal_objects[b].cluster_energy;
+                  });
+
+        // Assign energy rank: rank_map[index] = rank (1 = highest energy)
+        std::map<size_t, int> rank_map;
+        for (size_t r = 0; r < pass_indices.size(); ++r) {
+            rank_map[pass_indices[r]] = static_cast<int>(r + 1);
+        }
+
+        for (size_t j = 0; j < ecal_objects.size(); ++j) {
+            if (!ecal_pass[j]) continue;
+
+            // Build compound: e+e-gamma
+            PParticle epemg = dilepton + ecal_objects[j];
+
+            // Boost to CMS
+            PParticle epemg_cms = frames.getFrame("beam").boost(epemg);
+
+            // Compound variables
+            epemg_nt["epemg_mass"] = epemg.massGeV();
+            epemg_nt["epemg_p"] = epemg.momentum();
+            epemg_nt["epemg_theta"] = epemg.theta();
+            epemg_nt["epemg_phi"] = epemg.phi();
+
+            // CMS variables
+            epemg_nt["epemg_rapidity_cms"] = epemg_cms.rapidity();
+            epemg_nt["epemg_pt_cms"] = epemg_cms.vec().Pt();
+            epemg_nt["epemg_theta_cms"] = epemg_cms.theta();
+
+            // Dilepton (e+e-) sub-variables
+            epemg_nt["ee_oa"] = oa;
+            epemg_nt["ee_mass"] = m_ee;
+
+            // Gamma variables
+            epemg_nt["gamma_energy"] = ecal_objects[j].cluster_energy;
+            epemg_nt["gamma_theta"] = ecal_objects[j].cluster_theta;
+            epemg_nt["gamma_phi"] = ecal_objects[j].cluster_phi;
+            epemg_nt["gamma_index"] = static_cast<Float_t>(j + 1);
+
+            // Multiplicity and ranking
+            epemg_nt["ecal_mult"] = static_cast<Float_t>(neutr_mult);
+            epemg_nt["gamma_pass_mult"] = static_cast<Float_t>(gamma_pass_mult);
+            epemg_nt["gamma_rank_energy"] = static_cast<Float_t>(rank_map[j]);
+
+            epemg_nt.fill();
+        }
     }
 
     // ========================================================================
@@ -477,6 +550,24 @@ int main(int argc, char* argv[]) {
     } catch (const std::exception& e) {
         std::cerr << "Error opening input: " << e.what() << "\n";
         return 1;
+    }
+
+    // ========================================================================
+    // STEP 10: Apply lepton prefix mapping (for combinatorial background)
+    // ========================================================================
+    // If config has lepton_prefixes, apply them to the reader.
+    // This allows the same processEvent() code to work with EpEp_ID and EmEm_ID
+    // trees where variable names differ (ep1_p/ep2_p instead of ep_p/em_p).
+    // When no prefixes are defined (EpEm_ID), this does nothing.
+
+    auto [prefix1, prefix2] = config.getLeptonPrefixes();
+    if (!prefix1.empty()) {
+        reader.setLeptonPrefixes(prefix1, prefix2);
+        std::string channel = config.getChannelName();
+        std::cout << "NTupleReader: Prefix mapping ep_ -> " << prefix1
+                  << "_, em_ -> " << prefix2 << "_";
+        if (!channel.empty()) std::cout << " (channel: " << channel << ")";
+        std::cout << "\n";
     }
 
     // ========================================================================
