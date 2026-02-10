@@ -288,7 +288,7 @@ public:
     }
 
     // ========================================================================
-    // Variable Prefix Mapping (Step 10)
+    // Variable Prefix Mapping
     // ========================================================================
 
     /**
@@ -439,7 +439,7 @@ private:
     // Storage for branch values (reflection map)
     std::map<std::string, Float_t> branch_values_;
 
-    // Lepton prefix mapping (Step 10): ep_ -> prefix1_, em_ -> prefix2_
+    // Lepton prefix mapping: ep_ -> prefix1_, em_ -> prefix2_
     std::string lepton_prefix_1_ = "ep";   // replacement for "ep" prefix
     std::string lepton_prefix_2_ = "em";   // replacement for "em" prefix
     bool has_prefix_mapping_ = false;
