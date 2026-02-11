@@ -1,6 +1,9 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/epem_049_01_pid.root",
+        "source": [
+            "/hdd2/przygoda/hades/pp158/LEPTONS/epem067_all.root",
+            "/hdd2/przygoda/hades/pp158/LEPTONS/epem068_all.root"
+        ],
         "tree_name": "EpEm_ID",
         "channel": "EpEm",
         "lepton_prefixes": ["ep", "em"],
@@ -8,13 +11,13 @@
         "max_events": 1000000
     },
     "output": {
-        "filename": "output_tutorial.root",
+        "filename": "output_epem.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
     },
     "beam": {
-        "kinetic_energy": 4500.0,
+        "kinetic_energy": 1580.0,
         "luminosity": 1.0
     },
     "kinematics": {
