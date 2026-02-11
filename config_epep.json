@@ -4,14 +4,14 @@
             "/hdd2/przygoda/hades/pp158/LEPTONS/epem067_all.root",
             "/hdd2/przygoda/hades/pp158/LEPTONS/epem068_all.root"
         ],
-        "tree_name": "EpEp_ID",
-        "channel": "EpEp",
+        "tree_name": "PEpEp_ID",
+        "channel": "PEpEp",
         "lepton_prefixes": ["ep1", "ep2"],
         "start_event": 0,
         "max_events": 1000000
     },
     "output": {
-        "filename": "output_epep.root",
+        "filename": "output_pepep.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0

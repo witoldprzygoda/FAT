@@ -60,6 +60,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
                               KinematicType::CORRECTED);
 
+    // Create proton (p_ prefix is the same in all PEpEm/PEpEp/PEmEm trees)
+    PParticle proton(MASS_PROTON, "p");
+
+    proton.setFromSpherical(reader["p_p"], reader["p_theta"], reader["p_phi"],
+                            KinematicType::RECONSTRUCTED);
+
+    proton.setFromSpherical(reader["p_p_corr_p"], reader["p_theta"], reader["p_phi"],
+                            KinematicType::CORRECTED);
+
     // Lepton momentum histograms
     mgr.fill("ep_p", positron.momentum());
     mgr.fill("em_p", electron.momentum());
@@ -72,6 +81,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double em_p_rec = electron.momentum(KinematicType::RECONSTRUCTED);
     double em_p_cor = electron.momentum(KinematicType::CORRECTED);
     double em_dp = em_p_cor - em_p_rec;
+
+    double p_p_rec = proton.momentum(KinematicType::RECONSTRUCTED);
+    double p_p_cor = proton.momentum(KinematicType::CORRECTED);
 
     mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
     mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
@@ -96,8 +108,37 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt = dilepton_cms.vec().Pt();
     double theta_cms = dilepton_cms.theta();
 
+    // Beam + target for missing mass and compound calculations
+    PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
+    PParticle target = ParticleFactory::createTargetProton();
+    PParticle initial = beam + target;
+
+    // Missing mass of e+e- system: MM(e+e-) = beam + target - e+ - e-
+    PParticle miss_epem = initial - positron - electron;
+    double mm_epem_mass = miss_epem.massGeV();
+    double mm_epem_mass2 = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
+
+    // Compound: p + e+ + e-
+    PParticle pepem = proton + positron + electron;
+    double pepem_mass = pepem.massGeV();
+    double pepem_mass2 = pepem.vec().M2() / 1e6;  // GeV²/c⁴
+
+    // Missing mass of p+e+e- system: MM(pe+e-) = beam + target - p - e+ - e-
+    PParticle miss_pepem = initial - proton - positron - electron;
+    double mm_pepem_mass = miss_pepem.massGeV();
+    double mm_pepem_mass2 = miss_pepem.vec().M2() / 1e6;  // GeV²/c⁴
+
+    // Boost p+e+e- to beam-target CMS frame
+    PParticle pepem_cms = frames.getFrame("beam").boost(pepem);
+    double pepem_y_cms = pepem_cms.rapidity();
+    double pepem_pt_cms = pepem_cms.vec().Pt();
+    double pepem_theta_cms = pepem_cms.theta();
+    double pepem_costheta_cms = pepem_cms.cosTheta();
+
     // Fill dilepton ntuple (before OA cut, store cut decision as flag)
     bool oa_pass = cuts.passMinCut("opening_angle", oa);
+    bool m_ee_cut = cuts.passMinCut("m_ee", m_ee);
+    bool mm_pepem_cut = cuts.passRangeCut("mm_pepem", mm_pepem_mass);
 
     auto& nt = mgr.getDynamicNtuple("dilepton_nt");
 
@@ -115,6 +156,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["em_theta_rich"] = reader["em_theta_rich"];
     nt["em_phi_rich"] = reader["em_phi_rich"];
 
+    nt["p_p_rec"] = p_p_rec;
+    nt["p_p_cor"] = p_p_cor;
+    nt["p_theta"] = proton.theta();
+    nt["p_phi"] = proton.phi();
+
     nt["oa"] = oa;
     nt["m_ee"] = m_ee;
 
@@ -122,15 +168,39 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["pt"] = pt;
     nt["theta_cms"] = theta_cms;
 
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;  // cut decision flag
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;
+    nt["m_ee_cut"] = m_ee_cut ? 1.0f : 0.0f;
+    nt["mm_pepem_cut"] = mm_pepem_cut ? 1.0f : 0.0f;
+
+    nt["pepem_mass"] = pepem_mass;
+    nt["pepem_mass2"] = pepem_mass2;
+    nt["mm_pepem_mass"] = mm_pepem_mass;
+    nt["mm_pepem_mass2"] = mm_pepem_mass2;
+    nt["pepem_y_cms"] = pepem_y_cms;
+    nt["pepem_pt_cms"] = pepem_pt_cms;
+    nt["pepem_theta_cms"] = pepem_theta_cms;
+    nt["pepem_costheta_cms"] = pepem_costheta_cms;
 
     nt.fill();
 
     // Apply opening angle cut (reject close pairs)
     // if (!oa_pass) return;
     if (oa_pass) {
-    // Still fill histograms for failed OA cut for comparison
         mgr.fill("mass_ee_after_oa", m_ee);
+    }
+
+    // Missing mass of pe+e- (with OA > 9 and M_ee > 0.14 cuts)
+    if (oa_pass && m_ee_cut) {
+        mgr.fill("mm_pepem", mm_pepem_mass);
+    }
+
+    // Dilepton mass with OA > 9 and MM(pe+e-) proton window
+    if (oa_pass && mm_pepem_cut) {
+        mgr.fill("m_ee_mm_pepem", m_ee);
+        if (m_ee_cut) {
+            mgr.fill("pepem_inv_mass", pepem_mass);
+            mgr.fill("pepem_cms_costheta", pepem_costheta_cms);
+        }
     }
     // CMS histograms (after OA cut)
     mgr.fill("rapidity_cms", y_cms);
@@ -140,16 +210,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     // Dilepton invariant mass (after all cuts)
     mgr.fill("mass_ee", m_ee);
-
-    // Beam + target for missing mass calculations
-    PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
-    PParticle target = ParticleFactory::createTargetProton();
-    PParticle initial = beam + target;
-
-    // Missing mass of e+e- system: MM(e+e-) = beam + target - e+ - e-
-    PParticle miss_epem = initial - positron - electron;
-    double mm_epem_mass = miss_epem.massGeV();
-    double mm_epem_mass2 = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
@@ -189,6 +249,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 ecal_nt["cluster_energy" + suffix] = obj.cluster_energy;
                 ecal_nt["cluster_theta" + suffix] = obj.cluster_theta;
                 ecal_nt["cluster_phi" + suffix] = obj.cluster_phi;
+                ecal_nt["cluster_ncells" + suffix] = obj.cluster_ncells;
 
                 ecal_nt["ecal_beta" + suffix] = obj.ecal_beta;
                 ecal_nt["ecal_pid" + suffix] = obj.ecal_pid;
@@ -222,7 +283,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
         std::sort(pass_indices.begin(), pass_indices.end(),
                   [&](size_t a, size_t b) {
-                      return ecal_objects[a].cluster_energy > ecal_objects[b].cluster_energy;
+                      return ecal_objects[a].ecal_energy > ecal_objects[b].ecal_energy;
                   });
 
         std::map<size_t, int> rank_map;
@@ -248,9 +309,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             epemg_nt["ee_oa"] = oa;
             epemg_nt["ee_mass"] = m_ee;
 
-            epemg_nt["gamma_energy"] = ecal_objects[j].cluster_energy;
-            epemg_nt["gamma_theta"] = ecal_objects[j].cluster_theta;
-            epemg_nt["gamma_phi"] = ecal_objects[j].cluster_phi;
+            epemg_nt["gamma_energy"] = ecal_objects[j].ecal_energy;
+            epemg_nt["gamma_theta"] = ecal_objects[j].ecal_theta;
+            epemg_nt["gamma_phi"] = ecal_objects[j].ecal_phi;
             epemg_nt["gamma_index"] = static_cast<Float_t>(j + 1);
 
             epemg_nt["ecal_mult"] = static_cast<Float_t>(neutr_mult);

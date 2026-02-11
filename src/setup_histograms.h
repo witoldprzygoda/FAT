@@ -55,6 +55,22 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create2D("rapidity_vs_mass", "y_{CMS} vs M_{ee};M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
                  100, 0.0, 1.0, 100, -2.0, 2.0, "cms");
 
+    // Missing mass of pe+e- system (after OA > 9 and M_ee > 0.14 cuts)
+    mgr.create1D("mm_pepem", "MM(pe^{+}e^{-});MM(pe^{+}e^{-}) [GeV/c^{2}];Counts",
+                 200, 0.0, 2.0, "pepem");
+
+    // Dilepton mass with MM(pe+e-) proton window + OA > 9 cuts
+    mgr.create1D("m_ee_mm_pepem", "M_{ee} (OA>9, MM proton);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 160, 0.0, 0.8, "pepem");
+
+    // Invariant mass of pe+e- system (OA > 9, M_ee > 0.14, MM proton window)
+    mgr.create1D("pepem_inv_mass", "M(pe^{+}e^{-}) (OA>9, M_{ee}>0.14, MM proton);M(pe^{+}e^{-}) [GeV/c^{2}];Counts",
+                 100, 0.8, 1.8, "pepem");
+
+    // cos(theta) of pe+e- in CMS (OA > 9, M_ee > 0.14, MM proton window)
+    mgr.create1D("pepem_cms_costheta", "cos#theta_{CMS}(pe^{+}e^{-}) (OA>9, M_{ee}>0.14, MM proton);cos#theta_{CMS};Counts",
+                 25, -1.0, 1.0, "pepem");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 

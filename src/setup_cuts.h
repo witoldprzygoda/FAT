@@ -28,6 +28,12 @@ inline void setupCuts(CutManager& cuts) {
     // Opening angle cut (rejects close e+e- pairs)
     cuts.defineMinCut("opening_angle", 9.0, "Opening angle > 9 deg");
 
+    // Dilepton mass cut (above pi0)
+    cuts.defineMinCut("m_ee", 0.14, "M_ee > 0.14 GeV/c^2");
+
+    // Missing mass of pe+e- (proton mass window)
+    cuts.defineRangeCut("mm_pepem", 0.88, 1.02, "MM(pe+e-) proton window");
+
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
         .addValueCut("ecal_pid", 1.0, "PID == 1")

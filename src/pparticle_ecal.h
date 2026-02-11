@@ -13,11 +13,13 @@
  * - neutr_phi2_N, neutr_theta2_N, neutr_r2_N, neutr_z2_N
  * - neutr_energy_N
  * - neutr_cluster_energy_N, neutr_cluster_theta_N, neutr_cluster_phi_N (cluster reco)
+ * - neutr_cluster_ncells_N (number of cells in cluster)
  * - neutr_mult, neutr_counter
  *
  * Where N = 1, 2, 3, 4, 5 for the five ECAL hits.
  *
- * The cluster variables (neutr_cluster_*) are used for PParticle kinematics.
+ * The neutr_theta, neutr_phi, neutr_energy variables are used for PParticle kinematics.
+ * The cluster variables (neutr_cluster_*) are stored as extension fields.
  *
  * Typical use cases:
  * - Photon (gamma): mass = 0
@@ -96,11 +98,12 @@ public:
     double ecal_z2;           ///< Z position (2nd method) [mm]
 
     // ========================================================================
-    // ECAL cluster reconstruction (used for PParticle kinematics)
+    // ECAL cluster reconstruction (extension fields, NOT used for kinematics)
     // ========================================================================
-    double cluster_energy;    ///< Cluster energy [MeV] - used for momentum
-    double cluster_theta;     ///< Cluster polar angle [deg] - used for kinematics
-    double cluster_phi;       ///< Cluster azimuthal angle [deg] - used for kinematics
+    double cluster_energy;    ///< Cluster energy [MeV]
+    double cluster_theta;     ///< Cluster polar angle [deg]
+    double cluster_phi;       ///< Cluster azimuthal angle [deg]
+    int    cluster_ncells;    ///< Number of cells in cluster
 
     // Quality
     double ecal_chi2;         ///< Fit chi-squared
@@ -150,6 +153,7 @@ public:
           ecal_r2(other.ecal_r2), ecal_z2(other.ecal_z2),
           cluster_energy(other.cluster_energy),
           cluster_theta(other.cluster_theta), cluster_phi(other.cluster_phi),
+          cluster_ncells(other.cluster_ncells),
           ecal_chi2(other.ecal_chi2),
           ecal_mult(other.ecal_mult), ecal_counter(other.ecal_counter),
           ecal_valid(other.ecal_valid) {}
@@ -166,8 +170,9 @@ public:
      * @return true if successfully filled, false if variables missing
      *
      * Reads all neutr_*_N variables where N = index.
-     * Uses cluster reconstruction variables (neutr_cluster_*) for PParticle kinematics.
-     * For photons (mass=0), uses cluster_energy as momentum.
+     * Uses neutr_theta, neutr_phi, neutr_energy for PParticle kinematics.
+     * Cluster variables (neutr_cluster_*) are stored as extension fields.
+     * For photons (mass=0), uses neutr_energy as momentum.
      * For massive particles, uses neutr_p_N.
      */
     bool setFromReader(NTupleReader& reader, int index,
@@ -176,53 +181,49 @@ public:
         // Build variable name suffix
         std::string idx = "_" + std::to_string(index);
 
-        // Check if cluster variables exist (required for kinematics)
-        std::string cluster_theta_var = "neutr_cluster_theta" + idx;
-        std::string cluster_phi_var = "neutr_cluster_phi" + idx;
-        std::string cluster_energy_var = "neutr_cluster_energy" + idx;
+        // Check if primary variables exist (required for kinematics)
+        std::string theta_var = "neutr_theta" + idx;
+        std::string phi_var = "neutr_phi" + idx;
+        std::string energy_var = "neutr_energy" + idx;
         std::string p_var = "neutr_p" + idx;
 
-        if (!reader.hasVariable(cluster_theta_var) ||
-            !reader.hasVariable(cluster_phi_var)) {
+        if (!reader.hasVariable(theta_var) ||
+            !reader.hasVariable(phi_var)) {
             ecal_valid = false;
             return false;
         }
 
-        // Read cluster reconstruction variables (for PParticle kinematics)
-        cluster_theta = reader[cluster_theta_var];
-        cluster_phi = reader[cluster_phi_var];
-        cluster_energy = readIfExists(reader, cluster_energy_var, -1.0);
+        // Read primary reconstruction variables (for PParticle kinematics)
+        ecal_theta     = reader[theta_var];
+        ecal_phi       = reader[phi_var];
+        ecal_energy    = readIfExists(reader, energy_var, -1.0);
 
-        // For momentum: use cluster_energy for photons (mass=0), p for massive
+        // For momentum: use neutr_energy for photons (mass=0), p for massive
         double p_val;
         double mass_hypo = vec().M();  // Get mass from base class
 
-        if (mass_hypo == 0.0 && cluster_energy > 0) {
+        if (mass_hypo == 0.0 && ecal_energy > 0) {
             // Photon: p = E (massless)
-            p_val = cluster_energy;
+            p_val = ecal_energy;
         } else if (reader.hasVariable(p_var)) {
             // Massive particle: use momentum
             p_val = reader[p_var];
-        } else if (cluster_energy > 0) {
-            // Fallback: use cluster energy
-            p_val = cluster_energy;
+        } else if (ecal_energy > 0) {
+            // Fallback: use energy
+            p_val = ecal_energy;
         } else {
             ecal_valid = false;
             return false;
         }
 
-        // Set momentum using cluster angles (inherited from PParticle)
-        setFromSpherical(p_val, cluster_theta, cluster_phi, type);
+        // Set momentum using neutr_theta/phi (inherited from PParticle)
+        setFromSpherical(p_val, ecal_theta, ecal_phi, type);
 
-        // Read ECAL-specific fields (primary reconstruction)
-        ecal_theta     = readIfExists(reader, "neutr_theta" + idx, -1.0);
-        ecal_phi       = readIfExists(reader, "neutr_phi" + idx, -1.0);
-
+        // Read ECAL-specific fields
         ecal_pid       = static_cast<int>(readIfExists(reader, "neutr_pid" + idx, 0.0));
         ecal_clusterId = static_cast<int>(readIfExists(reader, "neutr_clusterid" + idx, -1.0));
         ecal_charge    = readIfExists(reader, "neutr_q" + idx, 0.0);
 
-        ecal_energy    = readIfExists(reader, "neutr_energy" + idx, -1.0);
         ecal_p_pid     = readIfExists(reader, "neutr_p_pid" + idx, -1.0);
 
         ecal_mass      = readIfExists(reader, "neutr_mass" + idx, -1.0);
@@ -241,6 +242,12 @@ public:
         ecal_theta2    = readIfExists(reader, "neutr_theta2" + idx, -1.0);
         ecal_r2        = readIfExists(reader, "neutr_r2" + idx, -1.0);
         ecal_z2        = readIfExists(reader, "neutr_z2" + idx, -1.0);
+
+        // Cluster reconstruction variables (extension fields, not used for kinematics)
+        cluster_energy = readIfExists(reader, "neutr_cluster_energy" + idx, -1.0);
+        cluster_theta  = readIfExists(reader, "neutr_cluster_theta" + idx, -1.0);
+        cluster_phi    = readIfExists(reader, "neutr_cluster_phi" + idx, -1.0);
+        cluster_ncells = static_cast<int>(readIfExists(reader, "neutr_cluster_ncells" + idx, 0.0));
 
         // Multiplicity (same for all hits, no index suffix)
         ecal_mult      = static_cast<int>(readIfExists(reader, "neutr_mult", 0.0));
@@ -276,6 +283,7 @@ public:
         cluster_energy = -1.0;
         cluster_theta = -1.0;
         cluster_phi = -1.0;
+        cluster_ncells = 0;
         ecal_chi2 = -1.0;
         ecal_mult = 0;
         ecal_counter = 0;
