@@ -21,49 +21,57 @@
 inline void setupHistograms(Manager& mgr) {
     std::cout << "Setting up histograms...\n";
 
-    // Lepton momentum
-    mgr.create1D("ep_p", "e^{+} momentum;p [MeV/c];Counts",
-                 100, 0, 2000, "leptons");
-    mgr.create1D("em_p", "e^{-} momentum;p [MeV/c];Counts",
-                 100, 0, 2000, "leptons");
+    // ppip compound invariant mass (proton + pi+)
+    mgr.create1D("ppip_inv_mass", "M(p#pi^{+}) invariant mass;M(p#pi^{+}) [GeV/c^{2}];Counts",
+                 100, 1.0, 2.5, "ppip");
 
-    // Momentum correction: delta_p vs p_reconstructed
-    mgr.create2D("ep_dp_vs_p", "e^{+}: #Deltap vs p;p_{rec} [MeV/c];p_{corr} - p_{rec} [MeV/c]",
-                 100, 0, 2000, 100, 0, 10, "corrections");
-    mgr.create2D("em_dp_vs_p", "e^{-}: #Deltap vs p;p_{rec} [MeV/c];p_{corr} - p_{rec} [MeV/c]",
-                 100, 0, 2000, 100, 0, 10, "corrections");
+    // ppip missing mass (beam + target - proton - pi+)
+    mgr.create1D("ppip_miss_mass", "MM(p#pi^{+}) missing mass;MM(p#pi^{+}) [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "ppip");
 
-    // Dilepton invariant mass
-    mgr.create1D("mass_ee", "e^{+}e^{-} invariant mass;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+    // ========================================================================
+    // PWA (Partial Wave Analysis) Histograms
+    // ========================================================================
 
-    // Opening angle and before/after OA cut mass spectra
-    mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
-                 180, 0, 180, "dilepton");
-    mgr.create1D("mass_ee_before_oa", "M_{ee} before OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
-    mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+    // Group A: cos(theta) of single particles in CMS frame
+    mgr.create1D("pwa_pip_costh", "#pi^{+} cos#theta_{CMS};cos#theta_{CMS};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_p_costh", "Proton cos#theta_{CMS};cos#theta_{CMS};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_n_costh", "Neutron cos#theta_{CMS};cos#theta_{CMS};Counts",
+                 40, -1.0, 1.0, "pwa");
 
-    // CMS frame observables (after boost to beam-target CMS)
-    mgr.create1D("rapidity_cms", "Dilepton rapidity in CMS;y_{CMS};Counts",
-                 100, -2.0, 2.0, "cms");
-    mgr.create1D("pt_cms", "Dilepton transverse momentum;p_{T} [MeV/c];Counts",
-                 100, 0, 1500, "cms");
-    mgr.create1D("theta_cms", "Dilepton polar angle in CMS;#theta_{CMS} [deg];Counts",
-                 90, 0, 180, "cms");
-    mgr.create2D("rapidity_vs_mass", "y_{CMS} vs M_{ee};M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
-                 100, 0.0, 1.0, 100, -2.0, 2.0, "cms");
+    // Group B: Momenta in LAB frame
+    mgr.create1D("pwa_pip_p", "#pi^{+} momentum;p [GeV/c];Counts",
+                 50, 0.0, 1.0, "pwa");
+    mgr.create1D("pwa_p_p", "Proton momentum;p [GeV/c];Counts",
+                 50, 0.0, 2.0, "pwa");
+    mgr.create1D("pwa_n_p", "Neutron momentum;p [GeV/c];Counts",
+                 50, 0.0, 2.0, "pwa");
 
-    // pe+e- compound histograms (FWD proton + dilepton)
-    mgr.create1D("mm_pepem", "MM(pe^{+}e^{-});MM(pe^{+}e^{-}) [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "pepem");
-    mgr.create1D("m_ee_mm_pepem", "M_{ee} (OA>9, MM proton);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 80, 0.0, 0.8, "pepem");
-    mgr.create1D("pepem_inv_mass", "M(pe^{+}e^{-}) (OA>9, M_{ee}>0.14, MM proton);M(pe^{+}e^{-}) [GeV/c^{2}];Counts",
-                 50, 0.8, 1.8, "pepem");
-    mgr.create1D("pepem_cms_costheta", "cos#theta_{CMS}(pe^{+}e^{-}) (OA>9, M_{ee}>0.14, MM proton);cos#theta_{CMS};Counts",
-                 25, -1.0, 1.0, "pepem");
+    // Group C: Invariant masses of compound systems
+    mgr.create1D("pwa_ppip_m", "M(p#pi^{+});M(p#pi^{+}) [GeV/c^{2}];Counts",
+                 60, 1.0, 1.6, "pwa");
+    mgr.create1D("pwa_npip_m", "M(n#pi^{+});M(n#pi^{+}) [GeV/c^{2}];Counts",
+                 60, 0.9, 1.5, "pwa");
+    mgr.create1D("pwa_pn_m", "M(pn);M(pn) [GeV/c^{2}];Counts",
+                 60, 1.7, 2.3, "pwa");
+
+    // Group D: Helicity distributions
+    mgr.create1D("pwa_pip_helicity", "#pi^{+} helicity angle;cos#theta_{helicity};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_pipn_helicity", "#pi^{+}n helicity angle;cos#theta_{helicity};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_n_helicity", "Neutron helicity angle;cos#theta_{helicity};Counts",
+                 40, -1.0, 1.0, "pwa");
+
+    // Group E: Gottfried-Jackson distributions
+    mgr.create1D("pwa_pip_gj", "#pi^{+} GJ angle;cos#theta_{GJ};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_pipn_gj", "#pi^{+}n GJ angle;cos#theta_{GJ};Counts",
+                 40, -1.0, 1.0, "pwa");
+    mgr.create1D("pwa_n_gj", "Neutron GJ angle;cos#theta_{GJ};Counts",
+                 40, -1.0, 1.0, "pwa");
 
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }

@@ -1,17 +1,13 @@
 {
     "input": {
-        "source": [
-            "/hdd2/przygoda/hades/pp158/LEPTONS/epem067_all.root",
-            "/hdd2/przygoda/hades/pp158/LEPTONS/epem068_all.root"
-        ],
-        "tree_name": "EpEm_ID",
-        "channel": "EpEm",
-        "lepton_prefixes": ["ep", "em"],
+        // "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067_01.root",
+        "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067.list",
+        "tree_name": "Pip_ID",
         "start_event": 0,
-        "max_events": 1000000
+        "max_events": 0
     },
     "output": {
-        "filename": "output_epem.root",
+        "filename": "output_fwd_ppip.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
@@ -27,5 +23,5 @@
         "analysis_type": "reconstructed"
     },
     "fwdet": true,
-    "ecal": true
+    "ecal": false
 }

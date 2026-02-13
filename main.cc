@@ -1,9 +1,8 @@
 // ========================================================================
-// FAT Framework - Dilepton Analysis
+// FAT Framework - Pion Analysis
 // ========================================================================
-// e+e- dilepton analysis for HADES experiment (pp @ 4.5 GeV).
-// Processes lepton pairs, ECAL photons, and Forward Tracker hadrons.
-// Supports EpEm, EpEp, EmEm channels via config-driven prefix mapping.
+// π+ pion analysis for HADES experiment (pp @ 4.5 GeV).
+// Processes positive pions and Forward Tracker hadrons.
 //
 // Usage:
 //   ./ana [config.json]
@@ -14,10 +13,9 @@
 
 #include "src/manager.h"
 #include "src/pparticle.h"
-#include "src/pparticle_ecal.h"
 #include "src/pparticle_fwd.h"
-#include "src/physics_utils.h"
 #include "src/boost_frame.h"
+#include "src/physics_utils.h"
 #include "src/ntuple_reader.h"
 #include "src/cut_manager.h"
 #include "src/analysis_config.h"
@@ -43,234 +41,24 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
-    // Create e+ and e- with reconstructed kinematics
-    PParticle positron(MASS_ELECTRON, "e+");
-    PParticle electron(MASS_ELECTRON, "e-");
+    // Create π+ (positive pion) with reconstructed kinematics
+    PParticle pion(MASS_PION_PLUS, "pi+");
 
-    positron.setFromSpherical(reader["ep_p"], reader["ep_theta"], reader["ep_phi"],
-                              KinematicType::RECONSTRUCTED);
-
-    electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
-                              KinematicType::RECONSTRUCTED);
+    pion.setFromSpherical(reader["pip_p"], reader["pip_theta"], reader["pip_phi"],
+                          KinematicType::RECONSTRUCTED);
 
     // Energy-loss corrected kinematics (same angles, corrected momentum)
-    positron.setFromSpherical(reader["ep_p_corr_ep"], reader["ep_theta"], reader["ep_phi"],
-                              KinematicType::CORRECTED);
+    pion.setFromSpherical(reader["pip_p_corr_pip"], reader["pip_theta"], reader["pip_phi"],
+                          KinematicType::CORRECTED);
 
-    electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
-                              KinematicType::CORRECTED);
-
-    // Lepton momentum histograms
-    mgr.fill("ep_p", positron.momentum());
-    mgr.fill("em_p", electron.momentum());
-
-    // Momentum correction: delta_p = p_corrected - p_reconstructed
-    double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
-    double ep_p_cor = positron.momentum(KinematicType::CORRECTED);
-    double ep_dp = ep_p_cor - ep_p_rec;
-
-    double em_p_rec = electron.momentum(KinematicType::RECONSTRUCTED);
-    double em_p_cor = electron.momentum(KinematicType::CORRECTED);
-    double em_dp = em_p_cor - em_p_rec;
-
-    mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
-    mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
-
-    // Opening angle between e+ and e- (must be computed before operator+)
-    double oa = Physics::openingAngle(positron, electron);
-    mgr.fill("opening_angle", oa);
-
-    // Dilepton (e+ + e-) invariant mass
-    PParticle dilepton = positron + electron;
-    double m_ee = dilepton.massGeV();
-
-    mgr.fill("mass_ee_before_oa", m_ee);
-
-    // Boost dilepton to beam-target CMS frame
+    // Setup CMS frame (beam + target)
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
-
-    PParticle dilepton_cms = frames.getFrame("beam").boost(dilepton);
-
-    double y_cms = dilepton_cms.rapidity();
-    double pt = dilepton_cms.vec().Pt();
-    double theta_cms = dilepton_cms.theta();
-
-    // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    bool oa_pass = cuts.passMinCut("opening_angle", oa);
-    bool m_ee_cut = cuts.passMinCut("m_ee", m_ee);
-
-    auto& nt = mgr.getDynamicNtuple("dilepton_nt");
-
-    nt["ep_p_rec"] = ep_p_rec;
-    nt["ep_p_cor"] = ep_p_cor;
-    nt["ep_theta"] = positron.theta();
-    nt["ep_phi"] = positron.phi();
-    nt["ep_theta_rich"] = reader["ep_theta_rich"];
-    nt["ep_phi_rich"] = reader["ep_phi_rich"];
-
-    nt["em_p_rec"] = em_p_rec;
-    nt["em_p_cor"] = em_p_cor;
-    nt["em_theta"] = electron.theta();
-    nt["em_phi"] = electron.phi();
-    nt["em_theta_rich"] = reader["em_theta_rich"];
-    nt["em_phi_rich"] = reader["em_phi_rich"];
-
-    nt["oa"] = oa;
-    nt["m_ee"] = m_ee;
-
-    nt["y_cms"] = y_cms;
-    nt["pt"] = pt;
-    nt["theta_cms"] = theta_cms;
-
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;
-    nt["m_ee_cut"] = m_ee_cut ? 1.0f : 0.0f;
-
-    nt.fill();
-
-    // Apply opening angle cut (reject close pairs)
-    // if (!oa_pass) return;
-    if (oa_pass) {
-    // Still fill histograms for failed OA cut for comparison
-        mgr.fill("mass_ee_after_oa", m_ee);
-    }
-    // CMS histograms (after OA cut)
-    mgr.fill("rapidity_cms", y_cms);
-    mgr.fill("pt_cms", pt);
-    mgr.fill("theta_cms", theta_cms);
-    mgr.fill("rapidity_vs_mass", m_ee, y_cms);
-
-    // Dilepton invariant mass (after all cuts)
-    mgr.fill("mass_ee", m_ee);
 
     // Beam + target for missing mass calculations
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
     PParticle target = ParticleFactory::createTargetProton();
     PParticle initial = beam + target;
-
-    // Missing mass of e+e- system: MM(e+e-) = beam + target - e+ - e-
-    PParticle miss_epem = initial - positron - electron;
-    double mm_epem_mass = miss_epem.massGeV();
-    double mm_epem_mass2 = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
-
-    // ECAL objects (electromagnetic calorimeter, up to 5 hits)
-    if (config.isEcalEnabled()) {
-        int neutr_mult = static_cast<int>(reader["neutr_mult"]);
-        if (neutr_mult < 0) neutr_mult = 0;  // sentinel -100 means no ECAL data
-
-        std::vector<PParticleEcal> ecal_objects;
-        ecal_objects.reserve(neutr_mult);
-
-        for (int i = 1; i <= neutr_mult && i <= 5; ++i) {
-            PParticleEcal ecal_obj(0.0, "ecal" + std::to_string(i));
-            if (ecal_obj.setFromReader(reader, i)) {
-                ecal_objects.push_back(ecal_obj);
-            }
-        }
-
-        // ECAL quality cuts (pass/fail flags reused for compound building)
-        std::vector<bool> ecal_pass(ecal_objects.size(), false);
-        for (size_t j = 0; j < ecal_objects.size(); ++j) {
-            const auto& obj = ecal_objects[j];
-            ecal_pass[j] = cuts.passCutSet("ecal_quality", {
-                static_cast<double>(obj.ecal_pid),
-                obj.ecal_beta,
-                obj.cluster_energy
-            });
-        }
-
-        auto& ecal_nt = mgr.getDynamicNtuple("ecal_nt");
-
-        ecal_nt["ecal_mult"] = neutr_mult;
-
-        auto fillEcalHit = [&](size_t idx, const std::string& suffix) {
-            if (ecal_objects.size() > idx) {
-                const auto& obj = ecal_objects[idx];
-
-                ecal_nt["ecal_pass" + suffix] = ecal_pass[idx] ? 1.0f : 0.0f;
-
-                ecal_nt["cluster_energy" + suffix] = obj.cluster_energy;
-                ecal_nt["cluster_theta" + suffix] = obj.cluster_theta;
-                ecal_nt["cluster_phi" + suffix] = obj.cluster_phi;
-
-                ecal_nt["ecal_beta" + suffix] = obj.ecal_beta;
-                ecal_nt["ecal_pid" + suffix] = obj.ecal_pid;
-                ecal_nt["ecal_energy" + suffix] = obj.ecal_energy;
-                ecal_nt["ecal_theta" + suffix] = obj.ecal_theta;
-                ecal_nt["ecal_phi" + suffix] = obj.ecal_phi;
-                ecal_nt["ecal_chi2" + suffix] = obj.ecal_chi2;
-                ecal_nt["ecal_tof" + suffix] = obj.ecal_tof;
-                ecal_nt["ecal_r" + suffix] = obj.ecal_r;
-                ecal_nt["ecal_z" + suffix] = obj.ecal_z;
-            }
-        };
-
-        fillEcalHit(0, "_1");
-        fillEcalHit(1, "_2");
-        fillEcalHit(2, "_3");
-        fillEcalHit(3, "_4");
-        fillEcalHit(4, "_5");
-
-        ecal_nt.fill();
-
-        // Compound e+e-gamma objects (one entry per passing gamma)
-        auto& epemg_nt = mgr.getDynamicNtuple("epemg_nt");
-
-        int gamma_pass_mult = std::count(ecal_pass.begin(), ecal_pass.end(), true);
-
-        // Energy-ranked indices of passing gammas (rank 1 = highest energy)
-        std::vector<size_t> pass_indices;
-        for (size_t j = 0; j < ecal_objects.size(); ++j) {
-            if (ecal_pass[j]) pass_indices.push_back(j);
-        }
-        std::sort(pass_indices.begin(), pass_indices.end(),
-                  [&](size_t a, size_t b) {
-                      return ecal_objects[a].cluster_energy > ecal_objects[b].cluster_energy;
-                  });
-
-        std::map<size_t, int> rank_map;
-        for (size_t r = 0; r < pass_indices.size(); ++r) {
-            rank_map[pass_indices[r]] = static_cast<int>(r + 1);
-        }
-
-        for (size_t j = 0; j < ecal_objects.size(); ++j) {
-            if (!ecal_pass[j]) continue;
-
-            PParticle epemg = dilepton + ecal_objects[j];
-            PParticle epemg_cms = frames.getFrame("beam").boost(epemg);
-
-            epemg_nt["epemg_mass"] = epemg.massGeV();
-            epemg_nt["epemg_p"] = epemg.momentum();
-            epemg_nt["epemg_theta"] = epemg.theta();
-            epemg_nt["epemg_phi"] = epemg.phi();
-
-            epemg_nt["epemg_rapidity_cms"] = epemg_cms.rapidity();
-            epemg_nt["epemg_pt_cms"] = epemg_cms.vec().Pt();
-            epemg_nt["epemg_theta_cms"] = epemg_cms.theta();
-
-            epemg_nt["ee_oa"] = oa;
-            epemg_nt["ee_mass"] = m_ee;
-
-            epemg_nt["gamma_energy"] = ecal_objects[j].cluster_energy;
-            epemg_nt["gamma_theta"] = ecal_objects[j].cluster_theta;
-            epemg_nt["gamma_phi"] = ecal_objects[j].cluster_phi;
-            epemg_nt["gamma_index"] = static_cast<Float_t>(j + 1);
-
-            epemg_nt["ecal_mult"] = static_cast<Float_t>(neutr_mult);
-            epemg_nt["gamma_pass_mult"] = static_cast<Float_t>(gamma_pass_mult);
-            epemg_nt["gamma_rank_energy"] = static_cast<Float_t>(rank_map[j]);
-
-            // Missing masses
-            epemg_nt["mm_epem_mass"] = mm_epem_mass;
-            epemg_nt["mm_epem_mass2"] = mm_epem_mass2;
-
-            PParticle miss_epemg = initial - positron - electron - ecal_objects[j];
-            epemg_nt["mm_epemg_mass"] = miss_epemg.massGeV();
-            epemg_nt["mm_epemg_mass2"] = miss_epemg.vec().M2() / 1e6;  // GeV²/c⁴
-
-            epemg_nt.fill();
-        }
-    }
 
     // Forward Tracker objects (forward hadrons, up to 3 hits)
     if (config.isFwdEnabled()) {
@@ -322,55 +110,161 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
         fwd_nt.fill();
 
-        // Compound pe+e- objects (one entry per FWD proton candidate)
-        auto& pepem_nt = mgr.getDynamicNtuple("pepem_nt");
+        // Compound ppip objects (one entry per FWD proton candidate)
+        auto& ppip_nt = mgr.getDynamicNtuple("ppip_nt");
 
         for (size_t j = 0; j < fwd_objects.size(); ++j) {
-            // Build compound: FWD proton + e+ + e-
-            PParticle pepem = fwd_objects[j] + positron + electron;
-            double pepem_mass = pepem.massGeV();
+            // Apply neutron cut (FWD beta quality)
+            if (!cuts.passMinCut("neutron_cut", fwd_objects[j].fwd_beta)) continue;
 
-            // Missing mass: beam + target - FWD proton - e+ - e-
-            PParticle miss_pepem = initial - fwd_objects[j] - positron - electron;
-            double mm_pepem_mass = miss_pepem.massGeV();
-            double mm_pepem_mass2 = miss_pepem.vec().M2() / 1e6;  // GeV²/c⁴
+            // Build compound: FWD proton + pi+
+            PParticle ppip = fwd_objects[j] + pion;
+            double ppip_mass = ppip.massGeV();
 
-            // CMS boost
-            PParticle pepem_cms = frames.getFrame("beam").boost(pepem);
-            double pepem_costheta_cms = pepem_cms.cosTheta();
+            // Boost to CMS frame
+            PParticle ppip_cms = frames.getFrame("beam").boost(ppip);
 
-            bool mm_pepem_cut = cuts.passRangeCut("mm_pepem", mm_pepem_mass);
-            bool fwd_time_cut = cuts.passMaxCut("fwd_time", fwd_objects[j].fwd_tof);
+            // Missing mass: MM(ppip) = beam + target - proton - pi+
+            PParticle mm_ppip = initial - fwd_objects[j] - pion;
+            double mm_ppip_mass = mm_ppip.massGeV();
 
-            // Fill pepem ntuple
-            pepem_nt["fwd_p"] = fwd_objects[j].momentum();
-            pepem_nt["fwd_theta"] = fwd_objects[j].fwd_theta;
-            pepem_nt["fwd_phi"] = fwd_objects[j].fwd_phi;
-            pepem_nt["fwd_beta"] = fwd_objects[j].fwd_beta;
-            pepem_nt["fwd_mass2"] = fwd_objects[j].fwd_mass2;
-            pepem_nt["fwd_index"] = static_cast<Float_t>(j + 1);
-            pepem_nt["fwd_mult"] = static_cast<Float_t>(fwdet_mult);
+            // Boost missing mass to CMS frame
+            PParticle mm_ppip_cms = frames.getFrame("beam").boost(mm_ppip);
 
-            pepem_nt["oa"] = oa;
-            pepem_nt["m_ee"] = m_ee;
+            // Fill ppip ntuple - LAB frame quantities
+            ppip_nt["ppip_mass"] = ppip_mass;
+            ppip_nt["ppip_p"] = ppip.momentum();
+            ppip_nt["ppip_theta"] = ppip.theta();
+            ppip_nt["ppip_phi"] = ppip.phi();
+            ppip_nt["ppip_rapidity"] = ppip.rapidity();
+            ppip_nt["ppip_pt"] = ppip.vec().Pt();
 
-            pepem_nt["pepem_mass"] = pepem_mass;
-            pepem_nt["mm_pepem_mass"] = mm_pepem_mass;
-            pepem_nt["mm_pepem_mass2"] = mm_pepem_mass2;
-            pepem_nt["pepem_costheta_cms"] = pepem_costheta_cms;
+            // CMS frame quantities (with _cms suffix)
+            ppip_nt["ppip_mass_cms"] = ppip_cms.massGeV();
+            ppip_nt["ppip_p_cms"] = ppip_cms.momentum();
+            ppip_nt["ppip_theta_cms"] = ppip_cms.theta();
+            ppip_nt["ppip_phi_cms"] = ppip_cms.phi();
+            ppip_nt["ppip_rapidity_cms"] = ppip_cms.rapidity();
+            ppip_nt["ppip_pt_cms"] = ppip_cms.vec().Pt();
+            ppip_nt["ppip_costheta_cms"] = ppip_cms.cosTheta();
 
-            pepem_nt.fill();
+            // Missing mass - LAB frame
+            ppip_nt["mm_ppip_mass"] = mm_ppip_mass;
+            ppip_nt["mm_ppip_p"] = mm_ppip.momentum();
+            ppip_nt["mm_ppip_theta"] = mm_ppip.theta();
+            ppip_nt["mm_ppip_phi"] = mm_ppip.phi();
+            ppip_nt["mm_ppip_rapidity"] = mm_ppip.rapidity();
+            ppip_nt["mm_ppip_pt"] = mm_ppip.vec().Pt();
 
-            // Fill histograms with progressive cuts
-            if (oa_pass && m_ee_cut && fwd_time_cut) {
-                mgr.fill("mm_pepem", mm_pepem_mass);
-            }
-            if (oa_pass && mm_pepem_cut && fwd_time_cut) {
-                mgr.fill("m_ee_mm_pepem", m_ee);
-                if (m_ee_cut) {
-                    mgr.fill("pepem_inv_mass", pepem_mass);
-                    mgr.fill("pepem_cms_costheta", pepem_costheta_cms);
-                }
+            // Missing mass - CMS frame
+            ppip_nt["mm_ppip_mass_cms"] = mm_ppip_cms.massGeV();
+            ppip_nt["mm_ppip_p_cms"] = mm_ppip_cms.momentum();
+            ppip_nt["mm_ppip_theta_cms"] = mm_ppip_cms.theta();
+            ppip_nt["mm_ppip_phi_cms"] = mm_ppip_cms.phi();
+            ppip_nt["mm_ppip_rapidity_cms"] = mm_ppip_cms.rapidity();
+            ppip_nt["mm_ppip_pt_cms"] = mm_ppip_cms.vec().Pt();
+            ppip_nt["mm_ppip_costheta_cms"] = mm_ppip_cms.cosTheta();
+
+            // FWD proton info
+            ppip_nt["fwd_p"] = fwd_objects[j].momentum();
+            ppip_nt["fwd_theta"] = fwd_objects[j].fwd_theta;
+            ppip_nt["fwd_phi"] = fwd_objects[j].fwd_phi;
+            ppip_nt["fwd_beta"] = fwd_objects[j].fwd_beta;
+            ppip_nt["fwd_mass2"] = fwd_objects[j].fwd_mass2;
+            ppip_nt["fwd_tof"] = fwd_objects[j].fwd_tof;
+            ppip_nt["fwd_index"] = static_cast<Float_t>(j + 1);
+            ppip_nt["fwd_mult"] = static_cast<Float_t>(fwdet_mult);
+
+            // Pion info
+            ppip_nt["pip_p_rec"] = pion.momentum(KinematicType::RECONSTRUCTED);
+            ppip_nt["pip_p_cor"] = pion.momentum(KinematicType::CORRECTED);
+            ppip_nt["pip_theta"] = pion.theta();
+            ppip_nt["pip_phi"] = pion.phi();
+
+            ppip_nt.fill();
+
+            // Fill histograms (with fwd_time cut)
+            if (/*true ||*/cuts.passMaxCut("fwd_time", fwd_objects[j].fwd_tof)) {
+                mgr.fill("ppip_inv_mass", ppip_mass);
+                mgr.fill("ppip_miss_mass", mm_ppip_mass);
+
+                // ================================================================
+                // PWA (Partial Wave Analysis)
+                // ================================================================
+                // Apply neutron mass cut for PWA analysis
+                if (/*true ||*/ cuts.passRangeCut("neutron_mass_cut", mm_ppip_mass)) {
+
+                    // Save LAB frame copies
+                    PParticle p_LAB = fwd_objects[j];
+                PParticle pip_LAB = pion;
+                PParticle n_LAB = mm_ppip;  // neutron is the missing mass
+
+                // Additional compound systems
+                PParticle npip = mm_ppip + pion;  // n + pip
+                PParticle pn = fwd_objects[j] + mm_ppip;  // p + n
+
+                // Boost to CMS frame for Group A (cos theta distributions)
+                PParticle p_CMS = frames.getFrame("beam").boost(fwd_objects[j]);
+                PParticle pip_CMS = frames.getFrame("beam").boost(pion);
+                PParticle n_CMS = frames.getFrame("beam").boost(mm_ppip);
+
+                // Group A: cos(theta) in CMS
+                mgr.fill("pwa_pip_costh", pip_CMS.cosTheta());
+                mgr.fill("pwa_p_costh", p_CMS.cosTheta());
+                mgr.fill("pwa_n_costh", n_CMS.cosTheta());
+
+                // Group B: Momenta in LAB frame
+                mgr.fill("pwa_pip_p", pip_LAB.momentum() / 1000.0);  // Convert MeV to GeV
+                mgr.fill("pwa_p_p", p_LAB.momentum() / 1000.0);
+                mgr.fill("pwa_n_p", n_LAB.momentum() / 1000.0);
+
+                // Group C: Invariant masses
+                mgr.fill("pwa_ppip_m", ppip.massGeV());
+                mgr.fill("pwa_npip_m", npip.massGeV());
+                mgr.fill("pwa_pn_m", pn.massGeV());
+
+                // Helicity frames (boost particles to rest frame of parent)
+                // Create boost frames for each compound system
+                BoostFrame ppip_frame(ppip);  // p + pip rest frame
+                BoostFrame npip_frame(npip);  // n + pip rest frame
+                BoostFrame pn_frame(pn);      // p + n rest frame
+
+                // Boost particles to ppip rest frame
+                PParticle pip_PPIP = ppip_frame.boost(pion);
+                PParticle n_PPIP = ppip_frame.boost(mm_ppip);
+
+                // Boost particles to npip rest frame
+                PParticle pip_NPIP = npip_frame.boost(pion);
+                PParticle p_NPIP = npip_frame.boost(fwd_objects[j]);
+
+                // Boost particles to pn rest frame
+                PParticle n_PN = pn_frame.boost(mm_ppip);
+                PParticle pip_PN = pn_frame.boost(pion);
+
+                // Group D: Helicity distributions (opening angles in rest frames)
+                double helicity_pip = Physics::openingAngle(pip_PPIP, n_PPIP);
+                double helicity_pipn = Physics::openingAngle(pip_NPIP, p_NPIP);
+                double helicity_n = Physics::openingAngle(n_PN, pip_PN);
+
+                mgr.fill("pwa_pip_helicity", cos(helicity_pip * M_PI / 180.0));
+                mgr.fill("pwa_pipn_helicity", cos(helicity_pipn * M_PI / 180.0));
+                mgr.fill("pwa_n_helicity", cos(helicity_n * M_PI / 180.0));
+
+                // Gottfried-Jackson frames (with projectile)
+                // Boost projectile to same rest frames
+                PParticle proj_PPIP = ppip_frame.boost(beam);
+                PParticle proj_NPIP = npip_frame.boost(beam);
+                PParticle proj_PN = pn_frame.boost(beam);
+
+                // Group E: GJ distributions (angles with respect to beam in rest frames)
+                double gj_pip = Physics::openingAngle(pip_PPIP, proj_PPIP);
+                double gj_pipn = Physics::openingAngle(pip_NPIP, proj_NPIP);
+                double gj_n = Physics::openingAngle(n_PN, proj_PN);
+
+                mgr.fill("pwa_pip_gj", cos(gj_pip * M_PI / 180.0));
+                mgr.fill("pwa_pipn_gj", cos(gj_pipn * M_PI / 180.0));
+                mgr.fill("pwa_n_gj", cos(gj_n * M_PI / 180.0));
+                }  // End neutron_mass_cut
             }
         }
     }
@@ -387,7 +281,7 @@ int main(int argc, char* argv[]) {
 
     ConsoleBox::newLine();
     ConsoleBox::printHeader("FAT Framework",
-                           "Dilepton Analysis");
+                           "Pion Analysis");
     ConsoleBox::newLine();
 
     // Load configuration
@@ -426,17 +320,6 @@ int main(int argc, char* argv[]) {
     } catch (const std::exception& e) {
         std::cerr << "Error opening input: " << e.what() << "\n";
         return 1;
-    }
-
-    // Lepton prefix mapping (for like-sign channels: EpEp, EmEm)
-    auto [prefix1, prefix2] = config.getLeptonPrefixes();
-    if (!prefix1.empty()) {
-        reader.setLeptonPrefixes(prefix1, prefix2);
-        std::string channel = config.getChannelName();
-        std::cout << "NTupleReader: Prefix mapping ep_ -> " << prefix1
-                  << "_, em_ -> " << prefix2 << "_";
-        if (!channel.empty()) std::cout << " (channel: " << channel << ")";
-        std::cout << "\n";
     }
 
     // Open output file and setup analysis components

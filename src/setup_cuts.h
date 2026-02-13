@@ -25,23 +25,14 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Opening angle cut (rejects close e+e- pairs)
-    cuts.defineMinCut("opening_angle", 9.0, "Opening angle > 9 deg");
-
-    // Dilepton mass cut (above pi0)
-    cuts.defineMinCut("m_ee", 0.14, "M_ee > 0.14 GeV/c^2");
-
     // Forward detector time cut
     cuts.defineMaxCut("fwd_time", 40.0, "FWD time < 40 ns");
 
-    // Missing mass of pe+e- (proton mass window)
-    cuts.defineRangeCut("mm_pepem", 0.88, 1.02, "MM(pe+e-) proton window");
+    // Neutron cut (FWD beta quality)
+    cuts.defineMinCut("neutron_cut", 0.9, "FWD beta > 0.9");
 
-    // ECAL quality cuts (AND logic; passCutSet values must match this order)
-    cuts.defineCutSet("ecal_quality", "ECAL particle quality")
-        .addValueCut("ecal_pid", 1.0, "PID == 1")
-        .addRangeCut("ecal_beta", 0.8, 1.2, "0.8 < beta < 1.2")
-        .addMinCut("cluster_energy", 100.0, "Cluster energy > 100 MeV");
+    // Neutron mass cut (missing mass window)
+    cuts.defineRangeCut("neutron_mass_cut", 0.7, 1.1, "MM(ppip) neutron mass window [0.7, 1.1] GeV/c^2");
 
     cuts.printDefinedCuts();
 }

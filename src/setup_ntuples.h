@@ -25,25 +25,13 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // Dilepton ntuple (ep_*, em_*, oa, m_ee, CMS variables, cut flags)
-    manager.createDynamicNtuple("dilepton_nt", "Dilepton event data");
-    std::cout << "  Created output ntuple 'dilepton_nt'\n";
-
-    // ECAL ntuple (ecal_mult, cluster/ecal variables indexed _1 to _5)
-    manager.createDynamicNtuple("ecal_nt", "ECAL detector data");
-    std::cout << "  Created output ntuple 'ecal_nt'\n";
-
     // Forward Tracker ntuple (fwd_mult, fwd variables indexed _1 to _3)
     manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
     std::cout << "  Created output ntuple 'fwdet_nt'\n";
 
-    // e+e-gamma compound ntuple (one entry per passing gamma, for pi0 Dalitz)
-    manager.createDynamicNtuple("epemg_nt", "e+e-gamma compound data");
-    std::cout << "  Created output ntuple 'epemg_nt'\n";
-
-    // pe+e- compound ntuple (one entry per FWD proton candidate)
-    manager.createDynamicNtuple("pepem_nt", "pe+e- compound data (FWD proton)");
-    std::cout << "  Created output ntuple 'pepem_nt'\n";
+    // ppip compound ntuple (proton + pi+, one entry per FWD proton candidate)
+    manager.createDynamicNtuple("ppip_nt", "p + pi+ compound data");
+    std::cout << "  Created output ntuple 'ppip_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H
