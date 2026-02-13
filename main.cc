@@ -98,6 +98,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     // Fill dilepton ntuple (before OA cut, store cut decision as flag)
     bool oa_pass = cuts.passMinCut("opening_angle", oa);
+    bool m_ee_cut = cuts.passMinCut("m_ee", m_ee);
 
     auto& nt = mgr.getDynamicNtuple("dilepton_nt");
 
@@ -122,7 +123,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["pt"] = pt;
     nt["theta_cms"] = theta_cms;
 
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;  // cut decision flag
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;
+    nt["m_ee_cut"] = m_ee_cut ? 1.0f : 0.0f;
 
     nt.fill();
 
@@ -154,6 +156,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
         int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+        if (neutr_mult < 0) neutr_mult = 0;  // sentinel -100 means no ECAL data
 
         std::vector<PParticleEcal> ecal_objects;
         ecal_objects.reserve(neutr_mult);
@@ -272,13 +275,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Forward Tracker objects (forward hadrons, up to 3 hits)
     if (config.isFwdEnabled()) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
+        if (fwdet_mult < 0) fwdet_mult = 0;
 
         std::vector<PParticleFwd> fwd_objects;
         fwd_objects.reserve(fwdet_mult);
 
         for (int i = 1; i <= fwdet_mult && i <= 3; ++i) {
             PParticleFwd fwd_obj(MASS_PROTON, "fwd" + std::to_string(i));
-            if (fwd_obj.setFromReader(reader, i)) {
+            if (fwd_obj.setFromReader(reader, i) && fwd_obj.fwd_theta > 0) {
                 fwd_objects.push_back(fwd_obj);
             }
         }
@@ -307,6 +311,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 fwd_nt["fwd_r" + suffix] = obj.fwd_r;
                 fwd_nt["fwd_z" + suffix] = obj.fwd_z;
                 fwd_nt["fwd_distToRpc" + suffix] = obj.fwd_distToRpc;
+
+                fwd_nt["fwd_tof" + suffix] = obj.fwd_tof;
             }
         };
 
@@ -315,6 +321,58 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         fillFwdHit(2, "_3");
 
         fwd_nt.fill();
+
+        // Compound pe+e- objects (one entry per FWD proton candidate)
+        auto& pepem_nt = mgr.getDynamicNtuple("pepem_nt");
+
+        for (size_t j = 0; j < fwd_objects.size(); ++j) {
+            // Build compound: FWD proton + e+ + e-
+            PParticle pepem = fwd_objects[j] + positron + electron;
+            double pepem_mass = pepem.massGeV();
+
+            // Missing mass: beam + target - FWD proton - e+ - e-
+            PParticle miss_pepem = initial - fwd_objects[j] - positron - electron;
+            double mm_pepem_mass = miss_pepem.massGeV();
+            double mm_pepem_mass2 = miss_pepem.vec().M2() / 1e6;  // GeV²/c⁴
+
+            // CMS boost
+            PParticle pepem_cms = frames.getFrame("beam").boost(pepem);
+            double pepem_costheta_cms = pepem_cms.cosTheta();
+
+            bool mm_pepem_cut = cuts.passRangeCut("mm_pepem", mm_pepem_mass);
+            bool fwd_time_cut = cuts.passMaxCut("fwd_time", fwd_objects[j].fwd_tof);
+
+            // Fill pepem ntuple
+            pepem_nt["fwd_p"] = fwd_objects[j].momentum();
+            pepem_nt["fwd_theta"] = fwd_objects[j].fwd_theta;
+            pepem_nt["fwd_phi"] = fwd_objects[j].fwd_phi;
+            pepem_nt["fwd_beta"] = fwd_objects[j].fwd_beta;
+            pepem_nt["fwd_mass2"] = fwd_objects[j].fwd_mass2;
+            pepem_nt["fwd_index"] = static_cast<Float_t>(j + 1);
+            pepem_nt["fwd_mult"] = static_cast<Float_t>(fwdet_mult);
+
+            pepem_nt["oa"] = oa;
+            pepem_nt["m_ee"] = m_ee;
+
+            pepem_nt["pepem_mass"] = pepem_mass;
+            pepem_nt["mm_pepem_mass"] = mm_pepem_mass;
+            pepem_nt["mm_pepem_mass2"] = mm_pepem_mass2;
+            pepem_nt["pepem_costheta_cms"] = pepem_costheta_cms;
+
+            pepem_nt.fill();
+
+            // Fill histograms with progressive cuts
+            if (oa_pass && m_ee_cut && fwd_time_cut) {
+                mgr.fill("mm_pepem", mm_pepem_mass);
+            }
+            if (oa_pass && mm_pepem_cut && fwd_time_cut) {
+                mgr.fill("m_ee_mm_pepem", m_ee);
+                if (m_ee_cut) {
+                    mgr.fill("pepem_inv_mass", pepem_mass);
+                    mgr.fill("pepem_cms_costheta", pepem_costheta_cms);
+                }
+            }
+        }
     }
 
 }

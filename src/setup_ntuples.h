@@ -40,6 +40,10 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     // e+e-gamma compound ntuple (one entry per passing gamma, for pi0 Dalitz)
     manager.createDynamicNtuple("epemg_nt", "e+e-gamma compound data");
     std::cout << "  Created output ntuple 'epemg_nt'\n";
+
+    // pe+e- compound ntuple (one entry per FWD proton candidate)
+    manager.createDynamicNtuple("pepem_nt", "pe+e- compound data (FWD proton)");
+    std::cout << "  Created output ntuple 'pepem_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H
