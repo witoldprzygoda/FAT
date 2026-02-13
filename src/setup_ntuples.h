@@ -25,11 +25,7 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // Forward Tracker ntuple (fwd_mult, fwd variables indexed _1 to _3)
-    manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
-    std::cout << "  Created output ntuple 'fwdet_nt'\n";
-
-    // ppip compound ntuple (proton + pi+, one entry per FWD proton candidate)
+    // ppip compound ntuple (proton + pi+)
     manager.createDynamicNtuple("ppip_nt", "p + pi+ compound data");
     std::cout << "  Created output ntuple 'ppip_nt'\n";
 }

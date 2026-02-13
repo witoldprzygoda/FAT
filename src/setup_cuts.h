@@ -25,12 +25,6 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Forward detector time cut
-    cuts.defineMaxCut("fwd_time", 40.0, "FWD time < 40 ns");
-
-    // Neutron cut (FWD beta quality)
-    cuts.defineMinCut("neutron_cut", 0.9, "FWD beta > 0.9");
-
     // Neutron mass cut (missing mass window)
     cuts.defineRangeCut("neutron_mass_cut", 0.7, 1.1, "MM(ppip) neutron mass window [0.7, 1.1] GeV/c^2");
 

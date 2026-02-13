@@ -2,7 +2,7 @@
     "input": {
         // "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067_01.root",
         "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067.list",
-        "tree_name": "Pip_ID",
+        "tree_name": "PPip_ID",
         "start_event": 0,
         "max_events": 0
     },
