@@ -258,15 +258,28 @@ public:
         
         // Write and close intermediate tree
         intermediate_file_->cd();
-        tree_->Write();
-        
-        // Reopen for reading
+        tree_->Write(nullptr, TObject::kOverwrite);
+        intermediate_file_->Flush();
         intermediate_file_->Close();
+        intermediate_file_.reset();
+
+        // Verify intermediate file exists before reopening
+        {
+            std::ifstream test(intermediate_filename_);
+            if (!test.good()) {
+                throw std::runtime_error("DynamicHNtuple: Intermediate file missing after write: " + intermediate_filename_);
+            }
+        }
+
+        // Reopen for reading
         intermediate_file_ = std::make_unique<TFile>(intermediate_filename_.c_str(), "READ");
+        if (!intermediate_file_ || intermediate_file_->IsZombie()) {
+            throw std::runtime_error("DynamicHNtuple: Cannot reopen intermediate file: " + intermediate_filename_);
+        }
         TTree* read_tree = dynamic_cast<TTree*>(intermediate_file_->Get((name_ + "_tree").c_str()));
-        
+
         if (!read_tree) {
-            throw std::runtime_error("DynamicHNtuple: Failed to reopen intermediate TTree!");
+            throw std::runtime_error("DynamicHNtuple: Failed to read TTree from intermediate file!");
         }
         
         // Set up branch addresses for reading

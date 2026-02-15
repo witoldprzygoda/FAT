@@ -25,9 +25,9 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // ppip compound ntuple (proton + pi+)
-    manager.createDynamicNtuple("ppip_nt", "p + pi+ compound data");
-    std::cout << "  Created output ntuple 'ppip_nt'\n";
+    // pp compound ntuple (proton + proton)
+    manager.createDynamicNtuple("pp_nt", "p + p compound data");
+    std::cout << "  Created output ntuple 'pp_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H

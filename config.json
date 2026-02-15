@@ -1,13 +1,13 @@
 {
     "input": {
-        // "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067_01.root",
+        //"source": "/hdd2/przygoda/hades/pp158/HADRONS/had067_01.root",
         "source": "/hdd2/przygoda/hades/pp158/HADRONS/had067.list",
-        "tree_name": "PPip_ID",
+        "tree_name": "PP_ID",
         "start_event": 0,
         "max_events": 0
     },
     "output": {
-        "filename": "output_fwd_ppip.root",
+        "filename": "output_pp.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0

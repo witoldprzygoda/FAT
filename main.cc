@@ -1,8 +1,8 @@
 // ========================================================================
-// FAT Framework - Pion Analysis
+// FAT Framework - Proton-Proton Analysis
 // ========================================================================
-// π+ pion analysis for HADES experiment (pp @ 4.5 GeV).
-// Processes positive pions and Forward Tracker hadrons.
+// pp analysis for HADES experiment (pp @ 1.58 GeV).
+// Processes two protons with pi0 as missing particle.
 //
 // Usage:
 //   ./ana [config.json]
@@ -40,181 +40,249 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
-    // Create π+ (positive pion) with reconstructed kinematics
-    PParticle pion(MASS_PION_PLUS, "pi+");
+    // Create first proton with reconstructed kinematics
+    PParticle proton1(MASS_PROTON, "p1");
 
-    pion.setFromSpherical(reader["pip_p"], reader["pip_theta"], reader["pip_phi"],
-                          KinematicType::RECONSTRUCTED);
+    proton1.setFromSpherical(reader["p1_p"], reader["p1_theta"], reader["p1_phi"],
+                             KinematicType::RECONSTRUCTED);
 
     // Energy-loss corrected kinematics (same angles, corrected momentum)
-    pion.setFromSpherical(reader["pip_p_corr_pip"], reader["pip_theta"], reader["pip_phi"],
-                          KinematicType::CORRECTED);
+    proton1.setFromSpherical(reader["p1_p_corr_p"], reader["p1_theta"], reader["p1_phi"],
+                             KinematicType::CORRECTED);
 
-    // Create measured proton with reconstructed kinematics
-    PParticle proton(MASS_PROTON, "p");
+    // Create second proton with reconstructed kinematics
+    PParticle proton2(MASS_PROTON, "p2");
 
-    proton.setFromSpherical(reader["p_p"], reader["p_theta"], reader["p_phi"],
-                            KinematicType::RECONSTRUCTED);
+    proton2.setFromSpherical(reader["p2_p"], reader["p2_theta"], reader["p2_phi"],
+                             KinematicType::RECONSTRUCTED);
 
     // Energy-loss corrected kinematics
-    proton.setFromSpherical(reader["p_p_corr_p"], reader["p_theta"], reader["p_phi"],
-                            KinematicType::CORRECTED);
-
-    // Setup CMS frame (beam + target)
-    EventFrames frames;
-    frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
+    proton2.setFromSpherical(reader["p2_p_corr_p"], reader["p2_theta"], reader["p2_phi"],
+                             KinematicType::CORRECTED);
 
     // Beam + target for missing mass calculations
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
     PParticle target = ParticleFactory::createTargetProton();
     PParticle initial = beam + target;
 
-    // Build compound: measured proton + pi+
-    PParticle ppip = proton + pion;
-    double ppip_mass = ppip.massGeV();
+    // Anti-elastic cut (reject elastic events)
+    double tantan = TMath::Tan(reader["p1_theta"] * TMath::DegToRad()) *
+                    TMath::Tan(reader["p2_theta"] * TMath::DegToRad());
+    double dphi = TMath::Abs(reader["p1_phi"] - reader["p2_phi"]);
+    if (cuts.passGraphicalCut("anti_elastic", dphi, tantan)) return;  // reject if inside
+
+    // Missing mass cuts (reject events with MM(p) < 1.05 GeV)
+    double mm_p1 = (initial - proton1).massGeV();  // MM of proton1
+    double mm_p2 = (initial - proton2).massGeV();  // MM of proton2
+    if (!cuts.passMinCut("mm_p1", mm_p1)) return;
+    if (!cuts.passMinCut("mm_p2", mm_p2)) return;
+
+    // Setup CMS frame (beam + target)
+    EventFrames frames;
+    frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
+
+    // Build compound: proton1 + proton2
+    PParticle pp = proton1 + proton2;
+    double pp_mass = pp.massGeV();
 
     // Boost to CMS frame
-    PParticle ppip_cms = frames.getFrame("beam").boost(ppip);
+    PParticle pp_cms = frames.getFrame("beam").boost(pp);
 
-    // Missing mass: MM(ppip) = beam + target - proton - pi+
-    PParticle mm_ppip = initial - proton - pion;
-    double mm_ppip_mass = mm_ppip.massGeV();
+    // Missing mass: MM(pp) = beam + target - proton1 - proton2 (pi0)
+    PParticle mm_pp = initial - proton1 - proton2;
+    double mm_pp_mass = mm_pp.massGeV();
 
     // Boost missing mass to CMS frame
-    PParticle mm_ppip_cms = frames.getFrame("beam").boost(mm_ppip);
+    PParticle mm_pp_cms = frames.getFrame("beam").boost(mm_pp);
 
-    // Fill ppip ntuple
-    auto& ppip_nt = mgr.getDynamicNtuple("ppip_nt");
+    // Delta systems (proton + pi0)
+    PParticle deltaP1 = initial - proton2;  // p1 + pi0
+    PParticle deltaP2 = initial - proton1;  // p2 + pi0
+
+    // Fill pp ntuple
+    auto& pp_nt = mgr.getDynamicNtuple("pp_nt");
 
     // LAB frame quantities
-    ppip_nt["ppip_mass"] = ppip_mass;
-    ppip_nt["ppip_p"] = ppip.momentum();
-    ppip_nt["ppip_theta"] = ppip.theta();
-    ppip_nt["ppip_phi"] = ppip.phi();
-    ppip_nt["ppip_rapidity"] = ppip.rapidity();
-    ppip_nt["ppip_pt"] = ppip.vec().Pt();
+    pp_nt["pp_mass"] = pp_mass;
+    pp_nt["pp_p"] = pp.momentum();
+    pp_nt["pp_theta"] = pp.theta();
+    pp_nt["pp_phi"] = pp.phi();
+    pp_nt["pp_rapidity"] = pp.rapidity();
+    pp_nt["pp_pt"] = pp.vec().Pt();
 
     // CMS frame quantities (with _cms suffix)
-    ppip_nt["ppip_mass_cms"] = ppip_cms.massGeV();
-    ppip_nt["ppip_p_cms"] = ppip_cms.momentum();
-    ppip_nt["ppip_theta_cms"] = ppip_cms.theta();
-    ppip_nt["ppip_phi_cms"] = ppip_cms.phi();
-    ppip_nt["ppip_rapidity_cms"] = ppip_cms.rapidity();
-    ppip_nt["ppip_pt_cms"] = ppip_cms.vec().Pt();
-    ppip_nt["ppip_costheta_cms"] = ppip_cms.cosTheta();
+    pp_nt["pp_mass_cms"] = pp_cms.massGeV();
+    pp_nt["pp_p_cms"] = pp_cms.momentum();
+    pp_nt["pp_theta_cms"] = pp_cms.theta();
+    pp_nt["pp_phi_cms"] = pp_cms.phi();
+    pp_nt["pp_rapidity_cms"] = pp_cms.rapidity();
+    pp_nt["pp_pt_cms"] = pp_cms.vec().Pt();
+    pp_nt["pp_costheta_cms"] = pp_cms.cosTheta();
 
-    // Missing mass - LAB frame
-    ppip_nt["mm_ppip_mass"] = mm_ppip_mass;
-    ppip_nt["mm_ppip_p"] = mm_ppip.momentum();
-    ppip_nt["mm_ppip_theta"] = mm_ppip.theta();
-    ppip_nt["mm_ppip_phi"] = mm_ppip.phi();
-    ppip_nt["mm_ppip_rapidity"] = mm_ppip.rapidity();
-    ppip_nt["mm_ppip_pt"] = mm_ppip.vec().Pt();
+    // Missing mass - LAB frame (pi0)
+    pp_nt["mm_pp_mass"] = mm_pp_mass;
+    pp_nt["mm_pp_p"] = mm_pp.momentum();
+    pp_nt["mm_pp_theta"] = mm_pp.theta();
+    pp_nt["mm_pp_phi"] = mm_pp.phi();
+    pp_nt["mm_pp_rapidity"] = mm_pp.rapidity();
+    pp_nt["mm_pp_pt"] = mm_pp.vec().Pt();
 
     // Missing mass - CMS frame
-    ppip_nt["mm_ppip_mass_cms"] = mm_ppip_cms.massGeV();
-    ppip_nt["mm_ppip_p_cms"] = mm_ppip_cms.momentum();
-    ppip_nt["mm_ppip_theta_cms"] = mm_ppip_cms.theta();
-    ppip_nt["mm_ppip_phi_cms"] = mm_ppip_cms.phi();
-    ppip_nt["mm_ppip_rapidity_cms"] = mm_ppip_cms.rapidity();
-    ppip_nt["mm_ppip_pt_cms"] = mm_ppip_cms.vec().Pt();
-    ppip_nt["mm_ppip_costheta_cms"] = mm_ppip_cms.cosTheta();
+    pp_nt["mm_pp_mass_cms"] = mm_pp_cms.massGeV();
+    pp_nt["mm_pp_p_cms"] = mm_pp_cms.momentum();
+    pp_nt["mm_pp_theta_cms"] = mm_pp_cms.theta();
+    pp_nt["mm_pp_phi_cms"] = mm_pp_cms.phi();
+    pp_nt["mm_pp_rapidity_cms"] = mm_pp_cms.rapidity();
+    pp_nt["mm_pp_pt_cms"] = mm_pp_cms.vec().Pt();
+    pp_nt["mm_pp_costheta_cms"] = mm_pp_cms.cosTheta();
 
-    // Proton info
-    ppip_nt["p_p_rec"] = proton.momentum(KinematicType::RECONSTRUCTED);
-    ppip_nt["p_p_cor"] = proton.momentum(KinematicType::CORRECTED);
-    ppip_nt["p_theta"] = proton.theta();
-    ppip_nt["p_phi"] = proton.phi();
+    // Proton1 info
+    pp_nt["p1_p_rec"] = proton1.momentum(KinematicType::RECONSTRUCTED);
+    pp_nt["p1_p_cor"] = proton1.momentum(KinematicType::CORRECTED);
+    pp_nt["p1_theta"] = proton1.theta();
+    pp_nt["p1_phi"] = proton1.phi();
 
-    // Pion info
-    ppip_nt["pip_p_rec"] = pion.momentum(KinematicType::RECONSTRUCTED);
-    ppip_nt["pip_p_cor"] = pion.momentum(KinematicType::CORRECTED);
-    ppip_nt["pip_theta"] = pion.theta();
-    ppip_nt["pip_phi"] = pion.phi();
+    // Proton2 info
+    pp_nt["p2_p_rec"] = proton2.momentum(KinematicType::RECONSTRUCTED);
+    pp_nt["p2_p_cor"] = proton2.momentum(KinematicType::CORRECTED);
+    pp_nt["p2_theta"] = proton2.theta();
+    pp_nt["p2_phi"] = proton2.phi();
 
-    ppip_nt.fill();
+    // Check pi0 mass cut and store result
+    bool passes_pion0_cut = cuts.passRangeCut("pion0_mass_cut", mm_pp_mass);
+    pp_nt["pion0_mass_cut"] = passes_pion0_cut ? 1 : 0;
+
+    pp_nt.fill();
 
     // Fill histograms
-    mgr.fill("ppip_inv_mass", ppip_mass);
-    mgr.fill("ppip_miss_mass", mm_ppip_mass);
+    // ppi0 invariant mass (delta system) - fill twice with 0.5 weight for symmetry
+    mgr.fillw("ppi0_inv_mass", deltaP1.massGeV(), 0.5);
+    mgr.fillw("ppi0_inv_mass", deltaP2.massGeV(), 0.5);
+
+    // pp invariant mass
+    mgr.fill("pp_inv_mass", pp_mass);
+
+    // pi0 missing mass
+    mgr.fill("pi0_miss_mass", mm_pp_mass);
+
+    // pi0 missing mass squared (from 4-vector, can be negative)
+    mgr.fill("pi0_miss_mass2", mm_pp.vec().M2() / 1e6);
+
+    // 2D debug: dphi vs tantan
+    mgr.fill("dphi_vs_tantan", dphi, tantan);
+
+    // 2D debug: missing mass p1 vs missing mass p2
+    // deltaP2 = initial - proton1 (MM of p1), deltaP1 = initial - proton2 (MM of p2)
+    mgr.fill("mm_p1_vs_mm_p2", deltaP2.massGeV(), deltaP1.massGeV());
+
+    // Pi0 mass cut - mandatory for PWA histogram filling
+    if (!passes_pion0_cut) return;
 
     // ================================================================
     // PWA (Partial Wave Analysis)
     // ================================================================
-    // Apply neutron mass cut for PWA analysis
-    if (cuts.passRangeCut("neutron_mass_cut", mm_ppip_mass)) {
 
-        // Save LAB frame copies
-        PParticle p_LAB = proton;
-        PParticle pip_LAB = pion;
-        PParticle n_LAB = mm_ppip;  // neutron is the missing mass
+    // Save LAB frame copies
+    PParticle p1_LAB = proton1;
+    PParticle p2_LAB = proton2;
+    PParticle pi0_LAB = mm_pp;  // pi0 is the missing mass
 
-        // Additional compound systems
-        PParticle npip = mm_ppip + pion;  // n + pip
-        PParticle pn = proton + mm_ppip;  // p + n
+    // Boost to CMS frame (beam direction)
+    PParticle p1_CMS = frames.getFrame("beam").boost(proton1);
+    PParticle p2_CMS = frames.getFrame("beam").boost(proton2);
+    PParticle pi0_CMS = frames.getFrame("beam").boost(mm_pp);
+    PParticle deltaP1_CMS = frames.getFrame("beam").boost(deltaP1);
+    PParticle deltaP2_CMS = frames.getFrame("beam").boost(deltaP2);
 
-        // Boost to CMS frame for Group A (cos theta distributions)
-        PParticle p_CMS = frames.getFrame("beam").boost(proton);
-        PParticle pip_CMS = frames.getFrame("beam").boost(pion);
-        PParticle n_CMS = frames.getFrame("beam").boost(mm_ppip);
+    // 2D: M(ppi0) vs cos_theta_cms - fill twice with 0.5 weight for symmetry
+    mgr.fillw("mppi0_vs_costh_cms", deltaP1.massGeV(), deltaP1_CMS.cosTheta(), 0.5);
+    mgr.fillw("mppi0_vs_costh_cms", deltaP2.massGeV(), deltaP2_CMS.cosTheta(), 0.5);
 
-        // Group A: cos(theta) in CMS
-        mgr.fill("pwa_pip_costh", pip_CMS.cosTheta());
-        mgr.fill("pwa_p_costh", p_CMS.cosTheta());
-        mgr.fill("pwa_n_costh", n_CMS.cosTheta());
+    // Group A: cos(theta) in CMS - fill twice with 0.5 weight for symmetry
+    mgr.fillw("pwa_pi0_costh", pi0_CMS.cosTheta(), 0.5);
+    mgr.fillw("pwa_pi0_costh", pi0_CMS.cosTheta(), 0.5);
+    mgr.fillw("pwa_p_costh", p1_CMS.cosTheta(), 0.5);
+    mgr.fillw("pwa_p_costh", p2_CMS.cosTheta(), 0.5);
 
-        // Group B: Momenta in LAB frame
-        mgr.fill("pwa_pip_p", pip_LAB.momentum() / 1000.0);  // Convert MeV to GeV
-        mgr.fill("pwa_p_p", p_LAB.momentum() / 1000.0);
-        mgr.fill("pwa_n_p", n_LAB.momentum() / 1000.0);
+    // Group B: Momenta in LAB frame - fill twice with 0.5 weight
+    mgr.fillw("pwa_pi0_p", pi0_LAB.momentum() / 1000.0, 0.5);  // Convert MeV to GeV
+    mgr.fillw("pwa_pi0_p", pi0_LAB.momentum() / 1000.0, 0.5);
+    mgr.fillw("pwa_p_p", p1_LAB.momentum() / 1000.0, 0.5);
+    mgr.fillw("pwa_p_p", p2_LAB.momentum() / 1000.0, 0.5);
 
-        // Group C: Invariant masses
-        mgr.fill("pwa_ppip_m", ppip.massGeV());
-        mgr.fill("pwa_npip_m", npip.massGeV());
-        mgr.fill("pwa_pn_m", pn.massGeV());
+    // Group C: Invariant masses
+    mgr.fillw("pwa_ppi0_m", deltaP1.massGeV(), 0.5);  // p1 + pi0
+    mgr.fillw("pwa_ppi0_m", deltaP2.massGeV(), 0.5);  // p2 + pi0
+    mgr.fillw("pwa_pp_m", pp.massGeV(), 0.5);
+    mgr.fillw("pwa_pp_m", pp.massGeV(), 0.5);
 
-        // Helicity frames (boost particles to rest frame of parent)
-        // Create boost frames for each compound system
-        BoostFrame ppip_frame(ppip);  // p + pip rest frame
-        BoostFrame npip_frame(npip);  // n + pip rest frame
-        BoostFrame pn_frame(pn);      // p + n rest frame
+    // Helicity frames (boost particles to rest frame of parent)
+    // For p + pi0 systems (deltaP1 and deltaP2)
+    BoostFrame deltaP1_frame(deltaP1);  // p1 + pi0 rest frame
+    BoostFrame deltaP2_frame(deltaP2);  // p2 + pi0 rest frame
+    BoostFrame pp_frame(pp);            // p1 + p2 rest frame
 
-        // Boost particles to ppip rest frame
-        PParticle pip_PPIP = ppip_frame.boost(pion);
-        PParticle n_PPIP = ppip_frame.boost(mm_ppip);
+    // Boost p1 to deltaP2 rest frame (p2 + pi0 system)
+    PParticle p1_P2PI0 = deltaP2_frame.boost(proton1);
 
-        // Boost particles to npip rest frame
-        PParticle pip_NPIP = npip_frame.boost(pion);
-        PParticle p_NPIP = npip_frame.boost(proton);
+    // Boost p2 to deltaP1 rest frame (p1 + pi0 system)
+    PParticle p2_P1PI0 = deltaP1_frame.boost(proton2);
 
-        // Boost particles to pn rest frame
-        PParticle n_PN = pn_frame.boost(mm_ppip);
-        PParticle pip_PN = pn_frame.boost(pion);
+    // Boost pi0 to both delta frames
+    PParticle pi0_P1PI0 = deltaP1_frame.boost(mm_pp);
+    PParticle pi0_P2PI0 = deltaP2_frame.boost(mm_pp);
 
-        // Group D: Helicity distributions (opening angles in rest frames)
-        double helicity_pip = Physics::openingAngle(pip_PPIP, n_PPIP);
-        double helicity_pipn = Physics::openingAngle(pip_NPIP, p_NPIP);
-        double helicity_n = Physics::openingAngle(n_PN, pip_PN);
+    // Boost particles to pp rest frame
+    PParticle p1_pp = pp_frame.boost(proton1);
+    PParticle p2_pp = pp_frame.boost(proton2);
+    PParticle pi0_pp = pp_frame.boost(mm_pp);
 
-        mgr.fill("pwa_pip_helicity", cos(helicity_pip * M_PI / 180.0));
-        mgr.fill("pwa_pipn_helicity", cos(helicity_pipn * M_PI / 180.0));
-        mgr.fill("pwa_n_helicity", cos(helicity_n * M_PI / 180.0));
+    // Group D: Helicity distributions (opening angles in rest frames)
+    // pi0 helicity in p+pi0 system - fill twice with 0.25 weight (0.5/2)
+    double helicity_pi0_1 = Physics::openingAngle(pi0_P1PI0, p2_P1PI0);
+    double helicity_pi0_2 = Physics::openingAngle(pi0_P2PI0, p1_P2PI0);
+    mgr.fillw("pwa_pi0_helicity", cos(helicity_pi0_1 * M_PI / 180.0), 0.25);
+    mgr.fillw("pwa_pi0_helicity", cos(helicity_pi0_2 * M_PI / 180.0), 0.25);
 
-        // Gottfried-Jackson frames (with projectile)
-        // Boost projectile to same rest frames
-        PParticle proj_PPIP = ppip_frame.boost(beam);
-        PParticle proj_NPIP = npip_frame.boost(beam);
-        PParticle proj_PN = pn_frame.boost(beam);
+    // p helicity in pp+pi0 system
+    double helicity_p1 = Physics::openingAngle(p1_pp, pi0_pp);
+    double helicity_p2 = Physics::openingAngle(p2_pp, pi0_pp);
+    mgr.fillw("pwa_p_helicity", cos(helicity_p1 * M_PI / 180.0), 0.5);
+    mgr.fillw("pwa_p_helicity", cos(helicity_p2 * M_PI / 180.0), 0.5);
 
-        // Group E: GJ distributions (angles with respect to beam in rest frames)
-        double gj_pip = Physics::openingAngle(pip_PPIP, proj_PPIP);
-        double gj_pipn = Physics::openingAngle(pip_NPIP, proj_NPIP);
-        double gj_n = Physics::openingAngle(n_PN, proj_PN);
+    // Gottfried-Jackson frames (with projectile)
+    // Boost projectile (beam) to same rest frames
+    PParticle proj_P1PI0 = deltaP1_frame.boost(beam);
+    PParticle proj_P2PI0 = deltaP2_frame.boost(beam);
+    PParticle proj_pp = pp_frame.boost(beam);
 
-        mgr.fill("pwa_pip_gj", cos(gj_pip * M_PI / 180.0));
-        mgr.fill("pwa_pipn_gj", cos(gj_pipn * M_PI / 180.0));
-        mgr.fill("pwa_n_gj", cos(gj_n * M_PI / 180.0));
-    }  // End neutron_mass_cut
+    // Group E: GJ distributions (angles with respect to beam in rest frames)
+    // pi0 GJ angle - fill twice with 0.25 weight
+    double gj_pi0_1 = Physics::openingAngle(pi0_P1PI0, proj_P1PI0);
+    double gj_pi0_2 = Physics::openingAngle(pi0_P2PI0, proj_P2PI0);
+    mgr.fillw("pwa_pi0_gj", cos(gj_pi0_1 * M_PI / 180.0), 0.25);
+    mgr.fillw("pwa_pi0_gj", cos(gj_pi0_2 * M_PI / 180.0), 0.25);
+
+    // p GJ angle
+    double gj_p1 = Physics::openingAngle(p1_pp, proj_pp);
+    double gj_p2 = Physics::openingAngle(p2_pp, proj_pp);
+    mgr.fillw("pwa_p_gj", cos(gj_p1 * M_PI / 180.0), 0.5);
+    mgr.fillw("pwa_p_gj", cos(gj_p2 * M_PI / 180.0), 0.5);
+
+    // Additional histograms (D+)
+    // Delta (p+pi0) mass and cos(theta)
+    mgr.fillw("mass_deltaP", deltaP1.massGeV(), 0.5);
+    mgr.fillw("mass_deltaP", deltaP2.massGeV(), 0.5);
+
+    mgr.fillw("cos_theta_deltaP", deltaP1_CMS.cosTheta(), 0.5);
+    mgr.fillw("cos_theta_deltaP", deltaP2_CMS.cosTheta(), 0.5);
+
+    // pi0 mass and cos(theta)
+    mgr.fillw("cos_theta_pi0", pi0_CMS.cosTheta(), 0.5);
+    mgr.fillw("cos_theta_pi0", pi0_CMS.cosTheta(), 0.5);
+
+    mgr.fillw("mass_pi0", mm_pp.massGeV(), 0.5);
+    mgr.fillw("mass_pi0", mm_pp.massGeV(), 0.5);
 
 }
 
@@ -228,7 +296,7 @@ int main(int argc, char* argv[]) {
 
     ConsoleBox::newLine();
     ConsoleBox::printHeader("FAT Framework",
-                           "Pion Analysis");
+                           "Proton-Proton Analysis");
     ConsoleBox::newLine();
 
     // Load configuration

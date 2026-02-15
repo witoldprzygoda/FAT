@@ -25,8 +25,16 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Neutron mass cut (missing mass window)
-    cuts.defineRangeCut("neutron_mass_cut", 0.7, 1.1, "MM(ppip) neutron mass window [0.7, 1.1] GeV/c^2");
+    // Graphical cut: anti-elastic (reject events inside the cut)
+    cuts.loadGraphicalCut("anti_elastic", "CUT_dphi_tantan_fitted.root", "cutg",
+                         "Anti-elastic cut (dphi vs tantan)");
+
+    // Missing mass proton cuts
+    cuts.defineMinCut("mm_p1", 1.05, "Missing mass proton1 > 1.05 GeV");
+    cuts.defineMinCut("mm_p2", 1.05, "Missing mass proton2 > 1.05 GeV");
+
+    // Pi0 mass window cut
+    cuts.defineRangeCut("pion0_mass_cut", 0.0, 0.23, "Pi0 mass window [GeV/c^2]");
 
     cuts.printDefinedCuts();
 }
