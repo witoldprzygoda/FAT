@@ -300,7 +300,8 @@ struct WAvg {
 // ============================================================================
 // MAIN
 // ============================================================================
-void analyze_elastic_pp(const char* filename = "output_pp.root")
+void analyze_elastic_pp(const char* filename = "output_pp_full.root")
+//void analyze_elastic_pp(const char* filename = "output_pp.root")
 {
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);

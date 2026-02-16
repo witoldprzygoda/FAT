@@ -29,6 +29,9 @@ inline void setupCuts(CutManager& cuts) {
     cuts.loadGraphicalCut("anti_elastic", "CUT_dphi_tantan_fitted.root", "cutg",
                          "Anti-elastic cut (dphi vs tantan)");
 
+    // FWD proton beta cut
+    cuts.defineMinCut("proton_fwd_cut", 0.9, "FWD beta > 0.9");
+
     // Missing mass proton cuts
     cuts.defineMinCut("mm_p1", 1.05, "Missing mass proton1 > 1.05 GeV");
     cuts.defineMinCut("mm_p2", 1.05, "Missing mass proton2 > 1.05 GeV");

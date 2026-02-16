@@ -25,8 +25,12 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // pp compound ntuple (proton + proton)
-    manager.createDynamicNtuple("pp_nt", "p + p compound data");
+    // Forward Tracker ntuple (fwd_mult, fwd variables indexed _1 to _3)
+    manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
+    std::cout << "  Created output ntuple 'fwdet_nt'\n";
+
+    // pp compound ntuple (HADES proton + FT proton, one entry per FWD candidate)
+    manager.createDynamicNtuple("pp_nt", "p(HADES) + p(FT) compound data");
     std::cout << "  Created output ntuple 'pp_nt'\n";
 }
 
