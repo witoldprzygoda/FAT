@@ -1,6 +1,7 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/epem_049_01_pid.root",
+        // "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/epem_049_01_pid.root",
+        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons.list",
         "tree_name": "EpEm_ID",
         "channel": "EpEm",
         "lepton_prefixes": ["ep", "em"],
