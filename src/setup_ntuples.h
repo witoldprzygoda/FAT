@@ -25,9 +25,9 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // Dilepton ntuple (ep_*, em_*, oa, m_ee, CMS variables, cut flags)
-    manager.createDynamicNtuple("dilepton_nt", "Dilepton event data");
-    std::cout << "  Created output ntuple 'dilepton_nt'\n";
+    // Pi+Pi-e+e- ntuple (ep_*, em_*, pip_*, pim_*, oa, m_ee, CMS variables, cut flags)
+    manager.createDynamicNtuple("pippimepem_nt", "Pi+Pi-e+e- event data");
+    std::cout << "  Created output ntuple 'pippimepem_nt'\n";
 
     // ECAL ntuple (ecal_mult, cluster/ecal variables indexed _1 to _5)
     manager.createDynamicNtuple("ecal_nt", "ECAL detector data");

@@ -40,7 +40,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
     // Event-level cuts (applied before particle creation)
-    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
+   // if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
     // Create e+ and e- with reconstructed kinematics
@@ -60,9 +60,30 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
                               KinematicType::CORRECTED);
 
+    // Create pi+ and pi- with reconstructed kinematics
+    PParticle piplus(MASS_PION_PLUS, "pi+");
+    PParticle piminus(MASS_PION_MINUS, "pi-");
+
+    piplus.setFromSpherical(reader["pip_p"], reader["pip_theta"], reader["pip_phi"],
+                            KinematicType::RECONSTRUCTED);
+
+    piminus.setFromSpherical(reader["pim_p"], reader["pim_theta"], reader["pim_phi"],
+                             KinematicType::RECONSTRUCTED);
+
+    // Energy-loss corrected kinematics for pions (same angles, corrected momentum)
+    piplus.setFromSpherical(reader["pip_p_corr_pip"], reader["pip_theta"], reader["pip_phi"],
+                            KinematicType::CORRECTED);
+
+    piminus.setFromSpherical(reader["pim_p_corr_pim"], reader["pim_theta"], reader["pim_phi"],
+                             KinematicType::CORRECTED);
+
     // Lepton momentum histograms
     mgr.fill("ep_p", positron.momentum());
     mgr.fill("em_p", electron.momentum());
+
+    // Pion momentum histograms
+    mgr.fill("pip_p", piplus.momentum());
+    mgr.fill("pim_p", piminus.momentum());
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
@@ -73,33 +94,98 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double em_p_cor = electron.momentum(KinematicType::CORRECTED);
     double em_dp = em_p_cor - em_p_rec;
 
+    double pip_p_rec = piplus.momentum(KinematicType::RECONSTRUCTED);
+    double pip_p_cor = piplus.momentum(KinematicType::CORRECTED);
+    double pip_dp = pip_p_cor - pip_p_rec;
+
+    double pim_p_rec = piminus.momentum(KinematicType::RECONSTRUCTED);
+    double pim_p_cor = piminus.momentum(KinematicType::CORRECTED);
+    double pim_dp = pim_p_cor - pim_p_rec;
+
     mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
     mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
+    mgr.fill("pip_dp_vs_p", pip_p_rec, pip_dp);
+    mgr.fill("pim_dp_vs_p", pim_p_rec, pim_dp);
 
     // Opening angle between e+ and e- (must be computed before operator+)
     double oa = Physics::openingAngle(positron, electron);
     mgr.fill("opening_angle", oa);
 
-    // Dilepton (e+ + e-) invariant mass
-    PParticle dilepton = positron + electron;
-    double m_ee = dilepton.massGeV();
+    // Compound objects
+    PParticle epem = positron + electron;                   // e+ e-
+    PParticle pippim = piplus + piminus;                    // pi+ pi-
+    PParticle pippimepem = pippim + epem;                   // pi+ pi- e+ e-
+
+    double m_ee = epem.massGeV();
+    double m_pippim = pippim.massGeV();
+    double m_pippimepem = pippimepem.massGeV();
 
     mgr.fill("mass_ee_before_oa", m_ee);
+    mgr.fill("mass_pippim", m_pippim);
+    mgr.fill("mass_pippimepem", m_pippimepem);
 
-    // Boost dilepton to beam-target CMS frame
+    // Beam + target for missing mass calculations
+    PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
+    PParticle target = ParticleFactory::createTargetProton();
+    PParticle initial = beam + target;
+
+    // Missing masses: MM(X) = beam + target - X
+    PParticle miss_epem = initial - epem;
+    PParticle miss_pippim = initial - pippim;
+    PParticle miss_pippimepem = initial - pippimepem;
+
+    double mm_epem = miss_epem.massGeV();
+    double mm_pippim = miss_pippim.massGeV();
+    double mm_pippimepem = miss_pippimepem.massGeV();
+
+    mgr.fill("mm_epem", mm_epem);
+    mgr.fill("mm_pippim", mm_pippim);
+    mgr.fill("mm_pippimepem", mm_pippimepem);
+    mgr.fill("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem);
+
+    // Boost compound systems to beam-target CMS frame (for rapidity/pt/theta observables)
+    // and to the pippimepem rest frame (for the selection OA).
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
+    frames.addCompositeFrame("pippimepem_rest", pippimepem);
 
-    PParticle dilepton_cms = frames.getFrame("beam").boost(dilepton);
+    PParticle epem_cms = frames.getFrame("beam").boost(epem);
 
-    double y_cms = dilepton_cms.rapidity();
-    double pt = dilepton_cms.vec().Pt();
-    double theta_cms = dilepton_cms.theta();
+    PParticle pippim_rest = frames.getFrame("pippimepem_rest").boost(pippim);
+    PParticle epem_rest = frames.getFrame("pippimepem_rest").boost(epem);
 
-    // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    bool oa_pass = cuts.passMinCut("opening_angle", oa);
+    double y_cms = epem_cms.rapidity();
+    double pt = epem_cms.vec().Pt();
+    double theta_cms = epem_cms.theta();
 
-    auto& nt = mgr.getDynamicNtuple("dilepton_nt");
+    // Opening angles between (pi+pi-) and (e+e-) systems: LAB and pippimepem rest frame
+    double oa_pippim_epem_lab = Physics::openingAngle(pippim, epem);
+    double oa_pippim_epem_rest = Physics::openingAngle(pippim_rest, epem_rest);
+
+    // 4-body selection: OA_LAB < 50, M(pi+pi-) < 0.420, OA_REST > 140
+    bool sel_pass = cuts.passCutSet("pippimepem_selection", {
+        oa_pippim_epem_lab,
+        m_pippim,
+        oa_pippim_epem_rest
+    });
+
+    if (sel_pass) {
+        mgr.fill("mass_pippimepem_selected", m_pippimepem);
+        mgr.fill("mm_vs_m_pippimepem_selected", mm_pippimepem, m_pippimepem);
+
+        // MM(pi+pi-e+e-) slice scan (selection + one slice window)
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30", m_pippimepem);
+    }
+
+    // Fill pi+pi-e+e- ntuple (before OA cut, store cut decision as flag)
+    // opening_angle_4 is the ACTIVE cut; opening_angle_9 is kept defined for future use.
+    bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
+
+    auto& nt = mgr.getDynamicNtuple("pippimepem_nt");
 
     nt["ep_p_rec"] = ep_p_rec;
     nt["ep_p_cor"] = ep_p_cor;
@@ -115,14 +201,35 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["em_theta_rich"] = reader["em_theta_rich"];
     nt["em_phi_rich"] = reader["em_phi_rich"];
 
+    nt["pip_p_rec"] = pip_p_rec;
+    nt["pip_p_cor"] = pip_p_cor;
+    nt["pip_theta"] = piplus.theta();
+    nt["pip_phi"] = piplus.phi();
+
+    nt["pim_p_rec"] = pim_p_rec;
+    nt["pim_p_cor"] = pim_p_cor;
+    nt["pim_theta"] = piminus.theta();
+    nt["pim_phi"] = piminus.phi();
+
     nt["oa"] = oa;
-    nt["m_ee"] = m_ee;
+
+    nt["m_ee"] = m_ee;                       // M(e+e-)
+    nt["m_pippim"] = m_pippim;               // M(pi+pi-)
+    nt["m_pippimepem"] = m_pippimepem;       // M(pi+pi-e+e-)
+
+    nt["mm_epem"] = mm_epem;                 // MM(e+e-)
+    nt["mm_pippim"] = mm_pippim;             // MM(pi+pi-)
+    nt["mm_pippimepem"] = mm_pippimepem;     // MM(pi+pi-e+e-)
+
+    nt["oa_pippim_epem_lab"] = oa_pippim_epem_lab;
+    nt["oa_pippim_epem_rest"] = oa_pippim_epem_rest;
 
     nt["y_cms"] = y_cms;
     nt["pt"] = pt;
     nt["theta_cms"] = theta_cms;
 
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;  // cut decision flag
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;   // opening_angle_4 decision
+    nt["sel_pass"] = sel_pass ? 1.0f : 0.0f; // pippimepem_selection chain decision
 
     nt.fill();
 
@@ -140,16 +247,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     // Dilepton invariant mass (after all cuts)
     mgr.fill("mass_ee", m_ee);
-
-    // Beam + target for missing mass calculations
-    PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
-    PParticle target = ParticleFactory::createTargetProton();
-    PParticle initial = beam + target;
-
-    // Missing mass of e+e- system: MM(e+e-) = beam + target - e+ - e-
-    PParticle miss_epem = initial - positron - electron;
-    double mm_epem_mass = miss_epem.massGeV();
-    double mm_epem_mass2 = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
@@ -233,7 +330,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         for (size_t j = 0; j < ecal_objects.size(); ++j) {
             if (!ecal_pass[j]) continue;
 
-            PParticle epemg = dilepton + ecal_objects[j];
+            PParticle epemg = epem + ecal_objects[j];
             PParticle epemg_cms = frames.getFrame("beam").boost(epemg);
 
             epemg_nt["epemg_mass"] = epemg.massGeV();
@@ -258,10 +355,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             epemg_nt["gamma_rank_energy"] = static_cast<Float_t>(rank_map[j]);
 
             // Missing masses
-            epemg_nt["mm_epem_mass"] = mm_epem_mass;
-            epemg_nt["mm_epem_mass2"] = mm_epem_mass2;
+            epemg_nt["mm_epem_mass"] = mm_epem;
+            epemg_nt["mm_epem_mass2"] = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
 
-            PParticle miss_epemg = initial - positron - electron - ecal_objects[j];
+            PParticle miss_epemg = initial - epem - ecal_objects[j];
             epemg_nt["mm_epemg_mass"] = miss_epemg.massGeV();
             epemg_nt["mm_epemg_mass2"] = miss_epemg.vec().M2() / 1e6;  // GeV²/c⁴
 
