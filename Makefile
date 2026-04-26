@@ -1,7 +1,7 @@
 # Compiler and Flags
 CXX    = g++ 
-CFLAGS = $(shell root-config --cflags) -std=c++17 -g -Wall -fPIC -I./src
-LIBS   = $(shell root-config --libs) -lProof -lEG
+CFLAGS = $(shell root-config --cflags) -std=c++17 -O3 -march=native -g -Wall -fPIC -I./src
+LIBS   = $(shell root-config --libs) -lEG
 
 # Source and header files
 SOURCES = main.cc src/hntuple.cc

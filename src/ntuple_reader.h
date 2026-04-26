@@ -89,7 +89,10 @@ public:
         
         treename_ = treename;
         is_chain_ = false;
-        std::cout << "NTupleReader: Opened '" << treename << "' from " << filename 
+        // Disable all branches by default; bindBranch() will re-enable each one
+        // on first access. Avoids decompressing branches the analysis never reads.
+        tree_->SetBranchStatus("*", 0);
+        std::cout << "NTupleReader: Opened '" << treename << "' from " << filename
                   << " (" << tree_->GetEntries() << " entries)\n";
     }
     
@@ -115,8 +118,10 @@ public:
         tree_ = chain_.get();
         treename_ = treename;
         is_chain_ = true;
-        
-        std::cout << "NTupleReader: Opened chain '" << treename << "' with " 
+        // Disable all branches by default; bindBranch() will re-enable each one
+        // on first access. SetBranchStatus on a TChain is sticky across files.
+        tree_->SetBranchStatus("*", 0);
+        std::cout << "NTupleReader: Opened chain '" << treename << "' with "
                   << filenames.size() << " files (" << tree_->GetEntries() << " entries)\n";
     }
     
@@ -387,8 +392,11 @@ private:
             }
         }
 
-        // Create storage under logical name, bind to physical branch
+        // Create storage under logical name, bind to physical branch.
+        // Order matters: re-activate the branch BEFORE SetBranchAddress, otherwise
+        // ROOT keeps it skipped during GetEntry and reads return zero.
         branch_values_[logical_name] = 0.0f;
+        tree_->SetBranchStatus(branch_name.c_str(), 1);
         tree_->SetBranchAddress(branch_name.c_str(), &branch_values_[logical_name]);
 
         // Re-read current entry to get value

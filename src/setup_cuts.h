@@ -51,6 +51,14 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineRangeCut("mm_slice_26_28", 2.6, 2.8, "MM(pi+pi-e+e-) in [2.6, 2.8] GeV/c^2");
     cuts.defineRangeCut("mm_slice_28_30", 2.8, 3.0, "MM(pi+pi-e+e-) in [2.8, 3.0] GeV/c^2");
 
+    // 2D graphical cut on (MM, M) of pi+pi-e+e- — loaded from ROOT file
+    cuts.loadGraphicalCut("cut_2d", "cuts/cut_2d.root", "cut_2d",
+                          "TCutG on (mm_pippimepem, m_pippimepem)");
+
+    // pi0 invariant-mass window for the e+e-gamma Dalitz hypothesis (CORRECTED)
+    cuts.defineRangeCut("pi0_mass_window", 0.1, 0.18,
+                        "M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window)");
+
     cuts.printDefinedCuts();
 }
 

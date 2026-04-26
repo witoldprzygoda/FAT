@@ -40,7 +40,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
     // Event-level cuts (applied before particle creation)
-   // if (!cuts.passValueCut("isBest", reader["isBest"])) return;
+    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
     // Create e+ and e- with reconstructed kinematics
@@ -77,13 +77,17 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     piminus.setFromSpherical(reader["pim_p_corr_pim"], reader["pim_theta"], reader["pim_phi"],
                              KinematicType::CORRECTED);
 
-    // Lepton momentum histograms
+    // Lepton momentum histograms (RECONSTRUCTED + CORRECTED)
     mgr.fill("ep_p", positron.momentum());
     mgr.fill("em_p", electron.momentum());
+    mgr.fill("ep_p_cor", positron.momentum(KinematicType::CORRECTED));
+    mgr.fill("em_p_cor", electron.momentum(KinematicType::CORRECTED));
 
-    // Pion momentum histograms
+    // Pion momentum histograms (RECONSTRUCTED + CORRECTED)
     mgr.fill("pip_p", piplus.momentum());
     mgr.fill("pim_p", piminus.momentum());
+    mgr.fill("pip_p_cor", piplus.momentum(KinematicType::CORRECTED));
+    mgr.fill("pim_p_cor", piminus.momentum(KinematicType::CORRECTED));
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
@@ -120,16 +124,25 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double m_pippim = pippim.massGeV();
     double m_pippimepem = pippimepem.massGeV();
 
+    // CORRECTED counterparts (compound PParticles already carry both kinematics)
+    double m_ee_cor = epem.massGeV(KinematicType::CORRECTED);
+    double m_pippim_cor = pippim.massGeV(KinematicType::CORRECTED);
+    double m_pippimepem_cor = pippimepem.massGeV(KinematicType::CORRECTED);
+
     mgr.fill("mass_ee_before_oa", m_ee);
     mgr.fill("mass_pippim", m_pippim);
     mgr.fill("mass_pippimepem", m_pippimepem);
 
-    // Beam + target for missing mass calculations
+    mgr.fill("mass_ee_before_oa_cor", m_ee_cor);
+    mgr.fill("mass_pippim_cor", m_pippim_cor);
+    mgr.fill("mass_pippimepem_cor", m_pippimepem_cor);
+
+    // Beam + target for missing mass calculations (synthetic — REC == COR)
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
     PParticle target = ParticleFactory::createTargetProton();
     PParticle initial = beam + target;
 
-    // Missing masses: MM(X) = beam + target - X
+    // Missing masses: MM(X) = beam + target - X (operator- propagates both kinematics)
     PParticle miss_epem = initial - epem;
     PParticle miss_pippim = initial - pippim;
     PParticle miss_pippimepem = initial - pippimepem;
@@ -138,19 +151,44 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double mm_pippim = miss_pippim.massGeV();
     double mm_pippimepem = miss_pippimepem.massGeV();
 
+    double mm_epem_cor = miss_epem.massGeV(KinematicType::CORRECTED);
+    double mm_pippim_cor = miss_pippim.massGeV(KinematicType::CORRECTED);
+    double mm_pippimepem_cor = miss_pippimepem.massGeV(KinematicType::CORRECTED);
+
     mgr.fill("mm_epem", mm_epem);
     mgr.fill("mm_pippim", mm_pippim);
     mgr.fill("mm_pippimepem", mm_pippimepem);
     mgr.fill("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem);
 
-    // Boost compound systems to beam-target CMS frame (for rapidity/pt/theta observables)
-    // and to the pippimepem rest frame (for the selection OA).
+    mgr.fill("mm_epem_cor", mm_epem_cor);
+    mgr.fill("mm_pippim_cor", mm_pippim_cor);
+    mgr.fill("mm_pippimepem_cor", mm_pippimepem_cor);
+    mgr.fill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
+
+    // 2D graphical cut on (mm_pippimepem, m_pippimepem) — separate decisions for REC and COR
+    bool cut2d_pass     = cuts.passGraphicalCut("cut_2d", mm_pippimepem,     m_pippimepem);
+    bool cut2d_pass_cor = cuts.passGraphicalCut("cut_2d", mm_pippimepem_cor, m_pippimepem_cor);
+    if (cut2d_pass) {
+        mgr.fill("mm_epem_cut2d", mm_epem);
+        mgr.fill("mm_pippim_cut2d", mm_pippim);
+        mgr.fill("mm_pippimepem_cut2d", mm_pippimepem);
+        mgr.fill("mm_vs_m_pippimepem_cut2d", mm_pippimepem, m_pippimepem);
+    }
+    if (cut2d_pass_cor) {
+        mgr.fill("mm_epem_cut2d_cor", mm_epem_cor);
+        mgr.fill("mm_pippim_cut2d_cor", mm_pippim_cor);
+        mgr.fill("mm_pippimepem_cut2d_cor", mm_pippimepem_cor);
+        mgr.fill("mm_vs_m_pippimepem_cut2d_cor", mm_pippimepem_cor, m_pippimepem_cor);
+    }
+
+    // Boost compound systems to beam-target CMS frame and to the pippimepem rest frame.
+    // RECONSTRUCTED-derived frames are stored in `frames`; CORRECTED-derived rest frame
+    // is built via a direct BoostFrame instance (composite-rest depends on kinematics).
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
     frames.addCompositeFrame("pippimepem_rest", pippimepem);
 
     PParticle epem_cms = frames.getFrame("beam").boost(epem);
-
     PParticle pippim_rest = frames.getFrame("pippimepem_rest").boost(pippim);
     PParticle epem_rest = frames.getFrame("pippimepem_rest").boost(epem);
 
@@ -158,15 +196,36 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt = epem_cms.vec().Pt();
     double theta_cms = epem_cms.theta();
 
-    // Opening angles between (pi+pi-) and (e+e-) systems: LAB and pippimepem rest frame
+    // CORRECTED CMS-frame observables: same beam frame (synthetic, no correction),
+    // read CORRECTED data of the boosted epem.
+    PParticle epem_cms_cor = frames.getFrame("beam").boost(epem);  // boosts both kinematics
+    double y_cms_cor = epem_cms_cor.rapidity(KinematicType::CORRECTED);
+    double pt_cor = epem_cms_cor.vec(KinematicType::CORRECTED).Pt();
+    double theta_cms_cor = epem_cms_cor.theta(KinematicType::CORRECTED);
+
+    // CORRECTED pippimepem rest frame — different boost vector, separate BoostFrame.
+    BoostFrame pippimepem_rest_cor_frame(pippimepem, KinematicType::CORRECTED);
+    PParticle pippim_rest_cor = pippimepem_rest_cor_frame.boost(pippim);
+    PParticle epem_rest_cor = pippimepem_rest_cor_frame.boost(epem);
+
+    // Opening angles (compound systems): LAB and pippimepem rest frame, RECONSTRUCTED + CORRECTED
     double oa_pippim_epem_lab = Physics::openingAngle(pippim, epem);
     double oa_pippim_epem_rest = Physics::openingAngle(pippim_rest, epem_rest);
+    double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem, KinematicType::CORRECTED);
+    double oa_pippim_epem_rest_cor = Physics::openingAngle(pippim_rest_cor, epem_rest_cor,
+                                                            KinematicType::CORRECTED);
 
-    // 4-body selection: OA_LAB < 50, M(pi+pi-) < 0.420, OA_REST > 140
+    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, OA_REST > 140
     bool sel_pass = cuts.passCutSet("pippimepem_selection", {
         oa_pippim_epem_lab,
         m_pippim,
         oa_pippim_epem_rest
+    });
+    // Same selection with CORRECTED inputs
+    bool sel_pass_cor = cuts.passCutSet("pippimepem_selection", {
+        oa_pippim_epem_lab_cor,
+        m_pippim_cor,
+        oa_pippim_epem_rest_cor
     });
 
     if (sel_pass) {
@@ -179,6 +238,68 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26", m_pippimepem);
         if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28", m_pippimepem);
         if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30", m_pippimepem);
+
+        // Same slices, additionally requiring cut_2d
+        if (cut2d_pass) {
+            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22_cut2d", m_pippimepem);
+            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24_cut2d", m_pippimepem);
+            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26_cut2d", m_pippimepem);
+            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28_cut2d", m_pippimepem);
+            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30_cut2d", m_pippimepem);
+        }
+    }
+
+    // === CORRECTED selection block (mirror of the above, using *_cor values) ===
+    if (sel_pass_cor) {
+        mgr.fill("mass_pippimepem_selected_cor", m_pippimepem_cor);
+        mgr.fill("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor);
+
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
+
+        if (cut2d_pass_cor) {
+            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cut2d_cor", m_pippimepem_cor);
+            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cut2d_cor", m_pippimepem_cor);
+            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cut2d_cor", m_pippimepem_cor);
+            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cut2d_cor", m_pippimepem_cor);
+            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cut2d_cor", m_pippimepem_cor);
+        }
+    }
+
+    // === ETA candidate (CORRECTED only) ===========================================
+    // eta -> pi+ pi- pi0 -> pi+ pi- e+ e- gamma (Dalitz pi0).
+    // Quality study: take only events with single ECAL hit passing ecal_quality
+    // and with M(e+e-gamma) in the pi0 window. Then build pippimepemg = pippim + epemg.
+    double m_pippimepemg_cor = -1.0;
+    double m_epemg_cor = -1.0;
+    bool   pippimepemg_pass = false;
+
+    if (config.isEcalEnabled() && static_cast<int>(reader["neutr_mult"]) == 1) {
+        PParticleEcal gamma(0.0, "gamma");
+        if (gamma.setFromReader(reader, 1)) {
+            bool gamma_quality = cuts.passCutSet("ecal_quality", {
+                static_cast<double>(gamma.ecal_pid),
+                gamma.ecal_beta,
+                gamma.cluster_energy
+            });
+            if (gamma_quality) {
+                // Mirror RECONSTRUCTED to CORRECTED — the photon has no measured correction
+                gamma.setFromSpherical(gamma.cluster_energy,
+                                       gamma.cluster_theta,
+                                       gamma.cluster_phi,
+                                       KinematicType::CORRECTED);
+                PParticle epemg = epem + gamma;
+                m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
+                if (cuts.passRangeCut("pi0_mass_window", m_epemg_cor)) {
+                    PParticle pippimepemg = pippim + epemg;   // = pippim + epem + gamma
+                    m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
+                    pippimepemg_pass = true;
+                }
+            }
+        }
     }
 
     // Fill pi+pi-e+e- ntuple (before OA cut, store cut decision as flag)
@@ -228,16 +349,75 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["pt"] = pt;
     nt["theta_cms"] = theta_cms;
 
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;   // opening_angle_4 decision
-    nt["sel_pass"] = sel_pass ? 1.0f : 0.0f; // pippimepem_selection chain decision
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;       // opening_angle_4 decision
+    nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // pippimepem_selection chain decision
+    nt["cut2d_pass"] = cut2d_pass ? 1.0f : 0.0f; // TCutG cut_2d on (MM, M) of pi+pi-e+e-
 
     nt.fill();
+
+    // === Mirror ntuple: same field names, compound observables from CORRECTED ===
+    auto& nt_cor = mgr.getDynamicNtuple("pippimepem_nt_cor");
+
+    // Per-particle fields are identical (raw _rec/_cor and angles don't change)
+    nt_cor["ep_p_rec"] = ep_p_rec;
+    nt_cor["ep_p_cor"] = ep_p_cor;
+    nt_cor["ep_theta"] = positron.theta();
+    nt_cor["ep_phi"] = positron.phi();
+    nt_cor["ep_theta_rich"] = reader["ep_theta_rich"];
+    nt_cor["ep_phi_rich"] = reader["ep_phi_rich"];
+
+    nt_cor["em_p_rec"] = em_p_rec;
+    nt_cor["em_p_cor"] = em_p_cor;
+    nt_cor["em_theta"] = electron.theta();
+    nt_cor["em_phi"] = electron.phi();
+    nt_cor["em_theta_rich"] = reader["em_theta_rich"];
+    nt_cor["em_phi_rich"] = reader["em_phi_rich"];
+
+    nt_cor["pip_p_rec"] = pip_p_rec;
+    nt_cor["pip_p_cor"] = pip_p_cor;
+    nt_cor["pip_theta"] = piplus.theta();
+    nt_cor["pip_phi"] = piplus.phi();
+
+    nt_cor["pim_p_rec"] = pim_p_rec;
+    nt_cor["pim_p_cor"] = pim_p_cor;
+    nt_cor["pim_theta"] = piminus.theta();
+    nt_cor["pim_phi"] = piminus.phi();
+
+    nt_cor["oa"] = oa;  // single-pair OA is direction-only — same as REC
+
+    // Compound observables — computed from CORRECTED kinematics
+    nt_cor["m_ee"] = m_ee_cor;
+    nt_cor["m_pippim"] = m_pippim_cor;
+    nt_cor["m_pippimepem"] = m_pippimepem_cor;
+
+    nt_cor["mm_epem"] = mm_epem_cor;
+    nt_cor["mm_pippim"] = mm_pippim_cor;
+    nt_cor["mm_pippimepem"] = mm_pippimepem_cor;
+
+    nt_cor["oa_pippim_epem_lab"] = oa_pippim_epem_lab_cor;
+    nt_cor["oa_pippim_epem_rest"] = oa_pippim_epem_rest_cor;
+
+    nt_cor["y_cms"] = y_cms_cor;
+    nt_cor["pt"] = pt_cor;
+    nt_cor["theta_cms"] = theta_cms_cor;
+
+    nt_cor["oa_pass"] = oa_pass ? 1.0f : 0.0f;             // OA single-pair: same decision
+    nt_cor["sel_pass"] = sel_pass_cor ? 1.0f : 0.0f;       // CORRECTED selection chain
+    nt_cor["cut2d_pass"] = cut2d_pass_cor ? 1.0f : 0.0f;   // CORRECTED cut_2d
+
+    // ETA quality study fields (only meaningful when pippimepemg_pass==1)
+    nt_cor["m_epemg"] = m_epemg_cor;
+    nt_cor["m_pippimepemg"] = m_pippimepemg_cor;
+    nt_cor["pippimepemg_pass"] = pippimepemg_pass ? 1.0f : 0.0f;
+
+    nt_cor.fill();
 
     // Apply opening angle cut (reject close pairs)
     // if (!oa_pass) return;
     if (oa_pass) {
     // Still fill histograms for failed OA cut for comparison
         mgr.fill("mass_ee_after_oa", m_ee);
+        mgr.fill("mass_ee_after_oa_cor", m_ee_cor);
     }
     // CMS histograms (after OA cut)
     mgr.fill("rapidity_cms", y_cms);
@@ -245,8 +425,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     mgr.fill("theta_cms", theta_cms);
     mgr.fill("rapidity_vs_mass", m_ee, y_cms);
 
+    mgr.fill("rapidity_cms_cor", y_cms_cor);
+    mgr.fill("pt_cms_cor", pt_cor);
+    mgr.fill("theta_cms_cor", theta_cms_cor);
+    mgr.fill("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor);
+
     // Dilepton invariant mass (after all cuts)
     mgr.fill("mass_ee", m_ee);
+    mgr.fill("mass_ee_cor", m_ee_cor);
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {

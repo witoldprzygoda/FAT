@@ -26,8 +26,14 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
     // Pi+Pi-e+e- ntuple (ep_*, em_*, pip_*, pim_*, oa, m_ee, CMS variables, cut flags)
-    manager.createDynamicNtuple("pippimepem_nt", "Pi+Pi-e+e- event data");
+    // Default uses RECONSTRUCTED-derived compound observables.
+    manager.createDynamicNtuple("pippimepem_nt", "Pi+Pi-e+e- event data (RECONSTRUCTED)");
     std::cout << "  Created output ntuple 'pippimepem_nt'\n";
+
+    // Mirror ntuple: same field names but compound observables computed from
+    // CORRECTED kinematics (energy-loss corrected momenta of the constituents).
+    manager.createDynamicNtuple("pippimepem_nt_cor", "Pi+Pi-e+e- event data (CORRECTED)");
+    std::cout << "  Created output ntuple 'pippimepem_nt_cor'\n";
 
     // ECAL ntuple (ecal_mult, cluster/ecal variables indexed _1 to _5)
     manager.createDynamicNtuple("ecal_nt", "ECAL detector data");

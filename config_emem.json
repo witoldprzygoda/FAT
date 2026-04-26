@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons.list",
+        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
         "tree_name": "PipPimEmEm_ID",
         "channel": "PipPimEmEm",
         "lepton_prefixes": ["em1", "em2"],
