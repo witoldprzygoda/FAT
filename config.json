@@ -1,14 +1,13 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
-        "tree_name": "PipPimEpEm_ID",
-        "channel": "PipPimEpEm",
-        "lepton_prefixes": ["ep", "em"],
+        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/HADRONS/pp45_hadrons_037.list",
+        "tree_name": "PipPim_ID",
+        "channel": "PipPim",
         "start_event": 0,
-        "max_events": 0 
+        "max_events": 0
     },
     "output": {
-        "filename": "output_pippimepem.root",
+        "filename": "output_pippim.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0

@@ -1,8 +1,6 @@
 /**
  * @file setup_cuts.h
- * @brief Cut definitions
- *
- * This file defines all cuts for the analysis.
+ * @brief Cut definitions for the pi+pi- hadronic analysis
  *
  * @author Witold Przygoda (witold.przygoda@uj.edu.pl)
  * @date 2025
@@ -14,50 +12,25 @@
 #include "cut_manager.h"
 #include <iostream>
 
-/**
- * @brief Define cuts for the analysis
- * @param cuts CutManager object for cut definition
- */
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
-    // Event-level cuts (applied before particle creation)
+    // Event-level cuts
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Opening angle cuts (reject close e+e- pairs)
-    // opening_angle_4 is the ACTIVE cut applied in data.
-    // opening_angle_9 is defined but not applied (kept for future studies).
-    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (active)");
-    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (for future use)");
-
-    // ECAL quality cuts (AND logic; passCutSet values must match this order)
+    // ECAL gamma quality (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
         .addValueCut("ecal_pid", 1.0, "PID == 1")
         .addRangeCut("ecal_beta", 0.8, 1.2, "0.8 < beta < 1.2")
         .addMinCut("cluster_energy", 100.0, "Cluster energy > 100 MeV");
 
-    // 4-body pi+pi-e+e- selection chain (AND logic; order matches passCutSet values)
-    cuts.defineCutSet("pippimepem_selection", "pi+pi-e+e- 4-body selection")
-        .addMaxCut("oa_pippim_epem_lab",  50.0, "OA_LAB((pi+pi-),(e+e-)) < 50 deg")
-        .addMaxCut("m_pippim",            0.420, "M(pi+pi-) < 0.420 GeV/c^2")
-        .addMinCut("oa_pippim_epem_rest", 140.0, "OA((pi+pi-),(e+e-)) in pippimepem rest frame > 140 deg");
-
-    // MM(pi+pi-e+e-) slice windows [GeV/c^2] — 6 adjacent bins for scan studies.
-    // Used in tandem with the selection chain (see main.cc).
-    cuts.defineRangeCut("mm_slice_20_22", 2.0, 2.2, "MM(pi+pi-e+e-) in [2.0, 2.2] GeV/c^2");
-    cuts.defineRangeCut("mm_slice_22_24", 2.2, 2.4, "MM(pi+pi-e+e-) in [2.2, 2.4] GeV/c^2");
-    cuts.defineRangeCut("mm_slice_24_26", 2.4, 2.6, "MM(pi+pi-e+e-) in [2.4, 2.6] GeV/c^2");
-    cuts.defineRangeCut("mm_slice_26_28", 2.6, 2.8, "MM(pi+pi-e+e-) in [2.6, 2.8] GeV/c^2");
-    cuts.defineRangeCut("mm_slice_28_30", 2.8, 3.0, "MM(pi+pi-e+e-) in [2.8, 3.0] GeV/c^2");
-
-    // 2D graphical cut on (MM, M) of pi+pi-e+e- — loaded from ROOT file
-    cuts.loadGraphicalCut("cut_2d", "cuts/cut_2d.root", "cut_2d",
-                          "TCutG on (mm_pippimepem, m_pippimepem)");
-
-    // pi0 invariant-mass window for the e+e-gamma Dalitz hypothesis (CORRECTED)
+    // pi0 invariant-mass window for the gamma+gamma hypothesis (wide — for ntuple gating)
     cuts.defineRangeCut("pi0_mass_window", 0.1, 0.18,
-                        "M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window)");
+                        "M(gg) in [0.10, 0.18] GeV/c^2 (wide pi0 window)");
+    // Narrow pi0 window — used for histogram filling now that statistics is huge
+    cuts.defineRangeCut("pi0_mass_window_narrow", 0.125, 0.145,
+                        "M(gg) in [0.125, 0.145] GeV/c^2 (narrow pi0 window)");
 
     cuts.printDefinedCuts();
 }

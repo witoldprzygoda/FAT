@@ -1,8 +1,6 @@
 /**
  * @file setup_ntuples.h
- * @brief Output ntuple definitions
- *
- * This file defines output ntuples for the analysis.
+ * @brief Output ntuple definitions for the pi+pi- hadronic analysis
  *
  * @author Witold Przygoda (witold.przygoda@uj.edu.pl)
  * @date 2025
@@ -15,25 +13,17 @@
 #include "analysis_config.h"
 #include <iostream>
 
-/**
- * @brief Setup output ntuples for the analysis
- * @param manager Reference to the Manager
- * @param config Reference to AnalysisConfig
- *
- * To add a new ntuple: manager.createDynamicNtuple("name", "description")
- */
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
-    // Pi+Pi-e+e- ntuple (ep_*, em_*, pip_*, pim_*, oa, m_ee, CMS variables, cut flags)
-    // Default uses RECONSTRUCTED-derived compound observables.
-    manager.createDynamicNtuple("pippimepem_nt", "Pi+Pi-e+e- event data (RECONSTRUCTED)");
-    std::cout << "  Created output ntuple 'pippimepem_nt'\n";
+    // Pi+Pi- ntuple (RECONSTRUCTED-derived compound observables)
+    manager.createDynamicNtuple("pippim_nt", "Pi+Pi- event data (RECONSTRUCTED)");
+    std::cout << "  Created output ntuple 'pippim_nt'\n";
 
     // Mirror ntuple: same field names but compound observables computed from
-    // CORRECTED kinematics (energy-loss corrected momenta of the constituents).
-    manager.createDynamicNtuple("pippimepem_nt_cor", "Pi+Pi-e+e- event data (CORRECTED)");
-    std::cout << "  Created output ntuple 'pippimepem_nt_cor'\n";
+    // CORRECTED kinematics (energy-loss corrected pion momenta).
+    manager.createDynamicNtuple("pippim_nt_cor", "Pi+Pi- event data (CORRECTED)");
+    std::cout << "  Created output ntuple 'pippim_nt_cor'\n";
 
     // ECAL ntuple (ecal_mult, cluster/ecal variables indexed _1 to _5)
     manager.createDynamicNtuple("ecal_nt", "ECAL detector data");
@@ -42,10 +32,6 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     // Forward Tracker ntuple (fwd_mult, fwd variables indexed _1 to _3)
     manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
     std::cout << "  Created output ntuple 'fwdet_nt'\n";
-
-    // e+e-gamma compound ntuple (one entry per passing gamma, for pi0 Dalitz)
-    manager.createDynamicNtuple("epemg_nt", "e+e-gamma compound data");
-    std::cout << "  Created output ntuple 'epemg_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H
