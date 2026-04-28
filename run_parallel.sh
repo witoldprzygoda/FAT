@@ -97,6 +97,20 @@ fi
 split -n "l/$N_PARTS" -d -a 3 --additional-suffix=.list \
       "$TMPDIR/all.list" "$TMPDIR/part_"
 
+# Drop empty chunks. `split -n l/N` can leave some chunks empty when N is close
+# to the line count, due to byte-rounded line boundaries. Empty chunks would
+# fail downstream in ana ("no files in list") and pollute the OK/FAIL summary.
+n_empty=0
+for f in "$TMPDIR"/part_*.list; do
+    if [[ ! -s "$f" ]]; then
+        rm -f "$f"
+        ((n_empty++))
+    fi
+done
+if (( n_empty > 0 )); then
+    echo "Dropped $n_empty empty chunk(s) (split-rounding artefact)."
+fi
+
 # Generate one config + output filename per chunk
 for f in "$TMPDIR"/part_*.list; do
     idx=$(basename "$f" | sed -E 's/part_([0-9]+)\.list/\1/')
