@@ -15,9 +15,18 @@
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
-    // Event-level cuts
+    // Event-level cuts (applied first, before any compound construction)
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
+
+    // Trigger: PT3 only (trigbit == 8192)
+    cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
+
+    // Start detector (LGAD) — defined as a cut set so future iteration/timing
+    // conditions can be appended without changing the call site.
+    // Only the first iteration (start_iteration == 3) is required for now.
+    cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
+        .addValueCut("start_iteration", 3.0, "start_iteration == 3");
 
     // ECAL gamma quality (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")

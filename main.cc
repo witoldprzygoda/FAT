@@ -44,9 +44,11 @@ using namespace Physics;
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
-    // Event-level cuts
+    // Event-level cuts (applied first)
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
+    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
+    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
     // ========================================================================
     // pi+ and pi- with reconstructed and corrected kinematics

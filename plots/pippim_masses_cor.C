@@ -34,6 +34,10 @@ namespace {
         gStyle->SetPadRightMargin(0.04);
         gStyle->SetPadTopMargin(0.06);
         gStyle->SetPadBottomMargin(0.13);
+        // Subtle vertical grid: thin dotted gray instead of default solid black
+        gStyle->SetGridColor(kGray + 1);
+        gStyle->SetGridStyle(3);   // 3 = dotted
+        gStyle->SetGridWidth(1);
     }
 
     // Compose nice axis title from a particle-mass label (uses LaTeX).
@@ -41,7 +45,9 @@ namespace {
         h->SetMarkerStyle(20);
         h->SetMarkerSize(0.6);
         h->SetMarkerColor(kBlack);
-        h->SetLineColor(kBlack);
+        // Thin blue line connecting bin centres (drawn via the "L" suffix in
+        // the Draw option below). LineColor also colours the error bars.
+        h->SetLineColor(kBlue);
         h->SetLineWidth(1);
         h->GetXaxis()->SetTitle(xtitle);
         h->GetYaxis()->SetTitle(ytitle);
@@ -88,9 +94,10 @@ void pippim_masses_cor(const char* file = "/home/przygoda/HADES/FAT/FAT/output_p
             auto* c = new TCanvas("c_m_gg_cor", "M(gg)", 800, 600);
             h->SetMinimum(0);
             h->GetXaxis()->SetRangeUser(0.0, 0.6);
-            h->Draw("E");
-            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.94, 0.034);
-            drawLabel("ECAL: ecal_mult == 2, ecal_quality", 0.94, 0.89, 0.030);
+            h->Draw("HIST L");          // thin blue polyline through bin centres
+            h->Draw("PE SAME");         // overlay markers + error bars
+            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.88, 0.034);
+            drawLabel("ECAL: ecal_mult == 2, ecal_quality", 0.94, 0.83, 0.030);
             c->Update();
             saveAs(c, "m_gg_cor");
         }
@@ -110,9 +117,10 @@ void pippim_masses_cor(const char* file = "/home/przygoda/HADES/FAT/FAT/output_p
             c->SetGridx();
             h->SetMinimum(0);
             h->GetXaxis()->SetRangeUser(0.2, 1.2);
-            h->Draw("E");
-            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.94, 0.034);
-            drawLabel("Tree: PipPim_ID, isBest+vertex_z", 0.94, 0.89, 0.030);
+            h->Draw("HIST L");          // thin blue polyline through bin centres
+            h->Draw("PE SAME");         // overlay markers + error bars
+            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.88, 0.034);
+            drawLabel("Tree: PipPim_ID, isBest+vertex_z", 0.94, 0.83, 0.030);
             c->Update();
             saveAs(c, "m_pippim_cor");
         }
@@ -133,10 +141,11 @@ void pippim_masses_cor(const char* file = "/home/przygoda/HADES/FAT/FAT/output_p
             c->SetGridx();
             h->SetMinimum(0);
             h->GetXaxis()->SetRangeUser(0.4, 1.4);
-            h->Draw("E");
-            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.94, 0.034);
+            h->Draw("HIST L");          // thin blue polyline through bin centres
+            h->Draw("PE SAME");         // overlay markers + error bars
+            drawLabel("HADES p+p @ 4.5 GeV   (CORRECTED)", 0.94, 0.88, 0.034);
             drawLabel("ecal_mult==2 + #pi^{0} window on M(#gamma#gamma)",
-                      0.94, 0.89, 0.030);
+                      0.94, 0.83, 0.030);
             c->Update();
             saveAs(c, "m_pippimgg_cor");
         }

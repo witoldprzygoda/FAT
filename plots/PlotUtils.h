@@ -227,9 +227,12 @@ public:
             h_all->SetMinimum(0.0);
         }
 
-        h_all->Draw("E");
-        h_cb->Draw("E SAME");
-        h_sig->Draw("E SAME");
+        // "L E" — draw a polyline connecting bin centres ("L") on top of error
+        // bars + markers ("E"). The marker keeps its per-series color, the
+        // line is the thin blue set in styleAll/CB/Signal.
+        h_all->Draw("L E");
+        h_cb->Draw("L E SAME");
+        h_sig->Draw("L E SAME");
 
         TLegend* leg = new TLegend(0.65, 0.72, 0.92, 0.90);
         leg->SetBorderSize(0);
@@ -260,11 +263,15 @@ public:
     // Styling
     // ========================================================================
 
+    // Marker color identifies the series; the polyline (and error bars, since
+    // ROOT TH1 shares LineColor between them) is a thin blue line connecting
+    // bin centres — set via SetLineColor(kBlue). Drawn via the "L" suffix in
+    // the Draw option ("E L SAME") in drawTriple().
     void styleAll(TH1* h) {
         h->SetMarkerStyle(20);
         h->SetMarkerSize(0.7);
         h->SetMarkerColor(kBlack);
-        h->SetLineColor(kBlack);
+        h->SetLineColor(kBlue);
         h->SetLineWidth(1);
     }
 
@@ -272,7 +279,7 @@ public:
         h->SetMarkerStyle(20);
         h->SetMarkerSize(0.7);
         h->SetMarkerColor(kRed);
-        h->SetLineColor(kRed);
+        h->SetLineColor(kBlue);
         h->SetLineWidth(1);
     }
 
