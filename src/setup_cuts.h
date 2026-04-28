@@ -59,6 +59,13 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineRangeCut("pi0_mass_window", 0.1, 0.18,
                         "M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window)");
 
+    // eta invariant-mass window — used for f1(1285) -> pi+pi- eta search.
+    // The eta candidate is identified either via eta -> e+e-gamma Dalitz (mult==1)
+    // or eta -> gamma gamma direct (mult==2), and the cut is applied on the
+    // corresponding mass — M(e+e-gamma) or M(gamma gamma).
+    cuts.defineRangeCut("eta_mass_window", 0.5, 0.6,
+                        "M(eta candidate) in [0.50, 0.60] GeV/c^2");
+
     cuts.printDefinedCuts();
 }
 

@@ -269,34 +269,78 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
     }
 
-    // === ETA candidate (CORRECTED only) ===========================================
-    // eta -> pi+ pi- pi0 -> pi+ pi- e+ e- gamma (Dalitz pi0).
-    // Quality study: take only events with single ECAL hit passing ecal_quality
-    // and with M(e+e-gamma) in the pi0 window. Then build pippimepemg = pippim + epemg.
+    // === ETA / f1 candidates from ECAL (CORRECTED only) ===========================
+    // ECAL N_gamma==1 case:
+    //   eta -> pi+pi- pi0 -> pi+pi- e+e-gamma (Dalitz pi0)  — pippimepemg_pass flag
+    //   f1  -> pi+pi- eta(e+e-gamma)  (Dalitz eta)           — eta_dalitz_pass flag
+    //   The compound M(pi+pi-e+e-gamma) is the same in both cases — only the cut
+    //   on M(e+e-gamma) differs (pi0 narrow vs eta window).
+    // ECAL N_gamma==2 case:
+    //   f1 -> pi+pi- eta(gamma gamma) — eta_gg_pass flag.
+    //   New compound M(pi+pi-gamma gamma) is the f1 candidate from the gg branch.
+    double m_epemg_cor       = -1.0;
     double m_pippimepemg_cor = -1.0;
-    double m_epemg_cor = -1.0;
-    bool   pippimepemg_pass = false;
+    bool   pippimepemg_pass  = false;   // M(epemg) in pi0 window (eta -> 3pi -> Dalitz pi0)
+    bool   eta_dalitz_pass   = false;   // M(epemg) in eta window (eta -> e+e-gamma Dalitz)
 
-    if (config.isEcalEnabled() && static_cast<int>(reader["neutr_mult"]) == 1) {
-        PParticleEcal gamma(0.0, "gamma");
-        if (gamma.setFromReader(reader, 1)) {
-            bool gamma_quality = cuts.passCutSet("ecal_quality", {
-                static_cast<double>(gamma.ecal_pid),
-                gamma.ecal_beta,
-                gamma.cluster_energy
-            });
-            if (gamma_quality) {
-                // Mirror RECONSTRUCTED to CORRECTED — the photon has no measured correction
-                gamma.setFromSpherical(gamma.cluster_energy,
-                                       gamma.cluster_theta,
-                                       gamma.cluster_phi,
-                                       KinematicType::CORRECTED);
-                PParticle epemg = epem + gamma;
-                m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
-                if (cuts.passRangeCut("pi0_mass_window", m_epemg_cor)) {
-                    PParticle pippimepemg = pippim + epemg;   // = pippim + epem + gamma
+    double m_gg_cor          = -1.0;
+    double m_pippim_gg_cor   = -1.0;
+    bool   eta_gg_pass       = false;   // M(gg)    in eta window (eta -> gamma gamma)
+
+    if (config.isEcalEnabled()) {
+        int neutr_mult_for_eta = static_cast<int>(reader["neutr_mult"]);
+
+        // -- mult==1: epemg compound + pi0/eta cuts on M(epemg) --
+        if (neutr_mult_for_eta == 1) {
+            PParticleEcal gamma(0.0, "gamma");
+            if (gamma.setFromReader(reader, 1)) {
+                bool gamma_quality = cuts.passCutSet("ecal_quality", {
+                    static_cast<double>(gamma.ecal_pid),
+                    gamma.ecal_beta,
+                    gamma.cluster_energy
+                });
+                if (gamma_quality) {
+                    // Mirror RECONSTRUCTED to CORRECTED (photon has no measured correction)
+                    gamma.setFromSpherical(gamma.cluster_energy,
+                                           gamma.cluster_theta,
+                                           gamma.cluster_phi,
+                                           KinematicType::CORRECTED);
+                    PParticle epemg = epem + gamma;
+                    m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
+
+                    // Compound mass — same value, different cut interpretations
+                    PParticle pippimepemg = pippim + epemg;
                     m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
-                    pippimepemg_pass = true;
+
+                    pippimepemg_pass = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
+                    eta_dalitz_pass  = cuts.passRangeCut("eta_mass_window",  m_epemg_cor);
+                }
+            }
+        }
+
+        // -- mult==2: gg compound + eta cut on M(gg) (f1 -> pi+pi- eta(gg)) --
+        if (neutr_mult_for_eta == 2) {
+            PParticleEcal g1(0.0, "g1");
+            PParticleEcal g2(0.0, "g2");
+            bool ok1 = g1.setFromReader(reader, 1);
+            bool ok2 = g2.setFromReader(reader, 2);
+            if (ok1 && ok2) {
+                bool q1 = cuts.passCutSet("ecal_quality", {
+                    static_cast<double>(g1.ecal_pid), g1.ecal_beta, g1.cluster_energy});
+                bool q2 = cuts.passCutSet("ecal_quality", {
+                    static_cast<double>(g2.ecal_pid), g2.ecal_beta, g2.cluster_energy});
+                if (q1 && q2) {
+                    g1.setFromSpherical(g1.cluster_energy, g1.cluster_theta, g1.cluster_phi,
+                                        KinematicType::CORRECTED);
+                    g2.setFromSpherical(g2.cluster_energy, g2.cluster_theta, g2.cluster_phi,
+                                        KinematicType::CORRECTED);
+                    PParticle gg         = g1 + g2;
+                    PParticle pippim_gg  = pippim + gg;
+                    m_gg_cor        = gg.massGeV(KinematicType::CORRECTED);
+                    m_pippim_gg_cor = pippim_gg.massGeV(KinematicType::CORRECTED);
+
+                    mgr.fill("mass_gg_cor", m_gg_cor);          // control plot
+                    eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg_cor);
                 }
             }
         }
@@ -405,10 +449,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["sel_pass"] = sel_pass_cor ? 1.0f : 0.0f;       // CORRECTED selection chain
     nt_cor["cut2d_pass"] = cut2d_pass_cor ? 1.0f : 0.0f;   // CORRECTED cut_2d
 
-    // ETA quality study fields (only meaningful when pippimepemg_pass==1)
-    nt_cor["m_epemg"] = m_epemg_cor;
-    nt_cor["m_pippimepemg"] = m_pippimepemg_cor;
-    nt_cor["pippimepemg_pass"] = pippimepemg_pass ? 1.0f : 0.0f;
+    // ECAL-derived eta / f1 fields (CORRECTED).
+    //   mult==1 branch: shared compound mass M(pi+pi-e+e-gamma); two flags select
+    //                   the interpretation (pi0 Dalitz inside epemg vs eta Dalitz)
+    //   mult==2 branch: separate compound M(pi+pi-gamma gamma) for f1 -> pi+pi-eta(gg)
+    nt_cor["m_epemg"]            = m_epemg_cor;
+    nt_cor["m_pippimepemg"]      = m_pippimepemg_cor;
+    nt_cor["pippimepemg_pass"]   = pippimepemg_pass ? 1.0f : 0.0f;  // mult==1, M(epemg) in pi0
+    nt_cor["eta_dalitz_pass"]    = eta_dalitz_pass  ? 1.0f : 0.0f;  // mult==1, M(epemg) in eta
+
+    nt_cor["m_gg"]               = m_gg_cor;
+    nt_cor["m_pippim_gg"]        = m_pippim_gg_cor;
+    nt_cor["eta_gg_pass"]        = eta_gg_pass      ? 1.0f : 0.0f;  // mult==2, M(gg) in eta
 
     nt_cor.fill();
 

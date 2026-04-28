@@ -237,6 +237,13 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create2D("rapidity_vs_mass_cor", "y_{CMS} vs M_{ee} (cor);M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
                  100, 0.0, 1.0, 100, -2.0, 2.0, "cms_cor");
 
+    // M(gamma gamma) control plot for ECAL N_gamma==2 events (CORRECTED).
+    // Used by the f1(1285) -> pi+pi- eta(gg) analysis to verify the photon
+    // pair populates the eta region before the f1 candidate is built.
+    mgr.create1D("mass_gg_cor",
+                 "#gamma#gamma invariant mass (cor);M_{#gamma#gamma} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "ecal_only_cor");
+
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 
