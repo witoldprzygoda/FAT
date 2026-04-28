@@ -44,3 +44,7 @@ ana
 *.pcm
 *.root
 MyDict.cc
+
+# Plot outputs — keep the directory (via .gitkeep) but ignore generated images
+plots/output/*
+!plots/output/.gitkeep

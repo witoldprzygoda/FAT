@@ -37,9 +37,18 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     manager.createDynamicNtuple("fwdet_nt", "Forward Tracker data");
     std::cout << "  Created output ntuple 'fwdet_nt'\n";
 
-    // e+e-gamma compound ntuple (one entry per passing gamma, for pi0 Dalitz)
+    // e+e-gamma compound ntuple (mult==1, for pi0 Dalitz)
     manager.createDynamicNtuple("epemg_nt", "e+e-gamma compound data");
     std::cout << "  Created output ntuple 'epemg_nt'\n";
+
+    // e+e-gg compound ntuple (mult==2: epem + gg, for omega -> e+e- pi0 search)
+    manager.createDynamicNtuple("epemgg_nt", "e+e-gg compound data (mult==2)");
+    std::cout << "  Created output ntuple 'epemgg_nt'\n";
+
+    // e+e-ggg compound ntuple (mult==3: 3 rotational entries per event;
+    // each row stores m_epemg / m_gg / m_epemggg of one rotation plus cut flags).
+    manager.createDynamicNtuple("epemggg_nt", "e+e-ggg combinatorial data (mult==3, 3 rotations)");
+    std::cout << "  Created output ntuple 'epemggg_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H

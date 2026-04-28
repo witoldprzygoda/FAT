@@ -37,6 +37,21 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("mass_ee", "e^{+}e^{-} invariant mass;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
 
+    // e+e-gamma invariant mass — pi0 Dalitz candidate (only when ecal_mult == 1)
+    mgr.create1D("mass_epemg", "e^{+}e^{-}#gamma invariant mass;M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "epemg");
+
+    // gamma+gamma invariant mass (only when ecal_mult == 2 with both passing quality)
+    mgr.create1D("mass_gg", "#gamma#gamma invariant mass;M_{#gamma#gamma} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "ecal_only");
+
+    // 4-gamma invariant mass under double-pi0 narrow constraint
+    // (ecal_mult == 4, all gammas pass quality, both gg pairings in narrow pi0 window).
+    // Filled across all 3 pairings, like a combinatorial sum.
+    mgr.create1D("mass_gggg_pi0pi0",
+                 "4#gamma invariant mass under (#pi^{0}, #pi^{0});M_{#gamma#gamma#gamma#gamma} [GeV/c^{2}];Counts",
+                 200, 0.2, 2.2, "ecal_only");
+
     // Opening angle and before/after OA cut mass spectra
     mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
                  180, 0, 180, "dilepton");

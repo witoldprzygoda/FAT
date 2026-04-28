@@ -210,33 +210,20 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
         ecal_nt.fill();
 
-        // Compound e+e-gamma objects (one entry per passing gamma)
-        auto& epemg_nt = mgr.getDynamicNtuple("epemg_nt");
+        // Compound e+e-gamma — only when ecal_mult == 1 AND the single gamma
+        // passes ecal_quality. One ntuple entry per qualifying event, plus the
+        // mass_epemg histogram (pi0 Dalitz region M ~ 0.135 GeV/c^2).
+        if (neutr_mult == 1 && !ecal_objects.empty() && ecal_pass[0]) {
+            auto& epemg_nt = mgr.getDynamicNtuple("epemg_nt");
+            const auto& gamma = ecal_objects[0];
 
-        int gamma_pass_mult = std::count(ecal_pass.begin(), ecal_pass.end(), true);
-
-        // Energy-ranked indices of passing gammas (rank 1 = highest energy)
-        std::vector<size_t> pass_indices;
-        for (size_t j = 0; j < ecal_objects.size(); ++j) {
-            if (ecal_pass[j]) pass_indices.push_back(j);
-        }
-        std::sort(pass_indices.begin(), pass_indices.end(),
-                  [&](size_t a, size_t b) {
-                      return ecal_objects[a].cluster_energy > ecal_objects[b].cluster_energy;
-                  });
-
-        std::map<size_t, int> rank_map;
-        for (size_t r = 0; r < pass_indices.size(); ++r) {
-            rank_map[pass_indices[r]] = static_cast<int>(r + 1);
-        }
-
-        for (size_t j = 0; j < ecal_objects.size(); ++j) {
-            if (!ecal_pass[j]) continue;
-
-            PParticle epemg = dilepton + ecal_objects[j];
+            PParticle epemg = dilepton + gamma;
             PParticle epemg_cms = frames.getFrame("beam").boost(epemg);
 
-            epemg_nt["epemg_mass"] = epemg.massGeV();
+            double m_epemg = epemg.massGeV();
+            mgr.fill("mass_epemg", m_epemg);
+
+            epemg_nt["epemg_mass"] = m_epemg;
             epemg_nt["epemg_p"] = epemg.momentum();
             epemg_nt["epemg_theta"] = epemg.theta();
             epemg_nt["epemg_phi"] = epemg.phi();
@@ -248,24 +235,107 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             epemg_nt["ee_oa"] = oa;
             epemg_nt["ee_mass"] = m_ee;
 
-            epemg_nt["gamma_energy"] = ecal_objects[j].cluster_energy;
-            epemg_nt["gamma_theta"] = ecal_objects[j].cluster_theta;
-            epemg_nt["gamma_phi"] = ecal_objects[j].cluster_phi;
-            epemg_nt["gamma_index"] = static_cast<Float_t>(j + 1);
+            epemg_nt["gamma_energy"] = gamma.cluster_energy;
+            epemg_nt["gamma_theta"] = gamma.cluster_theta;
+            epemg_nt["gamma_phi"] = gamma.cluster_phi;
 
             epemg_nt["ecal_mult"] = static_cast<Float_t>(neutr_mult);
-            epemg_nt["gamma_pass_mult"] = static_cast<Float_t>(gamma_pass_mult);
-            epemg_nt["gamma_rank_energy"] = static_cast<Float_t>(rank_map[j]);
 
             // Missing masses
             epemg_nt["mm_epem_mass"] = mm_epem_mass;
             epemg_nt["mm_epem_mass2"] = mm_epem_mass2;
 
-            PParticle miss_epemg = initial - positron - electron - ecal_objects[j];
+            PParticle miss_epemg = initial - positron - electron - gamma;
             epemg_nt["mm_epemg_mass"] = miss_epemg.massGeV();
             epemg_nt["mm_epemg_mass2"] = miss_epemg.vec().M2() / 1e6;  // GeV²/c⁴
 
             epemg_nt.fill();
+        }
+
+        // ===========================================================
+        // MULT == 2 — pi0 candidate from gg, omega candidate from epemgg
+        // ===========================================================
+        if (neutr_mult == 2 && ecal_objects.size() >= 2 &&
+            ecal_pass[0] && ecal_pass[1]) {
+
+            PParticle gg     = ecal_objects[0] + ecal_objects[1];
+            PParticle epemgg = dilepton + gg;
+
+            double m_gg     = gg.massGeV();
+            double m_epemgg = epemgg.massGeV();
+
+            mgr.fill("mass_gg", m_gg);
+
+            bool pi0_pass_narrow = cuts.passRangeCut("pi0_mass_window_narrow", m_gg);
+
+            auto& nt = mgr.getDynamicNtuple("epemgg_nt");
+            nt["m_ee"]            = m_ee;
+            nt["m_gg"]            = m_gg;
+            nt["m_epemgg"]        = m_epemgg;
+            nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
+            nt.fill();
+        }
+
+        // ===========================================================
+        // MULT == 3 — 3 rotational combinations
+        //   epemg_i = dilepton + g_i,  gg_jk = g_j + g_k,  full = epemg_i + gg_jk
+        // One ntuple row per rotation (3 rows per qualifying event).
+        // ===========================================================
+        if (neutr_mult == 3 && ecal_objects.size() >= 3 &&
+            ecal_pass[0] && ecal_pass[1] && ecal_pass[2]) {
+
+            const int rot[3][3] = {{0,1,2}, {1,2,0}, {2,0,1}};
+            auto& nt = mgr.getDynamicNtuple("epemggg_nt");
+
+            for (int r = 0; r < 3; ++r) {
+                int i = rot[r][0], j = rot[r][1], k = rot[r][2];
+
+                PParticle epemg_i  = dilepton + ecal_objects[i];
+                PParticle gg_jk    = ecal_objects[j] + ecal_objects[k];
+                PParticle epemggg  = epemg_i + gg_jk;
+
+                double m_epemg   = epemg_i.massGeV();
+                double m_gg_jk   = gg_jk.massGeV();
+                double m_epemggg = epemggg.massGeV();
+
+                bool pi0_pass_narrow = cuts.passRangeCut("pi0_mass_window_narrow", m_gg_jk);
+                bool eta_pass        = cuts.passRangeCut("eta_mass_window",        m_epemg);
+
+                nt["m_ee"]            = m_ee;
+                nt["m_epemg"]         = m_epemg;       // epem + g_i
+                nt["m_gg"]            = m_gg_jk;       // g_j + g_k
+                nt["m_epemggg"]       = m_epemggg;     // full compound
+                nt["rot_idx"]         = static_cast<Float_t>(r);
+                nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
+                nt["eta_pass"]        = eta_pass        ? 1.0f : 0.0f;
+                nt.fill();
+            }
+        }
+
+        // ===========================================================
+        // MULT == 4 — 4-gamma combinatorics under (pi0, pi0) constraint
+        //   3 pairings: (01)(23), (02)(13), (03)(12). Both gg pairs must
+        //   sit in the narrow pi0 window. epem is irrelevant here — this
+        //   is purely an ECAL combinatorial signal, so plotted directly
+        //   from output_epem.root without CB extraction.
+        // ===========================================================
+        if (neutr_mult == 4 && ecal_objects.size() >= 4 &&
+            ecal_pass[0] && ecal_pass[1] && ecal_pass[2] && ecal_pass[3]) {
+
+            const int pairings[3][4] = {{0,1, 2,3}, {0,2, 1,3}, {0,3, 1,2}};
+
+            for (int p = 0; p < 3; ++p) {
+                PParticle gg_a = ecal_objects[pairings[p][0]] + ecal_objects[pairings[p][1]];
+                PParticle gg_b = ecal_objects[pairings[p][2]] + ecal_objects[pairings[p][3]];
+
+                bool a_in_pi0 = cuts.passRangeCut("pi0_mass_window_narrow", gg_a.massGeV());
+                bool b_in_pi0 = cuts.passRangeCut("pi0_mass_window_narrow", gg_b.massGeV());
+
+                if (a_in_pi0 && b_in_pi0) {
+                    PParticle gggg = gg_a + gg_b;
+                    mgr.fill("mass_gggg_pi0pi0", gggg.massGeV());
+                }
+            }
         }
     }
 
