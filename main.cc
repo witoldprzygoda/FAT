@@ -42,6 +42,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Event-level cuts (applied before particle creation)
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
+    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
+    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
     // Create e+ and e- with reconstructed kinematics
     PParticle positron(MASS_ELECTRON, "e+");
@@ -97,7 +99,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double theta_cms = dilepton_cms.theta();
 
     // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    bool oa_pass = cuts.passMinCut("opening_angle", oa);
+    // Apply the 4-deg cut as the active selection. opening_angle_9 is defined
+    // in setup_cuts.h for future studies but NOT applied here.
+    bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
 
     auto& nt = mgr.getDynamicNtuple("dilepton_nt");
 
