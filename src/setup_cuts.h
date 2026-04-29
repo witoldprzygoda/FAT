@@ -25,6 +25,15 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
+    // Trigger: PT3 only (trigbit == 8192)
+    cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
+
+    // Start detector (LGAD) — defined as a cut set so future iteration/timing
+    // conditions can be appended without changing the call site.
+    // Only the first iteration (start_iteration == 3) is required for now.
+    cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
+        .addValueCut("start_iteration", 3.0, "start_iteration == 3");
+
     // Opening angle cuts (reject close e+e- pairs)
     // opening_angle_4 is the ACTIVE cut applied in data.
     // opening_angle_9 is defined but not applied (kept for future studies).

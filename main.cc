@@ -42,6 +42,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Event-level cuts (applied before particle creation)
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
+    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
+    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
     // Create e+ and e- with reconstructed kinematics
     PParticle positron(MASS_ELECTRON, "e+");
