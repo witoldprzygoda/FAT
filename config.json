@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
+        "source": "/home/damian/hdd1/HADES/pp45/sim/smash/smash_lepton.list",
         "tree_name": "PipPimEpEm_ID",
         "channel": "PipPimEpEm",
         "lepton_prefixes": ["ep", "em"],
@@ -20,7 +20,7 @@
     "kinematics": {
         "reconstructed": true,
         "corrected": true,
-        "simulated": false,
+        "simulated": true,
         "analysis_type": "reconstructed"
     },
     "fwdet": true,

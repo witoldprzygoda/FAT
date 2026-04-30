@@ -1,154 +1,141 @@
-// pippimepem_spectra.C — all / CB / signal for the pi+pi-e+e- observables:
+// pippimepem_spectra.C — pi+pi-e+e- observables for SIMULATION (no CB).
+// Single-file mode: reads only output_pippimepem.root and draws each curve
+// with PlotUtils::drawSingle. Unlike the experimental analysis there is no
+// CB extraction (no like-sign samples in simulation).
+//
+// Plots produced:
 //   M(e+e-), M(pi+pi-), M(pi+pi-e+e-),
 //   MM(pi+pi-), MM(pi+pi-e+e-),
-//   M(pi+pi-e+e-) after the pippimepem_selection cut chain
-//
-// CB = 2 * sqrt(N++ * N--) reconstructed from the like-sign samples
-// (output_pippimepep.root, output_pippimemem.root). Signal = all - CB.
+//   MM observables after cut_2d,
+//   M(pi+pi-e+e-) after pippimepem_selection chain,
+//   M(pi+pi-e+e-) in MM slice windows (with and without cut_2d).
 //
 // Usage: root -l -b -q plots/pippimepem_spectra.C
 
 #include "PlotUtils.h"
 #include <sstream>
 
-void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
-    double i_all = all->Integral();
-    double i_cb  = cb->Integral();
-    double i_sig = sig->Integral();
+// Helper: compose a weighted TTree::Draw cut. Per-event sim_genweight from
+// the ntuple is multiplied by an optional boolean filter so all spectra
+// reflect the SMASH luminosity normalisation.
+namespace { std::string wcut(const std::string& filter = "") {
+    return filter.empty() ? std::string("sim_genweight")
+                          : "(" + filter + ")*sim_genweight";
+}}
 
+
+void printIntegral(const char* label, TH1D* h) {
     std::cout << "\n=== " << label << " ===\n";
-    std::cout << "  all = " << i_all
-              << "   CB = " << i_cb
-              << "   sig = " << i_sig << "\n";
+    std::cout << "  entries = " << h->GetEntries()
+              << "   integral = " << h->Integral() << "\n";
 }
 
 void pippimepem_spectra() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem.root");   // single-file (sim, no CB)
 
     // --- 1. M(e+e-) -------------------------------------------------------
-    TH1D *a1, *c1, *s1;
-    std::tie(a1, c1, s1) = pu.drawSignal(
+    auto* h1 = pu.drawNtupleSingle(
         "pippimepem_nt", "m_ee",
-        160, 0.0, 0.8, "",
-        ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* cv1 = pu.drawTriple(a1, c1, s1, "M_{e^{+}e^{-}}", "c_m_ee", /*logy=*/true);
+        160, 0.0, 0.8, wcut(""),
+        ";M_{e^{+}e^{-}} [GeV/c^{2}];a.u.");
+    auto* cv1 = pu.drawSingle(h1, "M_{e^{+}e^{-}}", "c_m_ee", /*logy=*/true);
     pu.save(cv1, "m_ee");
-    printIntegrals("M(e+e-)", a1, c1, s1);
+    printIntegral("M(e+e-)", h1);
 
     // --- 2. M(pi+pi-) -----------------------------------------------------
-    TH1D *a2, *c2, *s2;
-    std::tie(a2, c2, s2) = pu.drawSignal(
+    auto* h2 = pu.drawNtupleSingle(
         "pippimepem_nt", "m_pippim",
-        200, 0.0, 2.0, "",
-        ";M_{#pi^{+}#pi^{-}} [GeV/c^{2}];Counts");
-    auto* cv2 = pu.drawTriple(a2, c2, s2, "M_{#pi^{+}#pi^{-}}", "c_m_pippim");
+        200, 0.0, 2.0, wcut(""),
+        ";M_{#pi^{+}#pi^{-}} [GeV/c^{2}];a.u.");
+    auto* cv2 = pu.drawSingle(h2, "M_{#pi^{+}#pi^{-}}", "c_m_pippim");
     pu.save(cv2, "m_pippim");
-    printIntegrals("M(pi+pi-)", a2, c2, s2);
+    printIntegral("M(pi+pi-)", h2);
 
     // --- 3. M(pi+pi-e+e-) -------------------------------------------------
-    TH1D *a3, *c3, *s3;
-    std::tie(a3, c3, s3) = pu.drawSignal(
+    auto* h3 = pu.drawNtupleSingle(
         "pippimepem_nt", "m_pippimepem",
-        200, 0.2, 1.4, "",
-        ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* cv3 = pu.drawTriple(a3, c3, s3,
+        200, 0.2, 1.4, wcut(""),
+        ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];a.u.");
+    auto* cv3 = pu.drawSingle(h3,
                               "M_{#pi^{+}#pi^{-}e^{+}e^{-}}", "c_m_pippimepem");
     pu.save(cv3, "m_pippimepem");
-    printIntegrals("M(pi+pi-e+e-)", a3, c3, s3);
+    printIntegral("M(pi+pi-e+e-)", h3);
 
     // --- 4. MM(pi+pi-) ----------------------------------------------------
-    TH1D *a4, *c4, *s4;
-    std::tie(a4, c4, s4) = pu.drawSignal(
+    auto* h4 = pu.drawNtupleSingle(
         "pippimepem_nt", "mm_pippim",
-        200, 0.0, 4.0, "",
-        ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts");
-    auto* cv4 = pu.drawTriple(a4, c4, s4,
-                              "MM(#pi^{+}#pi^{-})", "c_mm_pippim");
+        200, 0.0, 4.0, wcut(""),
+        ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];a.u.");
+    auto* cv4 = pu.drawSingle(h4, "MM(#pi^{+}#pi^{-})", "c_mm_pippim");
     pu.save(cv4, "mm_pippim");
-    printIntegrals("MM(pi+pi-)", a4, c4, s4);
+    printIntegral("MM(pi+pi-)", h4);
 
     // --- 5. MM(pi+pi-e+e-) ------------------------------------------------
-    TH1D *a5, *c5, *s5;
-    std::tie(a5, c5, s5) = pu.drawSignal(
+    auto* h5 = pu.drawNtupleSingle(
         "pippimepem_nt", "mm_pippimepem",
-        200, 0.0, 4.0, "",
-        ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts");
-    auto* cv5 = pu.drawTriple(a5, c5, s5,
-                              "MM(#pi^{+}#pi^{-}e^{+}e^{-})", "c_mm_pippimepem");
+        200, 0.0, 4.0, wcut(""),
+        ";MM(#pi^{+}#pi^{-}e^{+}e^{+}) [GeV/c^{2}];a.u.");
+    auto* cv5 = pu.drawSingle(h5, "MM(#pi^{+}#pi^{-}e^{+}e^{-})",
+                              "c_mm_pippimepem");
     pu.save(cv5, "mm_pippimepem");
-    printIntegrals("MM(pi+pi-e+e-)", a5, c5, s5);
+    printIntegral("MM(pi+pi-e+e-)", h5);
 
-    // --- 5a-5c. MM observables with the 2D graphical cut (cut_2d) ---------
-    // cut_2d is a TCutG on (mm_pippimepem, m_pippimepem) — see cuts/cut_2d.root
+    // --- 5a-5c. MM observables after cut_2d -------------------------------
     {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
+        auto* h = pu.drawNtupleSingle(
             "pippimepem_nt", "mm_epem",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(e^{+}e^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(e^{+}e^{-}) after cut_2d", "c_mm_epem_cut2d");
+            200, 0.0, 4.0, wcut("cut2d_pass==1"),
+            ";MM(e^{+}e^{-}) [GeV/c^{2}];a.u.");
+        auto* cv = pu.drawSingle(h, "MM(e^{+}e^{-}) after cut_2d", "c_mm_epem_cut2d");
         pu.save(cv, "mm_epem_cut2d");
-        printIntegrals("MM(e+e-) after cut_2d", a, c, s);
+        printIntegral("MM(e+e-) after cut_2d", h);
     }
     {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
+        auto* h = pu.drawNtupleSingle(
             "pippimepem_nt", "mm_pippim",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(#pi^{+}#pi^{-}) after cut_2d", "c_mm_pippim_cut2d");
+            200, 0.0, 4.0, wcut("cut2d_pass==1"),
+            ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];a.u.");
+        auto* cv = pu.drawSingle(h, "MM(#pi^{+}#pi^{-}) after cut_2d", "c_mm_pippim_cut2d");
         pu.save(cv, "mm_pippim_cut2d");
-        printIntegrals("MM(pi+pi-) after cut_2d", a, c, s);
+        printIntegral("MM(pi+pi-) after cut_2d", h);
     }
     {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
+        auto* h = pu.drawNtupleSingle(
             "pippimepem_nt", "mm_pippimepem",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d", "c_mm_pippimepem_cut2d");
+            200, 0.0, 4.0, wcut("cut2d_pass==1"),
+            ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];a.u.");
+        auto* cv = pu.drawSingle(h, "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d",
+                                 "c_mm_pippimepem_cut2d");
         pu.save(cv, "mm_pippimepem_cut2d");
-        printIntegrals("MM(pi+pi-e+e-) after cut_2d", a, c, s);
+        printIntegral("MM(pi+pi-e+e-) after cut_2d", h);
     }
 
     // --- 6. M(pi+pi-e+e-) after pippimepem_selection cut chain ------------
-    // Selection: OA_LAB((pippim),(epem)) < 50 deg
-    //            M(pi+pi-) < 0.420 GeV/c^2
-    //            OA_rest((pippim),(epem)) > 140 deg
-    TH1D *a6, *c6, *s6;
-    std::tie(a6, c6, s6) = pu.drawSignal(
+    auto* h6 = pu.drawNtupleSingle(
         "pippimepem_nt", "m_pippimepem",
-        200, 0.2, 1.4, "sel_pass==1",
-        ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* cv6 = pu.drawTriple(a6, c6, s6,
+        200, 0.2, 1.4, wcut("sel_pass==1"),
+        ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];a.u.");
+    auto* cv6 = pu.drawSingle(h6,
                               "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection)",
                               "c_m_pippimepem_selected");
     pu.save(cv6, "m_pippimepem_selected");
-    printIntegrals("M(pi+pi-e+e-) after selection", a6, c6, s6);
+    printIntegral("M(pi+pi-e+e-) after selection", h6);
 
     // --- 6a. Same as plot 6 but with cut_2d additionally applied ----------
     {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
+        auto* h = pu.drawNtupleSingle(
             "pippimepem_nt", "m_pippimepem",
-            200, 0.2, 1.4, "sel_pass==1 && cut2d_pass==1",
-            ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
+            200, 0.2, 1.4, wcut("sel_pass==1 && cut2d_pass==1"),
+            ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];a.u.");
+        auto* cv = pu.drawSingle(h,
                                  "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection + cut_2d)",
                                  "c_m_pippimepem_selected_cut2d");
         pu.save(cv, "m_pippimepem_selected_cut2d");
-        printIntegrals("M(pi+pi-e+e-) after selection + cut_2d", a, c, s);
+        printIntegral("M(pi+pi-e+e-) after selection + cut_2d", h);
     }
 
     // --- 7-12. M(pi+pi-e+e-) in MM(pi+pi-e+e-) slice windows --------------
-    // Each slice plot applies: sel_pass==1 && lo <= mm_pippimepem <= hi
-    // (matches the in-code RangeCut semantics, inclusive on both endpoints).
     auto drawSlice = [&](double lo, double hi, const std::string& tag, bool cut2d = false) {
         std::ostringstream cut;
         cut << "sel_pass==1 && mm_pippimepem>=" << lo
@@ -161,30 +148,26 @@ void pippimepem_spectra() {
 
         std::string suffix = tag + (cut2d ? "_cut2d" : "");
 
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
+        auto* h = pu.drawNtupleSingle(
             "pippimepem_nt", "m_pippimepem",
-            100, 0.2, 1.4, cut.str(),
-            ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                  title.str(),
-                                  "c_m_pippimepem_slice_" + suffix);
+            100, 0.2, 1.4, wcut(cut.str()),
+            ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];a.u.");
+        auto* cv = pu.drawSingle(h, title.str(),
+                                 "c_m_pippimepem_slice_" + suffix);
         pu.save(cv, "m_pippimepem_slice_" + suffix);
 
         std::ostringstream lbl;
         lbl << "M(pi+pi-e+e-) sel" << (cut2d ? "+cut_2d" : "")
             << ", MM in [" << lo << ", " << hi << "]";
-        printIntegrals(lbl.str().c_str(), a, c, s);
+        printIntegral(lbl.str().c_str(), h);
     };
 
-    // Slice plots without 2D cut
     drawSlice(2.0, 2.2, "20_22");
     drawSlice(2.2, 2.4, "22_24");
     drawSlice(2.4, 2.6, "24_26");
     drawSlice(2.6, 2.8, "26_28");
     drawSlice(2.8, 3.0, "28_30");
 
-    // Same slices, additionally with cut_2d
     drawSlice(2.0, 2.2, "20_22", true);
     drawSlice(2.2, 2.4, "22_24", true);
     drawSlice(2.4, 2.6, "24_26", true);

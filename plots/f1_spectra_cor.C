@@ -32,6 +32,15 @@
 #include <iostream>
 #include <string>
 
+// Helper: compose a weighted TTree::Draw cut. Per-event sim_genweight from
+// the ntuple is multiplied by an optional boolean filter so all spectra
+// reflect the SMASH luminosity normalisation.
+namespace { std::string wcut(const std::string& filter = "") {
+    return filter.empty() ? std::string("sim_genweight")
+                          : "(" + filter + ")*sim_genweight";
+}}
+
+
 namespace {
 
 void printIntegrals(const char* label, TH1D* a, TH1D* c, TH1D* s) {
@@ -60,7 +69,7 @@ void plotTriple(PlotUtils& pu,
                 bool linear_only = false)
 {
     TH1D *a, *c, *s;
-    std::tie(a, c, s) = pu.drawSignal(nt_name, varexpr, nbins, xmin, xmax, cut, "");
+    std::tie(a, c, s) = pu.drawSignal(nt_name, varexpr, nbins, xmin, xmax, wcut(cut), "");
     if (!a) {
         std::cerr << "plotTriple: drawSignal failed for " << basename << "\n";
         return;
@@ -107,7 +116,7 @@ void f1_spectra_cor() {
                200, 0.0, 1.0,
                "m_epemg>0",   // -1 default for events without mult==1 epemg
                "M(e^{+}e^{-}#gamma)  (ECAL N_{#gamma}=1, control);"
-               "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+               "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];a.u.",
                "m_epemg_cor",
                /*also_linear=*/true);
 
@@ -116,7 +125,7 @@ void f1_spectra_cor() {
                200, 0.0, 1.0,
                "m_gg>0",   // -1 default for events without mult==2 gg
                "M(#gamma#gamma)  (ECAL N_{#gamma}=2, control);"
-               "M_{#gamma#gamma} [GeV/c^{2}];Counts",
+               "M_{#gamma#gamma} [GeV/c^{2}];a.u.",
                "m_gg_cor",
                /*also_linear=*/true);
 
@@ -127,7 +136,7 @@ void f1_spectra_cor() {
                360, 0.0, 1.8, "eta_dalitz_pass==1",
                "f_{1}(1285) #rightarrow #pi^{+}#pi^{-} #eta(e^{+}e^{-}#gamma)  "
                "[ECAL N_{#gamma}=1, M(e^{+}e^{-}#gamma) #in #eta];"
-               "M_{#pi^{+}#pi^{-}e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+               "M_{#pi^{+}#pi^{-}e^{+}e^{-}#gamma} [GeV/c^{2}];a.u.",
                "f1_pippim_eta_dalitz_cor",
                /*also_linear=*/true);
 
@@ -136,7 +145,7 @@ void f1_spectra_cor() {
                360, 0.0, 1.8, "eta_gg_pass==1",
                "f_{1}(1285) #rightarrow #pi^{+}#pi^{-} #eta(#gamma#gamma)  "
                "[ECAL N_{#gamma}=2, M(#gamma#gamma) #in #eta];"
-               "M_{#pi^{+}#pi^{-}#gamma#gamma} [GeV/c^{2}];Counts",
+               "M_{#pi^{+}#pi^{-}#gamma#gamma} [GeV/c^{2}];a.u.",
                "f1_pippim_eta_gg_cor",
                /*also_linear=*/true);
 

@@ -1,64 +1,60 @@
-// mass_spectra.C — Dilepton invariant mass: no OA cut vs OA > 9 deg
+// mass_spectra.C — Dilepton invariant mass: no OA cut vs opening_angle_4 (>4 deg)
+// Simulation mode (single file, no CB extraction).
 // Usage: root -l -b -q plots/mass_spectra.C
 
 #include "PlotUtils.h"
 
-void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
-    // Full range
-    double i_all = all->Integral();
-    double i_cb  = cb->Integral();
-    double i_sig = sig->Integral();
+// Helper: compose a weighted TTree::Draw cut. Per-event sim_genweight from
+// the ntuple is multiplied by an optional boolean filter so all spectra
+// reflect the SMASH luminosity normalisation.
+namespace { std::string wcut(const std::string& filter = "") {
+    return filter.empty() ? std::string("sim_genweight")
+                          : "(" + filter + ")*sim_genweight";
+}}
 
-    // Above pi0: M > 0.14 GeV/c^2
-    int bin_pi0 = all->FindBin(0.1401);
-    int bin_max = all->GetNbinsX();
-    double i_all_above = all->Integral(bin_pi0, bin_max);
-    double i_cb_above  = cb->Integral(bin_pi0, bin_max);
-    double i_sig_above = sig->Integral(bin_pi0, bin_max);
+
+void printIntegrals(const char* label, TH1D* h) {
+    double i_full = h->Integral();
+    int bin_pi0 = h->FindBin(0.1401);
+    double i_above = h->Integral(bin_pi0, h->GetNbinsX());
 
     std::cout << "\n=== " << label << " ===\n";
-    std::cout << "  Full range:    all = " << i_all
-              << "  CB = " << i_cb
-              << "  sig = " << i_sig << "\n";
-    std::cout << "  M > 0.14:      all = " << i_all_above
-              << "  CB = " << i_cb_above
-              << "  sig = " << i_sig_above << "\n";
+    std::cout << "  Full range: " << i_full
+              << "    M > 0.14 GeV/c^2: " << i_above << "\n";
 }
 
 void mass_spectra() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem.root");   // single-file (sim, no CB)
 
     // --- 1. Mass spectrum without OA cut ---
-    TH1D *all1, *cb1, *sig1;
-    std::tie(all1, cb1, sig1) = pu.drawSignal("pippimepem_nt", "m_ee",
-                                              160, 0, 0.8, "",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c1 = pu.drawTriple(all1, cb1, sig1,
+    TH1D* h1 = pu.drawNtupleSingle("pippimepem_nt", "m_ee",
+                                   160, 0, 0.8, wcut(""),
+                                   ";M_{e^{+}e^{-}} [GeV/c^{2}];a.u.");
+    auto* c1 = pu.drawSingle(h1,
                              "M_{e^{+}e^{-}} (no OA cut)", "c_mass_no_oa",
                              /*logy=*/true);
     pu.save(c1, "mass_ee_no_oa");
-    printIntegrals("No OA cut", all1, cb1, sig1);
+    printIntegrals("No OA cut", h1);
 
     // Capture Y-axis range from first plot
-    double ymax = all1->GetMaximum();
-    double ymin = all1->GetMinimum();
+    double ymax = h1->GetMaximum();
+    double ymin = h1->GetMinimum();
 
-    // --- 2. Mass spectrum with OA > 9 deg cut (same Y range) ---
-    TH1D *all2, *cb2, *sig2;
-    std::tie(all2, cb2, sig2) = pu.drawSignal("pippimepem_nt", "m_ee",
-                                              160, 0, 0.8, "oa>9",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c2 = pu.drawTriple(all2, cb2, sig2,
-                             "M_{e^{+}e^{-}} (OA > 9#circ)", "c_mass_oa9",
+    // --- 2. Mass spectrum with opening_angle_4 (oa>4) cut applied (same Y range) ---
+    // Use oa_pass==1 — the boolean flag set by passMinCut("opening_angle_4", oa)
+    // in main.cc. This is the active cut (4 deg), not the legacy 9-deg version.
+    TH1D* h2 = pu.drawNtupleSingle("pippimepem_nt", "m_ee",
+                                   160, 0, 0.8, wcut("oa_pass==1"),
+                                   ";M_{e^{+}e^{-}} [GeV/c^{2}];a.u.");
+    auto* c2 = pu.drawSingle(h2,
+                             "M_{e^{+}e^{-}} (OA > 4#circ)", "c_mass_oa4",
                              /*logy=*/true);
-    all2->SetMaximum(ymax);
-    all2->SetMinimum(ymin);
+    h2->SetMaximum(ymax);
+    h2->SetMinimum(ymin);
     c2->Update();
-    pu.save(c2, "mass_ee_oa9");
-    printIntegrals("OA > 9 deg", all2, cb2, sig2);
+    pu.save(c2, "mass_ee_oa4");
+    printIntegrals("OA > 4 deg", h2);
 
     std::cout << "\nDone. Check plots/output/\n";
 }

@@ -624,10 +624,12 @@ namespace ParticleFactory {
         double E = T_kin + Physics::MASS_PROTON;
         double p = sqrt(E*E - Physics::MASS_PROTON*Physics::MASS_PROTON);
         PParticle beam(Physics::MASS_PROTON, "beam");
-        // Synthetic particle — no measurement, so RECONSTRUCTED == CORRECTED.
-        // Setting both lets composite-system CORRECTED arithmetic propagate cleanly.
+        // Synthetic particle — no measurement, so REC == COR == SIM.
+        // Setting all three lets composite-system arithmetic propagate cleanly
+        // for any KinematicType requested downstream (e.g. missing-mass with SIM).
         beam.setFromCartesian(0, 0, p, KinematicType::RECONSTRUCTED);
         beam.setFromCartesian(0, 0, p, KinematicType::CORRECTED);
+        beam.setFromCartesian(0, 0, p, KinematicType::SIMULATED);
         return beam;
     }
 
@@ -636,8 +638,11 @@ namespace ParticleFactory {
      */
     inline PParticle createTargetProton() {
         PParticle target(Physics::MASS_PROTON, "target");
+        // SetVectM with p=0 still sets E = m (proton rest mass), so the
+        // "not set" sentinel (E == 0) won't fire downstream.
         target.setFromCartesian(0, 0, 0, KinematicType::RECONSTRUCTED);
         target.setFromCartesian(0, 0, 0, KinematicType::CORRECTED);
+        target.setFromCartesian(0, 0, 0, KinematicType::SIMULATED);
         return target;
     }
 }

@@ -39,57 +39,92 @@ using namespace Physics;
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
-    // Event-level cuts (applied before particle creation)
+    // Event-level cuts (applied before particle creation).
+    // Simulation: no trigger_PT3 / start_detector cuts (no such fields in SMASH).
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
-    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
-    // Create e+ and e- with reconstructed kinematics
+    // ========================================================================
+    // MC truth purity gate — keep only correctly-IDed tracks
+    // ========================================================================
+    // Geant3 PIDs: 8 = pi+, 9 = pi-, 2 = e+, 3 = e-
+    // Reject events where any reconstructed track is misidentified.
+    int pip_pid = static_cast<int>(reader["pip_sim_id"]);
+    int pim_pid = static_cast<int>(reader["pim_sim_id"]);
+    int ep_pid  = static_cast<int>(reader["ep_sim_id"]);
+    int em_pid  = static_cast<int>(reader["em_sim_id"]);
+    if (pip_pid != 8 || pim_pid != 9 || ep_pid != 2 || em_pid != 3) return;
+
+    // ========================================================================
+    // Generator weight (per-event)
+    // ========================================================================
+    // SMASH stores the same lepton-process weight on both ep and em (they share
+    // the parent decay). Pion fields carry zero weight (they are mis-ID'd or
+    // secondary tracks). After the purity gate above the leptons are guaranteed
+    // genuine, so ep_sim_genweight is the correct event weight.
+    // Every mgr.fill below passes `w` as the third argument so the histograms
+    // and ntuple-derived spectra reflect the SMASH luminosity normalisation.
+    double w = reader["ep_sim_genweight"];
+
+    // ========================================================================
+    // Create e+ and e- — RECONSTRUCTED + CORRECTED + SIMULATED kinematics
+    // ========================================================================
     PParticle positron(MASS_ELECTRON, "e+");
     PParticle electron(MASS_ELECTRON, "e-");
 
     positron.setFromSpherical(reader["ep_p"], reader["ep_theta"], reader["ep_phi"],
                               KinematicType::RECONSTRUCTED);
-
     electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
                               KinematicType::RECONSTRUCTED);
 
     // Energy-loss corrected kinematics (same angles, corrected momentum)
     positron.setFromSpherical(reader["ep_p_corr_ep"], reader["ep_theta"], reader["ep_phi"],
                               KinematicType::CORRECTED);
-
     electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
                               KinematicType::CORRECTED);
 
-    // Create pi+ and pi- with reconstructed kinematics
+    // SIMULATED (Geant truth) — full 3-vector from sim_px/py/pz [MeV/c]
+    positron.setFromCartesian(reader["ep_sim_px"], reader["ep_sim_py"], reader["ep_sim_pz"],
+                              KinematicType::SIMULATED);
+    electron.setFromCartesian(reader["em_sim_px"], reader["em_sim_py"], reader["em_sim_pz"],
+                              KinematicType::SIMULATED);
+
+    // ========================================================================
+    // Create pi+ and pi- — RECONSTRUCTED + CORRECTED + SIMULATED
+    // ========================================================================
     PParticle piplus(MASS_PION_PLUS, "pi+");
     PParticle piminus(MASS_PION_MINUS, "pi-");
 
     piplus.setFromSpherical(reader["pip_p"], reader["pip_theta"], reader["pip_phi"],
                             KinematicType::RECONSTRUCTED);
-
     piminus.setFromSpherical(reader["pim_p"], reader["pim_theta"], reader["pim_phi"],
                              KinematicType::RECONSTRUCTED);
 
-    // Energy-loss corrected kinematics for pions (same angles, corrected momentum)
     piplus.setFromSpherical(reader["pip_p_corr_pip"], reader["pip_theta"], reader["pip_phi"],
                             KinematicType::CORRECTED);
-
     piminus.setFromSpherical(reader["pim_p_corr_pim"], reader["pim_theta"], reader["pim_phi"],
                              KinematicType::CORRECTED);
 
-    // Lepton momentum histograms (RECONSTRUCTED + CORRECTED)
-    mgr.fill("ep_p", positron.momentum());
-    mgr.fill("em_p", electron.momentum());
-    mgr.fill("ep_p_cor", positron.momentum(KinematicType::CORRECTED));
-    mgr.fill("em_p_cor", electron.momentum(KinematicType::CORRECTED));
+    piplus.setFromCartesian(reader["pip_sim_px"], reader["pip_sim_py"], reader["pip_sim_pz"],
+                            KinematicType::SIMULATED);
+    piminus.setFromCartesian(reader["pim_sim_px"], reader["pim_sim_py"], reader["pim_sim_pz"],
+                             KinematicType::SIMULATED);
 
-    // Pion momentum histograms (RECONSTRUCTED + CORRECTED)
-    mgr.fill("pip_p", piplus.momentum());
-    mgr.fill("pim_p", piminus.momentum());
-    mgr.fill("pip_p_cor", piplus.momentum(KinematicType::CORRECTED));
-    mgr.fill("pim_p_cor", piminus.momentum(KinematicType::CORRECTED));
+    // Lepton momentum histograms (REC + COR + SIM)
+    mgr.fillw("ep_p", positron.momentum(), w);
+    mgr.fillw("em_p", electron.momentum(), w);
+    mgr.fillw("ep_p_cor", positron.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("em_p_cor", electron.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("ep_p_sim", positron.momentum(KinematicType::SIMULATED), w);
+    mgr.fillw("em_p_sim", electron.momentum(KinematicType::SIMULATED), w);
+
+    // Pion momentum histograms (REC + COR + SIM)
+    mgr.fillw("pip_p", piplus.momentum(), w);
+    mgr.fillw("pim_p", piminus.momentum(), w);
+    mgr.fillw("pip_p_cor", piplus.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("pim_p_cor", piminus.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("pip_p_sim", piplus.momentum(KinematicType::SIMULATED), w);
+    mgr.fillw("pim_p_sim", piminus.momentum(KinematicType::SIMULATED), w);
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
@@ -108,14 +143,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pim_p_cor = piminus.momentum(KinematicType::CORRECTED);
     double pim_dp = pim_p_cor - pim_p_rec;
 
-    mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
-    mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
-    mgr.fill("pip_dp_vs_p", pip_p_rec, pip_dp);
-    mgr.fill("pim_dp_vs_p", pim_p_rec, pim_dp);
+    mgr.fillw("ep_dp_vs_p", ep_p_rec, ep_dp, w);
+    mgr.fillw("em_dp_vs_p", em_p_rec, em_dp, w);
+    mgr.fillw("pip_dp_vs_p", pip_p_rec, pip_dp, w);
+    mgr.fillw("pim_dp_vs_p", pim_p_rec, pim_dp, w);
 
     // Opening angle between e+ and e- (must be computed before operator+)
     double oa = Physics::openingAngle(positron, electron);
-    mgr.fill("opening_angle", oa);
+    mgr.fillw("opening_angle", oa, w);
 
     // Compound objects
     PParticle epem = positron + electron;                   // e+ e-
@@ -131,13 +166,22 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double m_pippim_cor = pippim.massGeV(KinematicType::CORRECTED);
     double m_pippimepem_cor = pippimepem.massGeV(KinematicType::CORRECTED);
 
-    mgr.fill("mass_ee_before_oa", m_ee);
-    mgr.fill("mass_pippim", m_pippim);
-    mgr.fill("mass_pippimepem", m_pippimepem);
+    // SIMULATED truth — Geant momenta propagated via operator+ to the compounds
+    double m_ee_sim = epem.massGeV(KinematicType::SIMULATED);
+    double m_pippim_sim = pippim.massGeV(KinematicType::SIMULATED);
+    double m_pippimepem_sim = pippimepem.massGeV(KinematicType::SIMULATED);
 
-    mgr.fill("mass_ee_before_oa_cor", m_ee_cor);
-    mgr.fill("mass_pippim_cor", m_pippim_cor);
-    mgr.fill("mass_pippimepem_cor", m_pippimepem_cor);
+    mgr.fillw("mass_ee_before_oa", m_ee, w);
+    mgr.fillw("mass_pippim", m_pippim, w);
+    mgr.fillw("mass_pippimepem", m_pippimepem, w);
+
+    mgr.fillw("mass_ee_before_oa_cor", m_ee_cor, w);
+    mgr.fillw("mass_pippim_cor", m_pippim_cor, w);
+    mgr.fillw("mass_pippimepem_cor", m_pippimepem_cor, w);
+
+    mgr.fillw("mass_ee_before_oa_sim", m_ee_sim, w);
+    mgr.fillw("mass_pippim_sim", m_pippim_sim, w);
+    mgr.fillw("mass_pippimepem_sim", m_pippimepem_sim, w);
 
     // Beam + target for missing mass calculations (synthetic — REC == COR)
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
@@ -157,30 +201,44 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double mm_pippim_cor = miss_pippim.massGeV(KinematicType::CORRECTED);
     double mm_pippimepem_cor = miss_pippimepem.massGeV(KinematicType::CORRECTED);
 
-    mgr.fill("mm_epem", mm_epem);
-    mgr.fill("mm_pippim", mm_pippim);
-    mgr.fill("mm_pippimepem", mm_pippimepem);
-    mgr.fill("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem);
+    double mm_epem_sim = miss_epem.massGeV(KinematicType::SIMULATED);
+    double mm_pippim_sim = miss_pippim.massGeV(KinematicType::SIMULATED);
+    double mm_pippimepem_sim = miss_pippimepem.massGeV(KinematicType::SIMULATED);
 
-    mgr.fill("mm_epem_cor", mm_epem_cor);
-    mgr.fill("mm_pippim_cor", mm_pippim_cor);
-    mgr.fill("mm_pippimepem_cor", mm_pippimepem_cor);
-    mgr.fill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
+    mgr.fillw("mm_epem", mm_epem, w);
+    mgr.fillw("mm_pippim", mm_pippim, w);
+    mgr.fillw("mm_pippimepem", mm_pippimepem, w);
+    mgr.fillw("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem, w);
+
+    mgr.fillw("mm_epem_cor", mm_epem_cor, w);
+    mgr.fillw("mm_pippim_cor", mm_pippim_cor, w);
+    mgr.fillw("mm_pippimepem_cor", mm_pippimepem_cor, w);
+    mgr.fillw("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor, w);
+
+    mgr.fillw("mm_epem_sim", mm_epem_sim, w);
+    mgr.fillw("mm_pippim_sim", mm_pippim_sim, w);
+    mgr.fillw("mm_pippimepem_sim", mm_pippimepem_sim, w);
+    mgr.fillw("mm_vs_m_pippimepem_sim", mm_pippimepem_sim, m_pippimepem_sim, w);
 
     // 2D graphical cut on (mm_pippimepem, m_pippimepem) — separate decisions for REC and COR
     bool cut2d_pass     = cuts.passGraphicalCut("cut_2d", mm_pippimepem,     m_pippimepem);
     bool cut2d_pass_cor = cuts.passGraphicalCut("cut_2d", mm_pippimepem_cor, m_pippimepem_cor);
     if (cut2d_pass) {
-        mgr.fill("mm_epem_cut2d", mm_epem);
-        mgr.fill("mm_pippim_cut2d", mm_pippim);
-        mgr.fill("mm_pippimepem_cut2d", mm_pippimepem);
-        mgr.fill("mm_vs_m_pippimepem_cut2d", mm_pippimepem, m_pippimepem);
+        mgr.fillw("mm_epem_cut2d", mm_epem, w);
+        mgr.fillw("mm_pippim_cut2d", mm_pippim, w);
+        mgr.fillw("mm_pippimepem_cut2d", mm_pippimepem, w);
+        mgr.fillw("mm_vs_m_pippimepem_cut2d", mm_pippimepem, m_pippimepem, w);
     }
     if (cut2d_pass_cor) {
-        mgr.fill("mm_epem_cut2d_cor", mm_epem_cor);
-        mgr.fill("mm_pippim_cut2d_cor", mm_pippim_cor);
-        mgr.fill("mm_pippimepem_cut2d_cor", mm_pippimepem_cor);
-        mgr.fill("mm_vs_m_pippimepem_cut2d_cor", mm_pippimepem_cor, m_pippimepem_cor);
+        mgr.fillw("mm_epem_cut2d_cor", mm_epem_cor, w);
+        mgr.fillw("mm_pippim_cut2d_cor", mm_pippim_cor, w);
+        mgr.fillw("mm_pippimepem_cut2d_cor", mm_pippimepem_cor, w);
+        mgr.fillw("mm_vs_m_pippimepem_cut2d_cor", mm_pippimepem_cor, m_pippimepem_cor, w);
+        // Same event, SIM-truth values (cut2d decision taken from CORRECTED — same population)
+        mgr.fillw("mm_epem_cut2d_sim", mm_epem_sim, w);
+        mgr.fillw("mm_pippim_cut2d_sim", mm_pippim_sim, w);
+        mgr.fillw("mm_pippimepem_cut2d_sim", mm_pippimepem_sim, w);
+        mgr.fillw("mm_vs_m_pippimepem_cut2d_sim", mm_pippimepem_sim, m_pippimepem_sim, w);
     }
 
     // Boost compound systems to beam-target CMS frame and to the pippimepem rest frame.
@@ -204,6 +262,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double y_cms_cor = epem_cms_cor.rapidity(KinematicType::CORRECTED);
     double pt_cor = epem_cms_cor.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = epem_cms_cor.theta(KinematicType::CORRECTED);
+
+    // SIMULATED CMS-frame observables (same beam frame is synthetic = identical for all)
+    double y_cms_sim = epem_cms.rapidity(KinematicType::SIMULATED);
+    double pt_sim = epem_cms.vec(KinematicType::SIMULATED).Pt();
+    double theta_cms_sim = epem_cms.theta(KinematicType::SIMULATED);
 
     // CORRECTED pippimepem rest frame — different boost vector, separate BoostFrame.
     BoostFrame pippimepem_rest_cor_frame(pippimepem, KinematicType::CORRECTED);
@@ -231,43 +294,67 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     });
 
     if (sel_pass) {
-        mgr.fill("mass_pippimepem_selected", m_pippimepem);
-        mgr.fill("mm_vs_m_pippimepem_selected", mm_pippimepem, m_pippimepem);
+        mgr.fillw("mass_pippimepem_selected", m_pippimepem, w);
+        mgr.fillw("mm_vs_m_pippimepem_selected", mm_pippimepem, m_pippimepem, w);
 
         // MM(pi+pi-e+e-) slice scan (selection + one slice window)
-        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_20_22", m_pippimepem, w);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_22_24", m_pippimepem, w);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_24_26", m_pippimepem, w);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_26_28", m_pippimepem, w);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_28_30", m_pippimepem, w);
 
         // Same slices, additionally requiring cut_2d
         if (cut2d_pass) {
-            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30_cut2d", m_pippimepem);
+            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_20_22_cut2d", m_pippimepem, w);
+            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_22_24_cut2d", m_pippimepem, w);
+            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_24_26_cut2d", m_pippimepem, w);
+            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_26_28_cut2d", m_pippimepem, w);
+            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fillw("mass_pippimepem_slice_28_30_cut2d", m_pippimepem, w);
         }
     }
 
     // === CORRECTED selection block (mirror of the above, using *_cor values) ===
     if (sel_pass_cor) {
-        mgr.fill("mass_pippimepem_selected_cor", m_pippimepem_cor);
-        mgr.fill("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor);
+        mgr.fillw("mass_pippimepem_selected_cor", m_pippimepem_cor, w);
+        mgr.fillw("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor, w);
 
-        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor, w);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor, w);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor, w);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor, w);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor, w);
 
         if (cut2d_pass_cor) {
-            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cut2d_cor", m_pippimepem_cor);
+            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_20_22_cut2d_cor", m_pippimepem_cor, w);
+            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_22_24_cut2d_cor", m_pippimepem_cor, w);
+            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_24_26_cut2d_cor", m_pippimepem_cor, w);
+            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_26_28_cut2d_cor", m_pippimepem_cor, w);
+            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_28_30_cut2d_cor", m_pippimepem_cor, w);
+        }
+    }
+
+    // === SIMULATED selection block (mirror, sel/cut2d decisions taken from CORRECTED) ===
+    // sim_pass and cut2d_pass on SIM kinematics is meaningful only insofar as we want a
+    // matched-acceptance comparison. We reuse the CORRECTED decisions to keep the same
+    // event population as in the _cor histograms — sim values then show what those
+    // events would have looked like at generator level.
+    if (sel_pass_cor) {
+        mgr.fillw("mass_pippimepem_selected_sim", m_pippimepem_sim, w);
+        mgr.fillw("mm_vs_m_pippimepem_selected_sim", mm_pippimepem_sim, m_pippimepem_sim, w);
+
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_20_22_sim", m_pippimepem_sim, w);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_22_24_sim", m_pippimepem_sim, w);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_24_26_sim", m_pippimepem_sim, w);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_26_28_sim", m_pippimepem_sim, w);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_28_30_sim", m_pippimepem_sim, w);
+
+        if (cut2d_pass_cor) {
+            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_20_22_cut2d_sim", m_pippimepem_sim, w);
+            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_22_24_cut2d_sim", m_pippimepem_sim, w);
+            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_24_26_cut2d_sim", m_pippimepem_sim, w);
+            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_26_28_cut2d_sim", m_pippimepem_sim, w);
+            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fillw("mass_pippimepem_slice_28_30_cut2d_sim", m_pippimepem_sim, w);
         }
     }
 
@@ -282,11 +369,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //   New compound M(pi+pi-gamma gamma) is the f1 candidate from the gg branch.
     double m_epemg_cor       = -1.0;
     double m_pippimepemg_cor = -1.0;
+    double m_epemg_sim       = -1.0;   // SIM mirror — sim leptons + reconstructed gamma
+    double m_pippimepemg_sim = -1.0;
     bool   pippimepemg_pass  = false;   // M(epemg) in pi0 window (eta -> 3pi -> Dalitz pi0)
     bool   eta_dalitz_pass   = false;   // M(epemg) in eta window (eta -> e+e-gamma Dalitz)
 
     double m_gg_cor          = -1.0;
     double m_pippim_gg_cor   = -1.0;
+    double m_gg_sim          = -1.0;   // SIM mirror (gamma is REC; leptons/pions are SIM)
+    double m_pippim_gg_sim   = -1.0;
     bool   eta_gg_pass       = false;   // M(gg)    in eta window (eta -> gamma gamma)
 
     if (config.isEcalEnabled()) {
@@ -302,17 +393,27 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                     gamma.cluster_energy
                 });
                 if (gamma_quality) {
-                    // Mirror RECONSTRUCTED to CORRECTED (photon has no measured correction)
+                    // Mirror RECONSTRUCTED to CORRECTED + SIMULATED.
+                    // Photon has no separate measurement for COR (no energy-loss
+                    // correction applies to ECAL clusters) and no MC truth field
+                    // in the ntuple — we mirror REC into both so operator+ can
+                    // propagate them through the compound for any KinematicType.
                     gamma.setFromSpherical(gamma.cluster_energy,
                                            gamma.cluster_theta,
                                            gamma.cluster_phi,
                                            KinematicType::CORRECTED);
+                    gamma.setFromSpherical(gamma.cluster_energy,
+                                           gamma.cluster_theta,
+                                           gamma.cluster_phi,
+                                           KinematicType::SIMULATED);
                     PParticle epemg = epem + gamma;
                     m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
+                    m_epemg_sim = epemg.massGeV(KinematicType::SIMULATED);
 
                     // Compound mass — same value, different cut interpretations
                     PParticle pippimepemg = pippim + epemg;
                     m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
+                    m_pippimepemg_sim = pippimepemg.massGeV(KinematicType::SIMULATED);
 
                     pippimepemg_pass = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
                     eta_dalitz_pass  = cuts.passRangeCut("eta_mass_window",  m_epemg_cor);
@@ -332,16 +433,24 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 bool q2 = cuts.passCutSet("ecal_quality", {
                     static_cast<double>(g2.ecal_pid), g2.ecal_beta, g2.cluster_energy});
                 if (q1 && q2) {
+                    // Mirror REC -> COR + SIM on the photons (no measured correction,
+                    // no MC truth in the ntuple).
                     g1.setFromSpherical(g1.cluster_energy, g1.cluster_theta, g1.cluster_phi,
                                         KinematicType::CORRECTED);
                     g2.setFromSpherical(g2.cluster_energy, g2.cluster_theta, g2.cluster_phi,
                                         KinematicType::CORRECTED);
+                    g1.setFromSpherical(g1.cluster_energy, g1.cluster_theta, g1.cluster_phi,
+                                        KinematicType::SIMULATED);
+                    g2.setFromSpherical(g2.cluster_energy, g2.cluster_theta, g2.cluster_phi,
+                                        KinematicType::SIMULATED);
                     PParticle gg         = g1 + g2;
                     PParticle pippim_gg  = pippim + gg;
                     m_gg_cor        = gg.massGeV(KinematicType::CORRECTED);
                     m_pippim_gg_cor = pippim_gg.massGeV(KinematicType::CORRECTED);
+                    m_gg_sim        = gg.massGeV(KinematicType::SIMULATED);
+                    m_pippim_gg_sim = pippim_gg.massGeV(KinematicType::SIMULATED);
 
-                    mgr.fill("mass_gg_cor", m_gg_cor);          // control plot
+                    mgr.fillw("mass_gg_cor", m_gg_cor, w);          // control plot
                     eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg_cor);
                 }
             }
@@ -398,6 +507,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;       // opening_angle_4 decision
     nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // pippimepem_selection chain decision
     nt["cut2d_pass"] = cut2d_pass ? 1.0f : 0.0f; // TCutG cut_2d on (MM, M) of pi+pi-e+e-
+
+    // Per-event sim weight — REC plotting macros use it as TTree::Draw weight cut
+    nt["sim_genweight"] = w;
 
     nt.fill();
 
@@ -464,29 +576,65 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["m_pippim_gg"]        = m_pippim_gg_cor;
     nt_cor["eta_gg_pass"]        = eta_gg_pass      ? 1.0f : 0.0f;  // mult==2, M(gg) in eta
 
+    // SIM mirrors of the ECAL-derived compounds. Photon kinematics are the
+    // ECAL reconstruction (no MC truth photon in the ntuple), but leptons /
+    // pions feeding the compound carry their SIMULATED values.
+    nt_cor["m_epemg_sim"]        = m_epemg_sim;
+    nt_cor["m_pippimepemg_sim"]  = m_pippimepemg_sim;
+    nt_cor["m_gg_sim"]           = m_gg_sim;
+    nt_cor["m_pippim_gg_sim"]    = m_pippim_gg_sim;
+
+    // SIMULATED truth — Geant momenta. Per-particle scalars and compound observables
+    // recorded alongside REC/COR for direct comparison in plotting macros.
+    nt_cor["ep_p_sim"]      = positron.momentum(KinematicType::SIMULATED);
+    nt_cor["em_p_sim"]      = electron.momentum(KinematicType::SIMULATED);
+    nt_cor["pip_p_sim"]     = piplus.momentum(KinematicType::SIMULATED);
+    nt_cor["pim_p_sim"]     = piminus.momentum(KinematicType::SIMULATED);
+
+    nt_cor["m_ee_sim"]            = m_ee_sim;
+    nt_cor["m_pippim_sim"]        = m_pippim_sim;
+    nt_cor["m_pippimepem_sim"]    = m_pippimepem_sim;
+
+    nt_cor["mm_epem_sim"]         = mm_epem_sim;
+    nt_cor["mm_pippim_sim"]       = mm_pippim_sim;
+    nt_cor["mm_pippimepem_sim"]   = mm_pippimepem_sim;
+
+    nt_cor["y_cms_sim"]           = y_cms_sim;
+    nt_cor["pt_sim"]              = pt_sim;
+    nt_cor["theta_cms_sim"]       = theta_cms_sim;
+
+    nt_cor["sim_genweight"]       = w;     // event weight (so plotting macros can apply it)
+
     nt_cor.fill();
 
     // Apply opening angle cut (reject close pairs)
     // if (!oa_pass) return;
     if (oa_pass) {
     // Still fill histograms for failed OA cut for comparison
-        mgr.fill("mass_ee_after_oa", m_ee);
-        mgr.fill("mass_ee_after_oa_cor", m_ee_cor);
+        mgr.fillw("mass_ee_after_oa", m_ee, w);
+        mgr.fillw("mass_ee_after_oa_cor", m_ee_cor, w);
+        mgr.fillw("mass_ee_after_oa_sim", m_ee_sim, w);
     }
     // CMS histograms (after OA cut)
-    mgr.fill("rapidity_cms", y_cms);
-    mgr.fill("pt_cms", pt);
-    mgr.fill("theta_cms", theta_cms);
-    mgr.fill("rapidity_vs_mass", m_ee, y_cms);
+    mgr.fillw("rapidity_cms", y_cms, w);
+    mgr.fillw("pt_cms", pt, w);
+    mgr.fillw("theta_cms", theta_cms, w);
+    mgr.fillw("rapidity_vs_mass", m_ee, y_cms, w);
 
-    mgr.fill("rapidity_cms_cor", y_cms_cor);
-    mgr.fill("pt_cms_cor", pt_cor);
-    mgr.fill("theta_cms_cor", theta_cms_cor);
-    mgr.fill("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor);
+    mgr.fillw("rapidity_cms_cor", y_cms_cor, w);
+    mgr.fillw("pt_cms_cor", pt_cor, w);
+    mgr.fillw("theta_cms_cor", theta_cms_cor, w);
+    mgr.fillw("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor, w);
+
+    mgr.fillw("rapidity_cms_sim", y_cms_sim, w);
+    mgr.fillw("pt_cms_sim", pt_sim, w);
+    mgr.fillw("theta_cms_sim", theta_cms_sim, w);
+    mgr.fillw("rapidity_vs_mass_sim", m_ee_sim, y_cms_sim, w);
 
     // Dilepton invariant mass (after all cuts)
-    mgr.fill("mass_ee", m_ee);
-    mgr.fill("mass_ee_cor", m_ee_cor);
+    mgr.fillw("mass_ee", m_ee, w);
+    mgr.fillw("mass_ee_cor", m_ee_cor, w);
+    mgr.fillw("mass_ee_sim", m_ee_sim, w);
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {

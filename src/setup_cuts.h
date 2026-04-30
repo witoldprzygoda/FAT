@@ -21,18 +21,11 @@
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
-    // Event-level cuts (applied before particle creation)
+    // Event-level cuts (applied before particle creation).
+    // Simulation: trigger_PT3 and start_detector cuts are NOT applied because
+    // SMASH-generated events have no trigger word and no LGAD response.
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
-
-    // Trigger: PT3 only (trigbit == 8192)
-    cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
-
-    // Start detector (LGAD) — defined as a cut set so future iteration/timing
-    // conditions can be appended without changing the call site.
-    // Only the first iteration (start_iteration == 3) is required for now.
-    cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
-        .addValueCut("start_iteration", 3.0, "start_iteration == 3");
 
     // Opening angle cuts (reject close e+e- pairs)
     // opening_angle_4 is the ACTIVE cut applied in data.
