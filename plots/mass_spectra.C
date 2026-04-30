@@ -27,9 +27,9 @@ void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
 
 void mass_spectra() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem_exp.root",
+                 "output_pippimepep_exp.root",
+                 "output_pippimemem_exp.root");
 
     // --- 1. Mass spectrum without OA cut ---
     TH1D *all1, *cb1, *sig1;

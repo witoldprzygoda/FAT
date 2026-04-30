@@ -4,7 +4,7 @@
 //   M(pi+pi-e+e-) after the pippimepem_selection cut chain
 //
 // CB = 2 * sqrt(N++ * N--) reconstructed from the like-sign samples
-// (output_pippimepep.root, output_pippimemem.root). Signal = all - CB.
+// (output_pippimepep_exp.root, output_pippimemem_exp.root). Signal = all - CB.
 //
 // Usage: root -l -b -q plots/pippimepem_spectra.C
 
@@ -24,9 +24,9 @@ void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
 
 void pippimepem_spectra() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem_exp.root",
+                 "output_pippimepep_exp.root",
+                 "output_pippimemem_exp.root");
 
     // --- 1. M(e+e-) -------------------------------------------------------
     TH1D *a1, *c1, *s1;

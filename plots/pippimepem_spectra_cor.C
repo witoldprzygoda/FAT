@@ -25,9 +25,9 @@ void printIntegrals_cor(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
 
 void pippimepem_spectra_cor() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem_exp.root",
+                 "output_pippimepep_exp.root",
+                 "output_pippimemem_exp.root");
 
     const char* NT = "pippimepem_nt_cor";
 

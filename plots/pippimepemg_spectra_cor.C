@@ -36,9 +36,9 @@ void pippimepemg_print(const char* label, TH1D* a, TH1D* c, TH1D* s) {
 
 void pippimepemg_spectra_cor() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem_exp.root",
+                 "output_pippimepep_exp.root",
+                 "output_pippimemem_exp.root");
 
     const char* NT = "pippimepem_nt_cor";
 

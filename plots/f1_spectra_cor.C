@@ -19,7 +19,7 @@
 //   f1_pippim_eta_gg_cor           — M(pi+pi-gg) under eta_gg_pass==1
 //
 // Reads three outputs in CWD:
-//   output_pippimepem.root  output_pippimepep.root  output_pippimemem.root
+//   output_pippimepem_exp.root  output_pippimepep_exp.root  output_pippimemem_exp.root
 //
 // Usage:  root -l -b -q plots/f1_spectra_cor.C
 
@@ -96,9 +96,9 @@ void plotTriple(PlotUtils& pu,
 
 void f1_spectra_cor() {
 
-    PlotUtils pu("output_pippimepem.root",
-                 "output_pippimepep.root",
-                 "output_pippimemem.root");
+    PlotUtils pu("output_pippimepem_exp.root",
+                 "output_pippimepep_exp.root",
+                 "output_pippimemem_exp.root");
 
     std::cout << "\n=== Control plots (CORRECTED) ===\n";
 

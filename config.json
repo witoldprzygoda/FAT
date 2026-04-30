@@ -8,7 +8,7 @@
         "max_events": 0 
     },
     "output": {
-        "filename": "output_pippimepem.root",
+        "filename": "output_pippimepem_exp.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
