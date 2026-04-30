@@ -31,7 +31,7 @@ namespace {
 
 void pippimepem_spectra_sim() {
 
-    PlotUtils pu("output_pippimepem.root");
+    PlotUtils pu("output_pippimepem_sim.root");
 
     const char* NT = "pippimepem_nt_cor";
 

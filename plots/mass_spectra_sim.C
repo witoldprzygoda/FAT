@@ -19,7 +19,7 @@ void printIntegrals_sim(const char* label, TH1D* h) {
 
 void mass_spectra_sim() {
 
-    PlotUtils pu("output_pippimepem.root");
+    PlotUtils pu("output_pippimepem_sim.root");
 
     // --- 1. Mass spectrum (sim) without OA cut ---
     TH1D* h1 = pu.drawNtupleSingle("pippimepem_nt_cor", "m_ee_sim",

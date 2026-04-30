@@ -30,7 +30,7 @@ void printIntegral_cor(const char* label, TH1D* h) {
 
 void pippimepem_spectra_cor() {
 
-    PlotUtils pu("output_pippimepem.root");   // single-file (sim, no CB)
+    PlotUtils pu("output_pippimepem_sim.root");   // single-file (sim, no CB)
 
     const char* NT = "pippimepem_nt_cor";
 

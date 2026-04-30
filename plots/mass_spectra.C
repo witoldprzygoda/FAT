@@ -25,7 +25,7 @@ void printIntegrals(const char* label, TH1D* h) {
 
 void mass_spectra() {
 
-    PlotUtils pu("output_pippimepem.root");   // single-file (sim, no CB)
+    PlotUtils pu("output_pippimepem_sim.root");   // single-file (sim, no CB)
 
     // --- 1. Mass spectrum without OA cut ---
     TH1D* h1 = pu.drawNtupleSingle("pippimepem_nt", "m_ee",

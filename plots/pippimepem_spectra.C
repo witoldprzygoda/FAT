@@ -1,5 +1,5 @@
 // pippimepem_spectra.C — pi+pi-e+e- observables for SIMULATION (no CB).
-// Single-file mode: reads only output_pippimepem.root and draws each curve
+// Single-file mode: reads only output_pippimepem_sim.root and draws each curve
 // with PlotUtils::drawSingle. Unlike the experimental analysis there is no
 // CB extraction (no like-sign samples in simulation).
 //
@@ -32,7 +32,7 @@ void printIntegral(const char* label, TH1D* h) {
 
 void pippimepem_spectra() {
 
-    PlotUtils pu("output_pippimepem.root");   // single-file (sim, no CB)
+    PlotUtils pu("output_pippimepem_sim.root");   // single-file (sim, no CB)
 
     // --- 1. M(e+e-) -------------------------------------------------------
     auto* h1 = pu.drawNtupleSingle(
