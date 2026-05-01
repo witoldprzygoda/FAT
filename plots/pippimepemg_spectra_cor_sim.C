@@ -1,4 +1,4 @@
-// pippimepemg_spectra_cor.C — eta-candidate quality study (CORRECTED only).
+// pippimepemg_spectra_cor_sim.C — eta-candidate quality study (CORRECTED only).
 // Simulation mode (single file, no CB).
 //
 // pippimepemg = pippim + (epem + gamma_ECAL) under:
@@ -17,7 +17,7 @@
 //
 // All output PDFs/PNGs land in plots/output/ with prefix "pippimepemg_*".
 //
-// Usage: root -l -b -q plots/pippimepemg_spectra_cor.C
+// Usage: root -l -b -q plots/pippimepemg_spectra_cor_sim.C
 
 #include "PlotUtils.h"
 #include <sstream>
@@ -37,7 +37,7 @@ namespace {
     constexpr double kProbeHi = 0.55;
 }
 
-void pippimepemg_spectra_cor() {
+void pippimepemg_spectra_cor_sim() {
 
     PlotUtils pu("output_pippimepem_sim.root");   // single-file (sim, no CB)
 
@@ -91,7 +91,7 @@ void pippimepemg_spectra_cor() {
         leg->Draw();
 
         cv->Update();
-        pu.save(cv, "pippimepemg_overlay_" + tag);
+        pu.save(cv, "pippimepemg_overlay_" + tag + "_cor_sim");
 
         std::cout << "[overlay " << tag << "] probe ["
                   << kProbeLo << ", " << kProbeHi << "] GeV/c^2:"
@@ -111,7 +111,7 @@ void pippimepemg_spectra_cor() {
             NT, "m_pippimepemg", nbins, 0.2, 1.4, wcut(cut_g),
             ";M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}];a.u.");
         auto* cv = pu.drawSingle(h, title, "c_pippimepemg_" + tag);
-        pu.save(cv, "pippimepemg_" + tag);
+        pu.save(cv, "pippimepemg_" + tag + "_cor_sim");
         std::cout << "[standalone " << tag << "] entries=" << h->GetEntries()
                   << "  integral=" << h->Integral() << "\n";
     };
@@ -157,5 +157,5 @@ void pippimepemg_spectra_cor() {
     runSlice(2.6, 2.8, "26_28", true);
     runSlice(2.8, 3.0, "28_30", true);
 
-    std::cout << "\nDone. Plots saved to plots/output/pippimepemg_*\n";
+    std::cout << "\nDone. Plots saved to plots/output/pippimepemg_*_cor_sim\n";
 }

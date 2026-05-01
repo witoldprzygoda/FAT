@@ -1,6 +1,7 @@
-// mass_spectra.C — Dilepton invariant mass: no OA cut vs opening_angle_4 (>4 deg)
+// mass_spectra_rec_sim.C — Dilepton invariant mass: no OA cut vs opening_angle_4
+//                          Reads RECONSTRUCTED kinematics from pippimepem_nt.
 // Simulation mode (single file, no CB extraction).
-// Usage: root -l -b -q plots/mass_spectra.C
+// Usage: root -l -b -q plots/mass_spectra_rec_sim.C
 
 #include "PlotUtils.h"
 
@@ -23,7 +24,7 @@ void printIntegrals(const char* label, TH1D* h) {
               << "    M > 0.14 GeV/c^2: " << i_above << "\n";
 }
 
-void mass_spectra() {
+void mass_spectra_rec_sim() {
 
     PlotUtils pu("output_pippimepem_sim.root");   // single-file (sim, no CB)
 
@@ -34,7 +35,7 @@ void mass_spectra() {
     auto* c1 = pu.drawSingle(h1,
                              "M_{e^{+}e^{-}} (no OA cut)", "c_mass_no_oa",
                              /*logy=*/true);
-    pu.save(c1, "mass_ee_no_oa");
+    pu.save(c1, "mass_ee_no_oa_rec_sim");
     printIntegrals("No OA cut", h1);
 
     // Capture Y-axis range from first plot
@@ -53,7 +54,7 @@ void mass_spectra() {
     h2->SetMaximum(ymax);
     h2->SetMinimum(ymin);
     c2->Update();
-    pu.save(c2, "mass_ee_oa4");
+    pu.save(c2, "mass_ee_oa4_rec_sim");
     printIntegrals("OA > 4 deg", h2);
 
     std::cout << "\nDone. Check plots/output/\n";
