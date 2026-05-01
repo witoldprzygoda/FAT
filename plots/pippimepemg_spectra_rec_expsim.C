@@ -4,11 +4,19 @@
 // pippimepemg = pippim + (epem + gamma_ECAL) under:
 //   - ecal_mult == 1
 //   - ecal_quality CutSet
-//   - M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window) → pippimepemg_pass==1
+//   - M(e+e-gamma) in [0.125, 0.145] GeV/c^2 (pi0 Dalitz, narrow — ACTIVE).
+//     Selection driven by pippimepemg_pass_narrow==1; the wide [0.10, 0.18]
+//     cut (pippimepemg_pass) is also stored for fallback / systematics.
 //
 // Mirror of pippimepemg_spectra_cor_expsim.C, reading from pippimepem_nt
-// (REC ntuple). Both ntuples carry m_pippimepemg, m_epemg, pippimepemg_pass —
-// values differ via the lepton/pion REC vs COR momenta (the gamma is mirrored).
+// (REC ntuple). Both ntuples carry the same field names; values differ via
+// the lepton/pion REC vs COR momenta (the gamma is mirrored).
+//
+// For each cut configuration (selection, cut_2d, MM slices) we produce two
+// joint exp+sim plots:
+//   M(pippimepemg)   — output basename "pippimepemg_<tag>_rec_expsim"
+//   MM(pippimepemg)  — output basename "pippimepemg_mm_<tag>_rec_expsim"
+//                       (= beam+target − pi+pi-e+e-γ, range [0, 4] GeV/c²)
 //
 // Output: plots/output/joint_pippimepemg_*_rec_expsim.{pdf,png}
 //
@@ -39,14 +47,14 @@ void pippimepemg_spectra_rec_expsim() {
 
     const char* NT = "pippimepem_nt";
 
-    // Always require pippimepemg_pass==1 (mult==1 ECAL gamma in pi0 Dalitz window).
+    // Always require pippimepemg_pass_narrow==1 (mult==1 ECAL gamma, narrow pi0 window).
     auto plot = [&](const std::string& cut_base, const std::string& title,
                     const std::string& basename, int nbins,
                     double xmin = 0.2, double xmax = 1.4,
                     double ctrl_lo = 1.00, double ctrl_hi = 1.40) {
         std::string cut_filter = cut_base.empty()
-                                 ? std::string("pippimepemg_pass==1")
-                                 : cut_base + " && pippimepemg_pass==1";
+                                 ? std::string("pippimepemg_pass_narrow==1")
+                                 : cut_base + " && pippimepemg_pass_narrow==1";
         std::string axis = ";M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}];a.u.";
 
         TH1D *a, *c, *s;
@@ -65,6 +73,30 @@ void pippimepemg_spectra_rec_expsim() {
                                    a, c, s, h_sim, ctrl_lo, ctrl_hi);
     };
 
+    // MM(pippimepemg) — beam+target − pi+pi-e+e-γ, full kinematic range [0, 4] GeV/c²
+    auto plotMM = [&](const std::string& cut_base, const std::string& title,
+                      const std::string& basename, int nbins) {
+        std::string cut_filter = cut_base.empty()
+                                 ? std::string("pippimepemg_pass_narrow==1")
+                                 : cut_base + " && pippimepemg_pass_narrow==1";
+        std::string axis = ";MM(#pi^{+}#pi^{-}e^{+}e^{-}#gamma) [GeV/c^{2}];a.u.";
+
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = exp.drawSignal(
+            NT, "mm_pippimepemg", nbins, 0.0, 4.0, cut_filter, axis);
+
+        TH1D* h_sim = sim.draw(NT, "mm_pippimepemg", nbins, 0.0, 4.0, cut_filter);
+        JointPlotter::styleSimLine(h_sim);
+        double scale = JointPlotter::rescaleSimToData(h_sim, s);
+
+        auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
+                                           "c_pippimepemg_mm_" + basename + "_rec_expsim",
+                                           false, scale);
+        JointPlotter::save(cv, "pippimepemg_mm_" + basename + "_rec_expsim");
+        printIntegrals_rec_expsim(("pippimepemg MM " + basename + " rec_expsim").c_str(),
+                                   a, c, s, h_sim, 0.0, 4.0);
+    };
+
     // Cut configurations (mirror those in pippimepem_spectra_rec_expsim.C).
     // No-cut plot uses a wider X range [0.4, 1.8] to capture the f1(1285) tail;
     // post-selection plots stay on [0.2, 1.4] (default) where statistics live.
@@ -75,19 +107,31 @@ void pippimepemg_spectra_rec_expsim() {
     plot("sel_pass==1 && cut2d_pass==1",    "M (after selection + cut_2d, #pi^{+}#pi^{-}#pi^{0})",
          "selected_cut2d", 200);
 
+    plotMM("",                              "MM (no cut, #pi^{+}#pi^{-}#pi^{0})",
+           "base", 200);
+    plotMM("sel_pass==1",                   "MM (after selection, #pi^{+}#pi^{-}#pi^{0})",
+           "selected", 200);
+    plotMM("sel_pass==1 && cut2d_pass==1",  "MM (after selection + cut_2d, #pi^{+}#pi^{-}#pi^{0})",
+           "selected_cut2d", 200);
+
     // Slice configurations — same MM(pippimepem) windows as the main macro
     auto plotSlice = [&](double lo, double hi, const std::string& tag, bool cut2d = false) {
         std::ostringstream cut;
         cut << "sel_pass==1 && mm_pippimepem>=" << lo
             << " && mm_pippimepem<=" << hi;
         if (cut2d) cut << " && cut2d_pass==1";
+        std::string cut_str = cut.str();
 
-        std::ostringstream title;
-        title << "M (#pi^{+}#pi^{-}#pi^{0}) sel" << (cut2d ? "+cut_2d" : "")
-              << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
+        std::ostringstream title_m;
+        title_m << "M (#pi^{+}#pi^{-}#pi^{0}) sel" << (cut2d ? "+cut_2d" : "")
+                << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
+        std::ostringstream title_mm;
+        title_mm << "MM (#pi^{+}#pi^{-}#pi^{0}) sel" << (cut2d ? "+cut_2d" : "")
+                 << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
 
         std::string suffix = "slice_" + tag + (cut2d ? "_cut2d" : "");
-        plot(cut.str(), title.str(), suffix, 100);
+        plot  (cut_str, title_m.str(),  suffix, 100);
+        plotMM(cut_str, title_mm.str(), suffix, 100);
     };
 
     plotSlice(2.0, 2.2, "20_22", false);
