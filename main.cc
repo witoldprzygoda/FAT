@@ -290,8 +290,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Photon has no measured correction (gamma is mirrored REC≡COR), so M(gg)
     // is identical between REC and COR. M(epemg) and the compounds with pippim,
     // however, DO differ between REC and COR via the lepton/pion momenta.
-    double m_epemg_rec       = -1.0,   m_epemg_cor       = -1.0;
-    double m_pippimepemg_rec = -1.0,   m_pippimepemg_cor = -1.0;
+    double m_epemg_rec        = -1.0,   m_epemg_cor        = -1.0;
+    double m_pippimepemg_rec  = -1.0,   m_pippimepemg_cor  = -1.0;
+    double mm_pippimepemg_rec = -1.0,   mm_pippimepemg_cor = -1.0;  // beam+target − pippimepemg
     bool   pippimepemg_pass_rec = false, pippimepemg_pass_cor = false;
     bool   eta_dalitz_pass_rec  = false, eta_dalitz_pass_cor  = false;
 
@@ -323,6 +324,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                     m_epemg_cor       = epemg.massGeV(KinematicType::CORRECTED);
                     m_pippimepemg_rec = pippimepemg.massGeV(KinematicType::RECONSTRUCTED);
                     m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
+
+                    // Missing mass to the full 5-body: MM(pi+pi-e+e-gamma)
+                    PParticle miss_pippimepemg = initial - pippimepemg;
+                    mm_pippimepemg_rec = miss_pippimepemg.massGeV(KinematicType::RECONSTRUCTED);
+                    mm_pippimepemg_cor = miss_pippimepemg.massGeV(KinematicType::CORRECTED);
 
                     pippimepemg_pass_rec = cuts.passRangeCut("pi0_mass_window",  m_epemg_rec);
                     pippimepemg_pass_cor = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
@@ -417,6 +423,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //   mult==2: M(pi+pi-gamma gamma); M(gg) is REC≡COR so the gg flag is shared
     nt["m_epemg"]            = m_epemg_rec;
     nt["m_pippimepemg"]      = m_pippimepemg_rec;
+    nt["mm_pippimepemg"]     = mm_pippimepemg_rec;
     nt["pippimepemg_pass"]   = pippimepemg_pass_rec ? 1.0f : 0.0f;
     nt["eta_dalitz_pass"]    = eta_dalitz_pass_rec  ? 1.0f : 0.0f;
 
@@ -483,6 +490,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //            M(gg) itself is REC≡COR (photon mirrored), so eta_gg_pass shared.
     nt_cor["m_epemg"]            = m_epemg_cor;
     nt_cor["m_pippimepemg"]      = m_pippimepemg_cor;
+    nt_cor["mm_pippimepemg"]     = mm_pippimepemg_cor;
     nt_cor["pippimepemg_pass"]   = pippimepemg_pass_cor ? 1.0f : 0.0f;
     nt_cor["eta_dalitz_pass"]    = eta_dalitz_pass_cor  ? 1.0f : 0.0f;
 

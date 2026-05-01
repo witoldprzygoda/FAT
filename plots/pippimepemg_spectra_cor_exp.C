@@ -130,12 +130,29 @@ void pippimepemg_spectra_cor_exp() {
     };
 
     // -----------------------------------------------------------------
+    // SECTION C: MM(pippimepemg) all/CB/signal — beam+target − pi+pi-e+e-γ
+    // -----------------------------------------------------------------
+    auto drawStandaloneMM = [&](const std::string& cut_base, const std::string& title,
+                                 const std::string& tag, int nbins) {
+        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass==1")
+                                             : cut_base + " && pippimepemg_pass==1";
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = pu.drawSignal(
+            NT, "mm_pippimepemg", nbins, 0.0, 4.0, cut_g,
+            ";MM(#pi^{+}#pi^{-}e^{+}e^{-}#gamma) [GeV/c^{2}];Counts");
+        auto* cv = pu.drawTriple(a, c, s, title, "c_pippimepemg_mm_" + tag);
+        pu.save(cv, "pippimepemg_mm_" + tag + "_cor_exp");
+        pippimepemg_print(("pippimepemg MM " + tag).c_str(), a, c, s);
+    };
+
+    // -----------------------------------------------------------------
     // Cut configurations (mirror those in pippimepem_spectra_cor.C)
     // -----------------------------------------------------------------
     auto run = [&](const std::string& cut_base, const std::string& title,
                    const std::string& tag, int nbins = 200) {
         drawOverlay(cut_base, title + " (overlay)", tag, nbins);
         drawStandalone(cut_base, title + " (#pi^{+}#pi^{-}#pi^{0})", tag, nbins);
+        drawStandaloneMM(cut_base, "MM(#pi^{+}#pi^{-}e^{+}e^{-}#gamma) " + title, tag, nbins);
     };
 
     run("",                                 "M (no cut)",                                   "base",                  200);
