@@ -82,6 +82,35 @@ void pippimepem_spectra() {
     plot("mm_pippimepem", 200, 0.0, 4.0, "cut2d_pass==1",
          "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d", "mm_pippimepem_cut2d", 3.00, 4.00);
 
+    // --- 5d. OA observables driving the pippimepem_selection cut chain ------
+    // Inline (not via plot()) because axis units are degrees, not GeV/c^2.
+    auto plotAngle = [&](const std::string& var, const std::string& title,
+                         const std::string& basename) {
+        const int nbins = 180;
+        const double xmin = 0.0, xmax = 180.0;
+        std::string axis = ";" + title + " [deg];a.u.";
+
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = exp.drawSignal(
+            "pippimepem_nt", var, nbins, xmin, xmax, "", axis);
+
+        TH1D* h_sim = sim.draw("pippimepem_nt", var, nbins, xmin, xmax, "");
+        JointPlotter::styleSimLine(h_sim);
+        double scale = JointPlotter::rescaleSimToData(h_sim, s);
+
+        auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
+                                           "c_" + basename, /*logy*/ false, scale);
+        JointPlotter::save(cv, basename);
+        printIntegrals(basename.c_str(), a, c, s, h_sim, xmin, xmax);
+    };
+
+    plotAngle("oa_pippim_epem_lab",
+              "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-}))",
+              "oa_pippim_epem_lab");
+    plotAngle("oa_pippim_epem_eta_rest",
+              "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame",
+              "oa_pippim_epem_eta_rest");
+
     // --- 6. M(pi+pi-e+e-) after pippimepem_selection -------------------------
     plot("m_pippimepem", 200, 0.2, 1.4, "sel_pass==1",
          "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection)",

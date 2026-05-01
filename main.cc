@@ -183,16 +183,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         mgr.fill("mm_vs_m_pippimepem_cut2d_cor", mm_pippimepem_cor, m_pippimepem_cor);
     }
 
-    // Boost compound systems to beam-target CMS frame and to the pippimepem rest frame.
-    // RECONSTRUCTED-derived frames are stored in `frames`; CORRECTED-derived rest frame
-    // is built via a direct BoostFrame instance (composite-rest depends on kinematics).
+    // Boost compound systems to beam-target CMS frame.
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
-    frames.addCompositeFrame("pippimepem_rest", pippimepem);
 
     PParticle epem_cms = frames.getFrame("beam").boost(epem);
-    PParticle pippim_rest = frames.getFrame("pippimepem_rest").boost(pippim);
-    PParticle epem_rest = frames.getFrame("pippimepem_rest").boost(epem);
 
     double y_cms = epem_cms.rapidity();
     double pt = epem_cms.vec().Pt();
@@ -205,29 +200,32 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt_cor = epem_cms_cor.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = epem_cms_cor.theta(KinematicType::CORRECTED);
 
-    // CORRECTED pippimepem rest frame — different boost vector, separate BoostFrame.
-    BoostFrame pippimepem_rest_cor_frame(pippimepem, KinematicType::CORRECTED);
-    PParticle pippim_rest_cor = pippimepem_rest_cor_frame.boost(pippim);
-    PParticle epem_rest_cor = pippimepem_rest_cor_frame.boost(epem);
+    // Lab-frame opening angle between the (π+π-) and (e+e-) momenta — REC + COR.
+    double oa_pippim_epem_lab     = Physics::openingAngle(pippim, epem);
+    double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem,
+                                                          KinematicType::CORRECTED);
 
-    // Opening angles (compound systems): LAB and pippimepem rest frame, RECONSTRUCTED + CORRECTED
-    double oa_pippim_epem_lab = Physics::openingAngle(pippim, epem);
-    double oa_pippim_epem_rest = Physics::openingAngle(pippim_rest, epem_rest);
-    double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem, KinematicType::CORRECTED);
-    double oa_pippim_epem_rest_cor = Physics::openingAngle(pippim_rest_cor, epem_rest_cor,
-                                                            KinematicType::CORRECTED);
+    // OA between (pippim) and (epem) in the rest frame of a HYPOTHETICAL η whose
+    // 3-momentum matches (pippim+epem) but whose mass is forced to m_η. When the
+    // measured M(pippim+epem) ≈ m_η this approaches 180° (back-to-back); when it
+    // differs the OA distribution spreads out — useful as a near-η selection.
+    double oa_pippim_epem_eta_rest     = Physics::openingAngleInMassConstrainedRestFrame(
+                                            pippim, epem, MASS_ETA);
+    double oa_pippim_epem_eta_rest_cor = Physics::openingAngleInMassConstrainedRestFrame(
+                                            pippim, epem, MASS_ETA,
+                                            KinematicType::CORRECTED);
 
-    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, OA_REST > 140
+    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, eta-rest OA > 140
     bool sel_pass = cuts.passCutSet("pippimepem_selection", {
         oa_pippim_epem_lab,
         m_pippim,
-        oa_pippim_epem_rest
+        oa_pippim_epem_eta_rest
     });
     // Same selection with CORRECTED inputs
     bool sel_pass_cor = cuts.passCutSet("pippimepem_selection", {
         oa_pippim_epem_lab_cor,
         m_pippim_cor,
-        oa_pippim_epem_rest_cor
+        oa_pippim_epem_eta_rest_cor
     });
 
     if (sel_pass) {
@@ -388,8 +386,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["mm_pippim"] = mm_pippim;             // MM(pi+pi-)
     nt["mm_pippimepem"] = mm_pippimepem;     // MM(pi+pi-e+e-)
 
-    nt["oa_pippim_epem_lab"] = oa_pippim_epem_lab;
-    nt["oa_pippim_epem_rest"] = oa_pippim_epem_rest;
+    nt["oa_pippim_epem_lab"]      = oa_pippim_epem_lab;
+    nt["oa_pippim_epem_eta_rest"] = oa_pippim_epem_eta_rest;
 
     nt["y_cms"] = y_cms;
     nt["pt"] = pt;
@@ -440,8 +438,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["mm_pippim"] = mm_pippim_cor;
     nt_cor["mm_pippimepem"] = mm_pippimepem_cor;
 
-    nt_cor["oa_pippim_epem_lab"] = oa_pippim_epem_lab_cor;
-    nt_cor["oa_pippim_epem_rest"] = oa_pippim_epem_rest_cor;
+    nt_cor["oa_pippim_epem_lab"]      = oa_pippim_epem_lab_cor;
+    nt_cor["oa_pippim_epem_eta_rest"] = oa_pippim_epem_eta_rest_cor;
 
     nt_cor["y_cms"] = y_cms_cor;
     nt_cor["pt"] = pt_cor;

@@ -207,6 +207,33 @@ inline double findBestScale(TH1* h_sim, TH1* h_data,
     return scale;
 }
 
+// ============================================================================
+// clampSimToDataIntegral — safety guard against sim-overshoot after a
+// per-window rescaling.
+//
+// After the primary normalisation (e.g. rescaleSimInWindow over a sideband),
+// it can happen that ∫sim over the FULL histogram exceeds ∫data — i.e. the
+// sim line sits above the data signal across most of the spectrum. In that
+// case we clamp: multiply h_sim by ∫data / ∫sim so the integrals match.
+//
+// Returns the EXTRA factor applied (1.0 if no clamp triggered). Caller
+// should fold it into the cumulative scale reported on the legend.
+// ============================================================================
+inline double clampSimToDataIntegral(TH1* h_sim, TH1* h_data) {
+    if (!h_sim || !h_data) return 1.0;
+    const double y_sim  = h_sim ->Integral();
+    const double y_data = h_data->Integral();
+    if (y_sim <= 0.0 || y_data <= 0.0) return 1.0;
+    if (y_sim <= y_data) return 1.0;     // already at or below — no clamp
+
+    const double extra = y_data / y_sim;
+    h_sim->Scale(extra);
+    std::cout << "  clampSimToDataIntegral: ∫sim=" << y_sim
+              << " > ∫data=" << y_data
+              << "  → extra α = " << extra << "  (clamped)\n";
+    return extra;
+}
+
 // Convenience: compute scale via findBestScale and apply it to h_sim.
 inline double rescaleSimToData(TH1* h_sim, TH1* h_data,
                                double overshoot_frac  = 0.20,
@@ -214,7 +241,8 @@ inline double rescaleSimToData(TH1* h_sim, TH1* h_data,
 {
     const double s = findBestScale(h_sim, h_data, overshoot_frac, yield_threshold);
     if (h_sim) h_sim->Scale(s);
-    return s;
+    const double extra = clampSimToDataIntegral(h_sim, h_data);
+    return s * extra;
 }
 
 // ============================================================================
@@ -234,7 +262,8 @@ inline double rescaleSimInWindow(TH1* h_sim, TH1* h_data, double lo, double hi) 
     std::cout << "  rescaleSimInWindow: norm [" << lo << ", " << hi
               << "]  ∫data=" << y_data << "  ∫sim=" << y_sim
               << "  α = " << scale << "\n";
-    return scale;
+    const double extra = clampSimToDataIntegral(h_sim, h_data);
+    return scale * extra;
 }
 
 // ============================================================================

@@ -56,10 +56,9 @@ void pippimepem_spectra_cor() {
         printIntegrals_cor(basename.c_str(), a, c, s, h_sim);
     };
 
-    // ---- M(e+e-)  norm [0.25, 0.40]  (above pi0 Dalitz, below resonances) ----
-    plot("m_ee",          160, 0.0, 0.8, "",
-         "M_{e^{+}e^{-}} (cor)", "m_ee_cor",
-         /*norm*/ 0.25, 0.40, /*disp*/ 0, 0, /*logy*/ true);
+    // ---- M(e+e-) deliberately NOT here — already covered by mass_spectra.C
+    //      (joint_mass_ee_no_oa / joint_mass_ee_oa4). This macro focuses on
+    //      pippim/compound observables to avoid duplicate figures.
 
     // ---- M(pi+pi-)  display [0, 1.4],  norm [0.6, 1.2] ----
     plot("m_pippim",      200, 0.0, 2.0, "",
@@ -94,6 +93,35 @@ void pippimepem_spectra_cor() {
     plot("mm_pippimepem", 200, 0.0, 4.0, "cut2d_pass==1",
          "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d (cor)", "mm_pippimepem_cut2d_cor",
          /*norm*/ 2.60, 3.00, /*disp*/ 1.0, 3.5);
+
+    // ---- OA observables driving the pippimepem_selection cut chain ----
+    // Inline (not via plot()) because axis units are degrees, not GeV/c^2.
+    // norm window not yet specified — fall back to findBestScale (auto).
+    auto plotAngle = [&](const std::string& var, const std::string& title,
+                         const std::string& basename) {
+        const int nbins = 180;
+        const double xmin = 0.0, xmax = 180.0;
+        std::string axis = ";" + title + " [deg];a.u.";
+
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = exp.drawSignal(NT, var, nbins, xmin, xmax, "", axis);
+
+        TH1D* h_sim = sim.draw(NT, var, nbins, xmin, xmax, "");
+        JointPlotter::styleSimLine(h_sim);
+        double scale = JointPlotter::rescaleSimToData(h_sim, s);
+
+        auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
+                                           "c_" + basename, /*logy*/ false, scale);
+        JointPlotter::save(cv, basename);
+        printIntegrals_cor(basename.c_str(), a, c, s, h_sim);
+    };
+
+    plotAngle("oa_pippim_epem_lab",
+              "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-})) (cor)",
+              "oa_pippim_epem_lab_cor");
+    plotAngle("oa_pippim_epem_eta_rest",
+              "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame (cor)",
+              "oa_pippim_epem_eta_rest_cor");
 
     // ---- M(pippimepem) after selection:  norm [0.8, 1.0]  (no display zoom) ----
     plot("m_pippimepem", 200, 0.2, 1.4, "sel_pass==1",
