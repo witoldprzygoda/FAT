@@ -16,6 +16,7 @@ namespace Physics {
     constexpr double MASS_PION_PLUS  = 139.56995;   // MeV/c^2, sim id = 8
     constexpr double MASS_PION_MINUS = 139.56995;   // MeV/c^2, sim id = 9
     constexpr double MASS_PION_ZERO  = 134.9768;    // MeV/c^2, sim id = 7
+    constexpr double MASS_ETA        = 547.862;     // MeV/c^2, sim id = 17
     constexpr double MASS_ELECTRON   = 0.51099895;  // MeV/c^2, sim id = 3
     constexpr double MASS_POSITRON   = 0.51099895;  // MeV/c^2, sim id = 2
     constexpr double MASS_MUON_PLUS  = 105.6583745; // MeV/c^2, sim id = 5

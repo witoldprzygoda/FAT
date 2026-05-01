@@ -115,6 +115,30 @@ void pippimepem_spectra_cor() {
         printIntegral_cor("MM(pi+pi-e+e-) after cut_2d cor", h);
     }
 
+    // --- 5d. OA observables driving the pippimepem_selection cut chain ----
+    {
+        auto* h = pu.drawNtupleSingle(
+            NT, "oa_pippim_epem_lab",
+            180, 0.0, 180.0, wcut(""),
+            ";OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-})) [deg];a.u.");
+        auto* cv = pu.drawSingle(h,
+                                 "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-})) (cor)",
+                                 "c_oa_pippim_epem_lab_cor");
+        pu.save(cv, "oa_pippim_epem_lab_cor");
+        printIntegral_cor("OA_LAB((pi+pi-),(e+e-)) cor", h);
+    }
+    {
+        auto* h = pu.drawNtupleSingle(
+            NT, "oa_pippim_epem_eta_rest",
+            180, 0.0, 180.0, wcut(""),
+            ";OA_{m_{#eta}-rest}((#pi^{+}#pi^{-}),(e^{+}e^{-})) [deg];a.u.");
+        auto* cv = pu.drawSingle(h,
+                                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame (cor)",
+                                 "c_oa_pippim_epem_eta_rest_cor");
+        pu.save(cv, "oa_pippim_epem_eta_rest_cor");
+        printIntegral_cor("OA_eta_rest((pi+pi-),(e+e-)) cor", h);
+    }
+
     // --- 6. M(pi+pi-e+e-) after pippimepem_selection cut chain ------------
     auto* h6 = pu.drawNtupleSingle(
         NT, "m_pippimepem",

@@ -43,8 +43,8 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineCutSet("pippimepem_selection", "pi+pi-e+e- 4-body selection")
         .addMaxCut("oa_pippim_epem_lab",  50.0, "OA_LAB((pi+pi-),(e+e-)) < 50 deg")
         .addMaxCut("m_pippim",            0.420, "M(pi+pi-) < 0.420 GeV/c^2")
-        .addMinCut("oa_plane_pippim_epem_rest", 140.0,
-                   "Dihedral angle (p_pi+ x p_pi-, p_e+ x p_e-) in pippimepem rest frame > 140 deg");
+        .addMinCut("oa_pippim_epem_eta_rest", 140.0,
+                   "OA((pi+pi-),(e+e-)) in m_eta-constrained rest frame > 140 deg");
 
     // MM(pi+pi-e+e-) slice windows [GeV/c^2] — 6 adjacent bins for scan studies.
     // Used in tandem with the selection chain (see main.cc).

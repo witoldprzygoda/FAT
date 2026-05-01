@@ -122,26 +122,26 @@ inline void setupHistograms(Manager& mgr) {
                  180, 0, 180, "dilepton");
 
     // Control histograms for the pippimepem_selection cut chain.
-    //   oa_pippim_epem_lab     — LAB-frame OA between (π+π-) and (e+e-) momenta
-    //                            (cut: oa_pippim_epem_lab < 50)
-    //   oa_plane_pippim_epem_rest   — in pippimepem rest frame, angle between the
-    //                            (π+π-) and (e+e-) DECAY PLANES, computed as
-    //                            ∠(p_pi+ × p_pi-, p_e+ × p_e-).
-    //                            (cut: oa_plane_pippim_epem_rest > 140)
+    //   oa_pippim_epem_lab      — LAB-frame OA between (π+π-) and (e+e-) momenta
+    //                             (cut: oa_pippim_epem_lab < 50)
+    //   oa_pippim_epem_eta_rest — OA between (π+π-) and (e+e-) in the rest frame
+    //                             of a hypothetical η whose 3-momentum equals
+    //                             (pippim+epem) but whose mass is forced to m_η.
+    //                             (cut: oa_pippim_epem_eta_rest > 140)
     // Range slightly past 180 to avoid the upper-edge → overflow issue.
     mgr.create1D("oa_pippim_epem_lab",
                  "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) LAB;#theta_{open} [deg];a.u.",
                  181, 0, 181, "angles");
-    mgr.create1D("oa_plane_pippim_epem_rest",
-                 "Dihedral #angle((#pi^{+}#pi^{-}),(e^{+}e^{-})) in pippimepem rest frame;"
-                 "#phi [deg];a.u.",
+    mgr.create1D("oa_pippim_epem_eta_rest",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame;"
+                 "#theta_{open} [deg];a.u.",
                  181, 0, 181, "angles");
     mgr.create1D("oa_pippim_epem_lab_cor",
                  "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) LAB (cor);#theta_{open} [deg];a.u.",
                  181, 0, 181, "angles_cor");
-    mgr.create1D("oa_plane_pippim_epem_rest_cor",
-                 "Dihedral #angle((#pi^{+}#pi^{-}),(e^{+}e^{-})) in pippimepem rest frame (cor);"
-                 "#phi [deg];a.u.",
+    mgr.create1D("oa_pippim_epem_eta_rest_cor",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame (cor);"
+                 "#theta_{open} [deg];a.u.",
                  181, 0, 181, "angles_cor");
     mgr.create1D("mass_ee_before_oa", "M_{ee} before OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];a.u.",
                  200, 0.0, 1.0, "dilepton");
