@@ -1,4 +1,4 @@
-// pippimepem_spectra.C — all / CB / signal for the pi+pi-e+e- observables:
+// pippimepem_spectra_rec_exp.C — all / CB / signal (RECONSTRUCTED, exp data) for the pi+pi-e+e- observables:
 //   M(e+e-), M(pi+pi-), M(pi+pi-e+e-),
 //   MM(pi+pi-), MM(pi+pi-e+e-),
 //   M(pi+pi-e+e-) after the pippimepem_selection cut chain
@@ -6,7 +6,7 @@
 // CB = 2 * sqrt(N++ * N--) reconstructed from the like-sign samples
 // (output_pippimepep_exp.root, output_pippimemem_exp.root). Signal = all - CB.
 //
-// Usage: root -l -b -q plots/pippimepem_spectra.C
+// Usage: root -l -b -q plots/pippimepem_spectra_rec_exp.C
 
 #include "PlotUtils.h"
 #include <sstream>
@@ -22,7 +22,7 @@ void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
               << "   sig = " << i_sig << "\n";
 }
 
-void pippimepem_spectra() {
+void pippimepem_spectra_rec_exp() {
 
     PlotUtils pu("output_pippimepem_exp.root",
                  "output_pippimepep_exp.root",
@@ -35,7 +35,7 @@ void pippimepem_spectra() {
         160, 0.0, 0.8, "",
         ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
     auto* cv1 = pu.drawTriple(a1, c1, s1, "M_{e^{+}e^{-}}", "c_m_ee", /*logy=*/true);
-    pu.save(cv1, "m_ee");
+    pu.save(cv1, "m_ee_rec_exp");
     printIntegrals("M(e+e-)", a1, c1, s1);
 
     // --- 2. M(pi+pi-) -----------------------------------------------------
@@ -45,7 +45,7 @@ void pippimepem_spectra() {
         200, 0.0, 2.0, "",
         ";M_{#pi^{+}#pi^{-}} [GeV/c^{2}];Counts");
     auto* cv2 = pu.drawTriple(a2, c2, s2, "M_{#pi^{+}#pi^{-}}", "c_m_pippim");
-    pu.save(cv2, "m_pippim");
+    pu.save(cv2, "m_pippim_rec_exp");
     printIntegrals("M(pi+pi-)", a2, c2, s2);
 
     // --- 3. M(pi+pi-e+e-) -------------------------------------------------
@@ -56,7 +56,7 @@ void pippimepem_spectra() {
         ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
     auto* cv3 = pu.drawTriple(a3, c3, s3,
                               "M_{#pi^{+}#pi^{-}e^{+}e^{-}}", "c_m_pippimepem");
-    pu.save(cv3, "m_pippimepem");
+    pu.save(cv3, "m_pippimepem_rec_exp");
     printIntegrals("M(pi+pi-e+e-)", a3, c3, s3);
 
     // --- 4. MM(pi+pi-) ----------------------------------------------------
@@ -67,7 +67,7 @@ void pippimepem_spectra() {
         ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts");
     auto* cv4 = pu.drawTriple(a4, c4, s4,
                               "MM(#pi^{+}#pi^{-})", "c_mm_pippim");
-    pu.save(cv4, "mm_pippim");
+    pu.save(cv4, "mm_pippim_rec_exp");
     printIntegrals("MM(pi+pi-)", a4, c4, s4);
 
     // --- 5. MM(pi+pi-e+e-) ------------------------------------------------
@@ -78,7 +78,7 @@ void pippimepem_spectra() {
         ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts");
     auto* cv5 = pu.drawTriple(a5, c5, s5,
                               "MM(#pi^{+}#pi^{-}e^{+}e^{-})", "c_mm_pippimepem");
-    pu.save(cv5, "mm_pippimepem");
+    pu.save(cv5, "mm_pippimepem_rec_exp");
     printIntegrals("MM(pi+pi-e+e-)", a5, c5, s5);
 
     // --- 5a-5c. MM observables with the 2D graphical cut (cut_2d) ---------
@@ -91,7 +91,7 @@ void pippimepem_spectra() {
             ";MM(e^{+}e^{-}) [GeV/c^{2}];Counts");
         auto* cv = pu.drawTriple(a, c, s,
                                  "MM(e^{+}e^{-}) after cut_2d", "c_mm_epem_cut2d");
-        pu.save(cv, "mm_epem_cut2d");
+        pu.save(cv, "mm_epem_cut2d_rec_exp");
         printIntegrals("MM(e+e-) after cut_2d", a, c, s);
     }
     {
@@ -102,7 +102,7 @@ void pippimepem_spectra() {
             ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts");
         auto* cv = pu.drawTriple(a, c, s,
                                  "MM(#pi^{+}#pi^{-}) after cut_2d", "c_mm_pippim_cut2d");
-        pu.save(cv, "mm_pippim_cut2d");
+        pu.save(cv, "mm_pippim_cut2d_rec_exp");
         printIntegrals("MM(pi+pi-) after cut_2d", a, c, s);
     }
     {
@@ -113,7 +113,7 @@ void pippimepem_spectra() {
             ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts");
         auto* cv = pu.drawTriple(a, c, s,
                                  "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d", "c_mm_pippimepem_cut2d");
-        pu.save(cv, "mm_pippimepem_cut2d");
+        pu.save(cv, "mm_pippimepem_cut2d_rec_exp");
         printIntegrals("MM(pi+pi-e+e-) after cut_2d", a, c, s);
     }
 
@@ -129,7 +129,7 @@ void pippimepem_spectra() {
         auto* cv = pu.drawTriple(a, c, s,
                                  "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-}))",
                                  "c_oa_pippim_epem_lab");
-        pu.save(cv, "oa_pippim_epem_lab");
+        pu.save(cv, "oa_pippim_epem_lab_rec_exp");
         printIntegrals("OA_LAB((pi+pi-),(e+e-))", a, c, s);
     }
     {
@@ -141,7 +141,7 @@ void pippimepem_spectra() {
         auto* cv = pu.drawTriple(a, c, s,
                                  "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame",
                                  "c_oa_pippim_epem_eta_rest");
-        pu.save(cv, "oa_pippim_epem_eta_rest");
+        pu.save(cv, "oa_pippim_epem_eta_rest_rec_exp");
         printIntegrals("OA_eta_rest((pi+pi-),(e+e-))", a, c, s);
     }
 
@@ -157,7 +157,7 @@ void pippimepem_spectra() {
     auto* cv6 = pu.drawTriple(a6, c6, s6,
                               "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection)",
                               "c_m_pippimepem_selected");
-    pu.save(cv6, "m_pippimepem_selected");
+    pu.save(cv6, "m_pippimepem_selected_rec_exp");
     printIntegrals("M(pi+pi-e+e-) after selection", a6, c6, s6);
 
     // --- 6a. Same as plot 6 but with cut_2d additionally applied ----------
@@ -170,7 +170,7 @@ void pippimepem_spectra() {
         auto* cv = pu.drawTriple(a, c, s,
                                  "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection + cut_2d)",
                                  "c_m_pippimepem_selected_cut2d");
-        pu.save(cv, "m_pippimepem_selected_cut2d");
+        pu.save(cv, "m_pippimepem_selected_cut2d_rec_exp");
         printIntegrals("M(pi+pi-e+e-) after selection + cut_2d", a, c, s);
     }
 
@@ -187,7 +187,7 @@ void pippimepem_spectra() {
         title << "M_{#pi^{+}#pi^{-}e^{+}e^{-}} sel" << (cut2d ? "+cut_2d" : "")
               << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
 
-        std::string suffix = tag + (cut2d ? "_cut2d" : "");
+        std::string suffix = tag + (cut2d ? "_cut2d" : "") + "_rec_exp";
 
         TH1D *a, *c, *s;
         std::tie(a, c, s) = pu.drawSignal(

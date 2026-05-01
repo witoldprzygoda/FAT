@@ -1,4 +1,4 @@
-// f1_spectra_cor.C — f1(1285) -> pi+pi- eta search on CORRECTED kinematics.
+// f1_spectra_cor_exp.C — f1(1285) -> pi+pi- eta search on CORRECTED kinematics.
 //
 // Two reconstruction modes for the eta candidate:
 //
@@ -13,15 +13,15 @@
 //       Cut flag: eta_gg_pass==1
 //
 // Plots produced (each as .pdf + .png, both log and linear Y):
-//   m_epemg_cor                    — control: M(e+e-gamma) for ECAL N_gamma==1
-//   m_gg_cor                       — control: M(gamma gamma) for ECAL N_gamma==2
-//   f1_pippim_eta_dalitz_cor       — M(pi+pi-e+e-gamma) under eta_dalitz_pass==1
-//   f1_pippim_eta_gg_cor           — M(pi+pi-gg) under eta_gg_pass==1
+//   m_epemg_cor_exp                — control: M(e+e-gamma) for ECAL N_gamma==1
+//   m_gg_cor_exp                   — control: M(gamma gamma) for ECAL N_gamma==2
+//   f1_pippim_eta_dalitz_cor_exp   — M(pi+pi-e+e-gamma) under eta_dalitz_pass==1
+//   f1_pippim_eta_gg_cor_exp       — M(pi+pi-gg) under eta_gg_pass==1
 //
 // Reads three outputs in CWD:
 //   output_pippimepem_exp.root  output_pippimepep_exp.root  output_pippimemem_exp.root
 //
-// Usage:  root -l -b -q plots/f1_spectra_cor.C
+// Usage:  root -l -b -q plots/f1_spectra_cor_exp.C
 
 #include "PlotUtils.h"
 #include <TFile.h>
@@ -94,7 +94,7 @@ void plotTriple(PlotUtils& pu,
 
 }  // namespace
 
-void f1_spectra_cor() {
+void f1_spectra_cor_exp() {
 
     PlotUtils pu("output_pippimepem_exp.root",
                  "output_pippimepep_exp.root",
@@ -108,7 +108,7 @@ void f1_spectra_cor() {
                "m_epemg>0",   // -1 default for events without mult==1 epemg
                "M(e^{+}e^{-}#gamma)  (ECAL N_{#gamma}=1, control);"
                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-               "m_epemg_cor",
+               "m_epemg_cor_exp",
                /*also_linear=*/true);
 
     // -- Control: M(gamma gamma) for ECAL N_gamma==2 (eta candidate from gg)
@@ -117,7 +117,7 @@ void f1_spectra_cor() {
                "m_gg>0",   // -1 default for events without mult==2 gg
                "M(#gamma#gamma)  (ECAL N_{#gamma}=2, control);"
                "M_{#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_gg_cor",
+               "m_gg_cor_exp",
                /*also_linear=*/true);
 
     std::cout << "\n=== f1(1285) candidates (CORRECTED) ===\n";
@@ -128,7 +128,7 @@ void f1_spectra_cor() {
                "f_{1}(1285) #rightarrow #pi^{+}#pi^{-} #eta(e^{+}e^{-}#gamma)  "
                "[ECAL N_{#gamma}=1, M(e^{+}e^{-}#gamma) #in #eta];"
                "M_{#pi^{+}#pi^{-}e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-               "f1_pippim_eta_dalitz_cor",
+               "f1_pippim_eta_dalitz_cor_exp",
                /*also_linear=*/true);
 
     // -- f1 from gamma gamma eta: M(pi+pi-gg) under eta cut on M(gg)
@@ -137,7 +137,7 @@ void f1_spectra_cor() {
                "f_{1}(1285) #rightarrow #pi^{+}#pi^{-} #eta(#gamma#gamma)  "
                "[ECAL N_{#gamma}=2, M(#gamma#gamma) #in #eta];"
                "M_{#pi^{+}#pi^{-}#gamma#gamma} [GeV/c^{2}];Counts",
-               "f1_pippim_eta_gg_cor",
+               "f1_pippim_eta_gg_cor_exp",
                /*also_linear=*/true);
 
     std::cout << "\nDone. Plots saved under plots/output/\n";

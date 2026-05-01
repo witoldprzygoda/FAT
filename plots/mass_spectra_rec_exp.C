@@ -1,5 +1,5 @@
-// mass_spectra.C — Dilepton invariant mass: no OA cut vs OA > 9 deg
-// Usage: root -l -b -q plots/mass_spectra.C
+// mass_spectra_rec_exp.C — Dilepton invariant mass: no OA cut vs OA > 9 deg (RECONSTRUCTED, exp data)
+// Usage: root -l -b -q plots/mass_spectra_rec_exp.C
 
 #include "PlotUtils.h"
 
@@ -25,7 +25,7 @@ void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
               << "  sig = " << i_sig_above << "\n";
 }
 
-void mass_spectra() {
+void mass_spectra_rec_exp() {
 
     PlotUtils pu("output_pippimepem_exp.root",
                  "output_pippimepep_exp.root",
@@ -39,7 +39,7 @@ void mass_spectra() {
     auto* c1 = pu.drawTriple(all1, cb1, sig1,
                              "M_{e^{+}e^{-}} (no OA cut)", "c_mass_no_oa",
                              /*logy=*/true);
-    pu.save(c1, "mass_ee_no_oa");
+    pu.save(c1, "mass_ee_no_oa_rec_exp");
     printIntegrals("No OA cut", all1, cb1, sig1);
 
     // Capture Y-axis range from first plot
@@ -57,7 +57,7 @@ void mass_spectra() {
     all2->SetMaximum(ymax);
     all2->SetMinimum(ymin);
     c2->Update();
-    pu.save(c2, "mass_ee_oa9");
+    pu.save(c2, "mass_ee_oa9_rec_exp");
     printIntegrals("OA > 9 deg", all2, cb2, sig2);
 
     std::cout << "\nDone. Check plots/output/\n";

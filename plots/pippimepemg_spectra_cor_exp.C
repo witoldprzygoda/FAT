@@ -1,4 +1,4 @@
-// pippimepemg_spectra_cor.C — eta-candidate quality study (CORRECTED only).
+// pippimepemg_spectra_cor_exp.C — eta-candidate quality study (CORRECTED, exp data).
 //
 // pippimepemg = pippim + (epem + gamma_ECAL) under:
 //   - ecal_mult == 1
@@ -16,7 +16,7 @@
 //
 // All output PDFs/PNGs land in plots/output/ with prefix "pippimepemg_*".
 //
-// Usage: root -l -b -q plots/pippimepemg_spectra_cor.C
+// Usage: root -l -b -q plots/pippimepemg_spectra_cor_exp.C
 
 #include "PlotUtils.h"
 #include <sstream>
@@ -34,7 +34,7 @@ void pippimepemg_print(const char* label, TH1D* a, TH1D* c, TH1D* s) {
               << "   sig = " << s->Integral() << "\n";
 }
 
-void pippimepemg_spectra_cor() {
+void pippimepemg_spectra_cor_exp() {
 
     PlotUtils pu("output_pippimepem_exp.root",
                  "output_pippimepep_exp.root",
@@ -104,7 +104,7 @@ void pippimepemg_spectra_cor() {
         leg->Draw();
 
         cv->Update();
-        pu.save(cv, "pippimepemg_overlay_" + tag);
+        pu.save(cv, "pippimepemg_overlay_" + tag + "_cor_exp");
 
         std::cout << "[overlay " << tag << "] probe ["
                   << kProbeLo << ", " << kProbeHi << "] GeV/c^2:"
@@ -125,7 +125,7 @@ void pippimepemg_spectra_cor() {
             NT, "m_pippimepemg", nbins, 0.2, 1.4, cut_g,
             ";M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}];Counts");
         auto* cv = pu.drawTriple(a, c, s, title, "c_pippimepemg_" + tag);
-        pu.save(cv, "pippimepemg_" + tag);
+        pu.save(cv, "pippimepemg_" + tag + "_cor_exp");
         pippimepemg_print(("pippimepemg standalone " + tag).c_str(), a, c, s);
     };
 
@@ -171,5 +171,5 @@ void pippimepemg_spectra_cor() {
     runSlice(2.6, 2.8, "26_28", true);
     runSlice(2.8, 3.0, "28_30", true);
 
-    std::cout << "\nDone. Plots saved to plots/output/pippimepemg_*\n";
+    std::cout << "\nDone. Plots saved to plots/output/pippimepemg_*_cor_exp\n";
 }
