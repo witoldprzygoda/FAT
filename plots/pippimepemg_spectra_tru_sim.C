@@ -45,8 +45,8 @@ void pippimepemg_spectra_tru_sim() {
     auto drawOverlay = [&](const std::string& cut_base, const std::string& title,
                            const std::string& tag, int nbins) {
         std::string cut_tagged = cut_base.empty()
-                                 ? std::string("pippimepemg_pass==1")
-                                 : cut_base + " && pippimepemg_pass==1";
+                                 ? std::string("pippimepemg_pass_narrow==1")
+                                 : cut_base + " && pippimepemg_pass_narrow==1";
 
         auto* h_full = pu.drawNtupleSingle(
             NT, "m_pippimepem_sim", nbins, 0.2, 1.4, wcut(cut_base),
@@ -101,8 +101,8 @@ void pippimepemg_spectra_tru_sim() {
     // -----------------------------------------------------------------
     auto drawStandalone = [&](const std::string& cut_base, const std::string& title,
                               const std::string& tag, int nbins) {
-        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass==1")
-                                             : cut_base + " && pippimepemg_pass==1";
+        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass_narrow==1")
+                                             : cut_base + " && pippimepemg_pass_narrow==1";
         auto* h = pu.drawNtupleSingle(
             NT, "m_pippimepemg_sim", nbins, 0.2, 1.4, wcut(cut_g),
             ";M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}] (truth);a.u.");
@@ -113,12 +113,30 @@ void pippimepemg_spectra_tru_sim() {
     };
 
     // -----------------------------------------------------------------
+    // SECTION C: MM(pippimepemg)_sim — beam+target − pi+pi-e+e-γ (truth)
+    // -----------------------------------------------------------------
+    auto drawStandaloneMM = [&](const std::string& cut_base, const std::string& title,
+                                 const std::string& tag, int nbins) {
+        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass_narrow==1")
+                                             : cut_base + " && pippimepemg_pass_narrow==1";
+        auto* h = pu.drawNtupleSingle(
+            NT, "mm_pippimepemg_sim", nbins, 0.0, 4.0, wcut(cut_g),
+            ";MM(#pi^{+}#pi^{-}e^{+}e^{-}#gamma) [GeV/c^{2}] (truth);a.u.");
+        auto* cv = pu.drawSingle(h, title, "c_pippimepemg_mm_" + tag + "_tru_sim");
+        pu.save(cv, "pippimepemg_mm_" + tag + "_tru_sim");
+        std::cout << "[MM " << tag << " truth] entries=" << h->GetEntries()
+                  << "  integral=" << h->Integral() << "\n";
+    };
+
+    // -----------------------------------------------------------------
     // Cut configurations
     // -----------------------------------------------------------------
     auto run = [&](const std::string& cut_base, const std::string& title,
                    const std::string& tag, int nbins = 200) {
         drawOverlay(cut_base, title + " (overlay, truth)", tag, nbins);
         drawStandalone(cut_base, title + " (#pi^{+}#pi^{-}#pi^{0}, truth)", tag, nbins);
+        drawStandaloneMM(cut_base, "MM(#pi^{+}#pi^{-}e^{+}e^{-}#gamma) " + title + " (truth)",
+                         tag, nbins);
     };
 
     run("",                                 "M (no cut)",                                   "base",                  200);

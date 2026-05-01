@@ -58,9 +58,18 @@ inline void setupCuts(CutManager& cuts) {
     cuts.loadGraphicalCut("cut_2d", "cuts/cut_2d.root", "cut_2d",
                           "TCutG on (mm_pippimepem, m_pippimepem)");
 
-    // pi0 invariant-mass window for the e+e-gamma Dalitz hypothesis (CORRECTED)
+    // pi0 invariant-mass windows for the e+e-gamma Dalitz hypothesis.
+    // Two variants:
+    //   pi0_mass_window         — wide [0.10, 0.18] GeV/c^2 (defined for fallback /
+    //                             systematic studies; NOT applied to pippimepemg_pass).
+    //   pi0_mass_window_narrow  — narrow [0.125, 0.145] GeV/c^2 (±10 MeV around m_pi0).
+    //                             This is the ACTIVE cut driving pippimepemg_pass —
+    //                             matches the experimental analysis convention for
+    //                             selecting the eta -> pi+pi- pi0 (Dalitz) candidate.
     cuts.defineRangeCut("pi0_mass_window", 0.1, 0.18,
-                        "M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window)");
+                        "M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz, wide — fallback)");
+    cuts.defineRangeCut("pi0_mass_window_narrow", 0.125, 0.145,
+                        "M(e+e-gamma) in [0.125, 0.145] GeV/c^2 (pi0 Dalitz, narrow — ACTIVE)");
 
     // eta invariant-mass window — used for f1(1285) -> pi+pi- eta search.
     // The eta candidate is identified either via eta -> e+e-gamma Dalitz (mult==1)

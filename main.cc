@@ -382,9 +382,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL clusters; no MC truth photon in the ntuple). M(epemg) and pippim+gg
     // compounds therefore differ only via their lepton/pion partners across REC,
     // COR, SIM. M(gg) itself is identical in all three — single value.
-    double m_epemg_rec       = -1.0,  m_epemg_cor       = -1.0,  m_epemg_sim       = -1.0;
-    double m_pippimepemg_rec = -1.0,  m_pippimepemg_cor = -1.0,  m_pippimepemg_sim = -1.0;
+    double m_epemg_rec        = -1.0,  m_epemg_cor        = -1.0,  m_epemg_sim        = -1.0;
+    double m_pippimepemg_rec  = -1.0,  m_pippimepemg_cor  = -1.0,  m_pippimepemg_sim  = -1.0;
+    double mm_pippimepemg_rec = -1.0,  mm_pippimepemg_cor = -1.0,  mm_pippimepemg_sim = -1.0;
     bool   pippimepemg_pass_rec = false, pippimepemg_pass_cor = false;
+    bool   pippimepemg_pass_narrow_rec = false, pippimepemg_pass_narrow_cor = false;
     bool   eta_dalitz_pass_rec  = false, eta_dalitz_pass_cor  = false;
 
     double m_gg              = -1.0;    // REC≡COR≡SIM — single value
@@ -426,10 +428,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                     m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
                     m_pippimepemg_sim = pippimepemg.massGeV(KinematicType::SIMULATED);
 
-                    pippimepemg_pass_rec = cuts.passRangeCut("pi0_mass_window",  m_epemg_rec);
-                    pippimepemg_pass_cor = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
-                    eta_dalitz_pass_rec  = cuts.passRangeCut("eta_mass_window",  m_epemg_rec);
-                    eta_dalitz_pass_cor  = cuts.passRangeCut("eta_mass_window",  m_epemg_cor);
+                    // Missing mass to the full 5-body: MM(pi+pi-e+e-gamma)
+                    PParticle miss_pippimepemg = initial - pippimepemg;
+                    mm_pippimepemg_rec = miss_pippimepemg.massGeV(KinematicType::RECONSTRUCTED);
+                    mm_pippimepemg_cor = miss_pippimepemg.massGeV(KinematicType::CORRECTED);
+                    mm_pippimepemg_sim = miss_pippimepemg.massGeV(KinematicType::SIMULATED);
+
+                    pippimepemg_pass_rec        = cuts.passRangeCut("pi0_mass_window",        m_epemg_rec);
+                    pippimepemg_pass_cor        = cuts.passRangeCut("pi0_mass_window",        m_epemg_cor);
+                    pippimepemg_pass_narrow_rec = cuts.passRangeCut("pi0_mass_window_narrow", m_epemg_rec);
+                    pippimepemg_pass_narrow_cor = cuts.passRangeCut("pi0_mass_window_narrow", m_epemg_cor);
+                    eta_dalitz_pass_rec         = cuts.passRangeCut("eta_mass_window",        m_epemg_rec);
+                    eta_dalitz_pass_cor         = cuts.passRangeCut("eta_mass_window",        m_epemg_cor);
                 }
             }
         }
@@ -525,10 +535,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL-derived eta / f1 fields — RECONSTRUCTED.
     //   mult==1: shared compound M(pi+pi-e+e-gamma); pi0 vs eta window flags
     //   mult==2: M(pi+pi-gamma gamma); M(gg) is REC≡COR≡SIM so the gg flag is shared
-    nt["m_epemg"]            = m_epemg_rec;
-    nt["m_pippimepemg"]      = m_pippimepemg_rec;
-    nt["pippimepemg_pass"]   = pippimepemg_pass_rec ? 1.0f : 0.0f;
-    nt["eta_dalitz_pass"]    = eta_dalitz_pass_rec  ? 1.0f : 0.0f;
+    nt["m_epemg"]                = m_epemg_rec;
+    nt["m_pippimepemg"]          = m_pippimepemg_rec;
+    nt["mm_pippimepemg"]         = mm_pippimepemg_rec;
+    nt["pippimepemg_pass"]        = pippimepemg_pass_rec        ? 1.0f : 0.0f;  // wide  [0.10, 0.18]
+    nt["pippimepemg_pass_narrow"] = pippimepemg_pass_narrow_rec ? 1.0f : 0.0f;  // ACTIVE [0.125, 0.145]
+    nt["eta_dalitz_pass"]        = eta_dalitz_pass_rec  ? 1.0f : 0.0f;
 
     nt["m_gg"]               = m_gg;
     nt["m_pippim_gg"]        = m_pippim_gg_rec;
@@ -539,6 +551,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // pions feeding the compound carry their SIMULATED values.
     nt["m_epemg_sim"]        = m_epemg_sim;
     nt["m_pippimepemg_sim"]  = m_pippimepemg_sim;
+    nt["mm_pippimepemg_sim"] = mm_pippimepemg_sim;
     nt["m_pippim_gg_sim"]    = m_pippim_gg_sim;
 
     // Per-event sim weight — REC plotting macros use it as TTree::Draw weight cut
@@ -602,10 +615,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //            (pi0 Dalitz inside epemg vs eta Dalitz)
     //   mult==2: separate compound M(pi+pi-gamma gamma) for f1 -> pi+pi-eta(gg);
     //            M(gg) itself is REC≡COR≡SIM (photon mirrored), so eta_gg_pass shared.
-    nt_cor["m_epemg"]            = m_epemg_cor;
-    nt_cor["m_pippimepemg"]      = m_pippimepemg_cor;
-    nt_cor["pippimepemg_pass"]   = pippimepemg_pass_cor ? 1.0f : 0.0f;
-    nt_cor["eta_dalitz_pass"]    = eta_dalitz_pass_cor  ? 1.0f : 0.0f;
+    nt_cor["m_epemg"]                = m_epemg_cor;
+    nt_cor["m_pippimepemg"]          = m_pippimepemg_cor;
+    nt_cor["mm_pippimepemg"]         = mm_pippimepemg_cor;
+    nt_cor["pippimepemg_pass"]        = pippimepemg_pass_cor        ? 1.0f : 0.0f;  // wide  [0.10, 0.18]
+    nt_cor["pippimepemg_pass_narrow"] = pippimepemg_pass_narrow_cor ? 1.0f : 0.0f;  // ACTIVE [0.125, 0.145]
+    nt_cor["eta_dalitz_pass"]        = eta_dalitz_pass_cor  ? 1.0f : 0.0f;
 
     nt_cor["m_gg"]               = m_gg;
     nt_cor["m_pippim_gg"]        = m_pippim_gg_cor;
@@ -616,6 +631,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // pions feeding the compound carry their SIMULATED values.
     nt_cor["m_epemg_sim"]        = m_epemg_sim;
     nt_cor["m_pippimepemg_sim"]  = m_pippimepemg_sim;
+    nt_cor["mm_pippimepemg_sim"] = mm_pippimepemg_sim;
     nt_cor["m_pippim_gg_sim"]    = m_pippim_gg_sim;
 
     // SIMULATED truth — Geant momenta. Per-particle scalars and compound observables
