@@ -1,64 +1,72 @@
-// mass_spectra.C — Dilepton invariant mass: no OA cut vs OA > 9 deg
+// mass_spectra.C — Joint EXP + SIM dilepton invariant mass.
+// Each canvas: data 3-curve (all/CB/signal) + sim line rescaled to data
+// signal in the right tail (control region, no signal contamination).
+//
+// Plots: m_ee with no OA cut, then with opening_angle_4 (>4 deg) applied.
+// Output: plots/output/joint_mass_ee_*.{pdf,png}
+//
 // Usage: root -l -b -q plots/mass_spectra.C
 
 #include "PlotUtils.h"
+#include "JointPlotter.h"
 
-void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
-    // Full range
-    double i_all = all->Integral();
-    double i_cb  = cb->Integral();
-    double i_sig = sig->Integral();
+namespace {
+    // Control region for sim->data signal rescaling — right-tail of M(ee)
+    // where any meson contribution has died off and integrated counts are
+    // dominated by combinatorial-corrected continuum.
+    constexpr double kCtrlLo = 0.40;
+    constexpr double kCtrlHi = 0.80;
 
-    // Above pi0: M > 0.14 GeV/c^2
-    int bin_pi0 = all->FindBin(0.1401);
-    int bin_max = all->GetNbinsX();
-    double i_all_above = all->Integral(bin_pi0, bin_max);
-    double i_cb_above  = cb->Integral(bin_pi0, bin_max);
-    double i_sig_above = sig->Integral(bin_pi0, bin_max);
-
-    std::cout << "\n=== " << label << " ===\n";
-    std::cout << "  Full range:    all = " << i_all
-              << "  CB = " << i_cb
-              << "  sig = " << i_sig << "\n";
-    std::cout << "  M > 0.14:      all = " << i_all_above
-              << "  CB = " << i_cb_above
-              << "  sig = " << i_sig_above << "\n";
+    void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig, TH1D* sim) {
+        std::cout << "\n=== " << label << " ===\n";
+        std::cout << "  exp: all=" << all->Integral()
+                  << "   CB=" << cb->Integral()
+                  << "   sig=" << sig->Integral() << "\n";
+        std::cout << "  sim: " << sim->Integral()
+                  << "   (rescaled to exp signal in [" << kCtrlLo << ", " << kCtrlHi << "])\n";
+    }
 }
 
 void mass_spectra() {
 
-    PlotUtils pu("output_pippimepem_exp.root",
-                 "output_pippimepep_exp.root",
-                 "output_pippimemem_exp.root");
+    PlotUtils exp("output_pippimepem_exp.root",
+                  "output_pippimepep_exp.root",
+                  "output_pippimemem_exp.root");
+    JointPlotter::SimSource sim("output_pippimepem_sim.root");
 
     // --- 1. Mass spectrum without OA cut ---
-    TH1D *all1, *cb1, *sig1;
-    std::tie(all1, cb1, sig1) = pu.drawSignal("pippimepem_nt", "m_ee",
-                                              160, 0, 0.8, "",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c1 = pu.drawTriple(all1, cb1, sig1,
-                             "M_{e^{+}e^{-}} (no OA cut)", "c_mass_no_oa",
-                             /*logy=*/true);
-    pu.save(c1, "mass_ee_no_oa");
-    printIntegrals("No OA cut", all1, cb1, sig1);
+    TH1D *a1, *c1, *s1;
+    std::tie(a1, c1, s1) = exp.drawSignal(
+        "pippimepem_nt", "m_ee", 160, 0, 0.8, "",
+        ";M_{e^{+}e^{-}} [GeV/c^{2}];a.u.");
 
-    // Capture Y-axis range from first plot
-    double ymax = all1->GetMaximum();
-    double ymin = all1->GetMinimum();
+    TH1D* sim1 = sim.draw("pippimepem_nt", "m_ee", 160, 0, 0.8, "");
+    JointPlotter::styleSimLine(sim1);
+    // Norm window per analysis spec: M(ee) ∈ [0.25, 0.40] — above pi0 Dalitz
+    // peak, below rho/omega/phi resonance region; smooth continuum dominates.
+    double scale1 = JointPlotter::rescaleSimInWindow(sim1, s1, 0.25, 0.40);
 
-    // --- 2. Mass spectrum with OA > 9 deg cut (same Y range) ---
-    TH1D *all2, *cb2, *sig2;
-    std::tie(all2, cb2, sig2) = pu.drawSignal("pippimepem_nt", "m_ee",
-                                              160, 0, 0.8, "oa>9",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c2 = pu.drawTriple(all2, cb2, sig2,
-                             "M_{e^{+}e^{-}} (OA > 9#circ)", "c_mass_oa9",
-                             /*logy=*/true);
-    all2->SetMaximum(ymax);
-    all2->SetMinimum(ymin);
-    c2->Update();
-    pu.save(c2, "mass_ee_oa9");
-    printIntegrals("OA > 9 deg", all2, cb2, sig2);
+    auto* cv1 = JointPlotter::drawJoint(a1, c1, s1, sim1,
+                                        "M_{e^{+}e^{-}} (no OA cut)",
+                                        "c_mass_no_oa", /*logy=*/true, scale1);
+    JointPlotter::save(cv1, "mass_ee_no_oa");
+    printIntegrals("No OA cut", a1, c1, s1, sim1);
 
-    std::cout << "\nDone. Check plots/output/\n";
+    // --- 2. Mass spectrum with opening_angle_4 (oa>4) cut applied ---
+    TH1D *a2, *c2, *s2;
+    std::tie(a2, c2, s2) = exp.drawSignal(
+        "pippimepem_nt", "m_ee", 160, 0, 0.8, "oa_pass==1",
+        ";M_{e^{+}e^{-}} [GeV/c^{2}];a.u.");
+
+    TH1D* sim2 = sim.draw("pippimepem_nt", "m_ee", 160, 0, 0.8, "oa_pass==1");
+    JointPlotter::styleSimLine(sim2);
+    double scale2 = JointPlotter::rescaleSimInWindow(sim2, s2, 0.25, 0.40);
+
+    auto* cv2 = JointPlotter::drawJoint(a2, c2, s2, sim2,
+                                        "M_{e^{+}e^{-}} (OA > 4#circ)",
+                                        "c_mass_oa4", /*logy=*/true, scale2);
+    JointPlotter::save(cv2, "mass_ee_oa4");
+    printIntegrals("OA > 4 deg", a2, c2, s2, sim2);
+
+    std::cout << "\nDone. Plots in plots/output/joint_*\n";
 }
