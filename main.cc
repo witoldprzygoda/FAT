@@ -277,7 +277,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
     }
 
-    // === ETA / f1 candidates from ECAL (CORRECTED only) ===========================
+    // === ETA / f1 candidates from ECAL (REC + COR) ===============================
     // ECAL N_gamma==1 case:
     //   eta -> pi+pi- pi0 -> pi+pi- e+e-gamma (Dalitz pi0)  — pippimepemg_pass flag
     //   f1  -> pi+pi- eta(e+e-gamma)  (Dalitz eta)           — eta_dalitz_pass flag
@@ -286,14 +286,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL N_gamma==2 case:
     //   f1 -> pi+pi- eta(gamma gamma) — eta_gg_pass flag.
     //   New compound M(pi+pi-gamma gamma) is the f1 candidate from the gg branch.
-    double m_epemg_cor       = -1.0;
-    double m_pippimepemg_cor = -1.0;
-    bool   pippimepemg_pass  = false;   // M(epemg) in pi0 window (eta -> 3pi -> Dalitz pi0)
-    bool   eta_dalitz_pass   = false;   // M(epemg) in eta window (eta -> e+e-gamma Dalitz)
+    //
+    // Photon has no measured correction (gamma is mirrored REC≡COR), so M(gg)
+    // is identical between REC and COR. M(epemg) and the compounds with pippim,
+    // however, DO differ between REC and COR via the lepton/pion momenta.
+    double m_epemg_rec       = -1.0,   m_epemg_cor       = -1.0;
+    double m_pippimepemg_rec = -1.0,   m_pippimepemg_cor = -1.0;
+    bool   pippimepemg_pass_rec = false, pippimepemg_pass_cor = false;
+    bool   eta_dalitz_pass_rec  = false, eta_dalitz_pass_cor  = false;
 
-    double m_gg_cor          = -1.0;
-    double m_pippim_gg_cor   = -1.0;
-    bool   eta_gg_pass       = false;   // M(gg)    in eta window (eta -> gamma gamma)
+    double m_gg             = -1.0;     // gamma is REC≡COR — single value
+    double m_pippim_gg_rec  = -1.0,   m_pippim_gg_cor   = -1.0;
+    bool   eta_gg_pass      = false;    // M(gg) in eta window — REC and COR agree
 
     if (config.isEcalEnabled()) {
         int neutr_mult_for_eta = static_cast<int>(reader["neutr_mult"]);
@@ -313,15 +317,17 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                                            gamma.cluster_theta,
                                            gamma.cluster_phi,
                                            KinematicType::CORRECTED);
-                    PParticle epemg = epem + gamma;
-                    m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
-
-                    // Compound mass — same value, different cut interpretations
+                    PParticle epemg      = epem   + gamma;
                     PParticle pippimepemg = pippim + epemg;
+                    m_epemg_rec       = epemg.massGeV(KinematicType::RECONSTRUCTED);
+                    m_epemg_cor       = epemg.massGeV(KinematicType::CORRECTED);
+                    m_pippimepemg_rec = pippimepemg.massGeV(KinematicType::RECONSTRUCTED);
                     m_pippimepemg_cor = pippimepemg.massGeV(KinematicType::CORRECTED);
 
-                    pippimepemg_pass = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
-                    eta_dalitz_pass  = cuts.passRangeCut("eta_mass_window",  m_epemg_cor);
+                    pippimepemg_pass_rec = cuts.passRangeCut("pi0_mass_window",  m_epemg_rec);
+                    pippimepemg_pass_cor = cuts.passRangeCut("pi0_mass_window",  m_epemg_cor);
+                    eta_dalitz_pass_rec  = cuts.passRangeCut("eta_mass_window",  m_epemg_rec);
+                    eta_dalitz_pass_cor  = cuts.passRangeCut("eta_mass_window",  m_epemg_cor);
                 }
             }
         }
@@ -344,11 +350,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                                         KinematicType::CORRECTED);
                     PParticle gg         = g1 + g2;
                     PParticle pippim_gg  = pippim + gg;
-                    m_gg_cor        = gg.massGeV(KinematicType::CORRECTED);
+                    m_gg            = gg.massGeV(KinematicType::CORRECTED);   // REC≡COR
+                    m_pippim_gg_rec = pippim_gg.massGeV(KinematicType::RECONSTRUCTED);
                     m_pippim_gg_cor = pippim_gg.massGeV(KinematicType::CORRECTED);
 
-                    mgr.fill("mass_gg_cor", m_gg_cor);          // control plot
-                    eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg_cor);
+                    mgr.fill("mass_gg_cor", m_gg);              // control plot
+                    eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg);
                 }
             }
         }
@@ -405,6 +412,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // pippimepem_selection chain decision
     nt["cut2d_pass"] = cut2d_pass ? 1.0f : 0.0f; // TCutG cut_2d on (MM, M) of pi+pi-e+e-
 
+    // ECAL-derived eta / f1 fields — RECONSTRUCTED.
+    //   mult==1: shared compound M(pi+pi-e+e-gamma); pi0 vs eta window flags
+    //   mult==2: M(pi+pi-gamma gamma); M(gg) is REC≡COR so the gg flag is shared
+    nt["m_epemg"]            = m_epemg_rec;
+    nt["m_pippimepemg"]      = m_pippimepemg_rec;
+    nt["pippimepemg_pass"]   = pippimepemg_pass_rec ? 1.0f : 0.0f;
+    nt["eta_dalitz_pass"]    = eta_dalitz_pass_rec  ? 1.0f : 0.0f;
+
+    nt["m_gg"]               = m_gg;
+    nt["m_pippim_gg"]        = m_pippim_gg_rec;
+    nt["eta_gg_pass"]        = eta_gg_pass         ? 1.0f : 0.0f;
+
     nt.fill();
 
     // === Mirror ntuple: same field names, compound observables from CORRECTED ===
@@ -457,18 +476,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["sel_pass"] = sel_pass_cor ? 1.0f : 0.0f;       // CORRECTED selection chain
     nt_cor["cut2d_pass"] = cut2d_pass_cor ? 1.0f : 0.0f;   // CORRECTED cut_2d
 
-    // ECAL-derived eta / f1 fields (CORRECTED).
-    //   mult==1 branch: shared compound mass M(pi+pi-e+e-gamma); two flags select
-    //                   the interpretation (pi0 Dalitz inside epemg vs eta Dalitz)
-    //   mult==2 branch: separate compound M(pi+pi-gamma gamma) for f1 -> pi+pi-eta(gg)
+    // ECAL-derived eta / f1 fields — CORRECTED.
+    //   mult==1: shared compound M(pi+pi-e+e-gamma); two flags select interpretation
+    //            (pi0 Dalitz inside epemg vs eta Dalitz)
+    //   mult==2: separate compound M(pi+pi-gamma gamma) for f1 -> pi+pi-eta(gg);
+    //            M(gg) itself is REC≡COR (photon mirrored), so eta_gg_pass shared.
     nt_cor["m_epemg"]            = m_epemg_cor;
     nt_cor["m_pippimepemg"]      = m_pippimepemg_cor;
-    nt_cor["pippimepemg_pass"]   = pippimepemg_pass ? 1.0f : 0.0f;  // mult==1, M(epemg) in pi0
-    nt_cor["eta_dalitz_pass"]    = eta_dalitz_pass  ? 1.0f : 0.0f;  // mult==1, M(epemg) in eta
+    nt_cor["pippimepemg_pass"]   = pippimepemg_pass_cor ? 1.0f : 0.0f;
+    nt_cor["eta_dalitz_pass"]    = eta_dalitz_pass_cor  ? 1.0f : 0.0f;
 
-    nt_cor["m_gg"]               = m_gg_cor;
+    nt_cor["m_gg"]               = m_gg;
     nt_cor["m_pippim_gg"]        = m_pippim_gg_cor;
-    nt_cor["eta_gg_pass"]        = eta_gg_pass      ? 1.0f : 0.0f;  // mult==2, M(gg) in eta
+    nt_cor["eta_gg_pass"]        = eta_gg_pass         ? 1.0f : 0.0f;
 
     nt_cor.fill();
 
