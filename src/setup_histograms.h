@@ -125,6 +125,29 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
 
+    // Control histograms for the pippimepem_selection cut chain.
+    //   oa_pippim_epem_lab      — LAB-frame OA between (π+π-) and (e+e-) momenta
+    //                             (cut: oa_pippim_epem_lab < 50)
+    //   oa_pippim_epem_eta_rest — OA between (π+π-) and (e+e-) in the rest frame
+    //                             of a hypothetical η whose 3-momentum equals
+    //                             (pippim+epem) but whose mass is forced to m_η.
+    //                             (cut: oa_pippim_epem_eta_rest > 140)
+    // Range slightly past 180 to avoid the upper-edge → overflow issue.
+    mgr.create1D("oa_pippim_epem_lab",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) LAB;#theta_{open} [deg];Counts",
+                 181, 0, 181, "angles");
+    mgr.create1D("oa_pippim_epem_eta_rest",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame;"
+                 "#theta_{open} [deg];Counts",
+                 181, 0, 181, "angles");
+    mgr.create1D("oa_pippim_epem_lab_cor",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) LAB (cor);#theta_{open} [deg];Counts",
+                 181, 0, 181, "angles_cor");
+    mgr.create1D("oa_pippim_epem_eta_rest_cor",
+                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame (cor);"
+                 "#theta_{open} [deg];Counts",
+                 181, 0, 181, "angles_cor");
+
     // CMS frame observables (after boost to beam-target CMS)
     mgr.create1D("rapidity_cms", "Dilepton rapidity in CMS;y_{CMS};Counts",
                  100, -2.0, 2.0, "cms");

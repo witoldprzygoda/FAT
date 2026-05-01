@@ -117,6 +117,34 @@ void pippimepem_spectra() {
         printIntegrals("MM(pi+pi-e+e-) after cut_2d", a, c, s);
     }
 
+    // --- 5d. OA observables driving the pippimepem_selection cut chain ----
+    // No selection applied — full all/CB/signal so the chosen cut thresholds
+    // (LAB < 50 deg, eta-rest > 140 deg) can be read off the spectra.
+    {
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = pu.drawSignal(
+            "pippimepem_nt", "oa_pippim_epem_lab",
+            180, 0.0, 180.0, "",
+            ";OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-})) [deg];Counts");
+        auto* cv = pu.drawTriple(a, c, s,
+                                 "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-}))",
+                                 "c_oa_pippim_epem_lab");
+        pu.save(cv, "oa_pippim_epem_lab");
+        printIntegrals("OA_LAB((pi+pi-),(e+e-))", a, c, s);
+    }
+    {
+        TH1D *a, *c, *s;
+        std::tie(a, c, s) = pu.drawSignal(
+            "pippimepem_nt", "oa_pippim_epem_eta_rest",
+            180, 0.0, 180.0, "",
+            ";OA_{m_{#eta}-rest}((#pi^{+}#pi^{-}),(e^{+}e^{-})) [deg];Counts");
+        auto* cv = pu.drawTriple(a, c, s,
+                                 "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame",
+                                 "c_oa_pippim_epem_eta_rest");
+        pu.save(cv, "oa_pippim_epem_eta_rest");
+        printIntegrals("OA_eta_rest((pi+pi-),(e+e-))", a, c, s);
+    }
+
     // --- 6. M(pi+pi-e+e-) after pippimepem_selection cut chain ------------
     // Selection: OA_LAB((pippim),(epem)) < 50 deg
     //            M(pi+pi-) < 0.420 GeV/c^2
