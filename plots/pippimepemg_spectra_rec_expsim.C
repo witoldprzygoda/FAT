@@ -1,28 +1,26 @@
-// pippimepemg_spectra_cor.C — Joint EXP + SIM for the pi+pi-pi0 candidate
-// (CORRECTED kinematics).
+// pippimepemg_spectra_rec_expsim.C — Joint EXP + SIM for the pi+pi-pi0 candidate
+// (RECONSTRUCTED kinematics).
 //
 // pippimepemg = pippim + (epem + gamma_ECAL) under:
 //   - ecal_mult == 1
 //   - ecal_quality CutSet
 //   - M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window) → pippimepemg_pass==1
 //
-// On the comparison branch we plot ONLY the standalone M(pippimepemg) under
-// the various cut configurations (selection, cut_2d, MM slices). The earlier
-// "overlay rescaled M(pippimepem) full vs pi+pi-pi0-tagged" plots are
-// intentionally dropped — they were comparing two subsets of the same
-// dataset, redundant in the joint exp+sim view.
+// Mirror of pippimepemg_spectra_cor_expsim.C, reading from pippimepem_nt
+// (REC ntuple). Both ntuples carry m_pippimepemg, m_epemg, pippimepemg_pass —
+// values differ via the lepton/pion REC vs COR momenta (the gamma is mirrored).
 //
-// Output: plots/output/joint_pippimepemg_*.{pdf,png}
+// Output: plots/output/joint_pippimepemg_*_rec_expsim.{pdf,png}
 //
-// Usage: root -l -b -q plots/pippimepemg_spectra_cor.C
+// Usage: root -l -b -q plots/pippimepemg_spectra_rec_expsim.C
 
 #include "PlotUtils.h"
 #include "JointPlotter.h"
 #include <sstream>
 
 namespace {
-    void printIntegrals_cor(const char* label, TH1D* all, TH1D* cb, TH1D* sig, TH1D* sim,
-                            double lo, double hi) {
+    void printIntegrals_rec_expsim(const char* label, TH1D* all, TH1D* cb, TH1D* sig, TH1D* sim,
+                                    double lo, double hi) {
         std::cout << "\n=== " << label << " ===\n";
         std::cout << "  exp: all=" << all->Integral()
                   << "   CB=" << cb->Integral()
@@ -32,18 +30,19 @@ namespace {
     }
 }
 
-void pippimepemg_spectra_cor() {
+void pippimepemg_spectra_rec_expsim() {
 
     PlotUtils exp("output_pippimepem_exp.root",
                   "output_pippimepep_exp.root",
                   "output_pippimemem_exp.root");
     JointPlotter::SimSource sim("output_pippimepem_sim.root");
 
-    const char* NT = "pippimepem_nt_cor";
+    const char* NT = "pippimepem_nt";
 
     // Always require pippimepemg_pass==1 (mult==1 ECAL gamma in pi0 Dalitz window).
     auto plot = [&](const std::string& cut_base, const std::string& title,
                     const std::string& basename, int nbins,
+                    double xmin = 0.2, double xmax = 1.4,
                     double ctrl_lo = 1.00, double ctrl_hi = 1.40) {
         std::string cut_filter = cut_base.empty()
                                  ? std::string("pippimepemg_pass==1")
@@ -52,21 +51,25 @@ void pippimepemg_spectra_cor() {
 
         TH1D *a, *c, *s;
         std::tie(a, c, s) = exp.drawSignal(
-            NT, "m_pippimepemg", nbins, 0.2, 1.4, cut_filter, axis);
+            NT, "m_pippimepemg", nbins, xmin, xmax, cut_filter, axis);
 
-        TH1D* h_sim = sim.draw(NT, "m_pippimepemg", nbins, 0.2, 1.4, cut_filter);
+        TH1D* h_sim = sim.draw(NT, "m_pippimepemg", nbins, xmin, xmax, cut_filter);
         JointPlotter::styleSimLine(h_sim);
         double scale = JointPlotter::rescaleSimToData(h_sim, s);
 
         auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
-                                           "c_pippimepemg_" + basename, false, scale);
-        JointPlotter::save(cv, "pippimepemg_" + basename);
-        printIntegrals_cor(("pippimepemg " + basename).c_str(), a, c, s, h_sim, ctrl_lo, ctrl_hi);
+                                           "c_pippimepemg_" + basename + "_rec_expsim",
+                                           false, scale);
+        JointPlotter::save(cv, "pippimepemg_" + basename + "_rec_expsim");
+        printIntegrals_rec_expsim(("pippimepemg " + basename + " rec_expsim").c_str(),
+                                   a, c, s, h_sim, ctrl_lo, ctrl_hi);
     };
 
-    // Cut configurations (mirror those in pippimepem_spectra_cor.C)
+    // Cut configurations (mirror those in pippimepem_spectra_rec_expsim.C).
+    // No-cut plot uses a wider X range [0.4, 1.8] to capture the f1(1285) tail;
+    // post-selection plots stay on [0.2, 1.4] (default) where statistics live.
     plot("",                                "M (no cut, #pi^{+}#pi^{-}#pi^{0})",
-         "base", 200);
+         "base", 200, /*xmin*/ 0.4, /*xmax*/ 1.8);
     plot("sel_pass==1",                     "M (after selection, #pi^{+}#pi^{-}#pi^{0})",
          "selected", 200);
     plot("sel_pass==1 && cut2d_pass==1",    "M (after selection + cut_2d, #pi^{+}#pi^{-}#pi^{0})",
@@ -99,5 +102,5 @@ void pippimepemg_spectra_cor() {
     plotSlice(2.6, 2.8, "26_28", true);
     plotSlice(2.8, 3.0, "28_30", true);
 
-    std::cout << "\nDone. Plots in plots/output/joint_pippimepemg_*\n";
+    std::cout << "\nDone. Plots in plots/output/joint_pippimepemg_*_rec_expsim\n";
 }

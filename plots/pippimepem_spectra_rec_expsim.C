@@ -1,13 +1,15 @@
-// pippimepem_spectra.C — Joint EXP + SIM for the pi+pi-e+e- observables (RECONSTRUCTED).
+// pippimepem_spectra_rec_expsim.C — Joint EXP + SIM for the pi+pi-e+e- observables.
+// RECONSTRUCTED kinematics — reads from pippimepem_nt.
 // Each canvas: data 3-curve (all/CB/signal) + sim line rescaled to data signal
 // in a per-plot control region (right tail / sideband).
 //
-// Plots: M(e+e-), M(pi+pi-), M(pi+pi-e+e-), MM(pi+pi-), MM(pi+pi-e+e-),
+// Plots: M(pi+pi-), M(pi+pi-e+e-), MM(pi+pi-), MM(pi+pi-e+e-),
 //        the same MM observables after cut_2d, M(pi+pi-e+e-) after selection,
+//        OA observables driving the cut chain,
 //        and M(pi+pi-e+e-) in MM slice windows (with and without cut_2d).
-// Output: plots/output/joint_*.{pdf,png}
+// Output: plots/output/joint_*_rec_expsim.{pdf,png}
 //
-// Usage: root -l -b -q plots/pippimepem_spectra.C
+// Usage: root -l -b -q plots/pippimepem_spectra_rec_expsim.C
 
 #include "PlotUtils.h"
 #include "JointPlotter.h"
@@ -25,38 +27,40 @@ namespace {
     }
 }
 
-void pippimepem_spectra() {
+void pippimepem_spectra_rec_expsim() {
 
     PlotUtils exp("output_pippimepem_exp.root",
                   "output_pippimepep_exp.root",
                   "output_pippimemem_exp.root");
     JointPlotter::SimSource sim("output_pippimepem_sim.root");
 
+    const char* NT = "pippimepem_nt";
+
     // Helper for a single joint plot. Picks per-plot control region for
     // sim->data signal rescaling; passes through cut + binning + axis labels.
+    // Output basename gets "_rec_expsim" appended automatically.
     auto plot = [&](const std::string& var, int nbins, double xmin, double xmax,
                     const std::string& cut_filter, const std::string& title,
                     const std::string& basename, double ctrl_lo, double ctrl_hi,
                     bool logy = false) {
         std::string axis = ";" + title + " [GeV/c^{2}];a.u.";
+        std::string base = basename + "_rec_expsim";
 
         TH1D *a, *c, *s;
-        std::tie(a, c, s) = exp.drawSignal(
-            "pippimepem_nt", var, nbins, xmin, xmax, cut_filter, axis);
+        std::tie(a, c, s) = exp.drawSignal(NT, var, nbins, xmin, xmax, cut_filter, axis);
 
-        TH1D* h_sim = sim.draw("pippimepem_nt", var, nbins, xmin, xmax, cut_filter);
+        TH1D* h_sim = sim.draw(NT, var, nbins, xmin, xmax, cut_filter);
         JointPlotter::styleSimLine(h_sim);
         double scale = JointPlotter::rescaleSimToData(h_sim, s);
 
         auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
-                                           "c_" + basename, logy, scale);
-        JointPlotter::save(cv, basename);
-        printIntegrals(basename.c_str(), a, c, s, h_sim, ctrl_lo, ctrl_hi);
+                                           "c_" + base, logy, scale);
+        JointPlotter::save(cv, base);
+        printIntegrals(base.c_str(), a, c, s, h_sim, ctrl_lo, ctrl_hi);
     };
 
-    // --- M(e+e-) deliberately NOT here — duplicate of mass_spectra.C plots
-    //     (joint_mass_ee_no_oa / joint_mass_ee_oa4). This macro focuses on
-    //     pippim/compound observables to avoid generating identical figures.
+    // --- M(e+e-) deliberately NOT here — covered by mass_spectra_{rec,cor}_expsim.C
+    //     (joint_mass_ee_no_oa_rec_expsim / joint_mass_ee_oa4_rec_expsim).
 
     // --- 1. M(pi+pi-)      ctrl = [0.7, 2.0]  (above rho)              ------
     plot("m_pippim", 200, 0.0, 2.0, "",
@@ -89,19 +93,19 @@ void pippimepem_spectra() {
         const int nbins = 180;
         const double xmin = 0.0, xmax = 180.0;
         std::string axis = ";" + title + " [deg];a.u.";
+        std::string base = basename + "_rec_expsim";
 
         TH1D *a, *c, *s;
-        std::tie(a, c, s) = exp.drawSignal(
-            "pippimepem_nt", var, nbins, xmin, xmax, "", axis);
+        std::tie(a, c, s) = exp.drawSignal(NT, var, nbins, xmin, xmax, "", axis);
 
-        TH1D* h_sim = sim.draw("pippimepem_nt", var, nbins, xmin, xmax, "");
+        TH1D* h_sim = sim.draw(NT, var, nbins, xmin, xmax, "");
         JointPlotter::styleSimLine(h_sim);
         double scale = JointPlotter::rescaleSimToData(h_sim, s);
 
         auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
-                                           "c_" + basename, /*logy*/ false, scale);
-        JointPlotter::save(cv, basename);
-        printIntegrals(basename.c_str(), a, c, s, h_sim, xmin, xmax);
+                                           "c_" + base, /*logy*/ false, scale);
+        JointPlotter::save(cv, base);
+        printIntegrals(base.c_str(), a, c, s, h_sim, xmin, xmax);
     };
 
     plotAngle("oa_pippim_epem_lab",
@@ -149,5 +153,5 @@ void pippimepem_spectra() {
     plotSlice(2.6, 2.8, "26_28", true);
     plotSlice(2.8, 3.0, "28_30", true);
 
-    std::cout << "\nDone. Plots in plots/output/joint_*\n";
+    std::cout << "\nDone. Plots in plots/output/joint_*_rec_expsim.{pdf,png}\n";
 }

@@ -1,19 +1,19 @@
-// pippimepem_spectra_cor.C — Joint EXP + SIM (CORRECTED kinematics).
-// Mirror of pippimepem_spectra.C but reading the *_nt_cor ntuple and
-// suffixing output filenames with "_cor".
+// pippimepem_spectra_cor_expsim.C — Joint EXP + SIM (CORRECTED kinematics).
+// Mirror of pippimepem_spectra_rec_expsim.C but reading the *_nt_cor ntuple and
+// suffixing output filenames with "_cor_expsim".
 //
 // Per-plot config: norm_lo/hi for sim->exp-signal integral matching, and
 // optional display_lo/hi to zoom the X axis (binning unchanged).
 // norm_lo == norm_hi means "fall back to findBestScale (auto)".
 //
-// Usage: root -l -b -q plots/pippimepem_spectra_cor.C
+// Usage: root -l -b -q plots/pippimepem_spectra_cor_expsim.C
 
 #include "PlotUtils.h"
 #include "JointPlotter.h"
 #include <sstream>
 
 namespace {
-    void printIntegrals_cor(const char* label, TH1D* all, TH1D* cb, TH1D* sig, TH1D* sim) {
+    void printIntegrals_cor_expsim(const char* label, TH1D* all, TH1D* cb, TH1D* sig, TH1D* sim) {
         std::cout << "\n=== " << label << " ===\n";
         std::cout << "  exp: all=" << all->Integral()
                   << "   CB="  << cb ->Integral()
@@ -22,7 +22,7 @@ namespace {
     }
 }
 
-void pippimepem_spectra_cor() {
+void pippimepem_spectra_cor_expsim() {
 
     PlotUtils exp("output_pippimepem_exp.root",
                   "output_pippimepep_exp.root",
@@ -53,7 +53,7 @@ void pippimepem_spectra_cor() {
                                            "c_" + basename, logy, scale,
                                            display_lo, display_hi);
         JointPlotter::save(cv, basename);
-        printIntegrals_cor(basename.c_str(), a, c, s, h_sim);
+        printIntegrals_cor_expsim(basename.c_str(), a, c, s, h_sim);
     };
 
     // ---- M(e+e-) deliberately NOT here — already covered by mass_spectra.C
@@ -62,36 +62,36 @@ void pippimepem_spectra_cor() {
 
     // ---- M(pi+pi-)  display [0, 1.4],  norm [0.6, 1.2] ----
     plot("m_pippim",      200, 0.0, 2.0, "",
-         "M_{#pi^{+}#pi^{-}} (cor)", "m_pippim_cor",
+         "M_{#pi^{+}#pi^{-}} (cor)", "m_pippim_cor_expsim",
          /*norm*/ 0.60, 1.20, /*disp*/ 0.0, 1.4);
 
     // ---- M(pi+pi-e+e-)  display [0.2, 1.9],  norm [1.0, 1.2] ----
     plot("m_pippimepem",  200, 0.2, 1.9, "",
-         "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (cor)", "m_pippimepem_cor",
+         "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (cor)", "m_pippimepem_cor_expsim",
          /*norm*/ 1.00, 1.20, /*disp*/ 0.2, 1.9);
 
     // ---- MM(pi+pi-)  display [1.5, 4],  norm [2.8, 3.2] ----
     plot("mm_pippim",     200, 0.0, 4.0, "",
-         "MM(#pi^{+}#pi^{-}) (cor)", "mm_pippim_cor",
+         "MM(#pi^{+}#pi^{-}) (cor)", "mm_pippim_cor_expsim",
          /*norm*/ 2.80, 3.20, /*disp*/ 1.5, 4.0);
 
     // ---- MM(pi+pi-e+e-)  display [1, 3.5],  norm [2.6, 3.0] ----
     plot("mm_pippimepem", 200, 0.0, 4.0, "",
-         "MM(#pi^{+}#pi^{-}e^{+}e^{-}) (cor)", "mm_pippimepem_cor",
+         "MM(#pi^{+}#pi^{-}e^{+}e^{-}) (cor)", "mm_pippimepem_cor_expsim",
          /*norm*/ 2.60, 3.00, /*disp*/ 1.0, 3.5);
 
     // ---- After cut_2d ----
     // mm_epem_cut2d:    display [1.5, 4],  norm [3.3, 3.5]
     plot("mm_epem",       200, 0.0, 4.0, "cut2d_pass==1",
-         "MM(e^{+}e^{-}) after cut_2d (cor)", "mm_epem_cut2d_cor",
+         "MM(e^{+}e^{-}) after cut_2d (cor)", "mm_epem_cut2d_cor_expsim",
          /*norm*/ 3.30, 3.50, /*disp*/ 1.5, 4.0);
     // mm_pippim_cut2d:  display [1.5, 4],  norm [2.8, 3.2]
     plot("mm_pippim",     200, 0.0, 4.0, "cut2d_pass==1",
-         "MM(#pi^{+}#pi^{-}) after cut_2d (cor)", "mm_pippim_cut2d_cor",
+         "MM(#pi^{+}#pi^{-}) after cut_2d (cor)", "mm_pippim_cut2d_cor_expsim",
          /*norm*/ 2.80, 3.20, /*disp*/ 1.5, 4.0);
     // mm_pippimepem_cut2d:  display [1, 3.5],  norm [2.6, 3.0]
     plot("mm_pippimepem", 200, 0.0, 4.0, "cut2d_pass==1",
-         "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d (cor)", "mm_pippimepem_cut2d_cor",
+         "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d (cor)", "mm_pippimepem_cut2d_cor_expsim",
          /*norm*/ 2.60, 3.00, /*disp*/ 1.0, 3.5);
 
     // ---- OA observables driving the pippimepem_selection cut chain ----
@@ -113,26 +113,26 @@ void pippimepem_spectra_cor() {
         auto* cv = JointPlotter::drawJoint(a, c, s, h_sim, title,
                                            "c_" + basename, /*logy*/ false, scale);
         JointPlotter::save(cv, basename);
-        printIntegrals_cor(basename.c_str(), a, c, s, h_sim);
+        printIntegrals_cor_expsim(basename.c_str(), a, c, s, h_sim);
     };
 
     plotAngle("oa_pippim_epem_lab",
               "OA_{LAB}((#pi^{+}#pi^{-}),(e^{+}e^{-})) (cor)",
-              "oa_pippim_epem_lab_cor");
+              "oa_pippim_epem_lab_cor_expsim");
     plotAngle("oa_pippim_epem_eta_rest",
               "OA((#pi^{+}#pi^{-}),(e^{+}e^{-})) in m_{#eta}-rest frame (cor)",
-              "oa_pippim_epem_eta_rest_cor");
+              "oa_pippim_epem_eta_rest_cor_expsim");
 
     // ---- M(pippimepem) after selection:  norm [0.8, 1.0]  (no display zoom) ----
     plot("m_pippimepem", 200, 0.2, 1.4, "sel_pass==1",
          "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (sel, cor)",
-         "m_pippimepem_selected_cor",
+         "m_pippimepem_selected_cor_expsim",
          /*norm*/ 0.80, 1.00);
 
     // ---- selected + cut_2d (no analysis spec yet) — fallback findBestScale ----
     plot("m_pippimepem", 200, 0.2, 1.4, "sel_pass==1 && cut2d_pass==1",
          "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (sel + cut_2d, cor)",
-         "m_pippimepem_selected_cut2d_cor",
+         "m_pippimepem_selected_cut2d_cor_expsim",
          /*norm*/ 0, 0);
 
     // ---- Slices (no per-plot spec yet — fallback findBestScale) ----
@@ -146,7 +146,7 @@ void pippimepem_spectra_cor() {
         title << "M_{#pi^{+}#pi^{-}e^{+}e^{-}} sel" << (cut2d ? "+cut_2d" : "")
               << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2} (cor)";
 
-        std::string suffix = tag + (cut2d ? "_cut2d" : "") + "_cor";
+        std::string suffix = tag + (cut2d ? "_cut2d" : "") + "_cor_expsim";
         plot("m_pippimepem", 100, 0.2, 1.4, cut.str(), title.str(),
              "m_pippimepem_slice_" + suffix, /*norm*/ 0, 0);
     };
