@@ -3,9 +3,11 @@
 // pippimepemg = pippim + (epem + gamma_ECAL) under:
 //   - ecal_mult == 1
 //   - ecal_quality CutSet
-//   - M(e+e-gamma) in [0.10, 0.18] GeV/c^2 (pi0 Dalitz window)
-// Fields read from pippimepem_nt_cor: m_pippimepem, m_pippimepemg, pippimepemg_pass,
-// sel_pass, cut2d_pass, mm_pippimepem.
+//   - M(e+e-gamma) in [0.125, 0.145] GeV/c^2 (pi0 Dalitz, narrow — ACTIVE).
+//     Selection driven by pippimepemg_pass_narrow==1; the wide [0.10, 0.18] cut
+//     is also stored (pippimepemg_pass) for fallback / systematics.
+// Fields read from pippimepem_nt_cor: m_pippimepem, m_pippimepemg,
+// pippimepemg_pass_narrow, sel_pass, cut2d_pass, mm_pippimepem, mm_pippimepemg.
 //
 // Two sections:
 //   (A) OVERLAY — for each cut configuration, draw M(pippimepem) all/CB/signal and
@@ -47,14 +49,14 @@ void pippimepemg_spectra_cor_exp() {
     // -----------------------------------------------------------------
     // First triple: M(pippimepem) all/CB/signal on the FULL sample (cut_base only).
     // Second curve: same M(pippimepem) signal but ONLY on events tagged as having
-    // a good pippimepemg candidate (pippimepemg_pass==1). Both spectra plot the
+    // a good pippimepemg candidate (pippimepemg_pass_narrow==1). Both spectra plot the
     // identical observable — they differ only in which events feed them, so the
     // background shape should match and the rescale at M~0.5 GeV/c^2 is meaningful.
     auto drawOverlay = [&](const std::string& cut_base, const std::string& title,
                            const std::string& tag, int nbins) {
         std::string cut_tagged = cut_base.empty()
-                                 ? std::string("pippimepemg_pass==1")
-                                 : cut_base + " && pippimepemg_pass==1";
+                                 ? std::string("pippimepemg_pass_narrow==1")
+                                 : cut_base + " && pippimepemg_pass_narrow==1";
 
         TH1D *a1, *c1, *s1, *a2, *c2, *s2;
         std::tie(a1, c1, s1) = pu.drawSignal(
@@ -118,8 +120,8 @@ void pippimepemg_spectra_cor_exp() {
     // -----------------------------------------------------------------
     auto drawStandalone = [&](const std::string& cut_base, const std::string& title,
                               const std::string& tag, int nbins) {
-        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass==1")
-                                             : cut_base + " && pippimepemg_pass==1";
+        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass_narrow==1")
+                                             : cut_base + " && pippimepemg_pass_narrow==1";
         TH1D *a, *c, *s;
         std::tie(a, c, s) = pu.drawSignal(
             NT, "m_pippimepemg", nbins, 0.2, 1.4, cut_g,
@@ -134,8 +136,8 @@ void pippimepemg_spectra_cor_exp() {
     // -----------------------------------------------------------------
     auto drawStandaloneMM = [&](const std::string& cut_base, const std::string& title,
                                  const std::string& tag, int nbins) {
-        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass==1")
-                                             : cut_base + " && pippimepemg_pass==1";
+        std::string cut_g = cut_base.empty() ? std::string("pippimepemg_pass_narrow==1")
+                                             : cut_base + " && pippimepemg_pass_narrow==1";
         TH1D *a, *c, *s;
         std::tie(a, c, s) = pu.drawSignal(
             NT, "mm_pippimepemg", nbins, 0.0, 4.0, cut_g,
