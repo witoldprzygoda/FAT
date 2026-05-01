@@ -44,6 +44,34 @@ inline double openingAngle(const PParticle& p1, const PParticle& p2,
     return p1.vec(type).Vect().Angle(p2.vec(type).Vect()) * TMath::RadToDeg();
 }
 
+// ============================================================================
+// Dihedral / plane angle between two pairs of particles
+// ============================================================================
+/**
+ * @brief Angle between the planes spanned by two particle pairs.
+ *
+ * For pairs (a, b) and (c, d) — typically AFTER boosting all four particles
+ * to a common rest frame — compute:
+ *   n_ab = p_a × p_b   (normal to plane (a, b))
+ *   n_cd = p_c × p_d   (normal to plane (c, d))
+ *   φ    = angle(n_ab, n_cd)   ∈ [0, 180] deg
+ *
+ * Used for the pippimepem analysis as the angle between the (π+π-) and
+ * (e+e-) decay planes in the pippimepem rest frame — a meaningful kinematic
+ * observable for the 4-body decay topology. NOT the same as the (vacuous)
+ * opening angle between the two pair-momenta in the same frame, which is
+ * always 180° by 3-momentum conservation.
+ *
+ * @return plane-to-plane angle in degrees, range [0, 180]
+ */
+inline double planeAngle(const PParticle& a, const PParticle& b,
+                         const PParticle& c, const PParticle& d,
+                         KinematicType type = KinematicType::RECONSTRUCTED) {
+    TVector3 n_ab = a.vec(type).Vect().Cross(b.vec(type).Vect());
+    TVector3 n_cd = c.vec(type).Vect().Cross(d.vec(type).Vect());
+    return n_ab.Angle(n_cd) * TMath::RadToDeg();
+}
+
 }  // namespace Physics
 
 #endif // PHYSICS_UTILS_H

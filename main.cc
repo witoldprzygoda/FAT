@@ -62,9 +62,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // the parent decay). Pion fields carry zero weight (they are mis-ID'd or
     // secondary tracks). After the purity gate above the leptons are guaranteed
     // genuine, so ep_sim_genweight is the correct event weight.
-    // Every mgr.fill below passes `w` as the third argument so the histograms
-    // and ntuple-derived spectra reflect the SMASH luminosity normalisation.
+    //
+    // FALLBACK for w == 0: the SMASH ntuple has many events with zero
+    // ep_sim_genweight (process-untagged background — the majority). Per the
+    // analysis convention we substitute a uniform weight 1 / N_simulated.
+    //
+    // *** EDIT HERE if N_simulated changes: SIM_NTOTAL_EVENTS ***
+    constexpr double SIM_NTOTAL_EVENTS = 1.0e10;       // total simulated events
+    constexpr double SIM_FALLBACK_WEIGHT = 1.0 / SIM_NTOTAL_EVENTS;  // = 1e-10
     double w = reader["ep_sim_genweight"];
+    if (w == 0.0) w = SIM_FALLBACK_WEIGHT;
 
     // ========================================================================
     // Create e+ and e- — RECONSTRUCTED + CORRECTED + SIMULATED kinematics
@@ -249,8 +256,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     frames.addCompositeFrame("pippimepem_rest", pippimepem);
 
     PParticle epem_cms = frames.getFrame("beam").boost(epem);
-    PParticle pippim_rest = frames.getFrame("pippimepem_rest").boost(pippim);
-    PParticle epem_rest = frames.getFrame("pippimepem_rest").boost(epem);
 
     double y_cms = epem_cms.rapidity();
     double pt = epem_cms.vec().Pt();
@@ -270,27 +275,56 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     // CORRECTED pippimepem rest frame — different boost vector, separate BoostFrame.
     BoostFrame pippimepem_rest_cor_frame(pippimepem, KinematicType::CORRECTED);
-    PParticle pippim_rest_cor = pippimepem_rest_cor_frame.boost(pippim);
-    PParticle epem_rest_cor = pippimepem_rest_cor_frame.boost(epem);
 
-    // Opening angles (compound systems): LAB and pippimepem rest frame, RECONSTRUCTED + CORRECTED
-    double oa_pippim_epem_lab = Physics::openingAngle(pippim, epem);
-    double oa_pippim_epem_rest = Physics::openingAngle(pippim_rest, epem_rest);
-    double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem, KinematicType::CORRECTED);
-    double oa_pippim_epem_rest_cor = Physics::openingAngle(pippim_rest_cor, epem_rest_cor,
-                                                            KinematicType::CORRECTED);
+    // === Boost EACH constituent (pip/pim/ep/em) into the pippimepem rest frame ===
+    // for the dihedral (plane-to-plane) angle calculation. The pair-momenta in
+    // this frame are exactly back-to-back by 3-momentum conservation, so the
+    // simple opening angle between (pippim) and (epem) is always 180° — vacuous.
+    // The MEANINGFUL observable is the angle between the (pi+,pi-) decay plane
+    // and the (e+,e-) decay plane: φ = ∠(p_pip × p_pim, p_ep × p_em).
+    PParticle pip_rest = frames.getFrame("pippimepem_rest").boost(piplus);
+    PParticle pim_rest = frames.getFrame("pippimepem_rest").boost(piminus);
+    PParticle ep_rest  = frames.getFrame("pippimepem_rest").boost(positron);
+    PParticle em_rest  = frames.getFrame("pippimepem_rest").boost(electron);
 
-    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, OA_REST > 140
+    PParticle pip_rest_cor = pippimepem_rest_cor_frame.boost(piplus);
+    PParticle pim_rest_cor = pippimepem_rest_cor_frame.boost(piminus);
+    PParticle ep_rest_cor  = pippimepem_rest_cor_frame.boost(positron);
+    PParticle em_rest_cor  = pippimepem_rest_cor_frame.boost(electron);
+
+    // Lab-frame opening angle between the (π+π-) and (e+e-) momenta — REC + COR.
+    double oa_pippim_epem_lab     = Physics::openingAngle(pippim, epem);
+    double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem,
+                                                          KinematicType::CORRECTED);
+
+    // Plane-to-plane angle in pippimepem rest frame:
+    //   n_pi  = p_pi+ × p_pi-
+    //   n_lep = p_e+  × p_e-
+    //   φ     = angle(n_pi, n_lep)  ∈ [0, 180] deg
+    double oa_plane_pippim_epem_rest     = Physics::planeAngle(pip_rest, pim_rest,
+                                                          ep_rest, em_rest);
+    double oa_plane_pippim_epem_rest_cor = Physics::planeAngle(pip_rest_cor, pim_rest_cor,
+                                                          ep_rest_cor, em_rest_cor,
+                                                          KinematicType::CORRECTED);
+
+    // Control histograms — filled BEFORE pippimepem_selection so the cut
+    // boundaries (oa_pippim_epem_lab < 50, dihedral > 140) can be verified.
+    mgr.fillw("oa_pippim_epem_lab",      oa_pippim_epem_lab,      w);
+    mgr.fillw("oa_plane_pippim_epem_rest",    oa_plane_pippim_epem_rest,    w);
+    mgr.fillw("oa_pippim_epem_lab_cor",  oa_pippim_epem_lab_cor,  w);
+    mgr.fillw("oa_plane_pippim_epem_rest_cor",oa_plane_pippim_epem_rest_cor,w);
+
+    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, dihedral > 140
     bool sel_pass = cuts.passCutSet("pippimepem_selection", {
         oa_pippim_epem_lab,
         m_pippim,
-        oa_pippim_epem_rest
+        oa_plane_pippim_epem_rest
     });
     // Same selection with CORRECTED inputs
     bool sel_pass_cor = cuts.passCutSet("pippimepem_selection", {
         oa_pippim_epem_lab_cor,
         m_pippim_cor,
-        oa_pippim_epem_rest_cor
+        oa_plane_pippim_epem_rest_cor
     });
 
     if (sel_pass) {
@@ -497,8 +531,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["mm_pippim"] = mm_pippim;             // MM(pi+pi-)
     nt["mm_pippimepem"] = mm_pippimepem;     // MM(pi+pi-e+e-)
 
-    nt["oa_pippim_epem_lab"] = oa_pippim_epem_lab;
-    nt["oa_pippim_epem_rest"] = oa_pippim_epem_rest;
+    nt["oa_pippim_epem_lab"]  = oa_pippim_epem_lab;
+    nt["oa_plane_pippim_epem_rest"] = oa_plane_pippim_epem_rest;
 
     nt["y_cms"] = y_cms;
     nt["pt"] = pt;
@@ -552,8 +586,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["mm_pippim"] = mm_pippim_cor;
     nt_cor["mm_pippimepem"] = mm_pippimepem_cor;
 
-    nt_cor["oa_pippim_epem_lab"] = oa_pippim_epem_lab_cor;
-    nt_cor["oa_pippim_epem_rest"] = oa_pippim_epem_rest_cor;
+    nt_cor["oa_pippim_epem_lab"]  = oa_pippim_epem_lab_cor;
+    nt_cor["oa_plane_pippim_epem_rest"] = oa_plane_pippim_epem_rest_cor;
 
     nt_cor["y_cms"] = y_cms_cor;
     nt_cor["pt"] = pt_cor;
