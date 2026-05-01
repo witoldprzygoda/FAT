@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/home/damian/hdd1/HADES/pp45/sim/smash/smash_lepton.list",
+        "source": "/home/damian/hdd1/HADES/pp45/sim/smash/smash_std.list",
         "tree_name": "PipPimEpEm_ID",
         "channel": "PipPimEpEm",
         "lepton_prefixes": ["ep", "em"],
@@ -8,7 +8,7 @@
         "max_events": 0 
     },
     "output": {
-        "filename": "output_pippimepem_sim.root",
+        "filename": "output_pippimepem_stdsim.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
