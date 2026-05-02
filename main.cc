@@ -64,11 +64,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ========================================================================
     // Generator weight (per-event)
     // ========================================================================
-    // SMASH stores the per-event lepton-process weight on ep_sim_genweight
-    // (same value on em — they share the parent decay). After the purity gate
-    // above the leptons are genuine, so ep_sim_genweight is the correct event
-    // weight, used as-is for every fillw call and stored on the output ntuple.
-    double w = reader["ep_sim_genweight"];
+    // STDSIM-specific: the SMASH "std" production stores zero in every
+    // *_sim_genweight field for all events (no per-process weighting). Using
+    // ep_sim_genweight as on the lepton-process branch would make every
+    // mgr.fillw(...) call carry weight 0 and every TTree::Draw "(filter)*sim_genweight"
+    // multiply the histogram by 0 — yielding empty plots. We force w = 1
+    // here so the analysis runs unweighted on this branch.
+    // (This is the whole reason pp45_pippimepem_stdsim is a separate branch.)
+    double w = 1.0;
 
     // ========================================================================
     // Create e+ and e- — RECONSTRUCTED + CORRECTED + SIMULATED kinematics
