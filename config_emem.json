@@ -8,7 +8,7 @@
         "max_events": 0
     },
     "output": {
-        "filename": "output_emem.root",
+        "filename": "output_emem_exp.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0

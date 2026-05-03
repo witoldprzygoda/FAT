@@ -1,11 +1,14 @@
-// epem_masses.C — Mass spectra suite for the e+e- + ECAL analysis.
+// epem_masses_rec_exp.C — Mass spectra suite (RECONSTRUCTED, exp data).
+//
+// Reads from `dilepton_nt`, `epemg_nt`, `epemgg_nt`, `epemggg_nt` (REC).
+// CB extraction uses the like-sign exp samples.
 //
 // Reads three outputs in CWD:
-//   output_epem.root, output_epep.root, output_emem.root
+//   output_epem_exp.root, output_epep_exp.root, output_emem_exp.root
 //
-// Usage:  root -l -b -q plots/epem_masses.C
+// Usage:  root -l -b -q plots/epem_masses_rec_exp.C
 //
-// Output: plots/output/m_*.{pdf,png}
+// Output: plots/output/m_*_rec_exp.{pdf,png}
 
 #include "PlotUtils.h"
 #include <TFile.h>
@@ -208,11 +211,11 @@ void drawDirectHisto(const char* file_path, const char* hist_path,
 
 }  // namespace
 
-void epem_masses() {
+void epem_masses_rec_exp() {
 
-    PlotUtils pu("output_epem.root",
-                 "output_epep.root",
-                 "output_emem.root");
+    PlotUtils pu("output_epem_exp.root",
+                 "output_epep_exp.root",
+                 "output_emem_exp.root");
 
     std::cout << "\n=== Section 1: dilepton + mult==1 / mult==2 ===\n";
 
@@ -220,7 +223,7 @@ void epem_masses() {
     plotTriple(pu, "dilepton_nt", "m_ee",
                240, 0.0, 1.2, "",
                "M(e^{+}e^{-});M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-               "m_ee");
+               "m_ee_rec_exp");
 
     // -- M(e+e- gamma)  ECAL N_gamma==1  (log + linear)
     //    Both #pi^{0} (135 MeV) AND #eta (547 MeV) Dalitz decays produce e+e-#gamma.
@@ -228,14 +231,14 @@ void epem_masses() {
                200, 0.0, 1.0, "",
                "M(e^{+}e^{-}#gamma)  (ECAL N_{#gamma}=1, #pi^{0}/#eta Dalitz);"
                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-               "m_epemg",
+               "m_epemg_rec_exp",
                /*also_linear=*/true);
 
     // -- 1a) M(gg) mult==2 — direct ECAL, no CB --------------------------
-    drawDirectHisto("output_epem.root", "ecal_only/mass_gg",
+    drawDirectHisto("output_epem_exp.root", "ecal_only/mass_gg",
                     "M(#gamma#gamma)  (ECAL N_{#gamma}=2);"
                     "M_{#gamma#gamma} [GeV/c^{2}];Counts",
-                    "m_gg",
+                    "m_gg_exp",
                     /*logy=*/false);
 
     // -- 1d) M(epem + gg) ECAL N_gamma==2 --------------------------------
@@ -243,7 +246,7 @@ void epem_masses() {
                280, 0.0, 1.4, "",
                "M(e^{+}e^{-}#gamma#gamma)  (ECAL N_{#gamma}=2);"
                "M_{e^{+}e^{-}#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_epemgg");
+               "m_epemgg_rec_exp");
 
     // -- 1e) M(epem + gg) under narrow pi0 — omega candidate -------------
     plotTriple(pu, "epemgg_nt", "m_epemgg",
@@ -251,7 +254,7 @@ void epem_masses() {
                "#omega(782) #rightarrow #pi^{0}(#gamma#gamma) e^{+}e^{-}  "
                "[M(#gamma#gamma) #in #pi^{0} narrow];"
                "M_{e^{+}e^{-}#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_epemgg_pi0narrow");
+               "m_epemgg_pi0narrow_rec_exp");
 
     std::cout << "\n=== Section 2: mult==3 rotational combinatorics ===\n";
 
@@ -260,14 +263,14 @@ void epem_masses() {
                280, 0.0, 1.4, "",
                "M(e^{+}e^{-}#gamma)  (ECAL N_{#gamma}=3, all rotations);"
                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-               "m_epemg_mult3");
+               "m_epemg_mult3_rec_exp");
 
     // -- 2b) M(gg) all rotations — linear Y for clarity of pi0 peak ------
     plotTriple(pu, "epemggg_nt", "m_gg",
                200, 0.0, 1.0, "",
                "M(#gamma#gamma)  (ECAL N_{#gamma}=3, all rotations);"
                "M_{#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_gg_mult3",
+               "m_gg_mult3_exp",
                /*also_linear=*/false,
                /*linear_only=*/true);
 
@@ -277,7 +280,7 @@ void epem_masses() {
                "M(e^{+}e^{-}#gamma)  (ECAL N_{#gamma}=3, "
                "M(#gamma#gamma)_{other} #in #pi^{0} narrow);"
                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-               "m_epemg_mult3_pi0narrow");
+               "m_epemg_mult3_pi0narrow_rec_exp");
 
     // -- 2d) M(gg) under M(epemg) in eta window — linear Y for clarity ---
     plotTriple(pu, "epemggg_nt", "m_gg",
@@ -285,7 +288,7 @@ void epem_masses() {
                "M(#gamma#gamma)  (ECAL N_{#gamma}=3, "
                "M(e^{+}e^{-}#gamma) #in #eta window);"
                "M_{#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_gg_mult3_eta",
+               "m_gg_mult3_eta_rec_exp",
                /*also_linear=*/false,
                /*linear_only=*/true);
 
@@ -294,7 +297,7 @@ void epem_masses() {
                360, 0.0, 1.8, "",
                "M(e^{+}e^{-}#gamma#gamma#gamma)  (ECAL N_{#gamma}=3);"
                "M_{e^{+}e^{-}#gamma#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_epemggg");
+               "m_epemggg_rec_exp");
 
     // -- 2f) M(epemggg) under both cuts — a0(980) candidate --------------
     plotTriple(pu, "epemggg_nt", "m_epemggg",
@@ -302,7 +305,7 @@ void epem_masses() {
                "a_{0}(980) #rightarrow #eta(e^{+}e^{-}#gamma) + #pi^{0}(#gamma#gamma)  "
                "[M(e^{+}e^{-}#gamma) #in #eta, M(#gamma#gamma) #in #pi^{0} narrow];"
                "M_{e^{+}e^{-}#gamma#gamma#gamma} [GeV/c^{2}];Counts",
-               "m_epemggg_both");
+               "m_epemggg_both_rec_exp");
 
     // -- 2g) a0 candidate: best-chi2 rotation per event + window cuts ----
     //   For each ECAL N_gamma==3 event we have 3 ways to assign one gamma to
@@ -324,21 +327,21 @@ void epem_masses() {
         const int    nbins = 240;
         const double xmin  = 0.4;
         const double xmax  = 1.6;
-        const char*  base  = "m_epemggg_bestchi2";
+        const char*  base  = "m_epemggg_bestchi2_rec_exp";
         const char*  title =
             "a_{0}(980) #rightarrow #eta(e^{+}e^{-}#gamma) + #pi^{0}(#gamma#gamma)  "
             "[best #chi^{2} rotation, M(#gamma#gamma) #in #pi^{0}, M(e^{+}e^{-}#gamma) #in #eta];"
             "M_{e^{+}e^{-}#gamma#gamma#gamma} [GeV/c^{2}];Counts";
 
-        TH1D* h_all = bestChi2Histogram("output_epem.root", nbins, xmin, xmax,
+        TH1D* h_all = bestChi2Histogram("output_epem_exp.root", nbins, xmin, xmax,
                                         "h_bestchi2_all",
                                         m_pi0, sigma_pi0, m_eta, sigma_eta,
                                         pi0_lo, pi0_hi, eta_lo, eta_hi);
-        TH1D* h_pp  = bestChi2Histogram("output_epep.root", nbins, xmin, xmax,
+        TH1D* h_pp  = bestChi2Histogram("output_epep_exp.root", nbins, xmin, xmax,
                                         "h_bestchi2_pp",
                                         m_pi0, sigma_pi0, m_eta, sigma_eta,
                                         pi0_lo, pi0_hi, eta_lo, eta_hi);
-        TH1D* h_mm  = bestChi2Histogram("output_emem.root", nbins, xmin, xmax,
+        TH1D* h_mm  = bestChi2Histogram("output_emem_exp.root", nbins, xmin, xmax,
                                         "h_bestchi2_mm",
                                         m_pi0, sigma_pi0, m_eta, sigma_eta,
                                         pi0_lo, pi0_hi, eta_lo, eta_hi);
@@ -353,7 +356,7 @@ void epem_masses() {
             double data_max = h_all->GetMaximum();
 
             auto* cv_log = pu.drawTriple(h_all, h_cb, h_sig, title,
-                                         "c_m_epemggg_bestchi2_log", true);
+                                         "c_m_epemggg_bestchi2_rec_exp_log", true);
             forceYCap(h_all, data_max, cv_log, true);
             pu.save(cv_log, base);
             printIntegrals(base, h_all, h_cb, h_sig);
@@ -364,11 +367,11 @@ void epem_masses() {
 
     // -- 3) M(gggg) ECAL N_gamma==4 with both gg pairs in narrow pi0
     //       both M(#gamma#gamma) cuts applied at fill time in ana.
-    drawDirectHisto("output_epem.root", "ecal_only/mass_gggg_pi0pi0",
+    drawDirectHisto("output_epem_exp.root", "ecal_only/mass_gggg_pi0pi0",
                     "K^{0}_{S}(498) #rightarrow #pi^{0}(#gamma#gamma) + #pi^{0}(#gamma#gamma)  "
                     "[both M(#gamma#gamma) #in #pi^{0} narrow];"
                     "M_{#gamma#gamma#gamma#gamma} [GeV/c^{2}];Counts",
-                    "m_gggg_pi0pi0",
+                    "m_gggg_pi0pi0_exp",
                     /*logy=*/false,
                     /*xmin=*/0.0, /*xmax=*/1.0);
 

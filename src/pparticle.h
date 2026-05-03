@@ -309,12 +309,28 @@ public:
 
     /**
      * @brief Subtract four-momentum (for missing mass calculations)
+     *
+     * Propagates RECONSTRUCTED and (when both operands have it set) CORRECTED
+     * and SIMULATED — mirrors the behaviour of operator+.
      */
     PParticle operator-(const PParticle& other) const {
         TLorentzVector diff_p4 = p4_reconstructed_ - other.p4_reconstructed_;
         PParticle result(diff_p4.M(), name_ + "-" + other.name_);
         result.p4_reconstructed_ = diff_p4;
         result.lab_frame_reconstructed_ = diff_p4;
+
+        // Corrected (if both available)
+        if (p4_corrected_.E() != 0 && other.p4_corrected_.E() != 0) {
+            result.p4_corrected_ = p4_corrected_ - other.p4_corrected_;
+            result.lab_frame_corrected_ = result.p4_corrected_;
+        }
+
+        // Simulated (if both available)
+        if (p4_simulated_.E() != 0 && other.p4_simulated_.E() != 0) {
+            result.p4_simulated_ = p4_simulated_ - other.p4_simulated_;
+            result.lab_frame_simulated_ = result.p4_simulated_;
+        }
+
         return result;
     }
 
@@ -608,7 +624,10 @@ namespace ParticleFactory {
         double E = T_kin + Physics::MASS_PROTON;
         double p = sqrt(E*E - Physics::MASS_PROTON*Physics::MASS_PROTON);
         PParticle beam(Physics::MASS_PROTON, "beam");
-        beam.setFromCartesian(0, 0, p);
+        // Synthetic particle — no measurement, so RECONSTRUCTED == CORRECTED.
+        // Setting both lets composite-system CORRECTED arithmetic propagate cleanly.
+        beam.setFromCartesian(0, 0, p, KinematicType::RECONSTRUCTED);
+        beam.setFromCartesian(0, 0, p, KinematicType::CORRECTED);
         return beam;
     }
 
@@ -617,7 +636,8 @@ namespace ParticleFactory {
      */
     inline PParticle createTargetProton() {
         PParticle target(Physics::MASS_PROTON, "target");
-        target.setFromCartesian(0, 0, 0);
+        target.setFromCartesian(0, 0, 0, KinematicType::RECONSTRUCTED);
+        target.setFromCartesian(0, 0, 0, KinematicType::CORRECTED);
         return target;
     }
 }
