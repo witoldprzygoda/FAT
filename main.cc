@@ -106,9 +106,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt_cor = dilepton_cms.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = dilepton_cms.theta(KinematicType::CORRECTED);
 
-    // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    // Apply the 4-deg cut as the active selection. opening_angle_9 is defined
-    // in setup_cuts.h for future studies but NOT applied here.
+    // Fill dilepton ntuple (before OA cut, store cut decision as flag).
+    // OA > 4 deg is the active analysis selection.
     bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
 
     // Helper to fill either dilepton_nt (REC) or dilepton_nt_cor (CORRECTED) —

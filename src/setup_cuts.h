@@ -34,11 +34,8 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
         .addValueCut("start_iteration", 3.0, "start_iteration == 3");
 
-    // Opening angle cuts (reject close e+e- pairs).
-    // opening_angle_4 is the ACTIVE cut applied in data.
-    // opening_angle_9 is defined but not applied (kept for future studies).
+    // Opening angle cut: reject close e+e- pairs (active analysis selection).
     cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (active)");
-    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (for future use)");
 
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
