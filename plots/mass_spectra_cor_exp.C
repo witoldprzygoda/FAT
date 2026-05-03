@@ -1,5 +1,6 @@
-// mass_spectra_cor_exp.C — Dilepton invariant mass: no OA cut vs OA > 9 deg
-//                          (CORRECTED, exp data).
+// mass_spectra_cor_exp.C — Dilepton invariant mass: no OA cut vs OA > 4 deg
+//                          (CORRECTED, exp data). OA > 4 is the active
+//                          analysis cut (oa_pass==1 flag from main.cc).
 //
 // Reads from `dilepton_nt_cor` — same field layout as `dilepton_nt` but `m_ee`
 // is the energy-loss-corrected invariant mass.
@@ -48,19 +49,19 @@ void mass_spectra_cor_exp() {
     double ymax = all1->GetMaximum();
     double ymin = all1->GetMinimum();
 
-    // --- 2. Mass spectrum with OA > 9 deg cut (same Y range) ---
+    // --- 2. Mass spectrum with active OA cut (OA > 4 deg, same Y range) ---
     TH1D *all2, *cb2, *sig2;
     std::tie(all2, cb2, sig2) = pu.drawSignal("dilepton_nt_cor", "m_ee",
-                                              160, 0, 0.8, "oa>9",
+                                              160, 0, 0.8, "oa_pass==1",
                                               ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
     auto* c2 = pu.drawTriple(all2, cb2, sig2,
-                             "M_{e^{+}e^{-}} (cor, OA > 9#circ)", "c_mass_oa9_cor_exp",
+                             "M_{e^{+}e^{-}} (cor, OA > 4#circ, active)", "c_mass_oa4_cor_exp",
                              /*logy=*/true);
     all2->SetMaximum(ymax);
     all2->SetMinimum(ymin);
     c2->Update();
-    pu.save(c2, "mass_ee_oa9_cor_exp");
-    printIntegrals_cor("OA > 9 deg (cor)", all2, cb2, sig2);
+    pu.save(c2, "mass_ee_oa4_cor_exp");
+    printIntegrals_cor("OA > 4 deg (cor, active)", all2, cb2, sig2);
 
     std::cout << "\nDone. Check plots/output/\n";
 }
