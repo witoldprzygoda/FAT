@@ -692,6 +692,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
         int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+        // SMASH may store -1 as the missing-value sentinel for events with no
+        // ECAL hits — clamp so vector::reserve below doesn't see a giant size_t.
+        if (neutr_mult < 0) neutr_mult = 0;
 
         std::vector<PParticleEcal> ecal_objects;
         ecal_objects.reserve(neutr_mult);
@@ -810,6 +813,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Forward Tracker objects (forward hadrons, up to 3 hits)
     if (config.isFwdEnabled()) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
+        // Same sentinel-clamp as ECAL — protects vector::reserve below.
+        if (fwdet_mult < 0) fwdet_mult = 0;
 
         std::vector<PParticleFwd> fwd_objects;
         fwd_objects.reserve(fwdet_mult);
