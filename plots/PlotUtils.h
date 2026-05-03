@@ -33,6 +33,7 @@
 
 class PlotUtils {
 public:
+    /// 3-file constructor: signal + like-sign pairs for CB extraction (data analysis).
     PlotUtils(const std::string& f_all,
               const std::string& f_pp,
               const std::string& f_mm)
@@ -49,6 +50,22 @@ public:
         }
         if (!f_mm_ || f_mm_->IsZombie()) {
             std::cerr << "PlotUtils: Cannot open " << f_mm << "\n";
+        }
+
+        applyStyle();
+        counter_ = 0;
+    }
+
+    /// Single-file constructor: one input only (simulation, no CB extraction).
+    /// Use drawNtupleSingle / getHistSingle / drawSingle for plotting.
+    explicit PlotUtils(const std::string& f_all)
+    {
+        f_all_ = TFile::Open(f_all.c_str(), "READ");
+        f_pp_  = nullptr;
+        f_mm_  = nullptr;
+
+        if (!f_all_ || f_all_->IsZombie()) {
+            std::cerr << "PlotUtils: Cannot open " << f_all << "\n";
         }
 
         applyStyle();
@@ -238,6 +255,81 @@ public:
         leg->AddEntry(h_all, "e^{+}e^{-} (all)", "lpe");
         leg->AddEntry(h_cb, "CB (2#sqrt{N_{++}N_{--}})", "lpe");
         leg->AddEntry(h_sig, "Signal (all - CB)", "lpe");
+        leg->Draw();
+
+        c->Update();
+        return c;
+    }
+
+    // ========================================================================
+    // Single-file helpers (no CB extraction)
+    // ========================================================================
+    // For simulation or any analysis where like-sign samples don't exist.
+    // Pair drawNtupleSingle / getHistSingle (data source) with drawSingle
+    // (canvas) the same way drawSignal pairs with drawTriple.
+
+    /// Draw a variable from a single ntuple in f_all_, return styled TH1D.
+    TH1D* drawNtupleSingle(const std::string& ntuple_name,
+                           const std::string& varexpr,
+                           int nbins, double xmin, double xmax,
+                           const std::string& cut = "",
+                           const std::string& title = "")
+    {
+        TH1D* h = drawFromNtuple(f_all_, ntuple_name, varexpr,
+                                 nbins, xmin, xmax, cut,
+                                 uniqueName(varexpr));
+        if (!h) {
+            std::cerr << "PlotUtils::drawNtupleSingle: failed for '" << varexpr << "'\n";
+            return nullptr;
+        }
+        if (!title.empty()) h->SetTitle(title.c_str());
+        styleAll(h);
+        return h;
+    }
+
+    /// Get an existing histogram from f_all_, return styled TH1D copy.
+    TH1D* getHistSingle(const std::string& histpath) {
+        TH1* raw = getHist(f_all_, histpath);
+        if (!raw) {
+            std::cerr << "PlotUtils::getHistSingle: histogram '" << histpath
+                      << "' not found in f_all_\n";
+            return nullptr;
+        }
+        TH1D* h = toTH1D(raw, uniqueName(histpath));
+        styleAll(h);
+        return h;
+    }
+
+    /// Draw a single histogram on a canvas with consistent styling + log/lin Y.
+    TCanvas* drawSingle(TH1* h,
+                        const std::string& canvasTitle = "",
+                        const std::string& canvasName  = "c1",
+                        bool logy = false,
+                        const std::string& legendLabel = "e^{+}e^{-} (sim)")
+    {
+        TCanvas* c = new TCanvas(canvasName.c_str(), canvasTitle.c_str(), 800, 600);
+        c->SetMargin(0.12, 0.05, 0.12, 0.08);
+        if (logy) c->SetLogy();
+
+        if (!canvasTitle.empty()) {
+            h->SetTitle(canvasTitle.c_str());
+        }
+
+        if (logy) {
+            h->SetMaximum(h->GetMaximum() * 3.0);
+            h->SetMinimum(0.5);
+        } else {
+            h->SetMaximum(h->GetMaximum() * 1.2);
+            h->SetMinimum(0.0);
+        }
+
+        h->Draw("E");
+
+        TLegend* leg = new TLegend(0.65, 0.82, 0.92, 0.90);
+        leg->SetBorderSize(0);
+        leg->SetFillStyle(0);
+        leg->SetTextSize(0.035);
+        leg->AddEntry(h, legendLabel.c_str(), "lpe");
         leg->Draw();
 
         c->Update();

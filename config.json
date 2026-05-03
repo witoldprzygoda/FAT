@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
+        "source": "/home/damian/hdd1/HADES/pp45/sim/smash/smash_lepton.list",
         "tree_name": "EpEm_ID",
         "channel": "EpEm",
         "lepton_prefixes": ["ep", "em"],
@@ -8,7 +8,7 @@
         "max_events": 0
     },
     "output": {
-        "filename": "output_epem_exp.root",
+        "filename": "output_epem_sim.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
@@ -20,7 +20,7 @@
     "kinematics": {
         "reconstructed": true,
         "corrected": true,
-        "simulated": false,
+        "simulated": true,
         "analysis_type": "reconstructed"
     },
     "fwdet": true,

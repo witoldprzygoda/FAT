@@ -38,6 +38,7 @@ $(EXECUTABLE): $(OBJECTS) $(DICTOBJ)
 $(DICT): $(DICT_HEADERS) $(LINKDEF)
 	rootcling -f $@ $(DICT_HEADERS) $(LINKDEF)
 
-# Cleanup
+# Cleanup — also removes ACLiC artifacts left over from `root macro.C++` runs
 clean:
 	rm -f $(EXECUTABLE) $(OBJECTS) $(DICT) $(DICTOBJ) *.pcm
+	rm -f plots/*_C.so plots/*_C.d plots/*_C_ACLiC_dict_rdict.pcm

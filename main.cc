@@ -1,9 +1,12 @@
 // ========================================================================
-// FAT Framework - Dilepton Analysis
+// FAT Framework - Dilepton Analysis (SIMULATION)
 // ========================================================================
-// e+e- dilepton analysis for HADES experiment (pp @ 4.5 GeV).
+// e+e- dilepton analysis for HADES SMASH simulation (pp @ 4.5 GeV).
 // Processes lepton pairs, ECAL photons, and Forward Tracker hadrons.
-// Supports EpEm, EpEp, EmEm channels via config-driven prefix mapping.
+// EpEm channel only — like-sign CB extraction is not applicable to sim.
+//
+// Per-event SMASH luminosity weight (ep_sim_genweight) is applied to every
+// histogram fill (fillw) and stored on the output ntuples for plotting macros.
 //
 // Usage:
 //   ./ana [config.json]
@@ -39,83 +42,119 @@ using namespace Physics;
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
-    // Event-level cuts (applied before particle creation)
+    // Event-level cuts (applied before particle creation).
+    // Simulation: no trigger_PT3 / start_detector cuts (no such fields in SMASH).
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
-    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
-    // Create e+ and e- with reconstructed kinematics
+    // ========================================================================
+    // MC truth purity gate — keep only correctly-IDed tracks
+    // ========================================================================
+    // Geant3 PIDs: 2 = e+, 3 = e-
+    // Reject events where any reconstructed lepton is misidentified.
+    int ep_pid = static_cast<int>(reader["ep_sim_id"]);
+    int em_pid = static_cast<int>(reader["em_sim_id"]);
+    if (ep_pid != 2 || em_pid != 3) return;
+
+    // Same-vertex gate: e+ and e- must originate from the same parent decay
+    // (sim_geninfo2 is the per-track parent-decay tag in the SMASH ntuple).
+    // Treated as a hard early return — events failing this are excluded from
+    // both histograms and ntuples, mirroring the PID purity gate above.
+    if (reader["ep_sim_geninfo2"] != reader["em_sim_geninfo2"]) return;
+
+    // ========================================================================
+    // Generator weight (per-event)
+    // ========================================================================
+    // SMASH stores the per-event lepton-process weight on ep_sim_genweight
+    // (same value on em — they share the parent decay). After the purity gate
+    // above the leptons are genuine, so ep_sim_genweight is the correct event
+    // weight, used as-is for every fillw call and stored on the output ntuple.
+    double w = reader["ep_sim_genweight"];
+
+    // ========================================================================
+    // Create e+ and e- — RECONSTRUCTED + CORRECTED + SIMULATED kinematics
+    // ========================================================================
     PParticle positron(MASS_ELECTRON, "e+");
     PParticle electron(MASS_ELECTRON, "e-");
 
     positron.setFromSpherical(reader["ep_p"], reader["ep_theta"], reader["ep_phi"],
                               KinematicType::RECONSTRUCTED);
-
     electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
                               KinematicType::RECONSTRUCTED);
 
     // Energy-loss corrected kinematics (same angles, corrected momentum)
     positron.setFromSpherical(reader["ep_p_corr_ep"], reader["ep_theta"], reader["ep_phi"],
                               KinematicType::CORRECTED);
-
     electron.setFromSpherical(reader["em_p_corr_em"], reader["em_theta"], reader["em_phi"],
                               KinematicType::CORRECTED);
 
-    // Lepton momentum histograms (RECONSTRUCTED + CORRECTED)
-    mgr.fill("ep_p", positron.momentum());
-    mgr.fill("em_p", electron.momentum());
-    mgr.fill("ep_p_cor", positron.momentum(KinematicType::CORRECTED));
-    mgr.fill("em_p_cor", electron.momentum(KinematicType::CORRECTED));
+    // SIMULATED (Geant truth) — full 3-vector from sim_px/py/pz [MeV/c]
+    positron.setFromCartesian(reader["ep_sim_px"], reader["ep_sim_py"], reader["ep_sim_pz"],
+                              KinematicType::SIMULATED);
+    electron.setFromCartesian(reader["em_sim_px"], reader["em_sim_py"], reader["em_sim_pz"],
+                              KinematicType::SIMULATED);
+
+    // Lepton momentum histograms (REC + COR + SIM)
+    mgr.fillw("ep_p", positron.momentum(), w);
+    mgr.fillw("em_p", electron.momentum(), w);
+    mgr.fillw("ep_p_cor", positron.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("em_p_cor", electron.momentum(KinematicType::CORRECTED), w);
+    mgr.fillw("ep_p_sim", positron.momentum(KinematicType::SIMULATED), w);
+    mgr.fillw("em_p_sim", electron.momentum(KinematicType::SIMULATED), w);
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
     double ep_p_cor = positron.momentum(KinematicType::CORRECTED);
+    double ep_p_sim = positron.momentum(KinematicType::SIMULATED);
     double ep_dp = ep_p_cor - ep_p_rec;
 
     double em_p_rec = electron.momentum(KinematicType::RECONSTRUCTED);
     double em_p_cor = electron.momentum(KinematicType::CORRECTED);
+    double em_p_sim = electron.momentum(KinematicType::SIMULATED);
     double em_dp = em_p_cor - em_p_rec;
 
-    mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
-    mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
+    mgr.fillw("ep_dp_vs_p", ep_p_rec, ep_dp, w);
+    mgr.fillw("em_dp_vs_p", em_p_rec, em_dp, w);
 
     // Opening angle between e+ and e- (must be computed before operator+)
     double oa = Physics::openingAngle(positron, electron);
-    mgr.fill("opening_angle", oa);
+    mgr.fillw("opening_angle", oa, w);
 
-    // Dilepton (e+ + e-) — operator+ propagates both REC and COR kinematics
+    // Dilepton (e+ + e-) — operator+ propagates REC + COR + SIM kinematics
     PParticle dilepton = positron + electron;
-    double m_ee = dilepton.massGeV();
+    double m_ee     = dilepton.massGeV();
     double m_ee_cor = dilepton.massGeV(KinematicType::CORRECTED);
+    double m_ee_sim = dilepton.massGeV(KinematicType::SIMULATED);
 
-    mgr.fill("mass_ee_before_oa", m_ee);
-    mgr.fill("mass_ee_before_oa_cor", m_ee_cor);
+    mgr.fillw("mass_ee_before_oa",     m_ee,     w);
+    mgr.fillw("mass_ee_before_oa_cor", m_ee_cor, w);
+    mgr.fillw("mass_ee_before_oa_sim", m_ee_sim, w);
 
-    // Boost dilepton to beam-target CMS frame (boost propagates both kinematics)
+    // Boost dilepton to beam-target CMS frame (boost propagates all kinematics)
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
 
     PParticle dilepton_cms = frames.getFrame("beam").boost(dilepton);
 
-    double y_cms = dilepton_cms.rapidity();
-    double pt = dilepton_cms.vec().Pt();
+    double y_cms     = dilepton_cms.rapidity();
+    double pt        = dilepton_cms.vec().Pt();
     double theta_cms = dilepton_cms.theta();
 
-    double y_cms_cor = dilepton_cms.rapidity(KinematicType::CORRECTED);
-    double pt_cor = dilepton_cms.vec(KinematicType::CORRECTED).Pt();
+    double y_cms_cor     = dilepton_cms.rapidity(KinematicType::CORRECTED);
+    double pt_cor        = dilepton_cms.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = dilepton_cms.theta(KinematicType::CORRECTED);
 
+    double y_cms_sim     = dilepton_cms.rapidity(KinematicType::SIMULATED);
+    double pt_sim        = dilepton_cms.vec(KinematicType::SIMULATED).Pt();
+    double theta_cms_sim = dilepton_cms.theta(KinematicType::SIMULATED);
+
     // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    // Apply the 4-deg cut as the active selection. opening_angle_9 is defined
-    // in setup_cuts.h for future studies but NOT applied here.
+    // opening_angle_4 is the ACTIVE cut applied via the oa_pass flag below.
     bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
 
-    // Helper to fill either dilepton_nt (REC) or dilepton_nt_cor (CORRECTED) —
-    // identical field layout, only compound observables (m_ee, CMS) differ.
-    auto fillDileptonNt = [&](const char* nt_name,
-                              double m_ee_v, double y_v, double pt_v, double theta_v) {
-        auto& nt = mgr.getDynamicNtuple(nt_name);
+    // === REC ntuple — compound observables from RECONSTRUCTED kinematics ===
+    {
+        auto& nt = mgr.getDynamicNtuple("dilepton_nt");
         nt["ep_p_rec"]      = ep_p_rec;
         nt["ep_p_cor"]      = ep_p_cor;
         nt["ep_theta"]      = positron.theta();
@@ -131,52 +170,100 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_phi_rich"]   = reader["em_phi_rich"];
 
         nt["oa"]            = oa;
-        nt["m_ee"]          = m_ee_v;
+        nt["m_ee"]          = m_ee;
 
-        nt["y_cms"]         = y_v;
-        nt["pt"]            = pt_v;
-        nt["theta_cms"]     = theta_v;
+        nt["y_cms"]         = y_cms;
+        nt["pt"]            = pt;
+        nt["theta_cms"]     = theta_cms;
 
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
+        nt["epem_same_vertex"] = 1.0f;          // hard-gated above (always 1)
+        nt["sim_genweight"]    = w;             // per-event SMASH luminosity weight
         nt.fill();
-    };
+    }
 
-    fillDileptonNt("dilepton_nt",     m_ee,     y_cms,     pt,     theta_cms);
-    fillDileptonNt("dilepton_nt_cor", m_ee_cor, y_cms_cor, pt_cor, theta_cms_cor);
+    // === COR mirror ntuple — compound observables from CORRECTED + SIM ====
+    // Same field names as REC ntuple, but compound observables are computed
+    // from CORRECTED kinematics. Additionally carries the SIM truth fields
+    // (m_ee_sim, etc.) so tru-plotting macros read everything from this one.
+    {
+        auto& nt = mgr.getDynamicNtuple("dilepton_nt_cor");
+        nt["ep_p_rec"]      = ep_p_rec;
+        nt["ep_p_cor"]      = ep_p_cor;
+        nt["ep_p_sim"]      = ep_p_sim;
+        nt["ep_theta"]      = positron.theta();
+        nt["ep_phi"]        = positron.phi();
+        nt["ep_theta_rich"] = reader["ep_theta_rich"];
+        nt["ep_phi_rich"]   = reader["ep_phi_rich"];
+
+        nt["em_p_rec"]      = em_p_rec;
+        nt["em_p_cor"]      = em_p_cor;
+        nt["em_p_sim"]      = em_p_sim;
+        nt["em_theta"]      = electron.theta();
+        nt["em_phi"]        = electron.phi();
+        nt["em_theta_rich"] = reader["em_theta_rich"];
+        nt["em_phi_rich"]   = reader["em_phi_rich"];
+
+        nt["oa"]            = oa;
+        nt["m_ee"]          = m_ee_cor;
+        nt["m_ee_sim"]      = m_ee_sim;
+
+        nt["y_cms"]         = y_cms_cor;
+        nt["pt"]            = pt_cor;
+        nt["theta_cms"]     = theta_cms_cor;
+
+        nt["y_cms_sim"]     = y_cms_sim;
+        nt["pt_sim"]        = pt_sim;
+        nt["theta_cms_sim"] = theta_cms_sim;
+
+        nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
+        nt["epem_same_vertex"] = 1.0f;
+        nt["sim_genweight"]    = w;
+        nt.fill();
+    }
 
     // Apply opening angle cut (reject close pairs)
-    // if (!oa_pass) return;
     if (oa_pass) {
-        // Still fill histograms for failed OA cut for comparison
-        mgr.fill("mass_ee_after_oa", m_ee);
-        mgr.fill("mass_ee_after_oa_cor", m_ee_cor);
+        mgr.fillw("mass_ee_after_oa",     m_ee,     w);
+        mgr.fillw("mass_ee_after_oa_cor", m_ee_cor, w);
+        mgr.fillw("mass_ee_after_oa_sim", m_ee_sim, w);
     }
     // CMS histograms (after OA cut)
-    mgr.fill("rapidity_cms", y_cms);
-    mgr.fill("pt_cms", pt);
-    mgr.fill("theta_cms", theta_cms);
-    mgr.fill("rapidity_vs_mass", m_ee, y_cms);
+    mgr.fillw("rapidity_cms",     y_cms,     w);
+    mgr.fillw("pt_cms",           pt,        w);
+    mgr.fillw("theta_cms",        theta_cms, w);
+    mgr.fillw("rapidity_vs_mass", m_ee, y_cms, w);
 
     // Dilepton invariant mass (after all cuts)
-    mgr.fill("mass_ee", m_ee);
-    mgr.fill("mass_ee_cor", m_ee_cor);
+    mgr.fillw("mass_ee",     m_ee,     w);
+    mgr.fillw("mass_ee_cor", m_ee_cor, w);
+    mgr.fillw("mass_ee_sim", m_ee_sim, w);
 
-    // Beam + target for missing mass calculations
+    // Beam + target for missing mass calculations (synthetic — REC == COR == SIM)
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
     PParticle target = ParticleFactory::createTargetProton();
     PParticle initial = beam + target;
 
-    // Missing mass of e+e- system: MM(e+e-) = beam + target - e+ - e-
-    // operator- propagates both REC and COR (synthetic beam/target carry both).
+    // Missing mass of e+e- system — operator- propagates all three kinematics.
     PParticle miss_epem = initial - positron - electron;
     double mm_epem_mass      = miss_epem.massGeV();
     double mm_epem_mass2     = miss_epem.vec().M2() / 1e6;  // GeV²/c⁴
     double mm_epem_mass_cor  = miss_epem.massGeV(KinematicType::CORRECTED);
     double mm_epem_mass2_cor = miss_epem.vec(KinematicType::CORRECTED).M2() / 1e6;
+    double mm_epem_mass_sim  = miss_epem.massGeV(KinematicType::SIMULATED);
+    double mm_epem_mass2_sim = miss_epem.vec(KinematicType::SIMULATED).M2() / 1e6;
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
-    if (config.isEcalEnabled()) {
+    // Guard: SMASH lepton-only ntuples (e.g. EpEm_ID for sim) do not carry
+    // neutr_* fields. Without this check `reader["neutr_mult"]` would throw
+    // for every event — caught silently by the event-loop catch — and ALL
+    // ECAL ntuples (ecal_nt, epemg_nt*, epemgg_nt*, epemggg_nt*) would never
+    // be created, missing entirely from the output ROOT file.
+    if (config.isEcalEnabled() && reader.hasVariable("neutr_mult")) {
         int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+        // SMASH may store -1 as the missing-value sentinel for events with no
+        // ECAL hits — clamp so vector::reserve below doesn't see a giant size_t.
+        if (neutr_mult < 0) neutr_mult = 0;
 
         std::vector<PParticleEcal> ecal_objects;
         ecal_objects.reserve(neutr_mult);
@@ -184,13 +271,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         for (int i = 1; i <= neutr_mult && i <= 5; ++i) {
             PParticleEcal ecal_obj(0.0, "ecal" + std::to_string(i));
             if (ecal_obj.setFromReader(reader, i)) {
-                // Photon has no measured momentum correction — mirror REC into
-                // CORRECTED so dilepton+gamma compounds propagate both kinematics
-                // (the difference between REC/COR comes solely from the leptons).
+                // Photon has no measured momentum correction and no MC truth
+                // photon in the ntuple — mirror REC into CORRECTED and SIMULATED
+                // so dilepton+gamma compounds propagate all three kinematics
+                // (differences come solely from the leptons feeding the compound).
                 ecal_obj.setFromSpherical(ecal_obj.vec().P(),
                                           ecal_obj.cluster_theta,
                                           ecal_obj.cluster_phi,
                                           KinematicType::CORRECTED);
+                ecal_obj.setFromSpherical(ecal_obj.vec().P(),
+                                          ecal_obj.cluster_theta,
+                                          ecal_obj.cluster_phi,
+                                          KinematicType::SIMULATED);
                 ecal_objects.push_back(ecal_obj);
             }
         }
@@ -252,23 +344,25 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
             double m_epemg     = epemg.massGeV();
             double m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
-            mgr.fill("mass_epemg", m_epemg);
-            mgr.fill("mass_epemg_cor", m_epemg_cor);
+            double m_epemg_sim = epemg.massGeV(KinematicType::SIMULATED);
+            mgr.fillw("mass_epemg",     m_epemg,     w);
+            mgr.fillw("mass_epemg_cor", m_epemg_cor, w);
+            mgr.fillw("mass_epemg_sim", m_epemg_sim, w);
 
-            // Helper — fills epemg_nt (REC) or epemg_nt_cor (CORRECTED).
-            auto fillEpemgNt = [&](const char* nt_name, KinematicType k) {
-                auto& nt = mgr.getDynamicNtuple(nt_name);
-                nt["epemg_mass"]         = epemg.massGeV(k);
-                nt["epemg_p"]            = epemg.momentum(k);
-                nt["epemg_theta"]        = epemg.theta(k);
-                nt["epemg_phi"]          = epemg.phi(k);
+            // === REC ntuple ===
+            {
+                auto& nt = mgr.getDynamicNtuple("epemg_nt");
+                nt["epemg_mass"]         = m_epemg;
+                nt["epemg_p"]            = epemg.momentum();
+                nt["epemg_theta"]        = epemg.theta();
+                nt["epemg_phi"]          = epemg.phi();
 
-                nt["epemg_rapidity_cms"] = epemg_cms.rapidity(k);
-                nt["epemg_pt_cms"]       = epemg_cms.vec(k).Pt();
-                nt["epemg_theta_cms"]    = epemg_cms.theta(k);
+                nt["epemg_rapidity_cms"] = epemg_cms.rapidity();
+                nt["epemg_pt_cms"]       = epemg_cms.vec().Pt();
+                nt["epemg_theta_cms"]    = epemg_cms.theta();
 
                 nt["ee_oa"]              = oa;
-                nt["ee_mass"]            = (k == KinematicType::CORRECTED) ? m_ee_cor : m_ee;
+                nt["ee_mass"]            = m_ee;
 
                 nt["gamma_energy"]       = gamma.cluster_energy;
                 nt["gamma_theta"]        = gamma.cluster_theta;
@@ -276,26 +370,57 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
                 nt["ecal_mult"]          = static_cast<Float_t>(neutr_mult);
 
-                if (k == KinematicType::CORRECTED) {
-                    nt["mm_epem_mass"]   = mm_epem_mass_cor;
-                    nt["mm_epem_mass2"]  = mm_epem_mass2_cor;
-                } else {
-                    nt["mm_epem_mass"]   = mm_epem_mass;
-                    nt["mm_epem_mass2"]  = mm_epem_mass2;
-                }
+                nt["mm_epem_mass"]       = mm_epem_mass;
+                nt["mm_epem_mass2"]      = mm_epem_mass2;
+                nt["mm_epemg_mass"]      = miss_epemg.massGeV();
+                nt["mm_epemg_mass2"]     = miss_epemg.vec().M2() / 1e6;
 
-                nt["mm_epemg_mass"]      = miss_epemg.massGeV(k);
-                nt["mm_epemg_mass2"]     = miss_epemg.vec(k).M2() / 1e6;
+                nt["sim_genweight"]      = w;
                 nt.fill();
-            };
+            }
 
-            fillEpemgNt("epemg_nt",     KinematicType::RECONSTRUCTED);
-            fillEpemgNt("epemg_nt_cor", KinematicType::CORRECTED);
+            // === COR mirror ntuple — also carries SIM truth fields for tru macros ===
+            {
+                auto& nt = mgr.getDynamicNtuple("epemg_nt_cor");
+                nt["epemg_mass"]         = m_epemg_cor;
+                nt["epemg_p"]            = epemg.momentum(KinematicType::CORRECTED);
+                nt["epemg_theta"]        = epemg.theta(KinematicType::CORRECTED);
+                nt["epemg_phi"]          = epemg.phi(KinematicType::CORRECTED);
+
+                nt["epemg_rapidity_cms"] = epemg_cms.rapidity(KinematicType::CORRECTED);
+                nt["epemg_pt_cms"]       = epemg_cms.vec(KinematicType::CORRECTED).Pt();
+                nt["epemg_theta_cms"]    = epemg_cms.theta(KinematicType::CORRECTED);
+
+                nt["ee_oa"]              = oa;
+                nt["ee_mass"]            = m_ee_cor;
+
+                nt["gamma_energy"]       = gamma.cluster_energy;
+                nt["gamma_theta"]        = gamma.cluster_theta;
+                nt["gamma_phi"]          = gamma.cluster_phi;
+
+                nt["ecal_mult"]          = static_cast<Float_t>(neutr_mult);
+
+                nt["mm_epem_mass"]       = mm_epem_mass_cor;
+                nt["mm_epem_mass2"]      = mm_epem_mass2_cor;
+                nt["mm_epemg_mass"]      = miss_epemg.massGeV(KinematicType::CORRECTED);
+                nt["mm_epemg_mass2"]     = miss_epemg.vec(KinematicType::CORRECTED).M2() / 1e6;
+
+                // SIM mirrors — leptons carry truth, photon mirrored REC≡SIM.
+                nt["epemg_mass_sim"]     = m_epemg_sim;
+                nt["ee_mass_sim"]        = m_ee_sim;
+                nt["mm_epem_mass_sim"]   = mm_epem_mass_sim;
+                nt["mm_epem_mass2_sim"]  = mm_epem_mass2_sim;
+                nt["mm_epemg_mass_sim"]  = miss_epemg.massGeV(KinematicType::SIMULATED);
+                nt["mm_epemg_mass2_sim"] = miss_epemg.vec(KinematicType::SIMULATED).M2() / 1e6;
+
+                nt["sim_genweight"]      = w;
+                nt.fill();
+            }
         }
 
         // ===========================================================
         // MULT == 2 — pi0 candidate from gg, omega candidate from epemgg
-        // M(gg) is REC≡COR (photon mirrored). M(epemgg) differs via leptons.
+        // M(gg) is REC≡COR≡SIM (photon mirrored). M(epemgg) differs via leptons.
         // ===========================================================
         if (neutr_mult == 2 && ecal_objects.size() >= 2 &&
             ecal_pass[0] && ecal_pass[1]) {
@@ -303,37 +428,46 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             PParticle gg     = ecal_objects[0] + ecal_objects[1];
             PParticle epemgg = dilepton + gg;
 
-            double m_gg         = gg.massGeV();              // REC≡COR
+            double m_gg         = gg.massGeV();                            // REC≡COR≡SIM
             double m_epemgg     = epemgg.massGeV();
             double m_epemgg_cor = epemgg.massGeV(KinematicType::CORRECTED);
+            double m_epemgg_sim = epemgg.massGeV(KinematicType::SIMULATED);
 
-            mgr.fill("mass_gg", m_gg);
+            mgr.fillw("mass_gg", m_gg, w);
 
             bool pi0_pass_narrow = cuts.passRangeCut("pi0_mass_window_narrow", m_gg);
 
             // REC ntuple
-            auto& nt = mgr.getDynamicNtuple("epemgg_nt");
-            nt["m_ee"]            = m_ee;
-            nt["m_gg"]            = m_gg;
-            nt["m_epemgg"]        = m_epemgg;
-            nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
-            nt.fill();
+            {
+                auto& nt = mgr.getDynamicNtuple("epemgg_nt");
+                nt["m_ee"]            = m_ee;
+                nt["m_gg"]            = m_gg;
+                nt["m_epemgg"]        = m_epemgg;
+                nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
+                nt["sim_genweight"]   = w;
+                nt.fill();
+            }
 
-            // CORRECTED mirror — same field names, m_ee/m_epemgg from COR
-            auto& nt_cor = mgr.getDynamicNtuple("epemgg_nt_cor");
-            nt_cor["m_ee"]            = m_ee_cor;
-            nt_cor["m_gg"]            = m_gg;
-            nt_cor["m_epemgg"]        = m_epemgg_cor;
-            nt_cor["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
-            nt_cor.fill();
+            // CORRECTED mirror — also carries SIM truth fields for tru macros
+            {
+                auto& nt = mgr.getDynamicNtuple("epemgg_nt_cor");
+                nt["m_ee"]            = m_ee_cor;
+                nt["m_gg"]            = m_gg;
+                nt["m_epemgg"]        = m_epemgg_cor;
+                nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
+                nt["m_ee_sim"]        = m_ee_sim;
+                nt["m_epemgg_sim"]    = m_epemgg_sim;
+                nt["sim_genweight"]   = w;
+                nt.fill();
+            }
         }
 
         // ===========================================================
         // MULT == 3 — 3 rotational combinations
         //   epemg_i = dilepton + g_i,  gg_jk = g_j + g_k,  full = epemg_i + gg_jk
         // One ntuple row per rotation (3 rows per qualifying event).
-        // M(gg) is REC≡COR; M(epemg) and M(epemggg) differ between REC and COR.
-        // Cut decisions evaluated separately for REC and COR (m_epemg differs).
+        // M(gg) is REC≡COR≡SIM; M(epemg) and M(epemggg) differ between REC/COR/SIM.
+        // Cut decisions evaluated separately for REC and COR (eta_pass differs).
         // ===========================================================
         if (neutr_mult == 3 && ecal_objects.size() >= 3 &&
             ecal_pass[0] && ecal_pass[1] && ecal_pass[2]) {
@@ -351,13 +485,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
                 double m_epemg       = epemg_i.massGeV();
                 double m_epemg_cor   = epemg_i.massGeV(KinematicType::CORRECTED);
-                double m_gg_jk       = gg_jk.massGeV();                       // REC≡COR
+                double m_epemg_sim   = epemg_i.massGeV(KinematicType::SIMULATED);
+                double m_gg_jk       = gg_jk.massGeV();                       // REC≡COR≡SIM
                 double m_epemggg     = epemggg.massGeV();
                 double m_epemggg_cor = epemggg.massGeV(KinematicType::CORRECTED);
+                double m_epemggg_sim = epemggg.massGeV(KinematicType::SIMULATED);
 
-                bool pi0_pass_narrow     = cuts.passRangeCut("pi0_mass_window_narrow", m_gg_jk);
-                bool eta_pass_rec        = cuts.passRangeCut("eta_mass_window",        m_epemg);
-                bool eta_pass_cor        = cuts.passRangeCut("eta_mass_window",        m_epemg_cor);
+                bool pi0_pass_narrow = cuts.passRangeCut("pi0_mass_window_narrow", m_gg_jk);
+                bool eta_pass_rec    = cuts.passRangeCut("eta_mass_window",        m_epemg);
+                bool eta_pass_cor    = cuts.passRangeCut("eta_mass_window",        m_epemg_cor);
 
                 // REC row
                 nt["m_ee"]            = m_ee;
@@ -367,9 +503,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 nt["rot_idx"]         = static_cast<Float_t>(r);
                 nt["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
                 nt["eta_pass"]        = eta_pass_rec    ? 1.0f : 0.0f;
+                nt["sim_genweight"]   = w;
                 nt.fill();
 
-                // CORRECTED row
+                // CORRECTED row + SIM mirror fields for tru macros
                 nt_cor["m_ee"]            = m_ee_cor;
                 nt_cor["m_epemg"]         = m_epemg_cor;
                 nt_cor["m_gg"]            = m_gg_jk;
@@ -377,6 +514,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 nt_cor["rot_idx"]         = static_cast<Float_t>(r);
                 nt_cor["pi0_pass_narrow"] = pi0_pass_narrow ? 1.0f : 0.0f;
                 nt_cor["eta_pass"]        = eta_pass_cor    ? 1.0f : 0.0f;
+                nt_cor["m_ee_sim"]        = m_ee_sim;
+                nt_cor["m_epemg_sim"]     = m_epemg_sim;
+                nt_cor["m_epemggg_sim"]   = m_epemggg_sim;
+                nt_cor["sim_genweight"]   = w;
                 nt_cor.fill();
             }
         }
@@ -386,7 +527,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         //   3 pairings: (01)(23), (02)(13), (03)(12). Both gg pairs must
         //   sit in the narrow pi0 window. epem is irrelevant here — this
         //   is purely an ECAL combinatorial signal, so plotted directly
-        //   from output_epem_exp.root without CB extraction.
+        //   from output_epem_sim.root without CB extraction.
         // ===========================================================
         if (neutr_mult == 4 && ecal_objects.size() >= 4 &&
             ecal_pass[0] && ecal_pass[1] && ecal_pass[2] && ecal_pass[3]) {
@@ -402,15 +543,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
                 if (a_in_pi0 && b_in_pi0) {
                     PParticle gggg = gg_a + gg_b;
-                    mgr.fill("mass_gggg_pi0pi0", gggg.massGeV());
+                    mgr.fillw("mass_gggg_pi0pi0", gggg.massGeV(), w);
                 }
             }
         }
     }
 
     // Forward Tracker objects (forward hadrons, up to 3 hits)
-    if (config.isFwdEnabled()) {
+    // Guard: same reasoning as for the ECAL block — SMASH lepton-only ntuples
+    // do not carry fwdet_* fields, so skip silently when missing.
+    if (config.isFwdEnabled() && reader.hasVariable("fwdet_mult")) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
+        // Same sentinel-clamp as ECAL — protects vector::reserve below.
+        if (fwdet_mult < 0) fwdet_mult = 0;
 
         std::vector<PParticleFwd> fwd_objects;
         fwd_objects.reserve(fwdet_mult);
