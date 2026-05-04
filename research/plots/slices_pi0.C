@@ -46,7 +46,7 @@ namespace {
     constexpr double kSliceStep = 0.2;
 
     constexpr const char* kVarStem    = "m_epemg";       // REC base name
-    constexpr const char* kVarStemSim = "m_epemg_sim";   // SIM truth base name
+    constexpr const char* kVarStemSim = "m_epemg_tru";   // TRU (truth) base name
 
     std::string fmtEdge(double x) {
         char buf[32];

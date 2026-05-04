@@ -370,6 +370,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 // --- REC compound observables ---
                 nt["m_ee"]               = m_ee;
                 nt["m_epemg"]            = m_epemg;
+                nt["m_epemg_cor"]        = m_epemg_cor;
                 nt["epemg_theta"]        = epemg.theta();
                 nt["epemg_phi"]          = epemg.phi();
 

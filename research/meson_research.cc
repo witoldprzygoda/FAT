@@ -3,11 +3,12 @@
 // Reads a single FAT-sim output (output_epem_sim.root) and produces a set
 // of 1D histograms of M(e+e-gamma), one per opening-angle slice.
 //
-// Two histograms per OA slice:
-//   m_epemg_oa_X_Y     — RECONSTRUCTED M(e+e-γ),  weighted by sim_genweight
-//   m_epemg_sim_oa_X_Y — SIMULATED-truth M(e+e-γ), weighted by sim_genweight
-// Plus the integrated full-range counterparts:
-//   m_epemg_full      and  m_epemg_sim_full
+// Three histograms per OA slice (REC / COR / TRU flavours of the e+e-γ mass):
+//   m_epemg_oa_X_Y      — RECONSTRUCTED  (raw HADES tracking)
+//   m_epemg_cor_oa_X_Y  — CORRECTED      (energy-loss corrected leptons)
+//   m_epemg_tru_oa_X_Y  — SIMULATED-truth (sim_px/py/pz directly)
+// All weighted by sim_genweight. Plus the integrated full-range counterparts:
+//   m_epemg_full, m_epemg_cor_full, m_epemg_tru_full
 //
 // On simulation there is no like-sign CB — the binary produces a single
 // channel only (one config file, one output ROOT).
@@ -125,7 +126,7 @@ int main(int argc, char* argv[]) {
     std::cout << "  slicing:  oa_epem in [" << kSliceMin << ", " << kSliceMax
               << "] deg, step " << kSliceStep << " deg → "
               << n_slices << " slices\n";
-    std::cout << "  per slice: REC m_epemg + SIM-truth m_epemg_sim, "
+    std::cout << "  per slice: REC m_epemg + COR m_epemg_cor + TRU m_epemg_sim, "
               << kHistNBins << " bins in ["
               << kHistMin << ", " << kHistMax << "] GeV/c²\n\n";
 
@@ -162,35 +163,48 @@ int main(int argc, char* argv[]) {
     };
 
     TH1D* h_full_rec = makeHist("m_epemg_full",
-        TString::Format("M(e^{+}e^{-}#gamma), OA #in [%.1f, %.1f] deg (full);"
+        TString::Format("M(e^{+}e^{-}#gamma) REC, OA #in [%.1f, %.1f] deg (full);"
                         "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                         kSliceMin, kSliceMax).Data());
-    TH1D* h_full_sim = makeHist("m_epemg_sim_full",
-        TString::Format("M(e^{+}e^{-}#gamma) (truth), OA #in [%.1f, %.1f] deg (full);"
+    TH1D* h_full_cor = makeHist("m_epemg_cor_full",
+        TString::Format("M(e^{+}e^{-}#gamma) COR, OA #in [%.1f, %.1f] deg (full);"
+                        "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
+                        kSliceMin, kSliceMax).Data());
+    TH1D* h_full_tru = makeHist("m_epemg_tru_full",
+        TString::Format("M(e^{+}e^{-}#gamma) TRU, OA #in [%.1f, %.1f] deg (full);"
                         "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                         kSliceMin, kSliceMax).Data());
 
     std::vector<TH1D*> h_slice_rec(n_slices, nullptr);
-    std::vector<TH1D*> h_slice_sim(n_slices, nullptr);
+    std::vector<TH1D*> h_slice_cor(n_slices, nullptr);
+    std::vector<TH1D*> h_slice_tru(n_slices, nullptr);
     for (int i = 0; i < n_slices; ++i) {
         const double oa_lo = kSliceMin + i * kSliceStep;
         const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
         const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
 
         h_slice_rec[i] = makeHist("m_epemg_" + suff,
-            TString::Format("M(e^{+}e^{-}#gamma), OA #in [%.1f, %.1f] deg;"
+            TString::Format("M(e^{+}e^{-}#gamma) REC, OA #in [%.1f, %.1f] deg;"
                             "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                             oa_lo, oa_hi).Data());
-        h_slice_sim[i] = makeHist("m_epemg_sim_" + suff,
-            TString::Format("M(e^{+}e^{-}#gamma) (truth), OA #in [%.1f, %.1f] deg;"
+        h_slice_cor[i] = makeHist("m_epemg_cor_" + suff,
+            TString::Format("M(e^{+}e^{-}#gamma) COR, OA #in [%.1f, %.1f] deg;"
+                            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
+                            oa_lo, oa_hi).Data());
+        h_slice_tru[i] = makeHist("m_epemg_tru_" + suff,
+            TString::Format("M(e^{+}e^{-}#gamma) TRU, OA #in [%.1f, %.1f] deg;"
                             "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                             oa_lo, oa_hi).Data());
     }
 
     // -- Branch addresses ---------------------------------------------------
-    Float_t oa_epem = 0, m_epemg = 0, m_epemg_sim = 0, sim_genweight = 0;
+    // Note: the TRU flavour is stored in the input ntuple under the legacy
+    // branch name 'm_epemg_sim'; we just rebrand it as TRU on the output.
+    Float_t oa_epem = 0, m_epemg = 0, m_epemg_cor = 0, m_epemg_sim = 0,
+            sim_genweight = 0;
     t->SetBranchAddress("oa_epem",       &oa_epem);
     t->SetBranchAddress("m_epemg",       &m_epemg);
+    t->SetBranchAddress("m_epemg_cor",   &m_epemg_cor);
     t->SetBranchAddress("m_epemg_sim",   &m_epemg_sim);
     t->SetBranchAddress("sim_genweight", &sim_genweight);
 
@@ -225,9 +239,11 @@ int main(int argc, char* argv[]) {
         if (idx < 0 || idx >= n_slices) continue;
 
         h_full_rec ->Fill(m_epemg,     sim_genweight);
-        h_full_sim ->Fill(m_epemg_sim, sim_genweight);
+        h_full_cor ->Fill(m_epemg_cor, sim_genweight);
+        h_full_tru ->Fill(m_epemg_sim, sim_genweight);
         h_slice_rec[idx]->Fill(m_epemg,     sim_genweight);
-        h_slice_sim[idx]->Fill(m_epemg_sim, sim_genweight);
+        h_slice_cor[idx]->Fill(m_epemg_cor, sim_genweight);
+        h_slice_tru[idx]->Fill(m_epemg_sim, sim_genweight);
         ++n_filled;
 
         if (n_processed % print_every == 0) {
@@ -240,7 +256,8 @@ int main(int argc, char* argv[]) {
               << "   filled: " << n_filled
               << "   in-window: " << h_full_rec->GetEntries() << "\n";
     std::cout << "  full-range integrals: REC=" << h_full_rec->Integral()
-              << "   SIM=" << h_full_sim->Integral() << "\n";
+              << "   COR=" << h_full_cor->Integral()
+              << "   TRU=" << h_full_tru->Integral() << "\n";
 
     // -- Per-slice summary (entries + sim_genweight integral) -------------
     // The single-pass loop above interleaves slices, so we can't print a
@@ -251,10 +268,9 @@ int main(int argc, char* argv[]) {
         const double oa_lo = kSliceMin + i * kSliceStep;
         const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
         std::cout << "    OA [" << oa_lo << ", " << oa_hi << "] deg:"
-                  << "  REC entries=" << h_slice_rec[i]->GetEntries()
-                  << " ∫=" << h_slice_rec[i]->Integral()
-                  << "  |  SIM entries=" << h_slice_sim[i]->GetEntries()
-                  << " ∫=" << h_slice_sim[i]->Integral() << "\n";
+                  << "  REC ∫=" << h_slice_rec[i]->Integral()
+                  << "  |  COR ∫=" << h_slice_cor[i]->Integral()
+                  << "  |  TRU ∫=" << h_slice_tru[i]->Integral() << "\n";
     }
 
     fout->Write();
