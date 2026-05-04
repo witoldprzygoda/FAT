@@ -42,10 +42,15 @@
 // Slicing parameters — kept simple as compile-time constants.
 // -----------------------------------------------------------------------------
 namespace SliceConfig {
-    // OA slice grid: [kSliceMin, kSliceMax] divided into kSliceStep-wide bins.
-    constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
-    constexpr double kSliceStep = 0.2;
+    // OA slice grids — two co-existing slicings on the same range:
+    //   step 0.2° → fine (used by π⁰ Dalitz analysis, high statistics)
+    //   step 0.5° → coarse (used by η Dalitz analysis, lower statistics)
+    // Histogram names stay distinct because the slice edges differ
+    // (e.g. m_epemg_oa_0p0_0p2 vs m_epemg_oa_0p0_0p5).
+    constexpr double kSliceMin     = 0.0;
+    constexpr double kSliceMax     = 10.0;
+    constexpr double kSliceStep    = 0.2;
+    constexpr double kSliceStepEta = 0.5;
 
     // Per-slice m_epemg histogram binning.
     constexpr int    kHistNBins = 160;      // 5 MeV/bin
@@ -136,10 +141,14 @@ int main(int argc, char* argv[]) {
     std::cout << "  cut:      '" << extra_cut << "'\n";
 
     using namespace SliceConfig;
-    const int n_slices = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStep));
+    const int n_slices_pi0 = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStep));
+    const int n_slices_eta = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStepEta));
     std::cout << "  slicing:  '" << kSliceVar << "' in [" << kSliceMin << ", "
-              << kSliceMax << "] deg, step " << kSliceStep << " deg → "
-              << n_slices << " slices\n";
+              << kSliceMax << "] deg\n"
+              << "      fine   step " << kSliceStep    << " deg → "
+              << n_slices_pi0 << " slices  (π⁰)\n"
+              << "      coarse step " << kSliceStepEta << " deg → "
+              << n_slices_eta << " slices  (η)\n";
     std::cout << "  flavours:";
     for (const auto& fv : kFlavors) std::cout << "  " << fv.name << "(" << fv.tag << ")";
     std::cout << "\n";
@@ -197,33 +206,40 @@ int main(int argc, char* argv[]) {
     // -- Loop slices --------------------------------------------------------
     Long64_t total = 0;
 
-    for (int i = 0; i < n_slices; ++i) {
-        const double oa_lo = kSliceMin + i * kSliceStep;
-        const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
-        const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
+    auto runSlicing = [&](double step, const char* tag) {
+        const int n = static_cast<int>(std::round((kSliceMax - kSliceMin) / step));
+        std::cout << "\n  [slicing " << tag << "  step=" << step
+                  << " deg → " << n << " slices]\n";
+        for (int i = 0; i < n; ++i) {
+            const double oa_lo = kSliceMin + i * step;
+            const double oa_hi = kSliceMin + (i + 1) * step;
+            const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
 
-        // Build cut: slice ∧ extra (shared across flavours).
-        std::stringstream cut;
-        cut << kSliceVar << ">=" << oa_lo << " && " << kSliceVar << "<" << oa_hi;
-        if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
+            std::stringstream cut;
+            cut << kSliceVar << ">=" << oa_lo << " && " << kSliceVar << "<" << oa_hi;
+            if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
 
-        for (const auto& fv : kFlavors) {
-            const std::string hname  = std::string(fv.name) + "_" + suff;
-            const TString     title  = TString::Format(
-                "M(e^{+}e^{-}#gamma) %s, OA(e^{+}e^{-}) #in [%.1f, %.1f] deg;"
-                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-                fv.tag, oa_lo, oa_hi);
+            for (const auto& fv : kFlavors) {
+                const std::string hname  = std::string(fv.name) + "_" + suff;
+                const TString     title  = TString::Format(
+                    "M(e^{+}e^{-}#gamma) %s, OA(e^{+}e^{-}) #in [%.1f, %.1f] deg;"
+                    "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+                    fv.tag, oa_lo, oa_hi);
 
-            TH1D* h = new TH1D(hname.c_str(), title, kHistNBins, kHistMin, kHistMax);
-            h->Sumw2();
+                TH1D* h = new TH1D(hname.c_str(), title, kHistNBins, kHistMin, kHistMax);
+                h->Sumw2();
 
-            const std::string draw_expr = std::string(fv.name) + ">>" + hname;
-            t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
+                const std::string draw_expr = std::string(fv.name) + ">>" + hname;
+                t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
 
-            total += static_cast<Long64_t>(h->GetEntries());
-            std::cout << "  " << hname << ": " << h->GetEntries() << " entries\n";
+                total += static_cast<Long64_t>(h->GetEntries());
+                std::cout << "  " << hname << ": " << h->GetEntries() << " entries\n";
+            }
         }
-    }
+    };
+
+    runSlicing(kSliceStep,    "fine/π⁰");
+    runSlicing(kSliceStepEta, "coarse/η");
 
     std::cout << "\n  Total fills across slices × flavours: " << total << "\n";
 
