@@ -52,9 +52,9 @@ namespace SliceConfig {
     constexpr double kSliceMax  = 10.0;
     constexpr double kSliceStep = 0.2;
 
-    constexpr int    kHistNBins = 160;      // 5 MeV/bin
+    constexpr int    kHistNBins = 230;      // 2 MeV/bin (230 × 0.002 = 0.46)
     constexpr double kHistMin   = 0.0;
-    constexpr double kHistMax   = 0.8;
+    constexpr double kHistMax   = 0.46;
 }
 
 // -----------------------------------------------------------------------------

@@ -1,7 +1,11 @@
-// research/plots/slices.C — draw m_epemg per OA slice (SIMULATION).
+// research/plots/slices_pi0.C — draw m_epemg per OA slice (SIMULATION).
+//
+// Histogram range matches meson_research.cc: m_epemg in [0, 0.46] GeV/c²
+// at 230 bins (2 MeV/bin), the resolution and zoom intended for the
+// pi0-Dalitz study (peak ~0.135 GeV).
 //
 // Reads a single file produced by `meson_research`:
-//   outputs/research_sim.root
+//   research_sim.root
 //
 // Plots, in order:
 //   1) the integrated full spectrum (m_epemg_full + m_epemg_sim_full), then
@@ -19,7 +23,7 @@
 // All paths are relative to the research/ directory.
 //
 // Usage (from research/):
-//   root -l -b -q plots/slices.C
+//   root -l -b -q plots/slices_pi0.C
 
 #include <TFile.h>
 #include <TH1D.h>
@@ -60,11 +64,11 @@ namespace {
     }
 }
 
-void slices() {
+void slices_pi0() {
 
-    TFile* f = TFile::Open("outputs/research_sim.root", "READ");
+    TFile* f = TFile::Open("research_sim.root", "READ");
     if (!f || f->IsZombie()) {
-        std::cerr << "Cannot open outputs/research_sim.root\n";
+        std::cerr << "Cannot open research_sim.root\n";
         return;
     }
 

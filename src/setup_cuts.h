@@ -39,12 +39,15 @@ inline void setupCuts(CutManager& cuts) {
         .addRangeCut("ecal_beta", 0.8, 1.2, "0.8 < beta < 1.2")
         .addMinCut("cluster_energy", 100.0, "Cluster energy > 100 MeV");
 
-    // Narrow pi0 invariant-mass window applied on M(gamma gamma)
+    // pi0 invariant-mass windows (applicable to either M(gg) or M(e+e-gamma)
+    // for Dalitz studies). Wide and narrow versions defined separately.
+    cuts.defineRangeCut("pi0_mass_window", 0.10, 0.18,
+                        "M in [0.10, 0.18] GeV/c^2 (wide pi0 window)");
     cuts.defineRangeCut("pi0_mass_window_narrow", 0.125, 0.145,
-                        "M(gg) in [0.125, 0.145] GeV/c^2 (narrow pi0 window)");
+                        "M in [0.125, 0.145] GeV/c^2 (narrow pi0 window)");
 
-    // eta invariant-mass window applied on M(e+e- gamma) — for the mult==3
-    // rotational analysis (epem + g_i is the eta candidate).
+    // eta invariant-mass window — applicable on M(e+e-gamma) for the mult==1
+    // Dalitz study and the mult==3 rotational analysis.
     cuts.defineRangeCut("eta_mass_window", 0.5, 0.6,
                         "M(e+e-gamma) in [0.5, 0.6] GeV/c^2 (eta window)");
 

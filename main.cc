@@ -332,10 +332,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
         ecal_nt.fill();
 
-        // Compound e+e-gamma — only when ecal_mult == 1 AND the single gamma
-        // passes ecal_quality. One ntuple entry per qualifying event, plus the
-        // mass_epemg histogram (pi0 Dalitz region M ~ 0.135 GeV/c^2).
-        if (neutr_mult == 1 && !ecal_objects.empty() && ecal_pass[0]) {
+        // Compound e+e-gamma — ecal_mult == 1, single neutral hit available.
+        // Three fills:
+        //   meson_dalitz_nt      — UNCONDITIONAL on ecal_pass; quality stored
+        //                          as a flag, so RICH/ECAL ID effects can be
+        //                          studied also for events that fail quality.
+        //                          Carries REC + SIM truth compound observables.
+        //   epemg_nt(_cor) +     — only when gamma passes ecal_quality
+        //   mass_epemg histos      (existing pi0/eta Dalitz pipeline).
+        if (neutr_mult == 1 && !ecal_objects.empty()) {
             const auto& gamma = ecal_objects[0];
 
             PParticle epemg = dilepton + gamma;
@@ -345,6 +350,126 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             double m_epemg     = epemg.massGeV();
             double m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
             double m_epemg_sim = epemg.massGeV(KinematicType::SIMULATED);
+
+            // Opening angles (REC defaults, SIM truth from sim_px/py/pz).
+            // Note: oa(positron, electron) at REC vs COR is identical because
+            // angles don't change under energy-loss correction. SIM however
+            // uses genuine truth direction → genuinely different value.
+            double oa_epem_g     = Physics::openingAngle(dilepton, gamma);
+            double oa_epem_g_sim = Physics::openingAngle(dilepton, gamma,
+                                                         KinematicType::SIMULATED);
+            double oa_epem_sim   = Physics::openingAngle(positron, electron,
+                                                         KinematicType::SIMULATED);
+
+            // === meson_dalitz_nt — Dalitz pi0/eta study with RICH+ECAL ========
+            // Mult==1 only; no ecal_quality gating — quality is recorded as
+            // a flag. REC compound + SIM truth compound + raw detector data.
+            {
+                auto& nt = mgr.getDynamicNtuple("meson_dalitz_nt");
+
+                // --- REC compound observables ---
+                nt["m_ee"]               = m_ee;
+                nt["m_epemg"]            = m_epemg;
+                nt["epemg_theta"]        = epemg.theta();
+                nt["epemg_phi"]          = epemg.phi();
+
+                nt["pi0_pass"]           = cuts.passRangeCut("pi0_mass_window",        m_epemg) ? 1.0f : 0.0f;
+                nt["pi0_pass_narrow"]    = cuts.passRangeCut("pi0_mass_window_narrow", m_epemg) ? 1.0f : 0.0f;
+                nt["eta_pass"]           = cuts.passRangeCut("eta_mass_window",        m_epemg) ? 1.0f : 0.0f;
+
+                nt["oa_epem"]            = oa;
+                nt["oa_epem_g"]          = oa_epem_g;
+
+                // --- SIM truth compound observables (suffix _sim) ---
+                nt["m_ee_sim"]           = m_ee_sim;
+                nt["m_epemg_sim"]        = m_epemg_sim;
+                nt["epemg_theta_sim"]    = epemg.theta(KinematicType::SIMULATED);
+                nt["epemg_phi_sim"]      = epemg.phi(KinematicType::SIMULATED);
+
+                nt["pi0_pass_sim"]        = cuts.passRangeCut("pi0_mass_window",        m_epemg_sim) ? 1.0f : 0.0f;
+                nt["pi0_pass_narrow_sim"] = cuts.passRangeCut("pi0_mass_window_narrow", m_epemg_sim) ? 1.0f : 0.0f;
+                nt["eta_pass_sim"]        = cuts.passRangeCut("eta_mass_window",        m_epemg_sim) ? 1.0f : 0.0f;
+
+                nt["oa_epem_sim"]        = oa_epem_sim;
+                nt["oa_epem_g_sim"]      = oa_epem_g_sim;
+
+                // --- ECAL quality cut decision (1 = passed quality) ---
+                nt["ecal_quality_pass"]  = ecal_pass[0] ? 1.0f : 0.0f;
+
+                // --- Lepton kinematics: REC + COR + SIM momenta + angles ---
+                nt["ep_p_rec"]           = ep_p_rec;
+                nt["ep_p_cor"]           = ep_p_cor;
+                nt["ep_p_sim"]           = ep_p_sim;
+                nt["ep_theta"]           = positron.theta();         // REC ≡ COR
+                nt["ep_phi"]             = positron.phi();
+                nt["ep_theta_sim"]       = positron.theta(KinematicType::SIMULATED);
+                nt["ep_phi_sim"]         = positron.phi(KinematicType::SIMULATED);
+
+                nt["em_p_rec"]           = em_p_rec;
+                nt["em_p_cor"]           = em_p_cor;
+                nt["em_p_sim"]           = em_p_sim;
+                nt["em_theta"]           = electron.theta();
+                nt["em_phi"]             = electron.phi();
+                nt["em_theta_sim"]       = electron.theta(KinematicType::SIMULATED);
+                nt["em_phi_sim"]         = electron.phi(KinematicType::SIMULATED);
+
+                // --- Neutral-cluster diagnostics (mult==1: _1 suffix stripped) ---
+                // Detector-level quantities — no SIM variant (no MC truth photon
+                // in the SMASH ntuple; gamma is mirrored REC≡COR≡SIM).
+                nt["neutr_mult"]            = reader["neutr_mult"];
+                nt["neutr_counter"]         = reader["neutr_counter"];
+                nt["neutr_pid"]             = reader["neutr_pid_1"];
+                nt["neutr_tof"]             = reader["neutr_tof_1"];
+                nt["neutr_tofrec"]          = reader["neutr_tofrec_1"];
+                nt["neutr_dist"]            = reader["neutr_dist_1"];
+                nt["neutr_clusterid"]       = reader["neutr_clusterid_1"];
+                nt["neutr_cluster_theta"]   = reader["neutr_cluster_theta_1"];
+                nt["neutr_cluster_phi"]     = reader["neutr_cluster_phi_1"];
+                nt["neutr_cluster_energy"]  = reader["neutr_cluster_energy_1"];
+                nt["neutr_cluster_ncells"]  = reader["neutr_cluster_ncells_1"];
+                nt["neutr_beta"]            = reader["neutr_beta_1"];
+                nt["neutr_p"]               = reader["neutr_p_1"];
+                nt["neutr_p_pid"]           = reader["neutr_p_pid_1"];
+                nt["neutr_mass"]            = reader["neutr_mass_1"];
+                nt["neutr_mass2"]           = reader["neutr_mass2_1"];
+                nt["neutr_q"]               = reader["neutr_q_1"];
+                nt["neutr_phi"]             = reader["neutr_phi_1"];
+                nt["neutr_theta"]           = reader["neutr_theta_1"];
+                nt["neutr_r"]               = reader["neutr_r_1"];
+                nt["neutr_z"]               = reader["neutr_z_1"];
+                nt["neutr_chi2"]            = reader["neutr_chi2_1"];
+                nt["neutr_phi2"]            = reader["neutr_phi2_1"];
+                nt["neutr_theta2"]          = reader["neutr_theta2_1"];
+                nt["neutr_r2"]              = reader["neutr_r2_1"];
+                nt["neutr_z2"]              = reader["neutr_z2_1"];
+                nt["neutr_energy"]          = reader["neutr_energy_1"];
+
+                // --- RICH ring parameters per lepton ---
+                nt["ep_rich_amp"]              = reader["ep_rich_amp"];
+                nt["ep_rich_avg_ringcharge"]   = reader["ep_rich_avg_ringcharge"];
+                nt["ep_rich_padnum"]           = reader["ep_rich_padnum"];
+                nt["ep_rich_centr"]            = reader["ep_rich_centr"];
+                nt["ep_rich_patmat"]           = reader["ep_rich_patmat"];
+                nt["ep_rich_houtra"]           = reader["ep_rich_houtra"];
+                nt["ep_rich_radius"]           = reader["ep_rich_radius"];
+
+                nt["em_rich_amp"]              = reader["em_rich_amp"];
+                nt["em_rich_avg_ringcharge"]   = reader["em_rich_avg_ringcharge"];
+                nt["em_rich_padnum"]           = reader["em_rich_padnum"];
+                nt["em_rich_centr"]            = reader["em_rich_centr"];
+                nt["em_rich_patmat"]           = reader["em_rich_patmat"];
+                nt["em_rich_houtra"]           = reader["em_rich_houtra"];
+                nt["em_rich_radius"]           = reader["em_rich_radius"];
+
+                // --- Per-event SMASH luminosity weight ---
+                nt["sim_genweight"]      = w;
+
+                nt.fill();
+            }
+
+            // === Existing pi0/eta Dalitz pipeline — quality-gated ===========
+            if (ecal_pass[0]) {
+
             mgr.fillw("mass_epemg",     m_epemg,     w);
             mgr.fillw("mass_epemg_cor", m_epemg_cor, w);
             mgr.fillw("mass_epemg_sim", m_epemg_sim, w);
@@ -416,7 +541,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 nt["sim_genweight"]      = w;
                 nt.fill();
             }
-        }
+            }   // close inner if (ecal_pass[0])
+        }       // close outer if (neutr_mult == 1 && !ecal_objects.empty())
 
         // ===========================================================
         // MULT == 2 — pi0 candidate from gg, omega candidate from epemgg

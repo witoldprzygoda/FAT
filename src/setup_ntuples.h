@@ -61,6 +61,15 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "  Created output ntuple 'epemggg_nt'\n";
     manager.createDynamicNtuple("epemggg_nt_cor", "e+e-ggg combinatorial data (mult==3, CORRECTED)");
     std::cout << "  Created output ntuple 'epemggg_nt_cor'\n";
+
+    // Meson Dalitz study (mult==1 only). SIM variant: keeps the full pp45_epem
+    // field set (REC compound + ECAL/RICH diagnostics + ecal_quality flag) and
+    // additionally records SIM-truth compound observables (mass-window flags,
+    // OAs and lepton angles built from sim_px/py/pz). sim_genweight is stored
+    // for proper luminosity weighting in plotting macros.
+    manager.createDynamicNtuple("meson_dalitz_nt",
+        "Meson Dalitz study (mult==1: epemg + RICH/ECAL diagnostics, REC + SIM truth)");
+    std::cout << "  Created output ntuple 'meson_dalitz_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H
