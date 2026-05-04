@@ -263,9 +263,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             {
                 auto& nt = mgr.getDynamicNtuple("meson_dalitz_nt");
 
-                // Compound observables (REC kinematics)
+                // Compound observables (REC kinematics + COR mass)
                 nt["m_ee"]               = m_ee;
                 nt["m_epemg"]            = m_epemg;
+                nt["m_epemg_cor"]        = m_epemg_cor;
                 nt["epemg_theta"]        = epemg.theta();
                 nt["epemg_phi"]          = epemg.phi();
 

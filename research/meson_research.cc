@@ -1,11 +1,13 @@
 // meson_research.cc — slice-based research on meson_dalitz_nt.
 //
-// Reads one channel of FAT output (output_*_exp.root) and produces a set
-// of 1D histograms of M(e+e-gamma), one per opening-angle slice.
+// Reads one channel of FAT output (output_*_exp.root) and produces TWO sets
+// of 1D histograms of M(e+e-gamma) per opening-angle slice:
+//   m_epemg_*       — RECONSTRUCTED (raw HADES tracking)
+//   m_epemg_cor_*   — CORRECTED     (energy-loss corrected leptons)
 //
 // The same binary is run separately on the three CB channels (epem, epep,
 // emem) via three different config files; downstream macros in plots/
-// combine them into all/CB/signal triples per slice.
+// combine them into all/CB/signal triples per slice for either flavour.
 //
 // Slicing config — currently compile-time constants. To change, edit the
 // SliceConfig namespace below and rebuild.
@@ -18,7 +20,7 @@
 // JSON config keys (flat schema):
 //   "input_file"   — FAT output ROOT file to read (e.g. output_epem_exp.root)
 //   "ntuple_name"  — ntuple to read from (typically "meson_dalitz_nt")
-//   "output_file"  — output ROOT file path (e.g. research/outputs/research_epem.root)
+//   "output_file"  — output ROOT file path (e.g. research_epem.root, relative to research/)
 //   "extra_cut"    — optional TTree::Draw cut, ANDed with the slice cut
 //                    (empty string = no extra cut)
 //
@@ -50,9 +52,20 @@ namespace SliceConfig {
     constexpr double kHistMin   = 0.0;
     constexpr double kHistMax   = 0.8;
 
-    // Slice variable + plotted variable in the input ntuple.
+    // Slice variable in the input ntuple.
     constexpr const char* kSliceVar = "oa_epem";
-    constexpr const char* kPlotVar  = "m_epemg";
+
+    // Plotted mass flavours: same hist binning, separate output histograms.
+    // The 'name' is both the input branch name and the output hist prefix.
+    struct MassFlavor {
+        const char* name;   // ntuple branch + hist-name prefix
+        const char* tag;    // human-readable label for log lines
+    };
+    constexpr MassFlavor kFlavors[] = {
+        {"m_epemg",     "REC"},
+        {"m_epemg_cor", "COR"},
+    };
+    constexpr int kNFlavors = sizeof(kFlavors) / sizeof(kFlavors[0]);
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +140,10 @@ int main(int argc, char* argv[]) {
     std::cout << "  slicing:  '" << kSliceVar << "' in [" << kSliceMin << ", "
               << kSliceMax << "] deg, step " << kSliceStep << " deg → "
               << n_slices << " slices\n";
-    std::cout << "  per slice: " << kPlotVar << " in [" << kHistMin << ", " << kHistMax
+    std::cout << "  flavours:";
+    for (const auto& fv : kFlavors) std::cout << "  " << fv.name << "(" << fv.tag << ")";
+    std::cout << "\n";
+    std::cout << "  per slice: each flavour in [" << kHistMin << ", " << kHistMax
               << "] GeV/c² with " << kHistNBins << " bins\n\n";
 
     // -- Open input ---------------------------------------------------------
@@ -153,17 +169,17 @@ int main(int argc, char* argv[]) {
     }
     fout->cd();   // histograms below auto-attach here
 
-    // -- Full-range histogram ----------------------------------------------
+    // -- Full-range histogram (per flavour) --------------------------------
     // m_epemg integrated over OA ∈ [kSliceMin, kSliceMax] — i.e. mathematically
     // the sum of all slice histograms below. Kept as a separate, named
     // histogram so plotting macros can read it directly without having to
-    // accumulate slices.
-    {
-        const std::string fname = std::string(kPlotVar) + "_full";
+    // accumulate slices. Built for each mass flavour (REC, COR).
+    for (const auto& fv : kFlavors) {
+        const std::string fname = std::string(fv.name) + "_full";
         const TString ftitle = TString::Format(
-            "M(e^{+}e^{-}#gamma), OA(e^{+}e^{-}) #in [%.1f, %.1f] deg (full);"
+            "M(e^{+}e^{-}#gamma) %s, OA(e^{+}e^{-}) #in [%.1f, %.1f] deg (full);"
             "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-            kSliceMin, kSliceMax);
+            fv.tag, kSliceMin, kSliceMax);
 
         TH1D* h_full = new TH1D(fname.c_str(), ftitle, kHistNBins, kHistMin, kHistMax);
         h_full->Sumw2();
@@ -172,7 +188,7 @@ int main(int argc, char* argv[]) {
         cut << kSliceVar << ">=" << kSliceMin << " && " << kSliceVar << "<" << kSliceMax;
         if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
 
-        const std::string draw_expr = std::string(kPlotVar) + ">>" + fname;
+        const std::string draw_expr = std::string(fv.name) + ">>" + fname;
         t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
 
         std::cout << "  " << fname << ": " << h_full->GetEntries() << " entries (full)\n";
@@ -184,31 +200,32 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n_slices; ++i) {
         const double oa_lo = kSliceMin + i * kSliceStep;
         const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
+        const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
 
-        const std::string hname  = std::string(kPlotVar) + "_oa_"
-                                 + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
-        const TString     title  = TString::Format(
-            "M(e^{+}e^{-}#gamma), OA(e^{+}e^{-}) #in [%.1f, %.1f] deg;"
-            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
-            oa_lo, oa_hi);
-
-        // Histogram lives in fout (we did fout->cd() above, no SetDirectory).
-        TH1D* h = new TH1D(hname.c_str(), title, kHistNBins, kHistMin, kHistMax);
-        h->Sumw2();
-
-        // Build cut: slice ∧ extra
+        // Build cut: slice ∧ extra (shared across flavours).
         std::stringstream cut;
         cut << kSliceVar << ">=" << oa_lo << " && " << kSliceVar << "<" << oa_hi;
         if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
 
-        const std::string draw_expr = std::string(kPlotVar) + ">>" + hname;
-        t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
+        for (const auto& fv : kFlavors) {
+            const std::string hname  = std::string(fv.name) + "_" + suff;
+            const TString     title  = TString::Format(
+                "M(e^{+}e^{-}#gamma) %s, OA(e^{+}e^{-}) #in [%.1f, %.1f] deg;"
+                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+                fv.tag, oa_lo, oa_hi);
 
-        total += static_cast<Long64_t>(h->GetEntries());
-        std::cout << "  " << hname << ": " << h->GetEntries() << " entries\n";
+            TH1D* h = new TH1D(hname.c_str(), title, kHistNBins, kHistMin, kHistMax);
+            h->Sumw2();
+
+            const std::string draw_expr = std::string(fv.name) + ">>" + hname;
+            t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
+
+            total += static_cast<Long64_t>(h->GetEntries());
+            std::cout << "  " << hname << ": " << h->GetEntries() << " entries\n";
+        }
     }
 
-    std::cout << "\n  Total entries across slices: " << total << "\n";
+    std::cout << "\n  Total fills across slices × flavours: " << total << "\n";
 
     fout->Write();
     fout->Close();

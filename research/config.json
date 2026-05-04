@@ -1,6 +1,6 @@
 {
     "input_file":  "../output_epem_exp.root",
     "ntuple_name": "meson_dalitz_nt",
-    "output_file": "outputs/research_epem.root",
+    "output_file": "research_epem.root",
     "extra_cut":   ""
 }

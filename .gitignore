@@ -50,9 +50,8 @@ plots/output/*
 !plots/output/.gitkeep
 
 # research/ artefacts: standalone binary + generated outputs/plots.
-# Keep the .gitkeep markers so the empty dirs survive a clone.
+# Per-channel and result ROOTs land directly in research/ (covered by the
+# global *.root rule above). Keep .gitkeep so the plots dir survives a clone.
 research/meson_research
-research/outputs/*
-!research/outputs/.gitkeep
 research/plots/output/*
 !research/plots/output/.gitkeep
