@@ -49,13 +49,20 @@
 // Slicing parameters — kept simple as compile-time constants.
 // -----------------------------------------------------------------------------
 namespace SliceConfig {
-    constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
-    constexpr double kSliceStep = 0.2;
+    // Two co-existing slicings on the same OA range:
+    //   step 0.2° → fine (π⁰ Dalitz, high statistics)
+    //   step 0.5° → coarse (η Dalitz, lower statistics)
+    // Histogram names stay distinct because slice edges differ
+    // (e.g. m_epemg_oa_0p0_0p2 vs m_epemg_oa_0p0_0p5).
+    constexpr double kSliceMin     = 0.0;
+    constexpr double kSliceMax     = 10.0;
+    constexpr double kSliceStep    = 0.2;
+    constexpr double kSliceStepEta = 0.5;
 
-    constexpr int    kHistNBins = 230;      // 2 MeV/bin (230 × 0.002 = 0.46)
+    // Histogram binning: 2 MeV/bin, range covers π⁰ AND η Dalitz peaks.
+    constexpr int    kHistNBins = 350;      // 2 MeV/bin (350 × 0.002 = 0.70)
     constexpr double kHistMin   = 0.0;
-    constexpr double kHistMax   = 0.46;
+    constexpr double kHistMax   = 0.70;
 }
 
 // -----------------------------------------------------------------------------
@@ -116,16 +123,19 @@ int main(int argc, char* argv[]) {
     }
 
     using namespace SliceConfig;
-    const int n_slices = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStep));
+    const int n_slices_pi0 = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStep));
+    const int n_slices_eta = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStepEta));
 
     std::cout << "=== meson_research (sim) ===\n";
     std::cout << "  input:    " << input_file  << "\n";
     std::cout << "  ntuple:   " << ntuple_name << "\n";
     std::cout << "  output:   " << output_file << "\n";
     std::cout << "  cut:      '" << extra_cut << "'   (× sim_genweight always)\n";
-    std::cout << "  slicing:  oa_epem in [" << kSliceMin << ", " << kSliceMax
-              << "] deg, step " << kSliceStep << " deg → "
-              << n_slices << " slices\n";
+    std::cout << "  slicing:  oa_epem in [" << kSliceMin << ", " << kSliceMax << "] deg\n"
+              << "      fine   step " << kSliceStep    << " → "
+              << n_slices_pi0 << " slices  (π⁰)\n"
+              << "      coarse step " << kSliceStepEta << " → "
+              << n_slices_eta << " slices  (η)\n";
     std::cout << "  per slice: REC m_epemg + COR m_epemg_cor + TRU m_epemg_sim, "
               << kHistNBins << " bins in ["
               << kHistMin << ", " << kHistMax << "] GeV/c²\n\n";
@@ -175,27 +185,37 @@ int main(int argc, char* argv[]) {
                         "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                         kSliceMin, kSliceMax).Data());
 
-    std::vector<TH1D*> h_slice_rec(n_slices, nullptr);
-    std::vector<TH1D*> h_slice_cor(n_slices, nullptr);
-    std::vector<TH1D*> h_slice_tru(n_slices, nullptr);
-    for (int i = 0; i < n_slices; ++i) {
-        const double oa_lo = kSliceMin + i * kSliceStep;
-        const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
-        const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
+    // Allocate per-slice histograms for both grids in a single helper.
+    auto allocSliceHists = [&](double step, int n,
+                               std::vector<TH1D*>& vrec,
+                               std::vector<TH1D*>& vcor,
+                               std::vector<TH1D*>& vtru) {
+        vrec.assign(n, nullptr);
+        vcor.assign(n, nullptr);
+        vtru.assign(n, nullptr);
+        for (int i = 0; i < n; ++i) {
+            const double oa_lo = kSliceMin + i * step;
+            const double oa_hi = kSliceMin + (i + 1) * step;
+            const std::string suff = "oa_" + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
+            vrec[i] = makeHist("m_epemg_" + suff,
+                TString::Format("M(e^{+}e^{-}#gamma) REC, OA #in [%.1f, %.1f] deg;"
+                                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
+                                oa_lo, oa_hi).Data());
+            vcor[i] = makeHist("m_epemg_cor_" + suff,
+                TString::Format("M(e^{+}e^{-}#gamma) COR, OA #in [%.1f, %.1f] deg;"
+                                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
+                                oa_lo, oa_hi).Data());
+            vtru[i] = makeHist("m_epemg_tru_" + suff,
+                TString::Format("M(e^{+}e^{-}#gamma) TRU, OA #in [%.1f, %.1f] deg;"
+                                "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
+                                oa_lo, oa_hi).Data());
+        }
+    };
 
-        h_slice_rec[i] = makeHist("m_epemg_" + suff,
-            TString::Format("M(e^{+}e^{-}#gamma) REC, OA #in [%.1f, %.1f] deg;"
-                            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
-                            oa_lo, oa_hi).Data());
-        h_slice_cor[i] = makeHist("m_epemg_cor_" + suff,
-            TString::Format("M(e^{+}e^{-}#gamma) COR, OA #in [%.1f, %.1f] deg;"
-                            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
-                            oa_lo, oa_hi).Data());
-        h_slice_tru[i] = makeHist("m_epemg_tru_" + suff,
-            TString::Format("M(e^{+}e^{-}#gamma) TRU, OA #in [%.1f, %.1f] deg;"
-                            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
-                            oa_lo, oa_hi).Data());
-    }
+    std::vector<TH1D*> h_slice_rec, h_slice_cor, h_slice_tru;          // 0.2° (π⁰)
+    std::vector<TH1D*> h_slice_eta_rec, h_slice_eta_cor, h_slice_eta_tru; // 0.5° (η)
+    allocSliceHists(kSliceStep,    n_slices_pi0, h_slice_rec,     h_slice_cor,     h_slice_tru);
+    allocSliceHists(kSliceStepEta, n_slices_eta, h_slice_eta_rec, h_slice_eta_cor, h_slice_eta_tru);
 
     // -- Branch addresses ---------------------------------------------------
     // Note: the TRU flavour is stored in the input ntuple under the legacy
@@ -229,21 +249,26 @@ int main(int argc, char* argv[]) {
 
         if (formula && formula->EvalInstance() == 0) continue;
 
-        // Determine slice index from OA. Reject if outside grid.
+        // Determine slice indices from OA. Reject if outside grid.
         if (oa_epem < kSliceMin || oa_epem >= kSliceMax) {
             // Not in slicing range → also skip the "full" histogram (which
             // is defined as the OA-window integration matching the slices).
             continue;
         }
-        const int idx = static_cast<int>((oa_epem - kSliceMin) / kSliceStep);
-        if (idx < 0 || idx >= n_slices) continue;
+        const int idx_pi0 = static_cast<int>((oa_epem - kSliceMin) / kSliceStep);
+        const int idx_eta = static_cast<int>((oa_epem - kSliceMin) / kSliceStepEta);
+        if (idx_pi0 < 0 || idx_pi0 >= n_slices_pi0) continue;
+        if (idx_eta < 0 || idx_eta >= n_slices_eta) continue;
 
         h_full_rec ->Fill(m_epemg,     sim_genweight);
         h_full_cor ->Fill(m_epemg_cor, sim_genweight);
         h_full_tru ->Fill(m_epemg_sim, sim_genweight);
-        h_slice_rec[idx]->Fill(m_epemg,     sim_genweight);
-        h_slice_cor[idx]->Fill(m_epemg_cor, sim_genweight);
-        h_slice_tru[idx]->Fill(m_epemg_sim, sim_genweight);
+        h_slice_rec    [idx_pi0]->Fill(m_epemg,     sim_genweight);
+        h_slice_cor    [idx_pi0]->Fill(m_epemg_cor, sim_genweight);
+        h_slice_tru    [idx_pi0]->Fill(m_epemg_sim, sim_genweight);
+        h_slice_eta_rec[idx_eta]->Fill(m_epemg,     sim_genweight);
+        h_slice_eta_cor[idx_eta]->Fill(m_epemg_cor, sim_genweight);
+        h_slice_eta_tru[idx_eta]->Fill(m_epemg_sim, sim_genweight);
         ++n_filled;
 
         if (n_processed % print_every == 0) {
@@ -260,18 +285,24 @@ int main(int argc, char* argv[]) {
               << "   TRU=" << h_full_tru->Integral() << "\n";
 
     // -- Per-slice summary (entries + sim_genweight integral) -------------
-    // The single-pass loop above interleaves slices, so we can't print a
-    // per-slice line "as we fill" the way a Draw-per-slice version would.
-    // Print the equivalent diagnostic at the end instead.
-    std::cout << "\n  Per-slice summary:\n";
-    for (int i = 0; i < n_slices; ++i) {
-        const double oa_lo = kSliceMin + i * kSliceStep;
-        const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
-        std::cout << "    OA [" << oa_lo << ", " << oa_hi << "] deg:"
-                  << "  REC ∫=" << h_slice_rec[i]->Integral()
-                  << "  |  COR ∫=" << h_slice_cor[i]->Integral()
-                  << "  |  TRU ∫=" << h_slice_tru[i]->Integral() << "\n";
-    }
+    auto printSummary = [&](double step, int n,
+                            const std::vector<TH1D*>& vrec,
+                            const std::vector<TH1D*>& vcor,
+                            const std::vector<TH1D*>& vtru,
+                            const char* tag) {
+        std::cout << "\n  Per-slice summary [" << tag
+                  << ", step=" << step << " deg]:\n";
+        for (int i = 0; i < n; ++i) {
+            const double oa_lo = kSliceMin + i * step;
+            const double oa_hi = kSliceMin + (i + 1) * step;
+            std::cout << "    OA [" << oa_lo << ", " << oa_hi << "] deg:"
+                      << "  REC ∫=" << vrec[i]->Integral()
+                      << "  |  COR ∫=" << vcor[i]->Integral()
+                      << "  |  TRU ∫=" << vtru[i]->Integral() << "\n";
+        }
+    };
+    printSummary(kSliceStep,    n_slices_pi0, h_slice_rec,     h_slice_cor,     h_slice_tru,     "fine/π⁰");
+    printSummary(kSliceStepEta, n_slices_eta, h_slice_eta_rec, h_slice_eta_cor, h_slice_eta_tru, "coarse/η");
 
     fout->Write();
     fout->Close();
