@@ -48,3 +48,11 @@ MyDict.cc
 # Plot outputs — keep the directory (via .gitkeep) but ignore generated images
 plots/output/*
 !plots/output/.gitkeep
+
+# research/ artefacts: standalone binary + generated outputs/plots.
+# Keep the .gitkeep markers so the empty dirs survive a clone.
+research/meson_research
+research/outputs/*
+!research/outputs/.gitkeep
+research/plots/output/*
+!research/plots/output/.gitkeep

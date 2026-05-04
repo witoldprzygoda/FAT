@@ -1,9 +1,18 @@
 // mass_spectra_rec_exp.C — Dilepton invariant mass: no OA cut vs OA > 4 deg
 //                          (RECONSTRUCTED, exp data). OA > 4 is the active
 //                          analysis cut (oa_pass==1 flag from main.cc).
+//
+// Each spectrum is saved in both log and linear Y variants. For LOG plots
+// the OA-cut panel reuses the no-OA Y range so the conversion-peak
+// suppression is directly visible. For LINEAR plots the OA-cut panel
+// gets its own auto-range — otherwise the conversion-peak in the no-OA
+// reference would set the cap too high and the cut spectrum would be
+// flattened to invisibility.
+//
 // Usage: root -l -b -q plots/mass_spectra_rec_exp.C
 
 #include "PlotUtils.h"
+#include <string>
 
 void printIntegrals(const char* label, TH1D* all, TH1D* cb, TH1D* sig) {
     double i_all = all->Integral();
@@ -31,33 +40,52 @@ void mass_spectra_rec_exp() {
                  "output_epep_exp.root",
                  "output_emem_exp.root");
 
-    // --- 1. Mass spectrum without OA cut ---
-    TH1D *all1, *cb1, *sig1;
-    std::tie(all1, cb1, sig1) = pu.drawSignal("dilepton_nt", "m_ee",
-                                              160, 0, 0.8, "",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c1 = pu.drawTriple(all1, cb1, sig1,
-                             "M_{e^{+}e^{-}} (no OA cut)", "c_mass_no_oa_rec_exp",
-                             /*logy=*/true);
-    pu.save(c1, "mass_ee_no_oa_rec_exp");
-    printIntegrals("No OA cut", all1, cb1, sig1);
+    // Binning: 280 bins over [0, 1.4] → 5 MeV/bin (same width as before).
+    const int    nbins = 280;
+    const double xmin = 0.0;
+    const double xmax = 1.4;
 
-    double ymax = all1->GetMaximum();
-    double ymin = all1->GetMinimum();
+    // --- Build histograms for both cuts ---
+    TH1D *a1, *c1, *s1, *a2, *c2, *s2;
+    std::tie(a1, c1, s1) = pu.drawSignal("dilepton_nt", "m_ee",
+                                         nbins, xmin, xmax, "",
+                                         ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
+    std::tie(a2, c2, s2) = pu.drawSignal("dilepton_nt", "m_ee",
+                                         nbins, xmin, xmax, "oa_pass==1",
+                                         ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
 
-    // --- 2. Mass spectrum with active OA cut (OA > 4 deg, same Y range) ---
-    TH1D *all2, *cb2, *sig2;
-    std::tie(all2, cb2, sig2) = pu.drawSignal("dilepton_nt", "m_ee",
-                                              160, 0, 0.8, "oa_pass==1",
-                                              ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
-    auto* c2 = pu.drawTriple(all2, cb2, sig2,
-                             "M_{e^{+}e^{-}} (OA > 4#circ, active)", "c_mass_oa4_rec_exp",
-                             /*logy=*/true);
-    all2->SetMaximum(ymax);
-    all2->SetMinimum(ymin);
-    c2->Update();
-    pu.save(c2, "mass_ee_oa4_rec_exp");
-    printIntegrals("OA > 4 deg (active)", all2, cb2, sig2);
+    const char* t_no = "M_{e^{+}e^{-}} (no OA cut)";
+    const char* t_oa = "M_{e^{+}e^{-}} (OA > 4#circ, active)";
+
+    // === No-OA: log (sets reference Y), then linear ===
+    auto* cv_no_log = pu.drawTriple(a1, c1, s1, t_no, "c_mass_no_oa_rec_exp_log", /*logy=*/true);
+    pu.save(cv_no_log, "mass_ee_no_oa_rec_exp_log");
+    const double ymax_log = a1->GetMaximum();
+    const double ymin_log = a1->GetMinimum();
+    printIntegrals("No OA cut (log)", a1, c1, s1);
+
+    // Linear Y: PlotUtils::drawTriple multiplies the histogram's CURRENT
+    // GetMaximum() by 1.2 — but after the previous (log) call the max is
+    // already inflated 3×, so its second multiply gives an absurd Y cap.
+    // Re-cap manually from raw bin contents.
+    const double a1_data_max = a1->GetBinContent(a1->GetMaximumBin());
+    auto* cv_no_lin = pu.drawTriple(a1, c1, s1, t_no, "c_mass_no_oa_rec_exp_lin", /*logy=*/false);
+    a1->SetMaximum(a1_data_max * 1.2); a1->SetMinimum(0.0);
+    cv_no_lin->Update();
+    pu.save(cv_no_lin, "mass_ee_no_oa_rec_exp_lin");
+
+    // === OA cut: log (Y matched to no-OA log), then linear (own auto-range) ===
+    auto* cv_oa_log = pu.drawTriple(a2, c2, s2, t_oa, "c_mass_oa4_rec_exp_log", /*logy=*/true);
+    a2->SetMaximum(ymax_log); a2->SetMinimum(ymin_log);
+    cv_oa_log->Update();
+    pu.save(cv_oa_log, "mass_ee_oa4_rec_exp_log");
+    printIntegrals("OA > 4 deg (active, log)", a2, c2, s2);
+
+    const double a2_data_max = a2->GetBinContent(a2->GetMaximumBin());
+    auto* cv_oa_lin = pu.drawTriple(a2, c2, s2, t_oa, "c_mass_oa4_rec_exp_lin", /*logy=*/false);
+    a2->SetMaximum(a2_data_max * 1.2); a2->SetMinimum(0.0);
+    cv_oa_lin->Update();
+    pu.save(cv_oa_lin, "mass_ee_oa4_rec_exp_lin");
 
     std::cout << "\nDone. Check plots/output/\n";
 }

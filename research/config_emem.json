@@ -1,0 +1,6 @@
+{
+    "input_file":  "../output_emem_exp.root",
+    "ntuple_name": "meson_dalitz_nt",
+    "output_file": "outputs/research_emem.root",
+    "extra_cut":   ""
+}

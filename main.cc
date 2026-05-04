@@ -239,10 +239,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
         ecal_nt.fill();
 
-        // Compound e+e-gamma — only when ecal_mult == 1 AND the single gamma
-        // passes ecal_quality. One ntuple entry per qualifying event, plus the
-        // mass_epemg histogram (pi0 Dalitz region M ~ 0.135 GeV/c^2).
-        if (neutr_mult == 1 && !ecal_objects.empty() && ecal_pass[0]) {
+        // Compound e+e-gamma — ecal_mult == 1, single neutral hit available.
+        // Two fills:
+        //   meson_dalitz_nt      — UNCONDITIONAL on ecal_pass; quality stored
+        //                          as a flag, so RICH/ECAL ID effects can be
+        //                          studied also for events that fail quality.
+        //   epemg_nt(_cor) +     — only when gamma passes ecal_quality
+        //   mass_epemg histos      (existing pi0/eta Dalitz pipeline).
+        if (neutr_mult == 1 && !ecal_objects.empty()) {
             const auto& gamma = ecal_objects[0];
 
             PParticle epemg = dilepton + gamma;
@@ -251,45 +255,136 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
             double m_epemg     = epemg.massGeV();
             double m_epemg_cor = epemg.massGeV(KinematicType::CORRECTED);
-            mgr.fill("mass_epemg", m_epemg);
-            mgr.fill("mass_epemg_cor", m_epemg_cor);
+            double oa_epem_g   = Physics::openingAngle(dilepton, gamma);
 
-            // Helper — fills epemg_nt (REC) or epemg_nt_cor (CORRECTED).
-            auto fillEpemgNt = [&](const char* nt_name, KinematicType k) {
-                auto& nt = mgr.getDynamicNtuple(nt_name);
-                nt["epemg_mass"]         = epemg.massGeV(k);
-                nt["epemg_p"]            = epemg.momentum(k);
-                nt["epemg_theta"]        = epemg.theta(k);
-                nt["epemg_phi"]          = epemg.phi(k);
+            // === meson_dalitz_nt — Dalitz pi0/eta study with RICH+ECAL ========
+            // Mult==1 only; no ecal_quality gating — quality is recorded as
+            // a flag. Lepton kinematics here are RECONSTRUCTED.
+            {
+                auto& nt = mgr.getDynamicNtuple("meson_dalitz_nt");
 
-                nt["epemg_rapidity_cms"] = epemg_cms.rapidity(k);
-                nt["epemg_pt_cms"]       = epemg_cms.vec(k).Pt();
-                nt["epemg_theta_cms"]    = epemg_cms.theta(k);
+                // Compound observables (REC kinematics)
+                nt["m_ee"]               = m_ee;
+                nt["m_epemg"]            = m_epemg;
+                nt["epemg_theta"]        = epemg.theta();
+                nt["epemg_phi"]          = epemg.phi();
 
-                nt["ee_oa"]              = oa;
-                nt["ee_mass"]            = (k == KinematicType::CORRECTED) ? m_ee_cor : m_ee;
+                // Lepton kinematics — momentum REC + COR, angles (REC ≡ COR
+                // for theta/phi: energy-loss correction adjusts |p| only).
+                nt["ep_p_rec"]           = ep_p_rec;
+                nt["ep_p_cor"]           = ep_p_cor;
+                nt["ep_theta"]           = positron.theta();
+                nt["ep_phi"]             = positron.phi();
 
-                nt["gamma_energy"]       = gamma.cluster_energy;
-                nt["gamma_theta"]        = gamma.cluster_theta;
-                nt["gamma_phi"]          = gamma.cluster_phi;
+                nt["em_p_rec"]           = em_p_rec;
+                nt["em_p_cor"]           = em_p_cor;
+                nt["em_theta"]           = electron.theta();
+                nt["em_phi"]             = electron.phi();
 
-                nt["ecal_mult"]          = static_cast<Float_t>(neutr_mult);
+                // Mass-window flags applied to M(epemg)
+                nt["pi0_pass"]           = cuts.passRangeCut("pi0_mass_window",        m_epemg) ? 1.0f : 0.0f;
+                nt["pi0_pass_narrow"]    = cuts.passRangeCut("pi0_mass_window_narrow", m_epemg) ? 1.0f : 0.0f;
+                nt["eta_pass"]           = cuts.passRangeCut("eta_mass_window",        m_epemg) ? 1.0f : 0.0f;
 
-                if (k == KinematicType::CORRECTED) {
-                    nt["mm_epem_mass"]   = mm_epem_mass_cor;
-                    nt["mm_epem_mass2"]  = mm_epem_mass2_cor;
-                } else {
-                    nt["mm_epem_mass"]   = mm_epem_mass;
-                    nt["mm_epem_mass2"]  = mm_epem_mass2;
-                }
+                // Opening angles
+                nt["oa_epem"]            = oa;
+                nt["oa_epem_g"]          = oa_epem_g;
 
-                nt["mm_epemg_mass"]      = miss_epemg.massGeV(k);
-                nt["mm_epemg_mass2"]     = miss_epemg.vec(k).M2() / 1e6;
+                // ECAL quality cut decision (1 = passed quality)
+                nt["ecal_quality_pass"]  = ecal_pass[0] ? 1.0f : 0.0f;
+
+                // Neutral-cluster diagnostics from input ntuple (mult==1: _1 suffix
+                // stripped on output, since this ntuple is mult==1-only).
+                nt["neutr_mult"]            = reader["neutr_mult"];
+                nt["neutr_counter"]         = reader["neutr_counter"];
+                nt["neutr_pid"]             = reader["neutr_pid_1"];
+                nt["neutr_tof"]             = reader["neutr_tof_1"];
+                nt["neutr_tofrec"]          = reader["neutr_tofrec_1"];
+                nt["neutr_dist"]            = reader["neutr_dist_1"];
+                nt["neutr_clusterid"]       = reader["neutr_clusterid_1"];
+                nt["neutr_cluster_theta"]   = reader["neutr_cluster_theta_1"];
+                nt["neutr_cluster_phi"]     = reader["neutr_cluster_phi_1"];
+                nt["neutr_cluster_energy"]  = reader["neutr_cluster_energy_1"];
+                nt["neutr_cluster_ncells"]  = reader["neutr_cluster_ncells_1"];
+                nt["neutr_beta"]            = reader["neutr_beta_1"];
+                nt["neutr_p"]               = reader["neutr_p_1"];
+                nt["neutr_p_pid"]           = reader["neutr_p_pid_1"];
+                nt["neutr_mass"]            = reader["neutr_mass_1"];
+                nt["neutr_mass2"]           = reader["neutr_mass2_1"];
+                nt["neutr_q"]               = reader["neutr_q_1"];
+                nt["neutr_phi"]             = reader["neutr_phi_1"];
+                nt["neutr_theta"]           = reader["neutr_theta_1"];
+                nt["neutr_r"]               = reader["neutr_r_1"];
+                nt["neutr_z"]               = reader["neutr_z_1"];
+                nt["neutr_chi2"]            = reader["neutr_chi2_1"];
+                nt["neutr_phi2"]            = reader["neutr_phi2_1"];
+                nt["neutr_theta2"]          = reader["neutr_theta2_1"];
+                nt["neutr_r2"]              = reader["neutr_r2_1"];
+                nt["neutr_z2"]              = reader["neutr_z2_1"];
+                nt["neutr_energy"]          = reader["neutr_energy_1"];
+
+                // RICH ring parameters — separately for ep and em
+                nt["ep_rich_amp"]              = reader["ep_rich_amp"];
+                nt["ep_rich_avg_ringcharge"]   = reader["ep_rich_avg_ringcharge"];
+                nt["ep_rich_padnum"]           = reader["ep_rich_padnum"];
+                nt["ep_rich_centr"]            = reader["ep_rich_centr"];
+                nt["ep_rich_patmat"]           = reader["ep_rich_patmat"];
+                nt["ep_rich_houtra"]           = reader["ep_rich_houtra"];
+                nt["ep_rich_radius"]           = reader["ep_rich_radius"];
+
+                nt["em_rich_amp"]              = reader["em_rich_amp"];
+                nt["em_rich_avg_ringcharge"]   = reader["em_rich_avg_ringcharge"];
+                nt["em_rich_padnum"]           = reader["em_rich_padnum"];
+                nt["em_rich_centr"]            = reader["em_rich_centr"];
+                nt["em_rich_patmat"]           = reader["em_rich_patmat"];
+                nt["em_rich_houtra"]           = reader["em_rich_houtra"];
+                nt["em_rich_radius"]           = reader["em_rich_radius"];
+
                 nt.fill();
-            };
+            }
 
-            fillEpemgNt("epemg_nt",     KinematicType::RECONSTRUCTED);
-            fillEpemgNt("epemg_nt_cor", KinematicType::CORRECTED);
+            // === Existing pi0/eta Dalitz pipeline — quality-gated ===========
+            if (ecal_pass[0]) {
+                mgr.fill("mass_epemg", m_epemg);
+                mgr.fill("mass_epemg_cor", m_epemg_cor);
+
+                // Helper — fills epemg_nt (REC) or epemg_nt_cor (CORRECTED).
+                auto fillEpemgNt = [&](const char* nt_name, KinematicType k) {
+                    auto& nt = mgr.getDynamicNtuple(nt_name);
+                    nt["epemg_mass"]         = epemg.massGeV(k);
+                    nt["epemg_p"]            = epemg.momentum(k);
+                    nt["epemg_theta"]        = epemg.theta(k);
+                    nt["epemg_phi"]          = epemg.phi(k);
+
+                    nt["epemg_rapidity_cms"] = epemg_cms.rapidity(k);
+                    nt["epemg_pt_cms"]       = epemg_cms.vec(k).Pt();
+                    nt["epemg_theta_cms"]    = epemg_cms.theta(k);
+
+                    nt["ee_oa"]              = oa;
+                    nt["ee_mass"]            = (k == KinematicType::CORRECTED) ? m_ee_cor : m_ee;
+
+                    nt["gamma_energy"]       = gamma.cluster_energy;
+                    nt["gamma_theta"]        = gamma.cluster_theta;
+                    nt["gamma_phi"]          = gamma.cluster_phi;
+
+                    nt["ecal_mult"]          = static_cast<Float_t>(neutr_mult);
+
+                    if (k == KinematicType::CORRECTED) {
+                        nt["mm_epem_mass"]   = mm_epem_mass_cor;
+                        nt["mm_epem_mass2"]  = mm_epem_mass2_cor;
+                    } else {
+                        nt["mm_epem_mass"]   = mm_epem_mass;
+                        nt["mm_epem_mass2"]  = mm_epem_mass2;
+                    }
+
+                    nt["mm_epemg_mass"]      = miss_epemg.massGeV(k);
+                    nt["mm_epemg_mass2"]     = miss_epemg.vec(k).M2() / 1e6;
+                    nt.fill();
+                };
+
+                fillEpemgNt("epemg_nt",     KinematicType::RECONSTRUCTED);
+                fillEpemgNt("epemg_nt_cor", KinematicType::CORRECTED);
+            }
         }
 
         // ===========================================================

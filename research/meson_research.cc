@@ -1,0 +1,219 @@
+// meson_research.cc — slice-based research on meson_dalitz_nt.
+//
+// Reads one channel of FAT output (output_*_exp.root) and produces a set
+// of 1D histograms of M(e+e-gamma), one per opening-angle slice.
+//
+// The same binary is run separately on the three CB channels (epem, epep,
+// emem) via three different config files; downstream macros in plots/
+// combine them into all/CB/signal triples per slice.
+//
+// Slicing config — currently compile-time constants. To change, edit the
+// SliceConfig namespace below and rebuild.
+//
+// Usage (from research/ — paths in JSON configs are relative to here):
+//   ./meson_research config.json        # epem
+//   ./meson_research config_epep.json   # ++
+//   ./meson_research config_emem.json   # --
+//
+// JSON config keys (flat schema):
+//   "input_file"   — FAT output ROOT file to read (e.g. output_epem_exp.root)
+//   "ntuple_name"  — ntuple to read from (typically "meson_dalitz_nt")
+//   "output_file"  — output ROOT file path (e.g. research/outputs/research_epem.root)
+//   "extra_cut"    — optional TTree::Draw cut, ANDed with the slice cut
+//                    (empty string = no extra cut)
+//
+// @author Witold Przygoda (witold.przygoda@uj.edu.pl)
+// @date 2025
+
+#include <TFile.h>
+#include <TTree.h>
+#include <TH1D.h>
+#include <TString.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cmath>
+#include <cctype>
+
+// -----------------------------------------------------------------------------
+// Slicing parameters — kept simple as compile-time constants.
+// -----------------------------------------------------------------------------
+namespace SliceConfig {
+    // OA slice grid: [kSliceMin, kSliceMax] divided into kSliceStep-wide bins.
+    constexpr double kSliceMin  = 0.0;
+    constexpr double kSliceMax  = 10.0;
+    constexpr double kSliceStep = 0.2;
+
+    // Per-slice m_epemg histogram binning.
+    constexpr int    kHistNBins = 160;      // 5 MeV/bin
+    constexpr double kHistMin   = 0.0;
+    constexpr double kHistMax   = 0.8;
+
+    // Slice variable + plotted variable in the input ntuple.
+    constexpr const char* kSliceVar = "oa_epem";
+    constexpr const char* kPlotVar  = "m_epemg";
+}
+
+// -----------------------------------------------------------------------------
+// Minimal JSON string-value reader for our flat schema. Looks for
+//   "key" : "value"
+// with whitespace tolerated. Returns empty string if key missing or value
+// not a string. Sufficient for our 4-key configs; do not extend.
+// -----------------------------------------------------------------------------
+std::string getJsonString(const std::string& content, const std::string& key) {
+    const std::string pat = "\"" + key + "\"";
+    size_t pos = 0;
+    while ((pos = content.find(pat, pos)) != std::string::npos) {
+        size_t after = pos + pat.size();
+        while (after < content.size() && std::isspace((unsigned char)content[after])) ++after;
+        if (after < content.size() && content[after] == ':') {
+            ++after;
+            while (after < content.size() && std::isspace((unsigned char)content[after])) ++after;
+            if (after < content.size() && content[after] == '"') {
+                const size_t end = content.find('"', after + 1);
+                if (end != std::string::npos)
+                    return content.substr(after + 1, end - after - 1);
+            }
+            return "";
+        }
+        pos = after;
+    }
+    return "";
+}
+
+// Format slice edge "0.4" → "0p4", "10.0" → "10p0" — used to build histogram
+// names that are valid C++ / ROOT identifiers (no dots).
+std::string fmtEdge(double x) {
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%.1f", x);
+    std::string s(buf);
+    for (auto& c : s) if (c == '.') c = 'p';
+    return s;
+}
+
+int main(int argc, char* argv[]) {
+    std::string config_path = "config.json";
+    if (argc > 1) config_path = argv[1];
+
+    // -- Load config --------------------------------------------------------
+    std::ifstream ifs(config_path);
+    if (!ifs) {
+        std::cerr << "ERROR: cannot open config file: " << config_path << "\n";
+        return 1;
+    }
+    std::stringstream buf;
+    buf << ifs.rdbuf();
+    const std::string content = buf.str();
+
+    const std::string input_file  = getJsonString(content, "input_file");
+    const std::string ntuple_name = getJsonString(content, "ntuple_name");
+    const std::string output_file = getJsonString(content, "output_file");
+    const std::string extra_cut   = getJsonString(content, "extra_cut");
+
+    if (input_file.empty() || ntuple_name.empty() || output_file.empty()) {
+        std::cerr << "ERROR: config must define non-empty input_file, ntuple_name, output_file\n";
+        return 1;
+    }
+
+    std::cout << "=== meson_research ===\n";
+    std::cout << "  input:    " << input_file  << "\n";
+    std::cout << "  ntuple:   " << ntuple_name << "\n";
+    std::cout << "  output:   " << output_file << "\n";
+    std::cout << "  cut:      '" << extra_cut << "'\n";
+
+    using namespace SliceConfig;
+    const int n_slices = static_cast<int>(std::round((kSliceMax - kSliceMin) / kSliceStep));
+    std::cout << "  slicing:  '" << kSliceVar << "' in [" << kSliceMin << ", "
+              << kSliceMax << "] deg, step " << kSliceStep << " deg → "
+              << n_slices << " slices\n";
+    std::cout << "  per slice: " << kPlotVar << " in [" << kHistMin << ", " << kHistMax
+              << "] GeV/c² with " << kHistNBins << " bins\n\n";
+
+    // -- Open input ---------------------------------------------------------
+    TFile* fin = TFile::Open(input_file.c_str(), "READ");
+    if (!fin || fin->IsZombie()) {
+        std::cerr << "ERROR: cannot open input file: " << input_file << "\n";
+        return 1;
+    }
+    auto* t = (TTree*)fin->Get(ntuple_name.c_str());
+    if (!t) {
+        std::cerr << "ERROR: ntuple '" << ntuple_name << "' not in " << input_file << "\n";
+        fin->Close();
+        return 1;
+    }
+    std::cout << "  input ntuple entries: " << t->GetEntries() << "\n\n";
+
+    // -- Open output --------------------------------------------------------
+    TFile* fout = TFile::Open(output_file.c_str(), "RECREATE");
+    if (!fout || fout->IsZombie()) {
+        std::cerr << "ERROR: cannot create output file: " << output_file << "\n";
+        fin->Close();
+        return 1;
+    }
+    fout->cd();   // histograms below auto-attach here
+
+    // -- Full-range histogram ----------------------------------------------
+    // m_epemg integrated over OA ∈ [kSliceMin, kSliceMax] — i.e. mathematically
+    // the sum of all slice histograms below. Kept as a separate, named
+    // histogram so plotting macros can read it directly without having to
+    // accumulate slices.
+    {
+        const std::string fname = std::string(kPlotVar) + "_full";
+        const TString ftitle = TString::Format(
+            "M(e^{+}e^{-}#gamma), OA(e^{+}e^{-}) #in [%.1f, %.1f] deg (full);"
+            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+            kSliceMin, kSliceMax);
+
+        TH1D* h_full = new TH1D(fname.c_str(), ftitle, kHistNBins, kHistMin, kHistMax);
+        h_full->Sumw2();
+
+        std::stringstream cut;
+        cut << kSliceVar << ">=" << kSliceMin << " && " << kSliceVar << "<" << kSliceMax;
+        if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
+
+        const std::string draw_expr = std::string(kPlotVar) + ">>" + fname;
+        t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
+
+        std::cout << "  " << fname << ": " << h_full->GetEntries() << " entries (full)\n";
+    }
+
+    // -- Loop slices --------------------------------------------------------
+    Long64_t total = 0;
+
+    for (int i = 0; i < n_slices; ++i) {
+        const double oa_lo = kSliceMin + i * kSliceStep;
+        const double oa_hi = kSliceMin + (i + 1) * kSliceStep;
+
+        const std::string hname  = std::string(kPlotVar) + "_oa_"
+                                 + fmtEdge(oa_lo) + "_" + fmtEdge(oa_hi);
+        const TString     title  = TString::Format(
+            "M(e^{+}e^{-}#gamma), OA(e^{+}e^{-}) #in [%.1f, %.1f] deg;"
+            "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
+            oa_lo, oa_hi);
+
+        // Histogram lives in fout (we did fout->cd() above, no SetDirectory).
+        TH1D* h = new TH1D(hname.c_str(), title, kHistNBins, kHistMin, kHistMax);
+        h->Sumw2();
+
+        // Build cut: slice ∧ extra
+        std::stringstream cut;
+        cut << kSliceVar << ">=" << oa_lo << " && " << kSliceVar << "<" << oa_hi;
+        if (!extra_cut.empty()) cut << " && (" << extra_cut << ")";
+
+        const std::string draw_expr = std::string(kPlotVar) + ">>" + hname;
+        t->Draw(draw_expr.c_str(), cut.str().c_str(), "goff");
+
+        total += static_cast<Long64_t>(h->GetEntries());
+        std::cout << "  " << hname << ": " << h->GetEntries() << " entries\n";
+    }
+
+    std::cout << "\n  Total entries across slices: " << total << "\n";
+
+    fout->Write();
+    fout->Close();
+    fin->Close();
+
+    std::cout << "Output: " << output_file << "\n";
+    return 0;
+}

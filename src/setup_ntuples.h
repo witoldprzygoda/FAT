@@ -61,6 +61,15 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "  Created output ntuple 'epemggg_nt'\n";
     manager.createDynamicNtuple("epemggg_nt_cor", "e+e-ggg combinatorial data (mult==3, CORRECTED)");
     std::cout << "  Created output ntuple 'epemggg_nt_cor'\n";
+
+    // Meson Dalitz study (mult==1 only).
+    // Records compound epemg observables, all relevant mass-window flags,
+    // ECAL quality decision and the full neutral-cluster diagnostics, plus
+    // RICH ring parameters separately for ep and em. Used to study how RICH
+    // hit characteristics and OA(ep, em) influence pi0 / eta Dalitz ID.
+    manager.createDynamicNtuple("meson_dalitz_nt",
+        "Meson Dalitz study (mult==1: epemg + RICH/ECAL diagnostics)");
+    std::cout << "  Created output ntuple 'meson_dalitz_nt'\n";
 }
 
 #endif // SETUP_NTUPLES_H

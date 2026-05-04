@@ -159,11 +159,8 @@ void epem_masses_cor_exp() {
 
     std::cout << "\n=== Section 1: dilepton + mult==1 / mult==2 (cor) ===\n";
 
-    // -- M(e+e-) ---------------------------------------------------------
-    plotTriple(pu, "dilepton_nt_cor", "m_ee",
-               240, 0.0, 1.2, "",
-               "M(e^{+}e^{-}) (cor);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-               "m_ee_cor_exp");
+    // -- M(e+e-) deliberately NOT here — covered by mass_spectra_cor_exp.C
+    //    (mass_ee_no_oa_cor_exp_{log,lin} / mass_ee_oa4_cor_exp_{log,lin}).
 
     // -- M(e+e- gamma)  ECAL N_gamma==1 ----------------------------------
     plotTriple(pu, "epemg_nt_cor", "epemg_mass",
