@@ -55,7 +55,7 @@ namespace SliceConfig {
     // Histogram names stay distinct because slice edges differ
     // (e.g. m_epemg_oa_0p0_0p2 vs m_epemg_oa_0p0_0p5).
     constexpr double kSliceMin     = 0.0;
-    constexpr double kSliceMax     = 10.0;
+    constexpr double kSliceMax     = 15.0;
     constexpr double kSliceStep    = 0.2;
     constexpr double kSliceStepEta = 0.5;
 
@@ -89,7 +89,7 @@ std::string getJsonString(const std::string& content, const std::string& key) {
     return "";
 }
 
-// Format slice edge "0.4" → "0p4", "10.0" → "10p0".
+// Format slice edge "0.4" → "0p4", "15.0" → "15p0".
 std::string fmtEdge(double x) {
     char buf[32];
     snprintf(buf, sizeof(buf), "%.1f", x);

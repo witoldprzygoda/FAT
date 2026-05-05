@@ -19,6 +19,7 @@
 
 #include <TFile.h>
 #include <TTree.h>
+#include <TAxis.h>
 #include <TGraphErrors.h>
 #include <TMultiGraph.h>
 #include <TCanvas.h>
@@ -41,7 +42,7 @@ void yields_eta(const char* flavour = "rec") {
         return;
     }
 
-    const std::string fpath = "fit_results_eta_" + fl + ".root";
+    const std::string fpath = "fit_results_eta_" + fl + "_sim.root";
     TFile* f = TFile::Open(fpath.c_str(), "READ");
     if (!f || f->IsZombie()) {
         std::cerr << "Cannot open " << fpath << "\n"; return;
@@ -55,6 +56,8 @@ void yields_eta(const char* flavour = "rec") {
     float  oa_lo = 0, oa_hi = 0;
     float  mu = 0, sigma = 0;
     float  y1 = 0, e1 = 0, y2 = 0, e2 = 0, y3 = 0, e3 = 0;
+    float  yf = 0, ef = 0;
+    float  yam = 0, eam = 0;   // asymmetric [μ−5σ, μ+3σ]
 
     t->SetBranchAddress("panel_idx",           &panel_idx);
     t->SetBranchAddress("oa_lo",               &oa_lo);
@@ -67,8 +70,13 @@ void yields_eta(const char* flavour = "rec") {
     t->SetBranchAddress("yield_data_2sig_err", &e2);
     t->SetBranchAddress("yield_data_3sig",     &y3);
     t->SetBranchAddress("yield_data_3sig_err", &e3);
+    t->SetBranchAddress("yield_data_full",     &yf);
+    t->SetBranchAddress("yield_data_full_err", &ef);
+    t->SetBranchAddress("yield_data_m5p3sig",     &yam);
+    t->SetBranchAddress("yield_data_m5p3sig_err", &eam);
 
-    std::vector<double> X, EX, Y1, EY1, Y2, EY2, Y3, EY3, Mu, Sig;
+    std::vector<double> X, EX, Y1, EY1, Y2, EY2, Y3, EY3, YF, EYF,
+                        YAM, EYAM, Mu, Sig;
 
     for (Long64_t ev = 0; ev < t->GetEntries(); ++ev) {
         t->GetEntry(ev);
@@ -79,6 +87,8 @@ void yields_eta(const char* flavour = "rec") {
         Y1.push_back(y1);   EY1.push_back(e1);
         Y2.push_back(y2);   EY2.push_back(e2);
         Y3.push_back(y3);   EY3.push_back(e3);
+        YF.push_back(yf);   EYF.push_back(ef);
+        YAM.push_back(yam); EYAM.push_back(eam);
         Mu.push_back(mu);   Sig.push_back(sigma);
     }
 
@@ -92,6 +102,8 @@ void yields_eta(const char* flavour = "rec") {
     auto* g1 = new TGraphErrors(N, X.data(), Y1.data(), EX.data(), EY1.data());
     auto* g2 = new TGraphErrors(N, X.data(), Y2.data(), EX.data(), EY2.data());
     auto* g3 = new TGraphErrors(N, X.data(), Y3.data(), EX.data(), EY3.data());
+    auto* gf  = new TGraphErrors(N, X.data(), YF.data(),  EX.data(), EYF.data());
+    auto* gam = new TGraphErrors(N, X.data(), YAM.data(), EX.data(), EYAM.data());
 
     g1->SetMarkerColor(kBlue);      g1->SetLineColor(kBlue);
     g1->SetMarkerStyle(20);         g1->SetMarkerSize(0.9);
@@ -99,11 +111,17 @@ void yields_eta(const char* flavour = "rec") {
     g2->SetMarkerStyle(21);         g2->SetMarkerSize(0.9);
     g3->SetMarkerColor(kRed);       g3->SetLineColor(kRed);
     g3->SetMarkerStyle(22);         g3->SetMarkerSize(1.0);
+    gf->SetMarkerColor(kBlack);     gf->SetLineColor(kBlack);
+    gf->SetMarkerStyle(33);         gf->SetMarkerSize(1.2);
+    gam->SetMarkerColor(kMagenta + 1); gam->SetLineColor(kMagenta + 1);
+    gam->SetMarkerStyle(29);           gam->SetMarkerSize(1.2);
 
     auto* mg = new TMultiGraph();
-    mg->Add(g1, "P");
-    mg->Add(g2, "P");
-    mg->Add(g3, "P");
+    mg->Add(g1,  "P");
+    mg->Add(g2,  "P");
+    mg->Add(g3,  "P");
+    mg->Add(gam, "P");
+    mg->Add(gf,  "P");
     mg->SetTitle(TString::Format(
         "#eta signal yield vs opening angle (%s, sim);"
         "OA(e^{+}e^{-}) [deg];yield (data #minus bg, sim_genweight)",
@@ -113,19 +131,21 @@ void yields_eta(const char* flavour = "rec") {
     c1->SetMargin(0.13, 0.05, 0.12, 0.08);
     c1->SetGrid();
     mg->Draw("A");
-    mg->GetXaxis()->SetLimits(0.0, 10.0);
+    mg->GetXaxis()->SetLimits(0.0, 15.0);
 
-    auto* leg1 = new TLegend(0.62, 0.72, 0.94, 0.90);
+    auto* leg1 = new TLegend(0.55, 0.62, 0.94, 0.90);
     leg1->SetBorderSize(0);
     leg1->SetFillStyle(0);
     leg1->SetTextSize(0.035);
-    leg1->AddEntry(g1, "yield(#mu #pm 1#sigma)", "lpe");
-    leg1->AddEntry(g2, "yield(#mu #pm 2#sigma)", "lpe");
-    leg1->AddEntry(g3, "yield(#mu #pm 3#sigma)", "lpe");
+    leg1->AddEntry(g1,  "yield(#mu #pm 1#sigma)",                "lpe");
+    leg1->AddEntry(g2,  "yield(#mu #pm 2#sigma)",                "lpe");
+    leg1->AddEntry(g3,  "yield(#mu #pm 3#sigma)",                "lpe");
+    leg1->AddEntry(gam, "yield([#mu#minus5#sigma, #mu+3#sigma])", "lpe");
+    leg1->AddEntry(gf,  "yield(full fit range)",                 "lpe");
     leg1->Draw();
 
     c1->Update();
-    const std::string out1 = "plots/output/yield_eta_" + fl + "_vs_oa";
+    const std::string out1 = "plots/output/yield_eta_" + fl + "_sim_vs_oa";
     c1->SaveAs((out1 + ".pdf").c_str());
     c1->SaveAs((out1 + ".png").c_str());
 
@@ -143,10 +163,10 @@ void yields_eta(const char* flavour = "rec") {
     c2->SetMargin(0.13, 0.05, 0.12, 0.08);
     c2->SetGrid();
     gm->Draw("AP");
-    gm->GetXaxis()->SetLimits(0.0, 10.0);
+    gm->GetXaxis()->SetLimits(0.0, 15.0);
 
     constexpr double kEtaPDG = 0.5478;
-    auto* lref = new TLine(0.0, kEtaPDG, 10.0, kEtaPDG);
+    auto* lref = new TLine(0.0, kEtaPDG, 15.0, kEtaPDG);
     lref->SetLineColor(kRed);
     lref->SetLineStyle(2);
     lref->SetLineWidth(2);
@@ -161,7 +181,7 @@ void yields_eta(const char* flavour = "rec") {
     leg2->Draw();
 
     c2->Update();
-    const std::string out2 = "plots/output/mu_eta_" + fl + "_vs_oa";
+    const std::string out2 = "plots/output/mu_eta_" + fl + "_sim_vs_oa";
     c2->SaveAs((out2 + ".pdf").c_str());
     c2->SaveAs((out2 + ".png").c_str());
 

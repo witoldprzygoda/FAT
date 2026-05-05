@@ -17,6 +17,7 @@
 
 #include <TFile.h>
 #include <TTree.h>
+#include <TAxis.h>
 #include <TGraphErrors.h>
 #include <TMultiGraph.h>
 #include <TCanvas.h>
@@ -29,12 +30,21 @@
 #include <iostream>
 #include <vector>
 
-void yields_pi0() {
-    TFile* f = TFile::Open("fit_results.root", "READ");
-    if (!f || f->IsZombie()) { std::cerr << "Cannot open fit_results.root\n"; return; }
+void yields_pi0(const char* flavour = "rec") {
+
+    std::string fl = flavour;
+    for (auto& c : fl) c = std::tolower(c);
+    if (fl != "rec" && fl != "cor" && fl != "tru") {
+        std::cerr << "Unknown flavour '" << flavour
+                  << "' (expected 'rec', 'cor' or 'tru')\n"; return;
+    }
+
+    const std::string fpath = "fit_results_" + fl + "_sim.root";
+    TFile* f = TFile::Open(fpath.c_str(), "READ");
+    if (!f || f->IsZombie()) { std::cerr << "Cannot open " << fpath << "\n"; return; }
 
     auto* t = (TTree*)f->Get("fit_results");
-    if (!t) { std::cerr << "TTree 'fit_results' not in fit_results.root\n"; return; }
+    if (!t) { std::cerr << "TTree 'fit_results' not in " << fpath << "\n"; return; }
 
     int    panel_idx = 0;
     float  oa_lo = 0, oa_hi = 0;
@@ -95,11 +105,11 @@ void yields_pi0() {
                  "OA(e^{+}e^{-}) [deg];"
                  "yield (data #minus bg, sim_genweight)");
 
-    auto* c1 = new TCanvas("c_yields", "yields vs OA", 1000, 700);
+    auto* c1 = new TCanvas(("c_yields_" + fl).c_str(), "yields vs OA", 1000, 700);
     c1->SetMargin(0.12, 0.05, 0.12, 0.08);
     c1->SetGrid();
     mg->Draw("A");
-    mg->GetXaxis()->SetLimits(0.0, 10.0);
+    mg->GetXaxis()->SetLimits(0.0, 15.0);
 
     auto* leg1 = new TLegend(0.62, 0.72, 0.94, 0.90);
     leg1->SetBorderSize(0);
@@ -111,8 +121,9 @@ void yields_pi0() {
     leg1->Draw();
 
     c1->Update();
-    c1->SaveAs("plots/output/yield_pi0_vs_oa.pdf");
-    c1->SaveAs("plots/output/yield_pi0_vs_oa.png");
+    const std::string out1 = "plots/output/yield_pi0_" + fl + "_sim_vs_oa";
+    c1->SaveAs((out1 + ".pdf").c_str());
+    c1->SaveAs((out1 + ".png").c_str());
 
     // ------------------------------------------------------------------------
     // Plot 2 — μ vs OA, error bars = ±σ_CB (peak width)
@@ -124,17 +135,17 @@ void yields_pi0() {
                  "OA(e^{+}e^{-}) [deg];"
                  "#mu_{CB} [GeV/c^{2}]  (vertical bars = #pm#sigma_{CB})");
 
-    auto* c2 = new TCanvas("c_mu", "mu vs OA", 1000, 700);
+    auto* c2 = new TCanvas(("c_mu_" + fl).c_str(), "mu vs OA", 1000, 700);
     c2->SetMargin(0.12, 0.05, 0.12, 0.08);
     c2->SetGrid();
     gm->Draw("AP");
-    gm->GetXaxis()->SetLimits(0.0, 10.0);
+    gm->GetXaxis()->SetLimits(0.0, 15.0);
 
     // PDG π⁰ mass reference line.
     constexpr double kPi0PDG = 0.13498;
     const double y_lo_axis = gm->GetYaxis()->GetXmin();
     const double y_hi_axis = gm->GetYaxis()->GetXmax();
-    auto* lref = new TLine(0.0, kPi0PDG, 10.0, kPi0PDG);
+    auto* lref = new TLine(0.0, kPi0PDG, 15.0, kPi0PDG);
     lref->SetLineColor(kRed);
     lref->SetLineStyle(2);
     lref->SetLineWidth(2);
@@ -150,13 +161,14 @@ void yields_pi0() {
     leg2->Draw();
 
     c2->Update();
-    c2->SaveAs("plots/output/mu_pi0_vs_oa.pdf");
-    c2->SaveAs("plots/output/mu_pi0_vs_oa.png");
+    const std::string out2 = "plots/output/mu_pi0_" + fl + "_sim_vs_oa";
+    c2->SaveAs((out2 + ".pdf").c_str());
+    c2->SaveAs((out2 + ".png").c_str());
 
     f->Close();
 
     std::cout << "Wrote:\n"
-              << "  plots/output/yield_pi0_vs_oa.{pdf,png}\n"
-              << "  plots/output/mu_pi0_vs_oa.{pdf,png}\n"
+              << "  " << out1 << ".{pdf,png}\n"
+              << "  " << out2 << ".{pdf,png}\n"
               << "  ("<< N <<" OA slices)\n";
 }

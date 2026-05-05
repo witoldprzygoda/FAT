@@ -35,10 +35,11 @@
 
 namespace {
     constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
+    constexpr double kSliceMax  = 15.0;
     constexpr double kSliceStep = 0.2;
 
-    constexpr const char* kVarStem = "m_epemg";
+    // Default REC; overridden per-flavour in fit_pi0(flavour) below.
+    constexpr const char* kVarStemDefault = "m_epemg";
 
     // Fit range — od 0.02 do końca histogramu (low-OA default).
     // Higher OA slices have rising/cut data at low m, see overrides below.
@@ -468,7 +469,17 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     return r;
 }
 
-void fit_pi0() {
+void fit_pi0(const char* flavour = "rec") {
+
+    std::string fl = flavour;
+    for (auto& c : fl) c = std::tolower(c);
+    std::string var_stem;
+    if      (fl == "rec") var_stem = "m_epemg";
+    else if (fl == "cor") var_stem = "m_epemg_cor";
+    else if (fl == "tru") var_stem = "m_epemg_tru";
+    else { std::cerr << "Unknown flavour '" << flavour
+                     << "' (expected 'rec', 'cor' or 'tru')\n"; return; }
+    (void)kVarStemDefault;
 
     TFile* f = TFile::Open("research_sim.root", "READ");
     if (!f || f->IsZombie()) { std::cerr << "Cannot open research_sim.root\n"; return; }
@@ -477,10 +488,11 @@ void fit_pi0() {
     gStyle->SetOptFit(0);
 
     gSystem->mkdir("plots/output", kTRUE);
-    const std::string pdf_multi     = "plots/output/fit_pi0_all.pdf";
-    const std::string pdf_multi_res = "plots/output/fit_pi0_residual_all.pdf";
+    const std::string pdf_multi     = "plots/output/fit_pi0_" + fl + "_sim_all.pdf";
+    const std::string pdf_multi_res = "plots/output/fit_pi0_" + fl + "_sim_residual_all.pdf";
 
-    TFile* fres = TFile::Open("fit_results.root", "RECREATE");
+    const std::string fres_path = "fit_results_" + fl + "_sim.root";
+    TFile* fres = TFile::Open(fres_path.c_str(), "RECREATE");
     auto* tres = new TTree("fit_results",
         "Crystal Ball + P2 + exp fits per OA slice");
     char   name[64]   = {0};
@@ -562,17 +574,18 @@ void fit_pi0() {
 
     // Panel 0: full integrated spectrum (QA only).
     {
-        const std::string hname = std::string(kVarStem) + "_full";
+        const std::string hname = var_stem + "_full";
         auto* h_in = (TH1D*)f->Get(hname.c_str());
         if (h_in) {
             auto* h = (TH1D*)h_in->Clone((hname + "_c").c_str());
             h->SetDirectory(nullptr);
             const TString ctitle = TString::Format(
-                "M(e^{+}e^{-}#gamma) — full OA range [%.1f, %.1f] deg "
+                "M(e^{+}e^{-}#gamma) %s — full OA range [%.1f, %.1f] deg "
                 "(QA fit only);"
                 "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
-                kSliceMin, kSliceMax);
-            FitRes r = fitOneHist(h, hname, ctitle.Data(), "full",
+                fl.c_str(), kSliceMin, kSliceMax);
+            FitRes r = fitOneHist(h, hname, ctitle.Data(),
+                                  fl + "_sim_full",
                                   kSliceMin, canvases, canvases_res);
             fillRow(r, hname, 0, kSliceMin, kSliceMax);
             std::cout << "  full: yield(fit) = " << r.yield_full
@@ -587,7 +600,7 @@ void fit_pi0() {
         const double lo = kSliceMin + i * kSliceStep;
         const double hi = kSliceMin + (i + 1) * kSliceStep;
         const std::string suff = "oa_" + fmtEdge(lo) + "_" + fmtEdge(hi);
-        const std::string hname = std::string(kVarStem) + "_" + suff;
+        const std::string hname = var_stem + "_" + suff;
 
         auto* h_in = (TH1D*)f->Get(hname.c_str());
         if (!h_in) { std::cerr << "  missing " << hname << "\n"; continue; }
@@ -595,11 +608,12 @@ void fit_pi0() {
         h->SetDirectory(nullptr);
 
         const TString ctitle = TString::Format(
-            "M(e^{+}e^{-}#gamma), OA #in [%.1f, %.1f] deg;"
+            "M(e^{+}e^{-}#gamma) %s, OA #in [%.1f, %.1f] deg;"
             "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
-            lo, hi);
+            fl.c_str(), lo, hi);
 
-        FitRes r = fitOneHist(h, hname, ctitle.Data(), "slice_" + suff,
+        FitRes r = fitOneHist(h, hname, ctitle.Data(),
+                              fl + "_sim_slice_" + suff,
                               lo, canvases, canvases_res);
         fillRow(r, hname, 1 + i, lo, hi);
 
@@ -633,13 +647,14 @@ void fit_pi0() {
     for (auto* c : canvases_res) delete c;
     f->Close();
 
-    std::cout << "\nResults TTree: research/fit_results.root  (TTree 'fit_results')\n";
+    std::cout << "\nResults TTree: research/" << fres_path
+              << "  (TTree 'fit_results')\n";
     std::cout << "Multipage PDFs:\n"
               << "  fit:      " << pdf_multi
               << "  (" << canvases.size() << " pages)\n"
               << "  residual: " << pdf_multi_res
               << "  (" << canvases_res.size() << " pages)\n";
     std::cout << "Per-panel PDFs/PNGs:\n"
-              << "  plots/output/fit_pi0_slice_*\n"
-              << "  plots/output/fit_pi0_residual_slice_*\n";
+              << "  plots/output/fit_pi0_" << fl << "_sim_slice_*\n"
+              << "  plots/output/fit_pi0_" << fl << "_sim_residual_slice_*\n";
 }
