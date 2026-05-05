@@ -1,31 +1,39 @@
-// research/plots/compare_yields_eta.C — exp vs sim shape comparison for η.
+// research/plots/compare_yields_eta.C — exp vs sim comparison for η Dalitz,
+// with sim normalized to exp in the high-OA tail.
 //
 // Reads:
-//   research/fit_results_eta_<exp_fl>.root        (exp, this branch — default 'rec')
-//   research/fit_results_eta_<exp_fl>_sim.root    (sim — copied over from
-//                                                  pp45_epem_sim with _sim suffix
-//                                                  to avoid filename collision)
+//   research/fit_results_eta_<fl>.root        (exp, this branch — default 'rec')
+//   research/fit_results_eta_<fl>_sim.root    (sim — copied from
+//                                              pp45_epem_sim with _sim suffix)
 //
-// Both files come from plots/fit_eta.C — same TTree schema with
-// yield_data_{1,2,3}sig{,_err} per OA slice. Both pipelines now use 0.5°
-// slicing for η, so OA bin centers match between exp and sim.
+// Both files come from plots/fit_eta.C and contain five yield variants per
+// OA slice: ±1σ, ±2σ, ±3σ, [μ−5σ, μ+3σ], and full-fit-range.
+//
+// Normalization strategy:
+//   Single anchor scale, computed from the ±1σ yield in the high-OA tail:
+//       S_exp_1σ = Σ_{oa_lo ≥ 9}  yield_exp_1σ(slice)
+//       S_sim_1σ = Σ_{oa_lo ≥ 9}  yield_sim_1σ(slice)
+//       scale    = S_exp_1σ / S_sim_1σ
+//   This single `scale` is then applied uniformly to all sim variants —
+//   by construction the ±1σ ratio in the high-OA region equals 1; other
+//   variants (±2σ, ±3σ, asym, full) deviate from 1 by however much their
+//   integrated yield differs in shape between exp and sim.
 //
 // Plot 1 — yield_eta_compare_norm_1sig_<fl>.{pdf,png}
-//   Normalized η yield (μ ± 1σ) vs opening angle, exp & sim overlaid.
-//   Each spectrum scaled so Σ_i y_i = 1 — pure shape comparison.
+//   Raw exp(1σ) overlaid with sim(1σ) × scale.
 //
 // Plot 2 — yield_eta_compare_ratio_norm_<fl>.{pdf,png}
-//   Three series: ratio (norm_exp / norm_sim) for ±1σ, ±2σ, ±3σ windows.
-//   Per-bin ratio formula: relative error = √((σ_y_e/y_e)² + (σ_y_s/y_s)²).
+//   Per-bin ratio exp_t / (scale · sim_t) for all five variants:
+//     • OA ∈ [0, 9]°    — narrow per-slice points (slice half-width on X)
+//     • OA ∈ [9, 15]°  — collapsed into ONE wide point at X = 12°,
+//                         X-half-width 3°. By construction the 1σ wide
+//                         point sits exactly at 1; the other variants
+//                         tell you how their high-OA shape relates to
+//                         the 1σ-anchored sim.
 //
 // Usage (from research/):
 //   root -l -b -q plots/compare_yields_eta.C            # exp REC vs sim REC
 //   root -l -b -q 'plots/compare_yields_eta.C("cor")'   # exp COR vs sim COR
-//   root -l -b -q 'plots/compare_yields_eta.C("tru")'   # exp TRU(?)
-//                                                       # — only sensible if
-//                                                       #   tru exists on both
-//                                                       #   sides; usually
-//                                                       #   sim-only
 
 #include <TFile.h>
 #include <TTree.h>
@@ -37,15 +45,34 @@
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TString.h>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cmath>
 
 namespace {
+    constexpr int kNTypes = 5;
+    constexpr const char* kBrY[kNTypes] = {
+        "yield_data_1sig",     "yield_data_2sig",     "yield_data_3sig",
+        "yield_data_m5p3sig",  "yield_data_full"
+    };
+    constexpr const char* kBrE[kNTypes] = {
+        "yield_data_1sig_err",     "yield_data_2sig_err",     "yield_data_3sig_err",
+        "yield_data_m5p3sig_err",  "yield_data_full_err"
+    };
+    constexpr const char* kLabel[kNTypes] = {
+        "#mu #pm 1#sigma",   "#mu #pm 2#sigma",   "#mu #pm 3#sigma",
+        "[#mu#minus5#sigma, #mu+3#sigma]",   "full fit range"
+    };
+
+    // High-OA window [oa_lo ≥ kScaleOAmin] used for the sim → exp normalization.
+    constexpr double kScaleOAmin = 9.0;
+
     struct SliceRow {
         double oa_c, oa_w;
-        double y1, e1, y2, e2, y3, e3;
+        double oa_lo, oa_hi;
+        double y[kNTypes], e[kNTypes];
     };
 
     bool readTree(const std::string& path, std::vector<SliceRow>& rows) {
@@ -58,41 +85,35 @@ namespace {
 
         int   panel_idx;
         float oa_lo, oa_hi;
-        float y1, e1, y2, e2, y3, e3;
-        t->SetBranchAddress("panel_idx",           &panel_idx);
-        t->SetBranchAddress("oa_lo",               &oa_lo);
-        t->SetBranchAddress("oa_hi",               &oa_hi);
-        t->SetBranchAddress("yield_data_1sig",     &y1);
-        t->SetBranchAddress("yield_data_1sig_err", &e1);
-        t->SetBranchAddress("yield_data_2sig",     &y2);
-        t->SetBranchAddress("yield_data_2sig_err", &e2);
-        t->SetBranchAddress("yield_data_3sig",     &y3);
-        t->SetBranchAddress("yield_data_3sig_err", &e3);
+        float y[kNTypes], e[kNTypes];
+        t->SetBranchAddress("panel_idx", &panel_idx);
+        t->SetBranchAddress("oa_lo",     &oa_lo);
+        t->SetBranchAddress("oa_hi",     &oa_hi);
+        for (int i = 0; i < kNTypes; ++i) {
+            t->SetBranchAddress(kBrY[i], &y[i]);
+            t->SetBranchAddress(kBrE[i], &e[i]);
+        }
 
         rows.clear();
         for (Long64_t ev = 0; ev < t->GetEntries(); ++ev) {
             t->GetEntry(ev);
             if (panel_idx == 0) continue;
             SliceRow r;
-            r.oa_c = 0.5 * (oa_lo + oa_hi);
-            r.oa_w = 0.5 * (oa_hi - oa_lo);
-            r.y1 = y1;  r.e1 = e1;
-            r.y2 = y2;  r.e2 = e2;
-            r.y3 = y3;  r.e3 = e3;
+            r.oa_lo = oa_lo;  r.oa_hi = oa_hi;
+            r.oa_c  = 0.5 * (oa_lo + oa_hi);
+            r.oa_w  = 0.5 * (oa_hi - oa_lo);
+            for (int i = 0; i < kNTypes; ++i) { r.y[i] = y[i];  r.e[i] = e[i]; }
             rows.push_back(r);
         }
         f->Close();
         return true;
     }
 
-    double sumCol(const std::vector<SliceRow>& v, int which) {
+    // Σ y_t over slices with oa_lo ≥ oa_min, for one yield type.
+    double sumHighOA(const std::vector<SliceRow>& v, int type, double oa_min) {
         double s = 0.0;
         for (const auto& r : v) {
-            switch (which) {
-                case 1: s += r.y1; break;
-                case 2: s += r.y2; break;
-                case 3: s += r.y3; break;
-            }
+            if (r.oa_lo >= oa_min - 1e-6) s += r.y[type];
         }
         return s;
     }
@@ -129,146 +150,199 @@ void compare_yields_eta(const char* exp_flavour = "rec") {
         }
     }
 
-    const double S_e1 = sumCol(exp_rows, 1);
-    const double S_e2 = sumCol(exp_rows, 2);
-    const double S_e3 = sumCol(exp_rows, 3);
-    const double S_s1 = sumCol(sim_rows, 1);
-    const double S_s2 = sumCol(sim_rows, 2);
-    const double S_s3 = sumCol(sim_rows, 3);
+    // Sums over high-OA window, both yields and quadrature errors per type.
+    double S_exp[kNTypes], S_sim[kNTypes], sE_exp[kNTypes], sE_sim[kNTypes];
+    for (int t = 0; t < kNTypes; ++t) {
+        S_exp[t] = sumHighOA(exp_rows, t, kScaleOAmin);
+        S_sim[t] = sumHighOA(sim_rows, t, kScaleOAmin);
+        double s2_e = 0, s2_s = 0;
+        for (const auto& r : exp_rows) if (r.oa_lo >= kScaleOAmin - 1e-6) s2_e += r.e[t]*r.e[t];
+        for (const auto& r : sim_rows) if (r.oa_lo >= kScaleOAmin - 1e-6) s2_s += r.e[t]*r.e[t];
+        sE_exp[t] = std::sqrt(s2_e);
+        sE_sim[t] = std::sqrt(s2_s);
+    }
 
-    if (S_e1 <= 0 || S_s1 <= 0) {
-        std::cerr << "Empty 1σ totals (exp=" << S_e1 << " sim=" << S_s1 << ")\n";
+    // Single anchor scale: from ±1σ yields in OA ≥ kScaleOAmin window.
+    if (S_sim[0] <= 0 || S_exp[0] <= 0) {
+        std::cerr << "Empty 1σ high-OA totals (S_exp=" << S_exp[0]
+                  << " S_sim=" << S_sim[0] << ") — cannot normalize.\n";
         return;
     }
+    const double scale = S_exp[0] / S_sim[0];
 
-    // --- Plot 1: normalized 1σ shape, exp vs sim ----------------------------
-    std::vector<double> X(N), EX(N), Ye_n1(N), Ee_n1(N), Ys_n1(N), Es_n1(N);
-    for (int i = 0; i < N; ++i) {
-        X [i] = exp_rows[i].oa_c;
-        EX[i] = exp_rows[i].oa_w;
-        Ye_n1[i] = exp_rows[i].y1 / S_e1;
-        Ee_n1[i] = exp_rows[i].e1 / S_e1;
-        Ys_n1[i] = sim_rows[i].y1 / S_s1;
-        Es_n1[i] = sim_rows[i].e1 / S_s1;
+    std::cout << "Anchor scale (1σ, OA #geq " << kScaleOAmin
+              << " deg): S_exp = " << S_exp[0]
+              << "   S_sim = " << S_sim[0]
+              << "   scale = " << scale << "\n";
+    std::cout << "High-OA wide-bin ratio per variant (with single scale = "
+              << scale << "):\n";
+    for (int t = 0; t < kNTypes; ++t) {
+        const double r_wide = S_exp[t] / (scale * S_sim[t]);
+        std::cout << "  " << kBrY[t] << ":   S_exp = " << S_exp[t]
+                  << "   S_sim = " << S_sim[t]
+                  << "   ratio_wide = " << r_wide << "\n";
     }
-
-    auto* g_exp = new TGraphErrors(N, X.data(), Ye_n1.data(), EX.data(), Ee_n1.data());
-    auto* g_sim = new TGraphErrors(N, X.data(), Ys_n1.data(), EX.data(), Es_n1.data());
-
-    g_exp->SetMarkerColor(kBlack); g_exp->SetLineColor(kBlack);
-    g_exp->SetMarkerStyle(20);     g_exp->SetMarkerSize(0.9);
-    g_sim->SetMarkerColor(kRed);   g_sim->SetLineColor(kRed);
-    g_sim->SetMarkerStyle(24);     g_sim->SetMarkerSize(0.9);
-
-    auto* mg1 = new TMultiGraph();
-    mg1->Add(g_exp, "P");
-    mg1->Add(g_sim, "P");
-    mg1->SetTitle(TString::Format(
-        "Normalized #eta signal yield (#pm 1#sigma): exp(%s) vs sim;"
-        "OA(e^{+}e^{-}) [deg];yield / #Sigma yield",
-        fl.c_str()));
 
     gStyle->SetOptStat(0);
     gSystem->mkdir("plots/output", kTRUE);
 
-    auto* c1 = new TCanvas("c_eta_norm_1sig", "norm η yield 1sig", 1000, 700);
-    c1->SetMargin(0.13, 0.05, 0.12, 0.08);
-    c1->SetGrid();
-    mg1->Draw("A");
-    mg1->GetXaxis()->SetLimits(0.0, 15.0);
+    // X coordinates shared across plots.
+    std::vector<double> X(N), EX(N);
+    for (int i = 0; i < N; ++i) { X[i] = exp_rows[i].oa_c; EX[i] = exp_rows[i].oa_w; }
 
-    auto* leg1 = new TLegend(0.62, 0.78, 0.94, 0.90);
-    leg1->SetBorderSize(0);
-    leg1->SetFillStyle(0);
-    leg1->SetTextSize(0.035);
-    leg1->AddEntry(g_exp, TString::Format("exp (%s)", fl.c_str()).Data(), "lpe");
-    leg1->AddEntry(g_sim, "sim",                                          "lpe");
-    leg1->Draw();
-
-    c1->Update();
-    const std::string out1 = "plots/output/yield_eta_compare_norm_1sig_" + fl;
-    c1->SaveAs((out1 + ".pdf").c_str());
-    c1->SaveAs((out1 + ".png").c_str());
-
-    // --- Plot 2: normalized exp/sim ratio for 1σ, 2σ, 3σ -------------------
-    auto buildRatio = [&](int Nsig, double S_e, double S_s,
-                          std::vector<double>& R, std::vector<double>& ER) {
-        R.resize(N);  ER.resize(N);
+    // ------------------------------------------------------------------------
+    // Plot 1 — raw exp(1σ) + sim(1σ) scaled to exp at oa_lo ≥ 9°
+    // ------------------------------------------------------------------------
+    {
+        std::vector<double> Ye(N), EYe(N), Ys(N), EYs(N);
+        const int t = 0;   // 1σ
         for (int i = 0; i < N; ++i) {
-            const double y_e = (Nsig == 1) ? exp_rows[i].y1
-                              : (Nsig == 2) ? exp_rows[i].y2 : exp_rows[i].y3;
-            const double e_e = (Nsig == 1) ? exp_rows[i].e1
-                              : (Nsig == 2) ? exp_rows[i].e2 : exp_rows[i].e3;
-            const double y_s = (Nsig == 1) ? sim_rows[i].y1
-                              : (Nsig == 2) ? sim_rows[i].y2 : sim_rows[i].y3;
-            const double e_s = (Nsig == 1) ? sim_rows[i].e1
-                              : (Nsig == 2) ? sim_rows[i].e2 : sim_rows[i].e3;
-
-            if (y_e <= 0 || y_s <= 0) { R[i] = 0; ER[i] = 0; continue; }
-            const double r = (y_e / S_e) / (y_s / S_s);
-            const double rel = std::sqrt((e_e/y_e)*(e_e/y_e) + (e_s/y_s)*(e_s/y_s));
-            R [i] = r;
-            ER[i] = r * rel;
+            Ye [i] = exp_rows[i].y[t];
+            EYe[i] = exp_rows[i].e[t];
+            Ys [i] = sim_rows[i].y[t] * scale;
+            EYs[i] = sim_rows[i].e[t] * scale;
         }
-    };
 
-    std::vector<double> R1, ER1, R2, ER2, R3, ER3;
-    buildRatio(1, S_e1, S_s1, R1, ER1);
-    buildRatio(2, S_e2, S_s2, R2, ER2);
-    buildRatio(3, S_e3, S_s3, R3, ER3);
+        // --- Per-slice point dump for the 1σ overlay ---------------------
+        std::cout << "\nPlot 1 (#mu#pm1#sigma) point dump — sim already scaled by "
+                  << scale << ":\n";
+        std::cout << "  "
+                  << std::setw(11) << "OA_center"
+                  << std::setw(15) << "Y_exp"
+                  << std::setw(15) << "EY_exp"
+                  << std::setw(15) << "Y_sim*scale"
+                  << std::setw(15) << "EY_sim*scale" << "\n";
+        std::cout << "  " << std::string(11+15*4, '-') << "\n";
+        for (int i = 0; i < N; ++i) {
+            std::cout << "  "
+                      << std::setw(11) << std::fixed << std::setprecision(2) << X[i]
+                      << std::setw(15) << std::fixed << std::setprecision(3) << Ye[i]
+                      << std::setw(15) << std::fixed << std::setprecision(3) << EYe[i]
+                      << std::setw(15) << std::fixed << std::setprecision(3) << Ys[i]
+                      << std::setw(15) << std::fixed << std::setprecision(3) << EYs[i]
+                      << "\n";
+        }
+        std::cout.unsetf(std::ios::fixed);
+        std::cout << "\n";
 
-    auto* gr1 = new TGraphErrors(N, X.data(), R1.data(), EX.data(), ER1.data());
-    auto* gr2 = new TGraphErrors(N, X.data(), R2.data(), EX.data(), ER2.data());
-    auto* gr3 = new TGraphErrors(N, X.data(), R3.data(), EX.data(), ER3.data());
+        auto* g_exp = new TGraphErrors(N, X.data(), Ye.data(), EX.data(), EYe.data());
+        auto* g_sim = new TGraphErrors(N, X.data(), Ys.data(), EX.data(), EYs.data());
 
-    gr1->SetMarkerColor(kBlue);      gr1->SetLineColor(kBlue);
-    gr1->SetMarkerStyle(20);         gr1->SetMarkerSize(0.9);
-    gr2->SetMarkerColor(kGreen + 2); gr2->SetLineColor(kGreen + 2);
-    gr2->SetMarkerStyle(21);         gr2->SetMarkerSize(0.9);
-    gr3->SetMarkerColor(kRed);       gr3->SetLineColor(kRed);
-    gr3->SetMarkerStyle(22);         gr3->SetMarkerSize(1.0);
+        g_exp->SetMarkerColor(kBlack); g_exp->SetLineColor(kBlack);
+        g_exp->SetMarkerStyle(20);     g_exp->SetMarkerSize(0.9);
+        g_sim->SetMarkerColor(kRed);   g_sim->SetLineColor(kRed);
+        g_sim->SetMarkerStyle(24);     g_sim->SetMarkerSize(0.9);
 
-    auto* mg2 = new TMultiGraph();
-    mg2->Add(gr1, "P");
-    mg2->Add(gr2, "P");
-    mg2->Add(gr3, "P");
-    mg2->SetTitle(TString::Format(
-        "Normalized #eta yield ratio: exp(%s) / sim;"
-        "OA(e^{+}e^{-}) [deg];"
-        "(y_{exp}/#Sigma_{exp}) / (y_{sim}/#Sigma_{sim})",
-        fl.c_str()));
+        auto* mg = new TMultiGraph();
+        mg->Add(g_exp, "P");
+        mg->Add(g_sim, "P");
+        mg->SetTitle(TString::Format(
+            "#eta yield (%s, #pm 1#sigma): exp vs sim "
+            "[sim normalized to exp at OA #geq %.0f#circ];"
+            "OA(e^{+}e^{-}) [deg];yield(#mu #pm 1#sigma)",
+            fl.c_str(), kScaleOAmin));
 
-    auto* c2 = new TCanvas("c_eta_ratio", "exp/sim η ratio", 1000, 700);
-    c2->SetMargin(0.13, 0.05, 0.12, 0.08);
-    c2->SetGrid();
-    mg2->Draw("A");
-    mg2->GetXaxis()->SetLimits(0.0, 15.0);
+        auto* c1 = new TCanvas("c_eta_norm_1sig", "exp vs scaled sim", 1000, 700);
+        c1->SetMargin(0.13, 0.05, 0.12, 0.08);
+        c1->SetGrid();
+        mg->Draw("A");
+        mg->GetXaxis()->SetLimits(0.0, 15.0);
 
-    auto* lref = new TLine(0.0, 1.0, 15.0, 1.0);
-    lref->SetLineColor(kGray + 2);
-    lref->SetLineStyle(2);
-    lref->SetLineWidth(2);
-    lref->Draw();
+        auto* leg = new TLegend(0.55, 0.78, 0.94, 0.90);
+        leg->SetBorderSize(0);
+        leg->SetFillStyle(0);
+        leg->SetTextSize(0.035);
+        leg->AddEntry(g_exp, TString::Format("exp (%s)", fl.c_str()).Data(), "lpe");
+        leg->AddEntry(g_sim,
+            TString::Format("sim #times %.4g  (norm. at OA #geq %.0f#circ)",
+                            scale, kScaleOAmin).Data(), "lpe");
+        leg->Draw();
 
-    auto* leg2 = new TLegend(0.62, 0.72, 0.94, 0.90);
-    leg2->SetBorderSize(0);
-    leg2->SetFillStyle(0);
-    leg2->SetTextSize(0.035);
-    leg2->AddEntry(gr1,  "ratio (#pm 1#sigma)", "lpe");
-    leg2->AddEntry(gr2,  "ratio (#pm 2#sigma)", "lpe");
-    leg2->AddEntry(gr3,  "ratio (#pm 3#sigma)", "lpe");
-    leg2->AddEntry(lref, "shape match (= 1)",   "l");
-    leg2->Draw();
+        c1->Update();
+        const std::string out1 = "plots/output/yield_eta_compare_norm_1sig_" + fl;
+        c1->SaveAs((out1 + ".pdf").c_str());
+        c1->SaveAs((out1 + ".png").c_str());
+    }
 
-    c2->Update();
-    const std::string out2 = "plots/output/yield_eta_compare_ratio_norm_" + fl;
-    c2->SaveAs((out2 + ".pdf").c_str());
-    c2->SaveAs((out2 + ".png").c_str());
+    // ------------------------------------------------------------------------
+    // Plot 2 — per-slice ratio across the full OA range, all five variants,
+    //   single anchor scale (1σ-based at OA ≥ kScaleOAmin) used for every
+    //   variant. By construction the average exp/sim ratio over OA ≥ 9°
+    //   equals 1 for the 1σ series; deviations elsewhere show shape change.
+    // ------------------------------------------------------------------------
+    {
+        const int colors[kNTypes] = {kBlue, kGreen + 2, kRed, kMagenta + 1, kBlack};
+        const int styles[kNTypes] = {20, 21, 22, 29, 33};
+        const double sizes[kNTypes] = {0.9, 0.9, 1.0, 1.1, 1.2};
+
+        std::vector<TGraphErrors*> grs;
+        grs.reserve(kNTypes);
+
+        for (int t = 0; t < kNTypes; ++t) {
+            std::vector<double> R(N), ER(N);
+            for (int i = 0; i < N; ++i) {
+                const double y_e = exp_rows[i].y[t];
+                const double e_e = exp_rows[i].e[t];
+                const double y_s = sim_rows[i].y[t];
+                const double e_s = sim_rows[i].e[t];
+                if (y_e <= 0 || y_s <= 0) {
+                    R[i] = 0.0;  ER[i] = 0.0;  continue;
+                }
+                const double r   = y_e / (scale * y_s);
+                const double rel = std::sqrt((e_e/y_e)*(e_e/y_e) + (e_s/y_s)*(e_s/y_s));
+                R [i] = r;
+                ER[i] = r * rel;
+            }
+
+            auto* g = new TGraphErrors(N, X.data(), R.data(), EX.data(), ER.data());
+            g->SetMarkerColor(colors[t]); g->SetLineColor(colors[t]);
+            g->SetMarkerStyle(styles[t]); g->SetMarkerSize(sizes[t]);
+            grs.push_back(g);
+        }
+
+        auto* mg = new TMultiGraph();
+        for (auto* g : grs) mg->Add(g, "P");
+        mg->SetTitle(TString::Format(
+            "#eta yield ratio: exp(%s) / (scale #times sim),   "
+            "scale = %.4g  (anchored on 1#sigma at OA #geq %.0f#circ);"
+            "OA(e^{+}e^{-}) [deg];"
+            "yield_{exp} / (scale #times yield_{sim})",
+            fl.c_str(), scale, kScaleOAmin));
+
+        auto* c2 = new TCanvas("c_eta_ratio", "exp/sim η ratio", 1100, 700);
+        c2->SetMargin(0.13, 0.05, 0.12, 0.08);
+        c2->SetGrid();
+        mg->Draw("A");
+        mg->GetXaxis()->SetLimits(0.0, 15.0);
+
+        auto* lref = new TLine(0.0, 1.0, 15.0, 1.0);
+        lref->SetLineColor(kGray + 2);
+        lref->SetLineStyle(2);
+        lref->SetLineWidth(2);
+        lref->Draw();
+
+        auto* leg = new TLegend(0.45, 0.62, 0.94, 0.90);
+        leg->SetBorderSize(0);
+        leg->SetFillStyle(0);
+        leg->SetTextSize(0.030);
+        for (int t = 0; t < kNTypes; ++t) {
+            const double r_wide = (S_sim[t] > 0)
+                                   ? S_exp[t] / (scale * S_sim[t]) : 0.0;
+            leg->AddEntry(grs[t],
+                TString::Format("%s  (#LTratio#GT_{OA #geq 9}=%.3f)", kLabel[t], r_wide).Data(),
+                "lpe");
+        }
+        leg->AddEntry(lref, "match (= 1)", "l");
+        leg->Draw();
+
+        c2->Update();
+        const std::string out2 = "plots/output/yield_eta_compare_ratio_norm_" + fl;
+        c2->SaveAs((out2 + ".pdf").c_str());
+        c2->SaveAs((out2 + ".png").c_str());
+    }
 
     std::cout << "Wrote:\n"
-              << "  " << out1 << ".{pdf,png}\n"
-              << "  " << out2 << ".{pdf,png}\n"
-              << "  (" << N << " OA slices)\n"
-              << "  exp totals: S_1σ=" << S_e1 << " S_2σ=" << S_e2 << " S_3σ=" << S_e3 << "\n"
-              << "  sim totals: S_1σ=" << S_s1 << " S_2σ=" << S_s2 << " S_3σ=" << S_s3 << "\n";
+              << "  plots/output/yield_eta_compare_norm_1sig_" << fl << ".{pdf,png}\n"
+              << "  plots/output/yield_eta_compare_ratio_norm_" << fl << ".{pdf,png}\n"
+              << "  (" << N << " OA slices)\n";
 }
