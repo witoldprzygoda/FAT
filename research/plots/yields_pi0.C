@@ -113,7 +113,7 @@ void yields_pi0(const char* flavour = "rec") {
     c1->SetMargin(0.12, 0.05, 0.12, 0.08);
     c1->SetGrid();
     mg->Draw("A");
-    mg->GetXaxis()->SetLimits(0.0, 10.0);
+    mg->GetXaxis()->SetLimits(0.0, 15.0);
 
     auto* leg1 = new TLegend(0.62, 0.72, 0.94, 0.90);
     leg1->SetBorderSize(0);
@@ -143,10 +143,10 @@ void yields_pi0(const char* flavour = "rec") {
     c2->SetMargin(0.12, 0.05, 0.12, 0.08);
     c2->SetGrid();
     gm->Draw("AP");
-    gm->GetXaxis()->SetLimits(0.0, 10.0);
+    gm->GetXaxis()->SetLimits(0.0, 15.0);
 
     constexpr double kPi0PDG = 0.13498;
-    auto* lref = new TLine(0.0, kPi0PDG, 10.0, kPi0PDG);
+    auto* lref = new TLine(0.0, kPi0PDG, 15.0, kPi0PDG);
     lref->SetLineColor(kRed);
     lref->SetLineStyle(2);
     lref->SetLineWidth(2);

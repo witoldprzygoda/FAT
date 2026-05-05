@@ -46,7 +46,7 @@
 
 namespace {
     constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
+    constexpr double kSliceMax  = 15.0;
     constexpr double kSliceStep = 0.2;
 
     // Default fit window (low-OA). At higher OA the data piles up at low m

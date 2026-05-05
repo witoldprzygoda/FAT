@@ -175,7 +175,7 @@ void compare_yields_eta(const char* exp_flavour = "rec") {
     c1->SetMargin(0.13, 0.05, 0.12, 0.08);
     c1->SetGrid();
     mg1->Draw("A");
-    mg1->GetXaxis()->SetLimits(0.0, 10.0);
+    mg1->GetXaxis()->SetLimits(0.0, 15.0);
 
     auto* leg1 = new TLegend(0.62, 0.78, 0.94, 0.90);
     leg1->SetBorderSize(0);
@@ -242,9 +242,9 @@ void compare_yields_eta(const char* exp_flavour = "rec") {
     c2->SetMargin(0.13, 0.05, 0.12, 0.08);
     c2->SetGrid();
     mg2->Draw("A");
-    mg2->GetXaxis()->SetLimits(0.0, 10.0);
+    mg2->GetXaxis()->SetLimits(0.0, 15.0);
 
-    auto* lref = new TLine(0.0, 1.0, 10.0, 1.0);
+    auto* lref = new TLine(0.0, 1.0, 15.0, 1.0);
     lref->SetLineColor(kGray + 2);
     lref->SetLineStyle(2);
     lref->SetLineWidth(2);

@@ -37,7 +37,7 @@
 
 namespace {
     constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
+    constexpr double kSliceMax  = 15.0;
     constexpr double kSliceStep = 0.5;   // coarser binning for η (low-stats)
 
     // Fit window targets the η peak.

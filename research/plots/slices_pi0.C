@@ -42,7 +42,7 @@
 namespace {
     // Match the slicing of meson_research.cc — keep these in sync.
     constexpr double kSliceMin  = 0.0;
-    constexpr double kSliceMax  = 10.0;
+    constexpr double kSliceMax  = 15.0;
     constexpr double kSliceStep = 0.2;
 
     // π⁰ Dalitz zoom on the X axis (display only — histograms keep [0, 0.8]).
