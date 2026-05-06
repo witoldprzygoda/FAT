@@ -180,6 +180,12 @@ struct FitRes {
     double yield_data_1sig = 0, yield_data_1sig_err = 0;
     double yield_data_2sig = 0, yield_data_2sig_err = 0;
     double yield_data_3sig = 0, yield_data_3sig_err = 0;
+    // Full-fit-range integral of residual (data − bg) — captures the entire
+    // CB left tail that symmetric ±Nσ windows miss for asymmetric peaks.
+    double yield_data_full = 0, yield_data_full_err = 0;
+    // Asymmetric window [μ − 5σ, μ + 3σ] — wider on the left to catch the
+    // CB tail, tighter on the right where the peak is Gaussian-like.
+    double yield_data_m5p3sig = 0, yield_data_m5p3sig_err = 0;
     double chi2 = 0;  int ndf = 0;
     double a0 = 0, a1 = 0, a2 = 0, a3 = 0, b_exp = 0, c_exp = 0;
     bool   ok = false;
@@ -376,9 +382,15 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     }
 
     // True integrals from the (still signed) residual — unbiased estimator.
+    // Window clipped to [fitMin, kFitMax] — outside the fit range the bg
+    // model is extrapolated and the residual contains other-peak content
+    // that would falsely inflate yields.
     auto trueIntegral = [&](double m_lo, double m_hi) {
-        const int b_lo = std::max(1, h_res->FindBin(m_lo));
-        const int b_hi = std::min(h_res->GetNbinsX(), h_res->FindBin(m_hi));
+        const double m_lo_c = std::max(m_lo, fitMin);
+        const double m_hi_c = std::min(m_hi, kFitMax);
+        if (m_hi_c <= m_lo_c) return std::make_pair(0.0, 0.0);
+        const int b_lo = std::max(1, h_res->FindBin(m_lo_c));
+        const int b_hi = std::min(h_res->GetNbinsX(), h_res->FindBin(m_hi_c));
         double err = 0.0;
         const double v = h_res->IntegralAndError(b_lo, b_hi, err);
         return std::make_pair(v, err);
@@ -395,6 +407,14 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     {
         auto p = trueIntegral(r.mu - 3.0 * r.sigma, r.mu + 3.0 * r.sigma);
         r.yield_data_3sig = p.first;  r.yield_data_3sig_err = p.second;
+    }
+    {
+        auto p = trueIntegral(fitMin, kFitMax);
+        r.yield_data_full = p.first;  r.yield_data_full_err = p.second;
+    }
+    {
+        auto p = trueIntegral(r.mu - 5.0 * r.sigma, r.mu + 3.0 * r.sigma);
+        r.yield_data_m5p3sig = p.first;  r.yield_data_m5p3sig_err = p.second;
     }
 
     // For the plot only: zero negative bins and clear the inherited fit
@@ -457,7 +477,13 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     tex2->DrawLatex(0.15, 0.78,
         TString::Format("yield(#mu#pm3#sigma) = %.3g #pm %.3g (data#minusbg)",
                         r.yield_data_3sig, r.yield_data_3sig_err));
-    tex2->DrawLatex(0.15, 0.72,
+    tex2->DrawLatex(0.15, 0.74,
+        TString::Format("yield([#mu#minus5#sigma, #mu+3#sigma]) = %.3g #pm %.3g (data#minusbg)",
+                        r.yield_data_m5p3sig, r.yield_data_m5p3sig_err));
+    tex2->DrawLatex(0.15, 0.70,
+        TString::Format("yield(full fit range) = %.3g #pm %.3g (data#minusbg)",
+                        r.yield_data_full, r.yield_data_full_err));
+    tex2->DrawLatex(0.15, 0.64,
         TString::Format("#mu = %.4f, #sigma = %.4f GeV/c^{2}", r.mu, r.sigma));
 
     c2->Update();
@@ -506,6 +532,8 @@ void fit_pi0(const char* flavour = "rec") {
     float  yield_data_1sig = 0, yield_data_1sig_err = 0;
     float  yield_data_2sig = 0, yield_data_2sig_err = 0;
     float  yield_data_3sig = 0, yield_data_3sig_err = 0;
+    float  yield_data_full = 0, yield_data_full_err = 0;
+    float  yield_data_m5p3sig = 0, yield_data_m5p3sig_err = 0;
     float  chi2 = 0; int ndf = 0; int ok = 0;
     float  a0 = 0, a1 = 0, a2 = 0, a3 = 0, b_exp = 0, c_exp = 0;
 
@@ -533,6 +561,10 @@ void fit_pi0(const char* flavour = "rec") {
     tres->Branch("yield_data_2sig_err", &yield_data_2sig_err, "yield_data_2sig_err/F");
     tres->Branch("yield_data_3sig",     &yield_data_3sig,     "yield_data_3sig/F");
     tres->Branch("yield_data_3sig_err", &yield_data_3sig_err, "yield_data_3sig_err/F");
+    tres->Branch("yield_data_full",     &yield_data_full,     "yield_data_full/F");
+    tres->Branch("yield_data_full_err", &yield_data_full_err, "yield_data_full_err/F");
+    tres->Branch("yield_data_m5p3sig",     &yield_data_m5p3sig,     "yield_data_m5p3sig/F");
+    tres->Branch("yield_data_m5p3sig_err", &yield_data_m5p3sig_err, "yield_data_m5p3sig_err/F");
     tres->Branch("chi2",            &chi2,            "chi2/F");
     tres->Branch("ndf",             &ndf,             "ndf/I");
     tres->Branch("ok",              &ok,              "ok/I");
@@ -558,6 +590,8 @@ void fit_pi0(const char* flavour = "rec") {
         yield_data_1sig = r.yield_data_1sig;  yield_data_1sig_err = r.yield_data_1sig_err;
         yield_data_2sig = r.yield_data_2sig;  yield_data_2sig_err = r.yield_data_2sig_err;
         yield_data_3sig = r.yield_data_3sig;  yield_data_3sig_err = r.yield_data_3sig_err;
+        yield_data_full = r.yield_data_full;  yield_data_full_err = r.yield_data_full_err;
+        yield_data_m5p3sig = r.yield_data_m5p3sig;  yield_data_m5p3sig_err = r.yield_data_m5p3sig_err;
         chi2 = r.chi2;         ndf = r.ndf;
         ok = r.ok ? 1 : 0;
         a0 = r.a0;  a1 = r.a1;  a2 = r.a2;  a3 = r.a3;
