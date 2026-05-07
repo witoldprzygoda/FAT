@@ -381,6 +381,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 nt["oa_epem"]            = oa;
                 nt["oa_epem_g"]          = oa_epem_g;
 
+                // ECAL energy-scale correction kinematic factor [GeV]:
+                //   D = E_ee − p_ee · n̂_γ
+                // Used by post-hoc photon-energy rescaling
+                //   M²_corr = m_ee² + 2·s·E_γ·D
+                // PParticle stores momenta in MeV → divide by 1000 for GeV
+                // consistency with m_ee, m_epemg.
+                {
+                    const TVector3 n_gamma  = gamma.vec().Vect().Unit();
+                    const double   E_ee_GeV = dilepton.vec().E() / 1000.0;
+                    const TVector3 p_ee_GeV = dilepton.vec().Vect() * (1.0 / 1000.0);
+                    nt["gamma_D"]           = E_ee_GeV - p_ee_GeV.Dot(n_gamma);
+                }
+
                 // --- SIM truth compound observables (suffix _sim) ---
                 nt["m_ee_sim"]           = m_ee_sim;
                 nt["m_epemg_sim"]        = m_epemg_sim;

@@ -495,7 +495,8 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     return r;
 }
 
-void fit_pi0(const char* flavour = "rec") {
+void fit_pi0(const char* flavour = "rec",
+             const char* file_suffix = "") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -507,17 +508,23 @@ void fit_pi0(const char* flavour = "rec") {
                      << "' (expected 'rec', 'cor' or 'tru')\n"; return; }
     (void)kVarStemDefault;
 
-    TFile* f = TFile::Open("research_sim.root", "READ");
-    if (!f || f->IsZombie()) { std::cerr << "Cannot open research_sim.root\n"; return; }
+    // Optional file suffix: switch from research_sim.root → research_sim<suffix>.root
+    // (and analogous fit_results / output PDFs). Used for the ECAL-corrected
+    // pipeline (suffix = "_ecalcor").
+    const std::string sfx = file_suffix ? file_suffix : "";
+
+    const std::string in_path = "research_sim" + sfx + ".root";
+    TFile* f = TFile::Open(in_path.c_str(), "READ");
+    if (!f || f->IsZombie()) { std::cerr << "Cannot open " << in_path << "\n"; return; }
 
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
 
     gSystem->mkdir("plots/output", kTRUE);
-    const std::string pdf_multi     = "plots/output/fit_pi0_" + fl + "_sim_all.pdf";
-    const std::string pdf_multi_res = "plots/output/fit_pi0_" + fl + "_sim_residual_all.pdf";
+    const std::string pdf_multi     = "plots/output/fit_pi0_" + fl + sfx + "_sim_all.pdf";
+    const std::string pdf_multi_res = "plots/output/fit_pi0_" + fl + sfx + "_sim_residual_all.pdf";
 
-    const std::string fres_path = "fit_results_" + fl + "_sim.root";
+    const std::string fres_path = "fit_results_" + fl + sfx + "_sim.root";
     TFile* fres = TFile::Open(fres_path.c_str(), "RECREATE");
     auto* tres = new TTree("fit_results",
         "Crystal Ball + P2 + exp fits per OA slice");
@@ -619,7 +626,7 @@ void fit_pi0(const char* flavour = "rec") {
                 "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts (sim_genweight)",
                 fl.c_str(), kSliceMin, kSliceMax);
             FitRes r = fitOneHist(h, hname, ctitle.Data(),
-                                  fl + "_sim_full",
+                                  fl + sfx + "_sim_full",
                                   kSliceMin, canvases, canvases_res);
             fillRow(r, hname, 0, kSliceMin, kSliceMax);
             std::cout << "  full: yield(fit) = " << r.yield_full
@@ -647,7 +654,7 @@ void fit_pi0(const char* flavour = "rec") {
             fl.c_str(), lo, hi);
 
         FitRes r = fitOneHist(h, hname, ctitle.Data(),
-                              fl + "_sim_slice_" + suff,
+                              fl + sfx + "_sim_slice_" + suff,
                               lo, canvases, canvases_res);
         fillRow(r, hname, 1 + i, lo, hi);
 
@@ -689,6 +696,6 @@ void fit_pi0(const char* flavour = "rec") {
               << "  residual: " << pdf_multi_res
               << "  (" << canvases_res.size() << " pages)\n";
     std::cout << "Per-panel PDFs/PNGs:\n"
-              << "  plots/output/fit_pi0_" << fl << "_sim_slice_*\n"
-              << "  plots/output/fit_pi0_" << fl << "_sim_residual_slice_*\n";
+              << "  plots/output/fit_pi0_" << fl << sfx << "_sim_slice_*\n"
+              << "  plots/output/fit_pi0_" << fl << sfx << "_sim_residual_slice_*\n";
 }

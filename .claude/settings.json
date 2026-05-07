@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"ecal_pi0_2dscan_{mu,scale\" plots/ecal_pi0_2dscan.C)",
+      "Bash(rm -f plots/ecal_pi0_2dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_2dscan.C+' 2>&1 | tail -15)",
+      "Bash(rm -f plots/ecal_pi0_2dscan_corr_C.* && root -l -b -q -e '.L plots/ecal_pi0_2dscan_corr.C+' 2>&1 | tail -10)",
+      "Bash(rm -f plots/ecal_eta_validate_corr_C.* && root -l -b -q -e '.L plots/ecal_eta_validate_corr.C+' 2>&1 | tail -10)",
+      "Bash(rm -f plots/apply_ecal_correction_C.* && root -l -b -q -e '.L plots/apply_ecal_correction.C+' 2>&1 | tail -10)",
+      "Bash(rm -f plots/compare_mu_corr_C.* && root -l -b -q -e '.L plots/compare_mu_corr.C+' 2>&1 | tail -5)"
+    ],
+    "additionalDirectories": [
+      "/home/przygoda/HADES/FAT/FAT/research/plots"
+    ]
+  }
+}
