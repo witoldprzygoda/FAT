@@ -31,7 +31,8 @@
 #include <string>
 #include <vector>
 
-void yields_eta(const char* flavour = "rec") {
+void yields_eta(const char* flavour = "rec",
+                const char* file_suffix = "") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -40,8 +41,9 @@ void yields_eta(const char* flavour = "rec") {
                   << "' (expected 'rec' or 'cor')\n";
         return;
     }
+    const std::string sfx = file_suffix ? file_suffix : "";
 
-    const std::string fpath = "fit_results_eta_" + fl + ".root";
+    const std::string fpath = "fit_results_eta_" + fl + sfx + ".root";
     TFile* f = TFile::Open(fpath.c_str(), "READ");
     if (!f || f->IsZombie()) {
         std::cerr << "Cannot open " << fpath << "\n"; return;
@@ -144,7 +146,7 @@ void yields_eta(const char* flavour = "rec") {
     leg1->Draw();
 
     c1->Update();
-    const std::string out1 = "plots/output/yield_eta_" + fl + "_vs_oa";
+    const std::string out1 = "plots/output/yield_eta_" + fl + sfx + "_vs_oa";
     c1->SaveAs((out1 + ".pdf").c_str());
     c1->SaveAs((out1 + ".png").c_str());
 
@@ -180,7 +182,7 @@ void yields_eta(const char* flavour = "rec") {
     leg2->Draw();
 
     c2->Update();
-    const std::string out2 = "plots/output/mu_eta_" + fl + "_vs_oa";
+    const std::string out2 = "plots/output/mu_eta_" + fl + sfx + "_vs_oa";
     c2->SaveAs((out2 + ".pdf").c_str());
     c2->SaveAs((out2 + ".png").c_str());
 

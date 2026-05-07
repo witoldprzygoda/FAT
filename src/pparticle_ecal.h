@@ -101,6 +101,7 @@ public:
     double cluster_energy;    ///< Cluster energy [MeV] - used for momentum
     double cluster_theta;     ///< Cluster polar angle [deg] - used for kinematics
     double cluster_phi;       ///< Cluster azimuthal angle [deg] - used for kinematics
+    int    cluster_ncells;    ///< Number of cells in cluster (cluster size)
 
     // Quality
     double ecal_chi2;         ///< Fit chi-squared
@@ -150,6 +151,7 @@ public:
           ecal_r2(other.ecal_r2), ecal_z2(other.ecal_z2),
           cluster_energy(other.cluster_energy),
           cluster_theta(other.cluster_theta), cluster_phi(other.cluster_phi),
+          cluster_ncells(other.cluster_ncells),
           ecal_chi2(other.ecal_chi2),
           ecal_mult(other.ecal_mult), ecal_counter(other.ecal_counter),
           ecal_valid(other.ecal_valid) {}
@@ -192,6 +194,7 @@ public:
         cluster_theta = reader[cluster_theta_var];
         cluster_phi = reader[cluster_phi_var];
         cluster_energy = readIfExists(reader, cluster_energy_var, -1.0);
+        cluster_ncells = static_cast<int>(readIfExists(reader, "neutr_cluster_ncells" + idx, -1.0));
 
         // For momentum: use cluster_energy for photons (mass=0), p for massive
         double p_val;
@@ -276,6 +279,7 @@ public:
         cluster_energy = -1.0;
         cluster_theta = -1.0;
         cluster_phi = -1.0;
+        cluster_ncells = -1;
         ecal_chi2 = -1.0;
         ecal_mult = 0;
         ecal_counter = 0;

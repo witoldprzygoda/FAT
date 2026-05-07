@@ -664,7 +664,8 @@ FitRes fitOneHist(TH1D* h, const std::string& base_name,
     return r;
 }
 
-void fit_pi0(const char* flavour = "rec") {
+void fit_pi0(const char* flavour = "rec",
+             const char* file_suffix = "") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -674,21 +675,30 @@ void fit_pi0(const char* flavour = "rec") {
     else { std::cerr << "Unknown flavour '" << flavour
                      << "' (expected 'rec' or 'cor')\n"; return; }
 
-    TFile* f_all = TFile::Open("research_epem.root", "READ");
-    TFile* f_pp  = TFile::Open("research_epep.root", "READ");
-    TFile* f_mm  = TFile::Open("research_emem.root", "READ");
-    if (!f_all || f_all->IsZombie()) { std::cerr << "Cannot open research_epem.root\n"; return; }
-    if (!f_pp  || f_pp ->IsZombie()) { std::cerr << "Cannot open research_epep.root\n"; return; }
-    if (!f_mm  || f_mm ->IsZombie()) { std::cerr << "Cannot open research_emem.root\n"; return; }
+    // Optional file suffix: switch from research_<ch>.root → research_<ch><suffix>.root,
+    // and likewise for fit_results / output PDFs. Used for the ECAL-corrected
+    // pipeline (suffix = "_ecalcor"), validated against fit_pi0_eta workflows.
+    const std::string sfx = file_suffix ? file_suffix : "";
+
+    const std::string p_all = "research_epem" + sfx + ".root";
+    const std::string p_pp  = "research_epep" + sfx + ".root";
+    const std::string p_mm  = "research_emem" + sfx + ".root";
+
+    TFile* f_all = TFile::Open(p_all.c_str(), "READ");
+    TFile* f_pp  = TFile::Open(p_pp .c_str(), "READ");
+    TFile* f_mm  = TFile::Open(p_mm .c_str(), "READ");
+    if (!f_all || f_all->IsZombie()) { std::cerr << "Cannot open " << p_all << "\n"; return; }
+    if (!f_pp  || f_pp ->IsZombie()) { std::cerr << "Cannot open " << p_pp  << "\n"; return; }
+    if (!f_mm  || f_mm ->IsZombie()) { std::cerr << "Cannot open " << p_mm  << "\n"; return; }
 
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
 
     gSystem->mkdir("plots/output", kTRUE);
-    const std::string pdf_multi     = "plots/output/fit_pi0_" + fl + "_all.pdf";
-    const std::string pdf_multi_res = "plots/output/fit_pi0_" + fl + "_residual_all.pdf";
+    const std::string pdf_multi     = "plots/output/fit_pi0_" + fl + sfx + "_all.pdf";
+    const std::string pdf_multi_res = "plots/output/fit_pi0_" + fl + sfx + "_residual_all.pdf";
 
-    const std::string fres_path = "fit_results_" + fl + ".root";
+    const std::string fres_path = "fit_results_" + fl + sfx + ".root";
     TFile* fres = TFile::Open(fres_path.c_str(), "RECREATE");
     auto* tres = new TTree("fit_results",
         "Crystal Ball + bg fits per OA slice (signal = all − CB)");
@@ -794,7 +804,7 @@ void fit_pi0(const char* flavour = "rec") {
                 "M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
                 fl.c_str(), kSliceMin, kSliceMax);
             FitRes r = fitOneHist(h_sig, hname, ctitle.Data(),
-                                  fl + "_full", kSliceMin,
+                                  fl + sfx + "_full", kSliceMin,
                                   canvases, canvases_res);
             fillRow(r, hname, 0, kSliceMin, kSliceMax);
             std::cout << "  full: yield(fit) = " << r.yield_full
@@ -894,7 +904,7 @@ void fit_pi0(const char* flavour = "rec") {
         }
 
         FitRes r = fitOneHist(h_sig, hname, ctitle.Data(),
-                              fl + "_slice_" + suff, lo,
+                              fl + sfx + "_slice_" + suff, lo,
                               canvases, canvases_res,
                               smoothedAvg(recent_alpha),
                               smoothedAvg(recent_sigma),
@@ -993,7 +1003,7 @@ void fit_pi0(const char* flavour = "rec") {
             (void)anchor_bgref;
 
             FitRes r = fitOneHist(p.h, p.hname, p.ctitle,
-                                  fl + "_slice_" + suff, p.lo,
+                                  fl + sfx + "_slice_" + suff, p.lo,
                                   canvases, canvases_res,
                                   -1.0, -1.0, -1.0, -1.0, -1.0, -1.0,
                                   &scaled);

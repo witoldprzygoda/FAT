@@ -1,0 +1,85 @@
+
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║                          FAT Framework                           ║
+║                        Dilepton Analysis                         ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+AnalysisConfig: Loaded configuration from config.json
+
+╔════════════════════════════════════════════════════════════════╗
+║                   ANALYSIS CONFIGURATION                       ║
+╠════════════════════════════════════════════════════════════════╣
+║ Config file: config.json                                       ║
+║                                                                ║
+║ Input:                                                         ║
+║  Source: /hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list (file list)║
+║  Tree: EpEm_ID                                                 ║
+║  Start event: 0                                                ║
+║  Max events: 0                                                 ║
+║                                                                ║
+║ Output:                                                        ║
+║  File: output_epem_exp.root                                    ║
+║                                                                ║
+║ Beam:                                                          ║
+║  Kinetic energy: 4500 MeV                                      ║
+╚════════════════════════════════════════════════════════════════╝
+NTupleReader: Found 29 files in /hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list
+NTupleReader: Opened chain 'EpEm_ID' with 29 files (113621144 entries)
+NTupleReader: Prefix mapping ep_ -> ep_, em_ -> em_ (channel: EpEm)
+Manager: Opened file 'output_epem_exp.root' with option 'RECREATE'
+Setting up histograms...
+  Created 21 histograms
+Setting up ntuples...
+DynamicHNtuple: Created 'dilepton_nt' with intermediate storage: output_epem_exp_dilepton_nt_tree.root
+  Created output ntuple 'dilepton_nt'
+DynamicHNtuple: Created 'dilepton_nt_cor' with intermediate storage: output_epem_exp_dilepton_nt_cor_tree.root
+  Created output ntuple 'dilepton_nt_cor'
+DynamicHNtuple: Created 'ecal_nt' with intermediate storage: output_epem_exp_ecal_nt_tree.root
+  Created output ntuple 'ecal_nt'
+DynamicHNtuple: Created 'fwdet_nt' with intermediate storage: output_epem_exp_fwdet_nt_tree.root
+  Created output ntuple 'fwdet_nt'
+DynamicHNtuple: Created 'epemg_nt' with intermediate storage: output_epem_exp_epemg_nt_tree.root
+  Created output ntuple 'epemg_nt'
+DynamicHNtuple: Created 'epemg_nt_cor' with intermediate storage: output_epem_exp_epemg_nt_cor_tree.root
+  Created output ntuple 'epemg_nt_cor'
+DynamicHNtuple: Created 'epemgg_nt' with intermediate storage: output_epem_exp_epemgg_nt_tree.root
+  Created output ntuple 'epemgg_nt'
+DynamicHNtuple: Created 'epemgg_nt_cor' with intermediate storage: output_epem_exp_epemgg_nt_cor_tree.root
+  Created output ntuple 'epemgg_nt_cor'
+DynamicHNtuple: Created 'epemggg_nt' with intermediate storage: output_epem_exp_epemggg_nt_tree.root
+  Created output ntuple 'epemggg_nt'
+DynamicHNtuple: Created 'epemggg_nt_cor' with intermediate storage: output_epem_exp_epemggg_nt_cor_tree.root
+  Created output ntuple 'epemggg_nt_cor'
+DynamicHNtuple: Created 'meson_dalitz_nt' with intermediate storage: output_epem_exp_meson_dalitz_nt_tree.root
+  Created output ntuple 'meson_dalitz_nt'
+Setting up cuts...
+
+Defined Cuts:
+─────────────────────────────────────────
+Range Cuts:
+  eta_mass_window: [0.5, 0.6]
+  pi0_mass_window: [0.1, 0.18]
+  pi0_mass_window_narrow: [0.125, 0.145]
+Value Cuts:
+  isBest: == 1  (Best candidate selection)
+  trigger_PT3: == 8192  (Trigger PT3 (trigbit == 8192))
+Min Cuts:
+  opening_angle_4: > 4  (Opening angle > 4 deg (active))
+  vertex_z: > -500  (Vertex Z quality [mm])
+Cut Sets:
+  [ecal_quality] - ECAL particle quality
+    ecal_pid: == 1  (PID == 1)
+    ecal_beta: [0.8, 1.2]  (0.8 < beta < 1.2)
+    cluster_energy: > 100  (Cluster energy > 100 MeV)
+  [start_detector] - Start detector (LGAD) response
+    start_iteration: == 3  (start_iteration == 3)
+
+┌──────────────────────────────────────────────────────────────┐
+│  Press Ctrl+C at any time to stop and save partial results   │
+└──────────────────────────────────────────────────────────────┘
+
+Processing events 0 to 113621144 (113621144 events)...
+
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.0 % | ETA: --:--    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.1 % | ETA: 3:57:05    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.2 % | ETA: 3:58:46    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.3 % | ETA: 3:56:44    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.4 % | ETA: 3:55:33    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.5 % | ETA: 3:56:45    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.6 % | ETA: 3:57:05    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.7 % | ETA: 3:56:45    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.8 % | ETA: 3:57:27    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.9 % | ETA: 3:56:42    [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1  % | ETA: 3:57:00    [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2  % | ETA: 3:44:40    [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 3  % | ETA: 3:47:51    
