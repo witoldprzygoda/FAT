@@ -3,10 +3,16 @@
     "allow": [
       "Bash(rm -f plots/ecal_eta_validate_corr_C.* && root -l -b -q 'plots/ecal_eta_validate_corr.C\\(\"rec\"\\)' 2>&1 | tail -15)",
       "Bash(rm -f plots/ecal_pi0_2dscan_C.* && root -l -b -q 'plots/ecal_pi0_2dscan.C\\(\"rec\"\\)' 2>&1 | grep -E \"Pass-2|recovered|=== ECAL|^θ\\\\[|summary\" | head -30)",
-      "Bash(rm -f plots/ecal_pi0_2dscan_corr_C.* plots/ecal_eta_validate_corr_C.* && root -l -b -q 'plots/ecal_pi0_2dscan_corr.C\\(\"rec\"\\)' 2>&1 | tail -15 && echo \"==== eta validate ====\" && root -l -b -q 'plots/ecal_eta_validate_corr.C\\(\"rec\"\\)' 2>&1 | tail -10)"
+      "Bash(rm -f plots/ecal_pi0_2dscan_corr_C.* plots/ecal_eta_validate_corr_C.* && root -l -b -q 'plots/ecal_pi0_2dscan_corr.C\\(\"rec\"\\)' 2>&1 | tail -15 && echo \"==== eta validate ====\" && root -l -b -q 'plots/ecal_eta_validate_corr.C\\(\"rec\"\\)' 2>&1 | tail -10)",
+      "Bash(rm -f plots/ecal_pi0_3dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_3dscan.C+' 2>&1 | tail -25)",
+      "Bash(rm -f plots/ecal_pi0_3dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_3dscan.C+' 2>&1 | grep -E \"error|Error:|warning\" | head -10)",
+      "Bash(rm -f plots/ecal_pi0_3dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_3dscan.C+' 2>&1 | tail -5 && ls plots/ecal_pi0_3dscan_C.so 2>&1)",
+      "Bash(rm -f plots/ecal_pi0_3dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_3dscan.C+' 2>&1 | grep -E \"error|creating\" | head -3 && root -l -b -q 'plots/ecal_pi0_3dscan.C\\(\"rec\"\\)' 2>&1 | tail -8)",
+      "Bash(rm -f plots/ecal_pi0_3dscan_C.* && root -l -b -q -e '.L plots/ecal_pi0_3dscan.C+' 2>&1 | grep -E \"error|creating\" | head -3 && root -l -b -q 'plots/ecal_pi0_3dscan.C\\(\"rec\"\\)' 2>&1 | tail -5)"
     ],
     "additionalDirectories": [
-      "/home/przygoda/HADES/FAT/FAT/research/plots"
+      "/home/przygoda/HADES/FAT/FAT/research/plots",
+      "/home/przygoda/HADES/FAT/FAT/plots"
     ]
   }
 }

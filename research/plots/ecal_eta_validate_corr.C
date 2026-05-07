@@ -146,16 +146,18 @@ void fillEtaChannel(const std::string& fpath,
             "ecal_quality_pass",
             "neutr_cluster_energy",
             "neutr_cluster_theta",
+            "neutr_cluster_phi",
             "gamma_D",
             "oa_epem"
          }) t->SetBranchStatus(b, 1);
 
-    float m_ee=0, m_eg=0, ecal_q=0, ne_E=0, ne_th=0, gD=0, oa=0;
+    float m_ee=0, m_eg=0, ecal_q=0, ne_E=0, ne_th=0, ne_ph=0, gD=0, oa=0;
     t->SetBranchAddress("m_ee",                 &m_ee);
     t->SetBranchAddress("m_epemg",              &m_eg);
     t->SetBranchAddress("ecal_quality_pass",    &ecal_q);
     t->SetBranchAddress("neutr_cluster_energy", &ne_E);
     t->SetBranchAddress("neutr_cluster_theta",  &ne_th);
+    t->SetBranchAddress("neutr_cluster_phi",    &ne_ph);
     t->SetBranchAddress("gamma_D",              &gD);
     t->SetBranchAddress("oa_epem",              &oa);
 
@@ -174,7 +176,7 @@ void fillEtaChannel(const std::string& fpath,
         if (ecal_q != 1.0f) continue;
         if (oa < kEtaOAMin || oa >= kEtaOAMax) continue;
         const double E_GeV = ne_E / 1000.0;
-        const double m_corr = look.m_corrected(m_ee, E_GeV, gD, ne_th);
+        const double m_corr = look.m_corrected(m_ee, E_GeV, gD, ne_th, ne_ph);
         h_uncorr->Fill(m_eg);
         h_corr  ->Fill(m_corr);
     }
@@ -206,7 +208,8 @@ TH1D* makeSignal(TH1D* h_all, TH1D* h_pp, TH1D* h_mm, const std::string& tag) {
     return h_sig;
 }
 
-void ecal_eta_validate_corr(const char* flavour = "rec") {
+void ecal_eta_validate_corr(const char* flavour = "rec",
+                            const char* map_dim = "2d") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -216,11 +219,27 @@ void ecal_eta_validate_corr(const char* flavour = "rec") {
     else { std::cerr << "Unknown flavour '" << flavour << "'\n"; return; }
     (void)mass_var;
 
+    std::string md = map_dim ? map_dim : "2d";
+    for (auto& c : md) c = std::tolower(c);
+
     EcalLookup look;
-    const std::string map_path = "ecal_pi0_2dscan_" + fl + ".root";
-    if (!look.load(map_path, "h_s_" + fl)) {
-        std::cerr << "Run ecal_pi0_2dscan.C first.\n"; return;
+    std::string map_path, map_hist;
+    bool loaded = false;
+    if (md == "3d") {
+        map_path = "ecal_pi0_3dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl + "_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else {
+        map_path = "ecal_pi0_2dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl;
+        loaded = look.load(map_path, map_hist);
     }
+    if (!loaded) {
+        std::cerr << "Run ecal_pi0_" << md << "scan.C first to produce "
+                  << map_path << "\n";
+        return;
+    }
+    const std::string map_tag = (md == "3d") ? "_3dmap" : "";
 
     gStyle->SetOptStat(0);
     gSystem->mkdir("plots/output", kTRUE);
@@ -319,12 +338,12 @@ void ecal_eta_validate_corr(const char* flavour = "rec") {
     leg->Draw();
 
     c->Update();
-    const std::string base = "plots/output/ecal_eta_validate_corr_" + fl;
+    const std::string base = "plots/output/ecal_eta_validate_corr_" + fl + map_tag;
     c->SaveAs((base + ".pdf").c_str());
     c->SaveAs((base + ".png").c_str());
 
     // Save per-stream hists for later inspection.
-    TFile* fout = TFile::Open(("ecal_eta_validate_corr_" + fl + ".root").c_str(),
+    TFile* fout = TFile::Open(("ecal_eta_validate_corr_" + fl + map_tag + ".root").c_str(),
                               "RECREATE");
     h_sig_u->Write();
     h_sig_c->Write();

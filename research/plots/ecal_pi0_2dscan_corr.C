@@ -198,22 +198,21 @@ void fillChannel(const std::string& fpath,
             "ecal_quality_pass",
             "neutr_cluster_energy",
             "neutr_cluster_theta",
+            "neutr_cluster_phi",
             "gamma_D"
          }) t->SetBranchStatus(b, 1);
 
-    float m_ee=0, ecal_q=0, ne_E=0, ne_th=0, gD=0;
+    float m_ee=0, ecal_q=0, ne_E=0, ne_th=0, ne_ph=0, gD=0;
     t->SetBranchAddress("m_ee",                 &m_ee);
     t->SetBranchAddress("ecal_quality_pass",    &ecal_q);
     t->SetBranchAddress("neutr_cluster_energy", &ne_E);
     t->SetBranchAddress("neutr_cluster_theta",  &ne_th);
+    t->SetBranchAddress("neutr_cluster_phi",    &ne_ph);
     t->SetBranchAddress("gamma_D",              &gD);
 
     const Long64_t N = t->GetEntries();
     std::cout << "  " << fpath << " (" << tag_prefix << "): " << N << " entries\n";
 
-    // m_epemg branch is unused for filling (we recompute) but we still
-    // verify mass_var is sensible here — keep mass_var arg for parity
-    // with original macro signatures.
     (void)mass_var;
 
     for (Long64_t ev = 0; ev < N; ++ev) {
@@ -226,7 +225,9 @@ void fillChannel(const std::string& fpath,
         const int    ti      = findBin(kTheta_edges, theta);
         if (ei < 0 || ti < 0) continue;
 
-        const double m_corr = look.m_corrected(m_ee, E_GeV, gD, theta);
+        // Pass phi → look.s() picks the 3D map automatically when loaded,
+        // and falls back to the 2D map otherwise.
+        const double m_corr = look.m_corrected(m_ee, E_GeV, gD, theta, ne_ph);
         if (m_corr <= 0) continue;
 
         cells[ei][ti]->Fill(m_corr);
@@ -236,7 +237,8 @@ void fillChannel(const std::string& fpath,
 }
 
 // =========================================================================
-void ecal_pi0_2dscan_corr(const char* flavour = "rec") {
+void ecal_pi0_2dscan_corr(const char* flavour = "rec",
+                          const char* map_dim = "2d") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -245,12 +247,25 @@ void ecal_pi0_2dscan_corr(const char* flavour = "rec") {
     else if (fl == "cor") mass_var = "m_epemg_cor";
     else { std::cerr << "Unknown flavour '" << flavour << "'\n"; return; }
 
-    // Load calibration map from the previous (uncorrected) scan.
+    // Load calibration map. Default 2D, "3d" loads ecal_pi0_3dscan_*.root.
+    std::string md = map_dim ? map_dim : "2d";
+    for (auto& c : md) c = std::tolower(c);
+
     EcalLookup look;
-    const std::string map_path = "ecal_pi0_2dscan_" + fl + ".root";
-    const std::string map_hist = "h_s_" + fl;
-    if (!look.load(map_path, map_hist)) {
-        std::cerr << "Run ecal_pi0_2dscan.C first to produce " << map_path << "\n";
+    std::string map_path, map_hist;
+    bool loaded = false;
+    if (md == "3d") {
+        map_path = "ecal_pi0_3dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl + "_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else {
+        map_path = "ecal_pi0_2dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl;
+        loaded = look.load(map_path, map_hist);
+    }
+    if (!loaded) {
+        std::cerr << "Run ecal_pi0_" << md << "scan.C first to produce "
+                  << map_path << "\n";
         return;
     }
 
@@ -334,8 +349,10 @@ void ecal_pi0_2dscan_corr(const char* flavour = "rec") {
                         "E_{#gamma} [GeV];#theta_{#gamma} [deg];#Delta#mu [GeV/c^{2}]",
                         fl.c_str()));
 
-    const std::string out_root = "ecal_pi0_2dscan_corr_" + fl + ".root";
-    const std::string out_pdf  = "plots/output/ecal_pi0_2dscan_corr_" + fl + ".pdf";
+    // Distinguish 2D vs 3D map outputs so reruns don't overwrite each other.
+    const std::string map_tag = (md == "3d") ? "_3dmap" : "";
+    const std::string out_root = "ecal_pi0_2dscan_corr_" + fl + map_tag + ".root";
+    const std::string out_pdf  = "plots/output/ecal_pi0_2dscan_corr_" + fl + map_tag + ".pdf";
     TFile* fout = TFile::Open(out_root.c_str(), "RECREATE");
 
     std::vector<TCanvas*> canvases;
@@ -429,9 +446,9 @@ void ecal_pi0_2dscan_corr(const char* flavour = "rec") {
         c->SaveAs(("plots/output/" + base + "_" + fl + ".png").c_str());
     };
 
-    drawHeat(h_mu_corr, "ecal_pi0_2dscan_corr_mu",
+    drawHeat(h_mu_corr, "ecal_pi0_2dscan_corr_mu" + map_tag,
              "COLZ TEXT45", 0.130, 0.140);
-    drawHeat(h_dmu,     "ecal_pi0_2dscan_corr_dmu",
+    drawHeat(h_dmu,     "ecal_pi0_2dscan_corr_dmu" + map_tag,
              "COLZ TEXT45", -0.005, 0.005);
 
     // Terminal table.

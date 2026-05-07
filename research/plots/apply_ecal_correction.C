@@ -82,15 +82,17 @@ void processChannel(const std::string& in_path,
             "ecal_quality_pass",
             "neutr_cluster_energy",
             "neutr_cluster_theta",
+            "neutr_cluster_phi",
             "oa_epem"
          }) t->SetBranchStatus(b, 1);
 
-    float m_ee=0, m_eg=0, ecal_q=0, ne_E=0, ne_th=0, oa=0;
+    float m_ee=0, m_eg=0, ecal_q=0, ne_E=0, ne_th=0, ne_ph=0, oa=0;
     t->SetBranchAddress("m_ee",                 &m_ee);
     t->SetBranchAddress("m_epemg",              &m_eg);
     t->SetBranchAddress("ecal_quality_pass",    &ecal_q);
     t->SetBranchAddress("neutr_cluster_energy", &ne_E);
     t->SetBranchAddress("neutr_cluster_theta",  &ne_th);
+    t->SetBranchAddress("neutr_cluster_phi",    &ne_ph);
     t->SetBranchAddress("oa_epem",              &oa);
 
     TFile* fout = TFile::Open(out_path.c_str(), "RECREATE");
@@ -159,8 +161,10 @@ void processChannel(const std::string& in_path,
 
         // Lookup s and compute corrected mass squared:
         //   m²_corr = (1 − s) · m_ee² + s · m²
+        // Phi is passed too: when a 3D map is loaded, lookup uses the
+        // (E, θ, φ_local) trilinear value; with a 2D map it's ignored.
         const double E_GeV = ne_E / 1000.0;
-        const double s     = look.s(E_GeV, ne_th);
+        const double s     = look.s(E_GeV, ne_th, ne_ph);
         const double m2    = m_eg * m_eg;
         const double m_ee2 = m_ee * m_ee;
         const double m2c   = (1.0 - s) * m_ee2 + s * m2;
@@ -185,7 +189,8 @@ void processChannel(const std::string& in_path,
     std::cout << "  → " << out_path << "\n";
 }
 
-void apply_ecal_correction(const char* flavour = "rec") {
+void apply_ecal_correction(const char* flavour = "rec",
+                           const char* map_dim = "2d") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
@@ -196,20 +201,42 @@ void apply_ecal_correction(const char* flavour = "rec") {
         return;
     }
 
+    std::string md = map_dim ? map_dim : "2d";
+    for (auto& c : md) c = std::tolower(c);
+
     EcalLookup look;
-    const std::string map_path = "ecal_pi0_2dscan_" + fl + ".root";
-    if (!look.load(map_path, "h_s_" + fl)) {
-        std::cerr << "Run ecal_pi0_2dscan.C first to produce " << map_path << "\n";
+    std::string map_path, map_hist;
+    bool loaded = false;
+    if (md == "3d") {
+        map_path = "ecal_pi0_3dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl + "_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else {
+        map_path = "ecal_pi0_2dscan_" + fl + ".root";
+        map_hist = "h_s_" + fl;
+        loaded = look.load(map_path, map_hist);
+    }
+    if (!loaded) {
+        std::cerr << "Run ecal_pi0_" << md << "scan.C first to produce "
+                  << map_path << "\n";
         return;
     }
-    std::cout << "ECAL correction map loaded from " << map_path << "\n";
+    std::cout << "ECAL correction map loaded from " << map_path
+              << " (" << md << ")\n";
 
     gSystem->mkdir("plots/output", kTRUE);
 
-    processChannel("../output_epem_exp.root", "research_epem_ecalcor.root", look);
-    processChannel("../output_epep_exp.root", "research_epep_ecalcor.root", look);
-    processChannel("../output_emem_exp.root", "research_emem_ecalcor.root", look);
+    // Output filename suffix distinguishes 2D vs 3D maps.
+    const std::string sfx = (md == "3d") ? "_3dmap" : "";
 
-    std::cout << "\nDone. Three files produced — same layout as research_<ch>.root,\n"
+    processChannel("../output_epem_exp.root",
+                   "research_epem_ecalcor" + sfx + ".root", look);
+    processChannel("../output_epep_exp.root",
+                   "research_epep_ecalcor" + sfx + ".root", look);
+    processChannel("../output_emem_exp.root",
+                   "research_emem_ecalcor" + sfx + ".root", look);
+
+    std::cout << "\nDone. Three files produced (suffix '" << sfx << "') — "
+                 "same layout as research_<ch>.root,\n"
                  "but with the ECAL energy-scale correction applied event-by-event.\n";
 }
