@@ -48,10 +48,10 @@ void mass_spectra_rec_expsim() {
     // --- 1. Mass spectrum without OA cut ---
     TH1D *a1, *c1, *s1;
     std::tie(a1, c1, s1) = exp.drawSignal(
-        NT, "m_ee", 160, 0, 0.8, "",
+        NT, "m_ee", 280, 0, 1.4, "",
         ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
 
-    TH1D* sim1 = sim.draw(NT, "m_ee", 160, 0, 0.8, "");
+    TH1D* sim1 = sim.draw(NT, "m_ee", 280, 0, 1.4, "");
     JointPlotter::styleSimLine(sim1);
     double scale1 = JointPlotter::rescaleSimInWindow(sim1, s1, kNormLo, kNormHi);
 
@@ -65,10 +65,10 @@ void mass_spectra_rec_expsim() {
     // --- 2. Mass spectrum with active OA cut (OA > 4 deg, oa_pass flag) ---
     TH1D *a2, *c2, *s2;
     std::tie(a2, c2, s2) = exp.drawSignal(
-        NT, "m_ee", 160, 0, 0.8, "oa_pass==1",
+        NT, "m_ee", 280, 0, 1.4, "oa_pass==1",
         ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
 
-    TH1D* sim2 = sim.draw(NT, "m_ee", 160, 0, 0.8, "oa_pass==1");
+    TH1D* sim2 = sim.draw(NT, "m_ee", 280, 0, 1.4, "oa_pass==1");
     JointPlotter::styleSimLine(sim2);
     double scale2 = JointPlotter::rescaleSimInWindow(sim2, s2, kNormLo, kNormHi);
 
