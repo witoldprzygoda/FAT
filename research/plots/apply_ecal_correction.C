@@ -90,12 +90,13 @@ void processSim(const std::string& in_path,
             "ecal_quality_pass",
             "neutr_cluster_energy",
             "neutr_cluster_theta",
+            "neutr_cluster_phi",
             "oa_epem",
             "sim_genweight"
          }) t->SetBranchStatus(b, 1);
 
     float m_ee=0, m_eg=0, m_eg_cor=0, m_eg_sim=0,
-          ecal_q=0, ne_E=0, ne_th=0, oa=0, w=1.0f;
+          ecal_q=0, ne_E=0, ne_th=0, ne_ph=0, oa=0, w=1.0f;
     t->SetBranchAddress("m_ee",                 &m_ee);
     t->SetBranchAddress("m_epemg",              &m_eg);
     t->SetBranchAddress("m_epemg_cor",          &m_eg_cor);
@@ -103,6 +104,7 @@ void processSim(const std::string& in_path,
     t->SetBranchAddress("ecal_quality_pass",    &ecal_q);
     t->SetBranchAddress("neutr_cluster_energy", &ne_E);
     t->SetBranchAddress("neutr_cluster_theta",  &ne_th);
+    t->SetBranchAddress("neutr_cluster_phi",    &ne_ph);
     t->SetBranchAddress("oa_epem",              &oa);
     t->SetBranchAddress("sim_genweight",        &w);
 
@@ -188,7 +190,7 @@ void processSim(const std::string& in_path,
         // Same s for REC and COR (single calibration map). TRU bypasses
         // calorimeter and is taken straight from the simulation truth.
         const double E_GeV = ne_E / 1000.0;
-        const double s     = look.s(E_GeV, ne_th);
+        const double s     = look.s(E_GeV, ne_th, ne_ph);
         const double m_ee2 = m_ee * m_ee;
 
         const double m2_rec = (1.0 - s) * m_ee2 + s * (m_eg     * m_eg);
@@ -227,30 +229,48 @@ void processSim(const std::string& in_path,
     std::cout << "  → " << out_path << "\n";
 }
 
-void apply_ecal_correction(const char* flavour = "rec") {
+void apply_ecal_correction(const char* flavour = "rec",
+                           const char* map_dim = "2d") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
     if (fl != "rec") {
-        std::cerr << "Only 'rec' is supported as the calibration flavour here\n"
-                  << "(map h_s_rec is loaded). The output file contains all\n"
-                  << "three flavours REC/COR/TRU, derived from this one map.\n";
+        std::cerr << "Only 'rec' is supported as the calibration flavour here\n";
         return;
     }
+    std::string md = map_dim ? map_dim : "2d";
+    for (auto& c : md) c = std::tolower(c);
 
     EcalLookup look;
-    const std::string map_path = "ecal_pi0_2dscan_" + fl + "_sim.root";
-    if (!look.load(map_path, "h_s_" + fl)) {
-        std::cerr << "Run ecal_pi0_2dscan.C first to produce " << map_path << "\n";
+    std::string map_path, map_hist;
+    bool loaded = false;
+    if (md == "combined") {
+        map_path = "ecal_combined_3dscan_sim.root";
+        map_hist = "h_s_combined_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else if (md == "3d") {
+        map_path = "ecal_pi0_3dscan_" + fl + "_sim.root";
+        map_hist = "h_s_" + fl + "_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else {
+        map_path = "ecal_pi0_2dscan_" + fl + "_sim.root";
+        map_hist = "h_s_" + fl;
+        loaded = look.load(map_path, map_hist);
+    }
+    if (!loaded) {
+        std::cerr << "Cannot open " << map_path << "\n";
         return;
     }
-    std::cout << "ECAL correction map loaded from " << map_path << "\n";
+    std::cout << "ECAL correction map loaded from " << map_path
+              << " (" << md << ")\n";
 
     gSystem->mkdir("plots/output", kTRUE);
 
-    processSim("../output_epem_sim.root", "research_sim_ecalcor.root", look);
+    const std::string sfx = (md == "combined") ? "_combined"
+                          : (md == "3d")        ? "_3dmap"
+                                                : "";
+    processSim("../output_epem_sim.root",
+               "research_sim_ecalcor" + sfx + ".root", look);
 
-    std::cout << "\nDone. research_sim_ecalcor.root produced — same layout as\n"
-                 "research_sim.root, with ECAL energy-scale correction applied\n"
-                 "event-by-event (REC, COR; TRU passes through unchanged).\n";
+    std::cout << "\nDone. research_sim_ecalcor" << sfx << ".root produced.\n";
 }
