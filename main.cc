@@ -32,6 +32,7 @@
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
 #include "src/console_box.h"
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
@@ -47,7 +48,17 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Event-level cuts (applied first)
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-    if (!cuts.passValueCut("trigger_PT3", reader["trigbit"])) return;
+
+    // Trigger selection (driven by config.trigger.selection):
+    //   "PT3"  -> trigbit == 8192   (default; 2-particle leptonic with bias)
+    //   "PT2"  -> trigbit == 4096   (unbiased 2-particle hadronic, downscale 64)
+    //   "none" -> no trigger filter (debug / no-bias ≥3-particle topologies)
+    {
+        const std::string trig_cut = config.getTriggerCutName();
+        if (!trig_cut.empty() &&
+            !cuts.passValueCut(trig_cut, reader["trigbit"])) return;
+    }
+
     if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
     // ========================================================================
@@ -436,10 +447,68 @@ int main(int argc, char* argv[]) {
 
     Long64_t events_to_process = end_event - start_event;
 
+    // ------------------------------------------------------------------
+    // Pass 1 (only if PT3 trigger-bias correction is enabled).
+    //   Counts trigbit==8192 (PT3) and trigbit==4096 (PT2) per input
+    //   ROOT file (= per HADES run) — beam conditions and trigger rates
+    //   drift between runs, so a single global w would carry a few-%
+    //   systematic. Per-file:
+    //
+    //       w[file] = (63 · N_PT2[file]) / N_PT3[file]
+    //
+    //   Pass 2 then sets the per-event weight to w[current_file]; every
+    //   histogram fill is multiplied by it and the trigger_corr branch
+    //   on every dynamic ntuple records the same number per event.
+    //   When the correction is disabled, this pass is skipped and every
+    //   event keeps weight 1.0.
+    // ------------------------------------------------------------------
+    const bool do_trigger_corr = config.isTriggerBiasCorrectionEnabled();
+    const int  n_files = reader.getNTrees();
+    std::vector<double> w_per_file(n_files, 1.0);
+
+    if (do_trigger_corr) {
+        ConsoleBox::newLine();
+        std::cout << "Pass 1/2: per-file trigger-bias counts (PT3=8192, PT2=4096)...\n\n";
+
+        std::vector<Long64_t> n_PT3(n_files, 0), n_PT2(n_files, 0);
+        ProgressBar pre_progress(events_to_process);
+        Long64_t pre_processed = 0;
+        for (Long64_t i = start_event; i < end_event; ++i) {
+            if (SignalHandler::wasInterrupted()) break;
+            reader.getEntry(i);
+            ++pre_processed;
+            pre_progress.update(pre_processed);
+            const int fi      = reader.getCurrentTreeNumber();
+            const int trigbit = static_cast<int>(reader["trigbit"]);
+            if      (trigbit == 8192) ++n_PT3[fi];
+            else if (trigbit == 4096) ++n_PT2[fi];
+        }
+        pre_progress.finish(SignalHandler::wasInterrupted());
+
+        std::cout << "\nPer-file PT3 trigger-bias correction"
+                  << " w = (63·N_PT2)/N_PT3:\n";
+        for (int f = 0; f < n_files; ++f) {
+            if (n_PT3[f] > 0 && n_PT2[f] > 0) {
+                w_per_file[f] = (63.0 * static_cast<double>(n_PT2[f]))
+                                       / static_cast<double>(n_PT3[f]);
+            }
+            std::cout << "  file " << std::setw(3) << f
+                      << "  N_PT3=" << std::setw(10) << n_PT3[f]
+                      << "  N_PT2=" << std::setw(8)  << n_PT2[f]
+                      << "  w=" << std::fixed << std::setprecision(5)
+                      << w_per_file[f] << "\n";
+        }
+    } else {
+        std::cout << "PT3 trigger-bias correction DISABLED"
+                  << " (config.trigger.bias_correction == false)."
+                  << " All event weights = 1.\n";
+    }
+
     ConsoleBox::newLine();
     ConsoleBox::printInfoBox("Press Ctrl+C at any time to stop and save partial results");
     ConsoleBox::newLine();
-    std::cout << "Processing events " << start_event << " to " << end_event
+    std::cout << (do_trigger_corr ? "Pass 2/2: " : "")
+              << "Processing events " << start_event << " to " << end_event
               << " (" << events_to_process << " events)...\n\n";
 
     Long64_t processed = 0;
@@ -456,6 +525,9 @@ int main(int argc, char* argv[]) {
         reader.getEntry(i);
         ++processed;
         progress.update(processed);
+
+        // Set per-event weight (1.0 when correction disabled).
+        manager.setEventWeight(w_per_file[reader.getCurrentTreeNumber()]);
 
         try {
             processEvent(reader, manager, cuts, config);

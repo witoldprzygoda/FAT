@@ -19,8 +19,10 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("isBest", 1, "Best candidate selection");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Trigger: PT3 only (trigbit == 8192)
+    // Trigger: PT3 only (trigbit == 8192). PT2 (trigbit == 4096) is defined
+    // for the trigger-bias correction counters; it is NOT applied as a cut.
     cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
+    cuts.defineValueCut("trigger_PT2", 4096, "Trigger PT2 (trigbit == 4096, downscale 64)");
 
     // Start detector (LGAD) — defined as a cut set so future iteration/timing
     // conditions can be appended without changing the call site.

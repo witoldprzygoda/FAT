@@ -16,6 +16,10 @@
         "kinetic_energy": 4500.0,
         "luminosity": 1.0
     },
+    "trigger": {
+        "selection":       "PT2",
+        "bias_correction": false
+    },
     "kinematics": {
         "reconstructed": true,
         "corrected": true,
