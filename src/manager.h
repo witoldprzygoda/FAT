@@ -351,57 +351,78 @@ public:
     // Fill helpers (shorthand for common operations)
     // ------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------
+    // Per-event weight (e.g. PT3 trigger-bias correction).
+    //
+    // setEventWeight(w) is called once per event in the analysis loop. It:
+    //   1. Updates current_event_weight_ — every fill()/fillw() below
+    //      multiplies the user-supplied weight by this scalar.
+    //   2. Pushes w into the trigger_corr branch of every dynamic ntuple
+    //      so a per-event branch persists in the output (DynamicHNtuple
+    //      resets fields after each fill(), so we re-set them here).
+    //
+    // When the bias correction is disabled (config flag or sim), main.cc
+    // never calls setEventWeight, so current_event_weight_ stays at 1.0
+    // and behaviour is identical to the pre-correction code.
+    // ------------------------------------------------------------------------
+    void setEventWeight(double w) {
+        current_event_weight_ = w;
+        for (auto& pair : dynamic_ntuples_) {
+            if (pair.second && !pair.second->isFinalized()) {
+                (*pair.second)["trigger_corr"] = static_cast<Float_t>(w);
+            }
+        }
+    }
+
+    double getEventWeight() const { return current_event_weight_; }
+
     /**
-     * @brief Fill 1D histogram (shorthand, no weight)
+     * @brief Fill 1D histogram (shorthand, no extra weight)
      *
      * Example:
      *   manager.fill("h_theta", 45.0);
      */
     void fill(const std::string& name, double value) {
-        getHistogram(name)->Fill(value);
+        getHistogram(name)->Fill(value, current_event_weight_);
     }
 
     /**
-     * @brief Fill 1D histogram with weight
+     * @brief Fill 1D histogram with explicit weight (multiplied with the
+     *        per-event weight set by setEventWeight()).
      *
      * Example:
-     *   manager.fillw("h_theta", 45.0, weight);
-     *   // Or for cross-section normalization:
-     *   manager.fillw("h_theta", 45.0, event_weight * luminosity);
+     *   manager.fillw("h_theta", 45.0, sim_genweight);
      */
     void fillw(const std::string& name, double value, double weight) {
-        getHistogram(name)->Fill(value, weight);
+        getHistogram(name)->Fill(value, weight * current_event_weight_);
     }
 
     /**
-     * @brief Fill 2D histogram (shorthand, no weight)
+     * @brief Fill 2D histogram (shorthand, no extra weight)
      */
     void fill(const std::string& name, double x, double y) {
-        getHistogramAs<TH2>(name)->Fill(x, y);
+        getHistogramAs<TH2>(name)->Fill(x, y, current_event_weight_);
     }
 
     /**
-     * @brief Fill 2D histogram with weight
-     *
-     * Example:
-     *   manager.fillw("h_xy", x, y, weight);
+     * @brief Fill 2D histogram with explicit weight (× per-event weight)
      */
     void fillw(const std::string& name, double x, double y, double weight) {
-        getHistogramAs<TH2>(name)->Fill(x, y, weight);
+        getHistogramAs<TH2>(name)->Fill(x, y, weight * current_event_weight_);
     }
 
     /**
-     * @brief Fill 3D histogram (shorthand, no weight)
+     * @brief Fill 3D histogram (shorthand, no extra weight)
      */
     void fill(const std::string& name, double x, double y, double z) {
-        getHistogramAs<TH3>(name)->Fill(x, y, z);
+        getHistogramAs<TH3>(name)->Fill(x, y, z, current_event_weight_);
     }
 
     /**
-     * @brief Fill 3D histogram with weight
+     * @brief Fill 3D histogram with explicit weight (× per-event weight)
      */
     void fillw(const std::string& name, double x, double y, double z, double weight) {
-        getHistogramAs<TH3>(name)->Fill(x, y, z, weight);
+        getHistogramAs<TH3>(name)->Fill(x, y, z, weight * current_event_weight_);
     }
 
     // ------------------------------------------------------------------------
@@ -477,6 +498,11 @@ private:
 
     // Dynamic ntuples (managed separately due to finalization needs)
     std::map<std::string, std::unique_ptr<DynamicHNtuple>> dynamic_ntuples_;
+
+    // Per-event weight used by setEventWeight(); multiplies all fill() calls.
+    // Defaults to 1.0 so that analyses which never call setEventWeight() are
+    // unaffected by this hook.
+    double current_event_weight_ = 1.0;
 };
 
 #endif // MANAGER_H

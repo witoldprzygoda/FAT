@@ -333,6 +333,22 @@ public:
     const TTree* getTree() const { return tree_; }
     const std::string& getTreeName() const { return treename_; }
     bool isChain() const { return is_chain_; }
+
+    // ------------------------------------------------------------------------
+    // Per-file accessors (relevant when isChain() == true): used by the
+    // PT3 trigger-bias correction to compute one weight per input file
+    // (one HADES run = one ROOT file in the .list).
+    //   getCurrentTreeNumber() returns the index of the currently-loaded
+    //                          tree in the chain, or 0 for a single TTree.
+    //   getNTrees()            returns the number of files in the chain,
+    //                          or 1 for a single TTree.
+    // ------------------------------------------------------------------------
+    int getCurrentTreeNumber() const {
+        return is_chain_ ? chain_->GetTreeNumber() : 0;
+    }
+    int getNTrees() const {
+        return is_chain_ ? chain_->GetNtrees() : 1;
+    }
     
     /**
      * @brief Get number of bound variables

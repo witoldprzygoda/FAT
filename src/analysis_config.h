@@ -701,7 +701,51 @@ public:
     bool isEcalEnabled() const {
         return config_["ecal"].asBool(false);
     }
-    
+
+    // ========================================================================
+    // Trigger configuration
+    //
+    //   "trigger": {
+    //       "selection":       "PT3" | "PT2" | "none",   default "PT3"
+    //       "bias_correction": true | false,             default true
+    //   }
+    //
+    // selection drives the per-event trigbit cut applied in processEvent.
+    // bias_correction controls whether main.cc runs Pass 1 (per-file
+    // trigbit counters) and weights every fill / ntuple row by the
+    // PT3 trigger-bias factor w = (63·N_PT2)/N_PT3 (or 1.0 when off).
+    // ========================================================================
+
+    /**
+     * @brief Trigger selection: "PT3", "PT2", or "none".
+     */
+    std::string getTriggerSelection() const {
+        const JsonValue& trig = config_["trigger"];
+        // Default PT3 to preserve historical behaviour for configs that
+        // don't yet include a "trigger" section.
+        std::string sel = trig["selection"].asString("PT3");
+        for (auto& c : sel) c = std::toupper(c);
+        if (sel == "PT3" || sel == "PT2" || sel == "NONE") return sel;
+        return "PT3";  // unknown values fall back to historical default
+    }
+
+    /**
+     * @brief Cut name to apply in processEvent — empty when "none".
+     */
+    std::string getTriggerCutName() const {
+        const std::string sel = getTriggerSelection();
+        if (sel == "PT3") return "trigger_PT3";
+        if (sel == "PT2") return "trigger_PT2";
+        return "";
+    }
+
+    /**
+     * @brief Whether the PT3 bias correction (per-file w) is applied.
+     */
+    bool isTriggerBiasCorrectionEnabled() const {
+        return config_["trigger"]["bias_correction"].asBool(true);
+    }
+
     // ========================================================================
     // Cut Configuration
     // ========================================================================
@@ -869,7 +913,14 @@ public:
         std::ostringstream ke_str;
         ke_str << getBeamKineticEnergy() << " MeV";
         printConfigLine(os, "Kinetic energy", ke_str.str());
-        
+        os << "║                                                                ║\n";
+
+        // Trigger section
+        os << "║ Trigger:                                                       ║\n";
+        printConfigLine(os, "Selection", getTriggerSelection());
+        printConfigLine(os, "Bias correction (PT3)",
+                        std::string(isTriggerBiasCorrectionEnabled() ? "enabled" : "disabled"));
+
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
 
