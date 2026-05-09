@@ -55,3 +55,16 @@ plots/output/*
 research/meson_research
 research/plots/output/*
 !research/plots/output/.gitkeep
+
+# research/calibration/ — analogous standalone tool (PT3/PT2 trigger scan).
+# Outputs (trigger_scan_*.root) land directly in research/calibration/
+# (covered by the global *.root rule above).
+research/calibration/trigger_scan
+research/calibration/plots/output/*
+!research/calibration/plots/output/.gitkeep
+
+# Calibration tables — produced by trigger_calibration.C and consumed by the
+# main analysis on pp45_epem. Live in repo root because the main analysis
+# expects them next to its configs; gitignored because they are derived
+# artefacts, not source.
+pt3_segments_*.json

@@ -1,0 +1,7 @@
+{
+    "input_source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
+    "tree_name":    "EmEm_ID",
+    "trig_pt3":     "8192",
+    "trig_pt2":     "4096",
+    "output_file":  "trigger_scan_emem.root"
+}
