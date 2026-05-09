@@ -55,6 +55,8 @@
 #include <TString.h>
 #include <TAxis.h>
 #include <iostream>
+#include <iomanip>
+#include <limits>
 #include <vector>
 #include <string>
 #include <map>
@@ -264,6 +266,23 @@ bool loadChannel(const std::string& chan, ChannelData& cd) {
 void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     if (cd.cum_x.empty()) return;
 
+    // Outlier accounting — count segments whose w falls outside the fixed
+    // y range. They will be drawn off-canvas (gaps in the visible step
+    // function); user needs to know they exist.
+    int  n_outliers = 0;
+    double w_min =  std::numeric_limits<double>::infinity();
+    double w_max = -std::numeric_limits<double>::infinity();
+    for (const SegmentSpan& s : cd.seg_spans) {
+        w_min = std::min(w_min, s.w);
+        w_max = std::max(w_max, s.w);
+        if (s.w < y_lo || s.w > y_hi) ++n_outliers;
+    }
+    std::cout << "  [" << cd.label << "]  w range observed: ["
+              << std::fixed << std::setprecision(3) << w_min << ", "
+              << w_max << "]   off-pad: " << n_outliers
+              << " / " << cd.seg_spans.size()
+              << " segments outside [" << y_lo << ", " << y_hi << "]\n";
+
     // -- Pad 1: cumulative N_PT3, N_PT2 vs chain event idx (log-y) --------
     std::vector<double> x(cd.cum_x.begin(), cd.cum_x.end());
     std::vector<double> y3(cd.cum_pt3.begin(), cd.cum_pt3.end());
@@ -395,29 +414,37 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
     c->SetLeftMargin(0.08); c->SetRightMargin(0.04);
     c->SetTopMargin(0.08);  c->SetBottomMargin(0.13);
 
-    // Build a frame matching the per-channel y-range so the overlay can be
-    // compared directly with the channel canvases.
-    double xmin = +1e18, xmax = -1e18;
+    // X-axis = file index (continuous, with fractional position WITHIN
+    // each file = local_event_idx / n_events_in_file). This is the only
+    // axis common to all three channels: epem/epep/emem scan the SAME
+    // .list file but their per-channel trees (EpEm_ID etc.) have very
+    // different entry counts per file, so each channel's "chain event
+    // index" axis has different total length. File index IS shared.
+    int n_files_max = 0;
     for (auto* cd : chans) {
-        for (const SegmentSpan& s : cd->seg_spans) {
-            xmin = std::min(xmin, (double) s.global_lo);
-            xmax = std::max(xmax, (double) s.global_hi);
-        }
+        if (cd) n_files_max = std::max(n_files_max, (int) cd->files.size());
     }
-    if (xmin >= xmax) { xmin = 0; xmax = 1; }
-    auto* frame = c->DrawFrame(xmin, y_lo, xmax, y_hi);
+    if (n_files_max == 0) n_files_max = 1;
+
+    auto* frame = c->DrawFrame(0.0, y_lo, (double) n_files_max, y_hi);
     frame->SetTitle("PT3 trigger-bias segment weights, all channels overlaid;"
-                    "chain event index;w = 63 #upoint N_{PT2}/N_{PT3}");
+                    "file index (fractional within each file);"
+                    "w = 63 #upoint N_{PT2}/N_{PT3}");
 
     auto* leg = new TLegend(0.83, 0.78, 0.97, 0.95);
-    const int colors[3]   = { kBlack, kBlue+1, kRed+1 };
+    const int colors[3] = { kBlack, kBlue+1, kRed+1 };
     int ci = 0;
     for (auto* cd : chans) {
-        if (!cd || cd->seg_spans.empty()) { ++ci; continue; }
+        if (!cd || cd->cal_rows.empty()) { ++ci; continue; }
         TLine* legend_line = nullptr;
-        for (const SegmentSpan& s : cd->seg_spans) {
-            auto* lc = new TLine((double) s.global_lo, s.w,
-                                 (double) s.global_hi, s.w);
+        for (const CalRow& r : cd->cal_rows) {
+            auto fi = cd->path2idx.find(r.file_path);
+            if (fi == cd->path2idx.end()) continue;
+            const Long64_t Nf = cd->files[fi->second].n_events;
+            if (Nf <= 0) continue;
+            const double x_lo = fi->second + (double) r.event_lo / (double) Nf;
+            const double x_hi = fi->second + (double) r.event_hi / (double) Nf;
+            auto* lc = new TLine(x_lo, r.w, x_hi, r.w);
             lc->SetLineColor(colors[ci]); lc->SetLineWidth(2);
             lc->Draw();
             if (!legend_line) legend_line = lc;
