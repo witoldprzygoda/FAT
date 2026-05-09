@@ -362,7 +362,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     g_p3->Draw("L");
     g_p2->Draw("L");
 
-    auto* leg1 = new TLegend(0.55, 0.89, 0.96, 0.985);
+    auto* leg1 = new TLegend(0.55, 0.86, 0.96, 0.93);
     leg1->SetTextSize(0.026);
     leg1->SetBorderSize(0);
     leg1->SetFillColorAlpha(kWhite, 0.7);
@@ -435,7 +435,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     }
 
     // Compact legend in the freed top-margin strip (above the data area).
-    auto* leg2 = new TLegend(0.55, 0.89, 0.96, 0.985);
+    auto* leg2 = new TLegend(0.55, 0.86, 0.96, 0.93);
     leg2->SetTextSize(0.026);
     leg2->SetBorderSize(0);
     leg2->SetFillColorAlpha(kWhite, 0.7);
@@ -461,7 +461,9 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
                  double y_lo, double y_hi) {
     auto* c = new TCanvas("c_calib_overlay", "c_calib_overlay", 1500, 700);
     c->SetGridx(); c->SetGridy();
-    c->SetLeftMargin(0.11); c->SetRightMargin(0.04);
+    // Wider right margin so the axis-overflow indicator (×10⁶ or similar)
+    // for the chain event index doesn't get clipped at the right edge.
+    c->SetLeftMargin(0.11); c->SetRightMargin(0.07);
     c->SetTopMargin(0.13);  c->SetBottomMargin(0.13);
 
     // X-axis = REFERENCE channel's chain event index. Reference is the
@@ -496,6 +498,9 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
         "chain event index (%s reference);"
         "w = 63 #upoint N_{PT2}/N_{PT3}",
         ref->label.c_str()));
+    // Smaller X-axis tick labels so the trailing "×10⁶" doesn't overflow
+    // the right edge for our 100M-event chains.
+    frame->GetXaxis()->SetLabelSize(0.030);
 
     // Alternating per-file bands across the full pad height — widths
     // proportional to the reference channel's per-file event counts.
@@ -522,7 +527,7 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
         }
     }
 
-    auto* leg = new TLegend(0.55, 0.89, 0.96, 0.985);
+    auto* leg = new TLegend(0.55, 0.86, 0.96, 0.93);
     leg->SetTextSize(0.026);
     leg->SetBorderSize(0);
     leg->SetFillColorAlpha(kWhite, 0.7);
