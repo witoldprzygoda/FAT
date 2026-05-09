@@ -20,15 +20,14 @@
 //            kinks visible here often correspond to segment boundaries.
 //
 //   Pad 2  — weight w plot:
-//              * per-window w   (black markers; each window contains a
-//                                fixed number of PT2 events — controlled
-//                                by `window_pt2` argument, default 1000;
-//                                Poisson-propagated σ_w bars)
-//              * cumulative w   (red line, growing from the chain start)
-//              * segment w      (blue piecewise-constant step function,
-//                                ±1σ thin dashed band per segment)
-//              * file boundaries (light gray dashed verticals)
-//              * segment boundaries (blue dashed verticals)
+//              * cumulative w     (red line, growing from the chain start)
+//              * segment w        (blue thick horizontal lines spanning
+//                                  each segment's chain range; each line
+//                                  has a thin BLACK vertical error bar at
+//                                  its midpoint showing ±σ_seg, the
+//                                  Poisson-propagated uncertainty of the
+//                                  calibration value)
+//              * file boundaries  (light gray dotted verticals)
 //
 // Cross-channel overlay canvas:
 //   * Segment-only piecewise-constant w for epem, epep, emem on one axis,
@@ -37,8 +36,7 @@
 //
 // Usage (from research/calibration/):
 //   root -l -b -q plots/visualize_calibration.C
-//   root -l -b -q 'plots/visualize_calibration.C(500)'    # tighter (~4.5% σ)
-//   root -l -b -q 'plots/visualize_calibration.C(2000)'   # smoother (~2.2% σ)
+//   root -l -b -q 'plots/visualize_calibration.C(0.8, 3.0)'   # custom y-range
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -73,20 +71,6 @@ struct FileInfo {
     Long64_t    chain_offset;    // sum of n_events of all preceding files
 };
 
-// One per-window aggregation for the per-window w plot.
-struct Window {
-    Long64_t  global_event_mid;   // chain event index of window centre
-    long long n_pt3;
-    long long n_pt2;
-    double w()     const { return (n_pt3 > 0 && n_pt2 > 0)
-                                      ? kK * (double) n_pt2 / (double) n_pt3 : 0.0; }
-    double sigma() const {
-        if (n_pt3 <= 0 || n_pt2 <= 0) return 0.0;
-        const double a = (double) n_pt3, b = (double) n_pt2;
-        return w() * std::sqrt(1.0/a + 1.0/b);
-    }
-};
-
 // One per-segment per-file row (matches calibration TTree schema).
 struct CalRow {
     int          seg_idx;
@@ -117,7 +101,6 @@ struct ChannelData {
     std::vector<Long64_t>      cum_x;          // chain event idx checkpoints
     std::vector<long long>     cum_pt3;        // cumulative N_PT3 at checkpoints
     std::vector<long long>     cum_pt2;        // cumulative N_PT2 at checkpoints
-    std::vector<Window>        windows;        // per-window aggregates
     std::vector<CalRow>        cal_rows;       // calibration table rows
     std::vector<SegmentSpan>   seg_spans;      // segments mapped to chain coords
     Long64_t                   total_chain_events = 0;
@@ -144,7 +127,7 @@ bool loadFiles(TTree* t_files, ChannelData& cd) {
     return !cd.files.empty();
 }
 
-bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_pt2) {
+bool loadEvents(TTree* t_evts, ChannelData& cd) {
     std::string  epath;
     std::string* pp = &epath;
     Long64_t e_local = 0;
@@ -157,8 +140,6 @@ bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_pt2) {
     if (N == 0) return false;
 
     long long cum_p3 = 0, cum_p2 = 0;
-    long long win_p3 = 0, win_p2 = 0;
-    Long64_t  win_first_global = -1;
 
     // Cumulative checkpoint cadence: every CHECK_EVERY trigger events we
     // record (chain_idx, cum_pt3, cum_pt2) — keeps the cumulative graph
@@ -178,24 +159,6 @@ bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_pt2) {
             cd.cum_x.push_back(global_idx);
             cd.cum_pt3.push_back(cum_p3);
             cd.cum_pt2.push_back(cum_p2);
-        }
-
-        // Window aggregation: close when we have collected `window_pt2`
-        // PT2 events (the rare class — controls the statistics floor).
-        // PT3 in the same window is whatever it happens to be (~64×PT2
-        // on average given the PT2 downscale).
-        if (win_first_global < 0) win_first_global = global_idx;
-        if (e_trig == 8192) ++win_p3;
-        else if (e_trig == 4096) ++win_p2;
-        const bool window_done = (win_p2 >= window_pt2) || (i == N - 1);
-        if (window_done && (win_p3 > 0 || win_p2 > 0)) {
-            Window w;
-            w.global_event_mid = (win_first_global + global_idx) / 2;
-            w.n_pt3            = win_p3;
-            w.n_pt2            = win_p2;
-            cd.windows.push_back(w);
-            win_p3 = win_p2 = 0;
-            win_first_global = -1;
         }
     }
     return true;
@@ -256,7 +219,7 @@ bool loadCalibration(const std::string& path, ChannelData& cd) {
     return true;
 }
 
-bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_pt2) {
+bool loadChannel(const std::string& chan, ChannelData& cd) {
     cd.label     = chan;
     // Paths are relative to the cwd from which root is invoked. Standard
     // usage is `cd research/calibration && root -l -b -q plots/...` so the
@@ -282,7 +245,7 @@ bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_pt2) 
         fscan->Close(); delete fscan;
         return false;
     }
-    if (!loadEventsAndWindows(t_evts, cd, window_pt2)) {
+    if (!loadEvents(t_evts, cd)) {
         fscan->Close(); delete fscan;
         return false;
     }
@@ -292,8 +255,6 @@ bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_pt2) 
 
     std::cout << "  loaded " << chan
               << ": files=" << cd.files.size()
-              << "  trig_events=" << (cd.windows.empty() ? 0 : cd.windows.back().global_event_mid + 1)
-              << "  windows=" << cd.windows.size()
               << "  segments=" << cd.seg_spans.size() << "\n";
     return true;
 }
@@ -313,22 +274,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     g_p3->SetLineColor(kRed+1);  g_p3->SetLineWidth(2);
     g_p2->SetLineColor(kBlue+1); g_p2->SetLineWidth(2);
 
-    // -- Pad 2: per-window w (markers), cumulative w (line), segments -----
-    std::vector<double> wx, wy, wex, wey;
-    wx.reserve(cd.windows.size());
-    for (const Window& w : cd.windows) {
-        if (w.n_pt3 == 0 || w.n_pt2 == 0) continue;
-        wx.push_back((double) w.global_event_mid);
-        wy.push_back(w.w());
-        wex.push_back(0.0);
-        wey.push_back(w.sigma());
-    }
-    auto* g_w = new TGraphErrors((int) wx.size(),
-                                 wx.data(), wy.data(),
-                                 wex.data(), wey.data());
-    g_w->SetMarkerStyle(20); g_w->SetMarkerColor(kBlack);
-    g_w->SetLineColor(kBlack); g_w->SetMarkerSize(0.5);
-
+    // -- Pad 2: cumulative w (red line), segments (blue with black error bars)
     // Cumulative w(x) computed from cum_pt3, cum_pt2 at checkpoints.
     std::vector<double> cwx, cwy;
     cwx.reserve(cd.cum_x.size()); cwy.reserve(cd.cum_x.size());
@@ -382,20 +328,16 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     mg2->SetTitle(TString::Format(
         "weight w = 63 #upoint N_{PT2}/N_{PT3}  (%s);chain event index;w",
         cd.label.c_str()));
-    mg2->Add(g_w,  "P");
     mg2->Add(g_cw, "L");
     mg2->Draw("A");
 
-    auto* leg2 = new TLegend(0.74, 0.78, 0.95, 0.95);
-    leg2->AddEntry(g_w,  "per window  w (N_{PT2}=K)  #pm #sigma", "lp");
-    leg2->AddEntry(g_cw, "cumulative w_{cum}",         "l");
+    auto* leg2 = new TLegend(0.74, 0.80, 0.95, 0.95);
+    leg2->AddEntry(g_cw, "cumulative w_{cum}", "l");
 
     // Each segment drawn as: a thick blue horizontal line (the value w_seg
-    // spanning the segment's chain range) PLUS a thin blue vertical error
-    // bar at the segment midpoint (±σ_seg). The error is the spread that
-    // the main analysis will actually inherit when applying this weight,
-    // so it's the one worth seeing — not the ±σ of an arbitrary sampling
-    // window.
+    // spanning the segment's chain range) PLUS a thin BLACK vertical error
+    // bar at the segment midpoint (±σ_seg). Black so the error of the
+    // calibration value reads cleanly off the colour of the segment line.
     const Color_t kSegColor = kBlue + 1;
     TLine* seg_legend_line = nullptr;
     for (const SegmentSpan& s : cd.seg_spans) {
@@ -409,7 +351,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
 
         if (s.sigma > 0) {
             auto* lv = new TLine(xmid, s.w - s.sigma, xmid, s.w + s.sigma);
-            lv->SetLineColor(kSegColor); lv->SetLineWidth(2);
+            lv->SetLineColor(kBlack); lv->SetLineWidth(1);
             lv->Draw();
         }
 
@@ -493,35 +435,24 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
 
 }  // anonymous namespace
 
-// `window_pt2` is the number of PT2 events per visualisation window (PT2
-// is the rare class — ~1.5% of trigger events at pp45 leptons due to the
-// 64× downscale, so it controls the statistics floor). Each window
-// therefore contains exactly `window_pt2` PT2 events plus ~64·window_pt2
-// PT3 events. Per-window σ_w/w ≈ √(1/N_PT2 + 1/N_PT3) ≈ 1/√N_PT2.
-//   window_pt2 = 1000  →  ~3% error per marker
-//   window_pt2 =  500  →  ~4.5% error per marker
-//   window_pt2 =  200  →  ~7% error per marker
-// Pure visualisation parameter — does NOT affect the segmenter (which is
-// PT2/PT3 stat-driven, not window-driven).
-//
 // `y_lo`, `y_hi` pin the weight-pad y-range identically across all three
 // channels so they can be compared at a glance.
-void visualize_calibration(Long64_t window_pt2 = 1000,
-                           double   y_lo       = 1.0,
-                           double   y_hi       = 2.5) {
+void visualize_calibration(double y_lo = 1.0,
+                           double y_hi = 2.5) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
     gStyle->SetLabelSize(0.045, "xy");
     gStyle->SetPadTickX(1); gStyle->SetPadTickY(1);
 
-    std::cout << "=== visualize_calibration  window=" << window_pt2
-              << " PT2 events per marker ===\n";
+    std::cout << "=== visualize_calibration"
+              << "  y=[" << y_lo << ", " << y_hi << "]"
+              << " ===\n";
 
     ChannelData epem, epep, emem;
-    const bool ok_e = loadChannel("epem", epem, window_pt2);
-    const bool ok_p = loadChannel("epep", epep, window_pt2);
-    const bool ok_m = loadChannel("emem", emem, window_pt2);
+    const bool ok_e = loadChannel("epem", epem);
+    const bool ok_p = loadChannel("epep", epep);
+    const bool ok_m = loadChannel("emem", emem);
 
     if (!ok_e && !ok_p && !ok_m) {
         std::cerr << "ERROR: no scan files found. Run "
