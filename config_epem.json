@@ -28,5 +28,6 @@
         "analysis_type": "reconstructed"
     },
     "fwdet": true,
-    "ecal": true
+    "ecal": true,
+    "mode": "full"
 }

@@ -2,26 +2,26 @@
 # ============================================================================
 # FAT parallel launcher — split input list, run N ana jobs, hadd outputs.
 #
-# Reads config.json (or any other .json), splits the .list source into N
-# chunks, generates a temporary config per chunk with its own output filename,
-# launches up to N_CONCURRENT ana jobs in parallel, then merges all part
-# outputs into the original output filename via hadd.
+# Reads config_<channel>.json (or any other .json), splits the .list source
+# into N chunks, generates a temporary config per chunk with its own output
+# filename, launches up to N_CONCURRENT ana jobs in parallel, then merges
+# all part outputs into the original output filename via hadd.
 #
 # Does NOT modify the project sources, the input config, or the input list.
 # All temp files live in $TMPDIR (printed below); cleaned up on success only.
 #
 # Usage:
-#   ./run_parallel.sh [config.json] [N_parts=32] [N_concurrent=N_parts]
+#   ./run_parallel.sh [config_epem.json] [N_parts=32] [N_concurrent=N_parts]
 #
 # Examples:
-#   ./run_parallel.sh                       # 32 parts, 32 concurrent
-#   ./run_parallel.sh config.json 16 8      # 16 parts, max 8 concurrent
-#   ./run_parallel.sh config.json 64 16     # 64 chunks, 16 at a time
+#   ./run_parallel.sh                              # config_epem.json default
+#   ./run_parallel.sh config_epep.json 16 8        # 16 parts, 8 concurrent
+#   ./run_parallel.sh config_emem_cal.json 64 16   # cal-mode 64 chunks
 # ============================================================================
 
 set -uo pipefail
 
-CONFIG="${1:-config.json}"
+CONFIG="${1:-config_epem.json}"
 N_PARTS="${2:-32}"
 N_CONCURRENT="${3:-$N_PARTS}"
 N_RETRIES="${4:-2}"          # per-chunk retries on failure

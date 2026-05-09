@@ -6,7 +6,7 @@
 // Supports EpEm, EpEp, EmEm channels via config-driven prefix mapping.
 //
 // Usage:
-//   ./ana [config.json]
+//   ./ana [config_epem.json]
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2025
@@ -618,7 +618,7 @@ int main(int argc, char* argv[]) {
     ConsoleBox::newLine();
 
     // Load configuration
-    std::string config_file = "config.json";
+    std::string config_file = "config_epem.json";
     if (argc > 1) {
         config_file = argv[1];
     }
