@@ -747,6 +747,25 @@ public:
     }
 
     // ========================================================================
+    // Run mode
+    // ========================================================================
+    //   "full" (default) — full analysis: histograms, dilepton_nt, ecal_nt,
+    //                      etc. and the existing Pass 1 trigger-bias counts.
+    //   "trigger_calibration" — minimal pass that only fills trigger_cal_nt
+    //                      (raw trigbit + oa + isBest + vertex + start
+    //                       per event, no cuts at fill time) plus a small
+    //                      trigger_cal_files metadata TTree. Pass 1, all
+    //                      other ntuples and all histograms are skipped.
+    //                      Used by research/calibration/ to derive the
+    //                      per-segment PT3-bias weights.
+    std::string getMode() const {
+        return config_["mode"].asString("full");
+    }
+    bool isTriggerCalibrationOnly() const {
+        return getMode() == "trigger_calibration";
+    }
+
+    // ========================================================================
     // Cut Configuration
     // ========================================================================
     

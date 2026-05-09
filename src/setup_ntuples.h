@@ -25,6 +25,24 @@
 inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
     std::cout << "Setting up ntuples...\n";
 
+    // Trigger-calibration-only mode: skip every analysis ntuple and create
+    // ONLY the dedicated trigger-calibration ntuple. The calibration run
+    // is a one-shot scan whose product is the per-segment PT3-bias weights
+    // (computed downstream by research/calibration/); none of the heavy
+    // dilepton / ECAL / FW ntuples are useful for it, and skipping them
+    // keeps the output ROOT small and the run fast.
+    if (config.isTriggerCalibrationOnly()) {
+        manager.createDynamicNtuple("trigger_cal_nt",
+            "Trigger calibration: one entry per event with valid e+e- pair. "
+            "Branches: file_idx, local_event_idx, trigbit, oa, isBest, "
+            "eVertReco_z, start_iteration. NO cuts applied at fill time — "
+            "all values are raw; the downstream calibration analysis chooses "
+            "isBest / vertex / start / oa cuts as it sees fit.");
+        std::cout << "  Created output ntuple 'trigger_cal_nt'\n";
+        std::cout << "  (mode = trigger_calibration: skipping all other ntuples)\n";
+        return;
+    }
+
     // Dilepton ntuple (ep_*, em_*, oa, m_ee, CMS variables, cut flags)
     // Default uses RECONSTRUCTED-derived compound observables.
     manager.createDynamicNtuple("dilepton_nt", "Dilepton event data (RECONSTRUCTED)");

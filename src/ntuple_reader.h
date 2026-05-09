@@ -358,6 +358,30 @@ public:
         auto* el = files->At(idx);
         return el ? el->GetTitle() : std::string{};
     }
+
+    // ------------------------------------------------------------------------
+    // Per-entry / per-file accessors used by trigger calibration: derive the
+    // current event's index inside its own tree (chain-aware), and the total
+    // entry count of any tree in the chain. Both relative to the input
+    // physical file the chain element points at, NOT to the merged chain.
+    // ------------------------------------------------------------------------
+    Long64_t getLocalEntryInTree() const {
+        if (!is_chain_) return current_entry_;
+        if (!chain_)    return -1;
+        const Long64_t* off = chain_->GetTreeOffset();
+        if (!off)       return -1;
+        return current_entry_ - off[chain_->GetTreeNumber()];
+    }
+    Long64_t getTreeNEvents(int idx) const {
+        if (!is_chain_) return tree_ ? tree_->GetEntries() : 0;
+        if (!chain_ || idx < 0 || idx >= chain_->GetNtrees()) return 0;
+        const Long64_t* off = chain_->GetTreeOffset();
+        if (!off)       return 0;
+        const Long64_t  total = chain_->GetEntries();
+        return (idx + 1 < chain_->GetNtrees())
+                   ? (off[idx + 1] - off[idx])
+                   : (total - off[idx]);
+    }
     
     /**
      * @brief Get number of bound variables

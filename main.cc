@@ -37,6 +37,43 @@
 using namespace Physics;
 
 // ============================================================================
+// PROCESS SINGLE EVENT — TRIGGER CALIBRATION MODE
+// ============================================================================
+// Used only when config.mode == "trigger_calibration". Reads RAW event-level
+// values (no cuts applied at fill time) and writes one entry per event with
+// a reconstructable e+e- pair to trigger_cal_nt. Downstream calibration in
+// research/calibration/ chooses how to cut on isBest, vertex_z,
+// start_iteration, oa.
+//
+// PParticle reconstruction is intentionally identical to processEvent's
+// (same setFromSpherical, same Physics::openingAngle) so the OA value here
+// matches the OA the full analysis would compute for the same event.
+void processEventCalibration(NTupleReader& reader, Manager& mgr) {
+    const Float_t trigbit    = reader["trigbit"];
+    const Float_t isBest     = reader["isBest"];
+    const Float_t vertex_z   = reader["eVertReco_z"];
+    const Float_t start_iter = reader["start_iteration"];
+
+    PParticle positron(MASS_ELECTRON, "e+");
+    PParticle electron(MASS_ELECTRON, "e-");
+    positron.setFromSpherical(reader["ep_p"], reader["ep_theta"], reader["ep_phi"],
+                              KinematicType::RECONSTRUCTED);
+    electron.setFromSpherical(reader["em_p"], reader["em_theta"], reader["em_phi"],
+                              KinematicType::RECONSTRUCTED);
+    const double oa = Physics::openingAngle(positron, electron);
+
+    auto& nt = mgr.getDynamicNtuple("trigger_cal_nt");
+    nt["file_idx"]        = static_cast<float>(reader.getCurrentTreeNumber());
+    nt["local_event_idx"] = static_cast<float>(reader.getLocalEntryInTree());
+    nt["trigbit"]         = trigbit;
+    nt["oa"]              = static_cast<float>(oa);
+    nt["isBest"]          = isBest;
+    nt["eVertReco_z"]     = vertex_z;
+    nt["start_iteration"] = start_iter;
+    nt.fill();
+}
+
+// ============================================================================
 // PROCESS SINGLE EVENT
 // ============================================================================
 
@@ -633,11 +670,19 @@ int main(int argc, char* argv[]) {
     Manager manager;
     manager.openFile(config.getOutputFilename(), config.getOutputOption());
 
-    setupHistograms(manager);
+    // setup_ntuples is always called (it self-skips heavy ntuples in cal
+    // mode); histograms and cuts are skipped entirely in cal mode since
+    // calibration writes nothing to histograms and applies no cuts at
+    // fill time. Avoids polluting output_*_cal.root with empty TH1/TH2.
+    if (!config.isTriggerCalibrationOnly()) {
+        setupHistograms(manager);
+    }
     setupNtuples(manager, config);
 
     CutManager cuts;
-    setupCuts(cuts);
+    if (!config.isTriggerCalibrationOnly()) {
+        setupCuts(cuts);
+    }
 
     // Event loop
     Long64_t total_entries = reader.entries();
@@ -650,6 +695,95 @@ int main(int argc, char* argv[]) {
     }
 
     Long64_t events_to_process = end_event - start_event;
+
+    // ------------------------------------------------------------------
+    // Mode: trigger_calibration → minimal pass, no full analysis.
+    //   Skips Pass 1 (per-file weight derivation) and the full processEvent
+    //   path. Writes ONLY trigger_cal_files (per-file metadata) and
+    //   trigger_cal_nt (per-event raw values) for downstream calibration
+    //   in research/calibration/. NO trigger filter — both PT3 and PT2
+    //   events are kept. NO cuts at fill time — raw isBest, eVertReco_z,
+    //   start_iteration, oa are saved; the calibration analysis decides
+    //   what to cut.
+    // ------------------------------------------------------------------
+    if (config.isTriggerCalibrationOnly()) {
+        ConsoleBox::newLine();
+        ConsoleBox::printInfoBox(
+            "Mode: trigger_calibration  (skipping full analysis)");
+        ConsoleBox::newLine();
+
+        const int n_files_cal = reader.getNTrees();
+
+        // Per-file metadata TTree. file_idx is local to THIS chunk; after
+        // hadd it resets across chunk boundaries. Calibration analysis
+        // detects chunk boundaries by file_idx resets and renumbers
+        // globally; file_path is the canonical key.
+        {
+            TFile* fout = manager.getFile();
+            TDirectory* keep = gDirectory;
+            fout->cd();
+            TTree* tfiles = new TTree("trigger_cal_files",
+                                      "Per-file metadata for trigger_cal_nt");
+            Int_t       fb_idx = 0;
+            Long64_t    fb_nev = 0;
+            std::string fb_path;
+            tfiles->Branch("file_idx",       &fb_idx, "file_idx/I");
+            tfiles->Branch("n_events_total", &fb_nev, "n_events_total/L");
+            tfiles->Branch("file_path",      &fb_path);
+            for (int f = 0; f < n_files_cal; ++f) {
+                fb_idx  = f;
+                fb_nev  = reader.getTreeNEvents(f);
+                fb_path = reader.getTreeFilePath(f);
+                tfiles->Fill();
+            }
+            tfiles->Write();
+            keep->cd();
+            std::cout << "Wrote trigger_cal_files (" << n_files_cal
+                      << " files)\n\n";
+        }
+
+        std::cout << "Processing events " << start_event << " to "
+                  << end_event << " (" << events_to_process
+                  << " events)...\n\n";
+
+        Long64_t processed = 0;
+        bool was_interrupted = false;
+        ProgressBar progress(events_to_process);
+
+        for (Long64_t i = start_event; i < end_event; ++i) {
+            if (SignalHandler::wasInterrupted()) {
+                was_interrupted = true;
+                break;
+            }
+            reader.getEntry(i);
+            ++processed;
+            progress.update(processed);
+            try {
+                processEventCalibration(reader, manager);
+            } catch (const std::exception&) {
+                continue;
+            }
+        }
+        progress.finish(was_interrupted);
+
+        std::cout << "\n";
+        if (was_interrupted) {
+            std::cout << "Processing interrupted by user (Ctrl+C).\n";
+        } else {
+            std::cout << "Processing complete!\n";
+        }
+        std::cout << "  Events processed: " << processed << "\n";
+
+        std::cout << "\nSaving results to "
+                  << config.getOutputFilename() << "...\n";
+        manager.printSummary();
+        manager.closeFile();
+
+        ConsoleBox::newLine();
+        ConsoleBox::printStatus("Analysis Complete!");
+        ConsoleBox::newLine();
+        return 0;
+    }
 
     // ------------------------------------------------------------------
     // Pass 1 (only if PT3 trigger-bias correction is enabled).
