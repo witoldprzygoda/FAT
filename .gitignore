@@ -66,5 +66,6 @@ research/calibration/plots/output/*
 # Calibration tables — produced by trigger_calibration.C and consumed by the
 # main analysis on pp45_epem. Live in repo root because the main analysis
 # expects them next to its configs; gitignored because they are derived
-# artefacts, not source.
-pt3_segments_*.json
+# artefacts, not source. (ROOT TTree, not JSON — granularity is intra-file
+# event ranges, see research/calibration/plots/trigger_calibration.C.)
+pt3_calibration_*.root
