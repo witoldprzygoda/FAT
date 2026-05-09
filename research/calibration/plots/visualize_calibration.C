@@ -20,8 +20,10 @@
 //            kinks visible here often correspond to segment boundaries.
 //
 //   Pad 2  — weight w plot:
-//              * per-window w   (black markers, window of K consecutive
-//                                trigger events; Poisson-propagated bars)
+//              * per-window w   (black markers; each window contains a
+//                                fixed number of PT2 events — controlled
+//                                by `window_pt2` argument, default 1000;
+//                                Poisson-propagated σ_w bars)
 //              * cumulative w   (red line, growing from the chain start)
 //              * segment w      (blue piecewise-constant step function,
 //                                ±1σ thin dashed band per segment)
@@ -35,7 +37,8 @@
 //
 // Usage (from research/calibration/):
 //   root -l -b -q plots/visualize_calibration.C
-//   root -l -b -q 'plots/visualize_calibration.C(2000)'   # window=2000 triggers
+//   root -l -b -q 'plots/visualize_calibration.C(500)'    # tighter (~4.5% σ)
+//   root -l -b -q 'plots/visualize_calibration.C(2000)'   # smoother (~2.2% σ)
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -141,7 +144,7 @@ bool loadFiles(TTree* t_files, ChannelData& cd) {
     return !cd.files.empty();
 }
 
-bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_size) {
+bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_pt2) {
     std::string  epath;
     std::string* pp = &epath;
     Long64_t e_local = 0;
@@ -177,11 +180,15 @@ bool loadEventsAndWindows(TTree* t_evts, ChannelData& cd, Long64_t window_size) 
             cd.cum_pt2.push_back(cum_p2);
         }
 
-        // Window aggregation
+        // Window aggregation: close when we have collected `window_pt2`
+        // PT2 events (the rare class — controls the statistics floor).
+        // PT3 in the same window is whatever it happens to be (~64×PT2
+        // on average given the PT2 downscale).
         if (win_first_global < 0) win_first_global = global_idx;
         if (e_trig == 8192) ++win_p3;
         else if (e_trig == 4096) ++win_p2;
-        if ((i + 1) % window_size == 0 || i == N - 1) {
+        const bool window_done = (win_p2 >= window_pt2) || (i == N - 1);
+        if (window_done && (win_p3 > 0 || win_p2 > 0)) {
             Window w;
             w.global_event_mid = (win_first_global + global_idx) / 2;
             w.n_pt3            = win_p3;
@@ -249,7 +256,7 @@ bool loadCalibration(const std::string& path, ChannelData& cd) {
     return true;
 }
 
-bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_size) {
+bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_pt2) {
     cd.label     = chan;
     // Paths are relative to the cwd from which root is invoked. Standard
     // usage is `cd research/calibration && root -l -b -q plots/...` so the
@@ -275,7 +282,7 @@ bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_size)
         fscan->Close(); delete fscan;
         return false;
     }
-    if (!loadEventsAndWindows(t_evts, cd, window_size)) {
+    if (!loadEventsAndWindows(t_evts, cd, window_pt2)) {
         fscan->Close(); delete fscan;
         return false;
     }
@@ -380,7 +387,7 @@ void drawChannelCanvas(const ChannelData& cd) {
     mg2->Draw("A");
 
     auto* leg2 = new TLegend(0.74, 0.78, 0.95, 0.95);
-    leg2->AddEntry(g_w,  "per window w[K] #pm #sigma", "lp");
+    leg2->AddEntry(g_w,  "per window  w (N_{PT2}=K)  #pm #sigma", "lp");
     leg2->AddEntry(g_cw, "cumulative w_{cum}",         "l");
 
     // Segments overlaid as blue horizontal lines per segment (with ±σ
@@ -488,25 +495,30 @@ void drawOverlay(const std::vector<ChannelData*>& chans) {
 
 }  // anonymous namespace
 
-// `window_size` counts entries of trigger_events — i.e. PT3 + PT2 events
-// MIXED (~98% PT3 / ~2% PT2 at pp45 leptons). 1000 is too small (only ~15
-// PT2 per window → ~25% Poisson error per marker, very noisy). 10000 gives
-// ~150 PT2/window → ~8% error, much cleaner. Pure visualisation parameter,
-// does not affect the segmenter.
-void visualize_calibration(Long64_t window_size = 10000) {
+// `window_pt2` is the number of PT2 events per visualisation window (PT2
+// is the rare class — ~1.5% of trigger events at pp45 leptons due to the
+// 64× downscale, so it controls the statistics floor). Each window
+// therefore contains exactly `window_pt2` PT2 events plus ~64·window_pt2
+// PT3 events. Per-window σ_w/w ≈ √(1/N_PT2 + 1/N_PT3) ≈ 1/√N_PT2.
+//   window_pt2 = 1000  →  ~3% error per marker
+//   window_pt2 =  500  →  ~4.5% error per marker
+//   window_pt2 =  200  →  ~7% error per marker
+// Pure visualisation parameter — does NOT affect the segmenter (which is
+// PT2/PT3 stat-driven, not window-driven).
+void visualize_calibration(Long64_t window_pt2 = 1000) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
     gStyle->SetLabelSize(0.045, "xy");
     gStyle->SetPadTickX(1); gStyle->SetPadTickY(1);
 
-    std::cout << "=== visualize_calibration  window=" << window_size
-              << " trigger events ===\n";
+    std::cout << "=== visualize_calibration  window=" << window_pt2
+              << " PT2 events per marker ===\n";
 
     ChannelData epem, epep, emem;
-    const bool ok_e = loadChannel("epem", epem, window_size);
-    const bool ok_p = loadChannel("epep", epep, window_size);
-    const bool ok_m = loadChannel("emem", emem, window_size);
+    const bool ok_e = loadChannel("epem", epem, window_pt2);
+    const bool ok_p = loadChannel("epep", epep, window_pt2);
+    const bool ok_m = loadChannel("emem", emem, window_pt2);
 
     if (!ok_e && !ok_p && !ok_m) {
         std::cerr << "ERROR: no scan files found. Run "
