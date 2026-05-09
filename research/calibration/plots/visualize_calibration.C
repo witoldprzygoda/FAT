@@ -49,6 +49,8 @@
 #include <TCanvas.h>
 #include <TLegend.h>
 #include <TLine.h>
+#include <TBox.h>
+#include <TLatex.h>
 #include <TPad.h>
 #include <TStyle.h>
 #include <TSystem.h>
@@ -309,49 +311,104 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     auto* c = new TCanvas(cname, cname, 1500, 950);
     c->Divide(1, 2, 0.001, 0.001);
 
+    // Common chain x-extent reused across pad 1 / pad 2 / band drawing.
+    const double xmax_chain = cd.files.empty()
+        ? 1.0
+        : (double) (cd.files.back().chain_offset + cd.files.back().n_events);
+
+    // Shared band styling (alternating per file across the full pad height).
+    const Color_t kBandA      = kAzure  - 9;
+    const Color_t kBandB      = kOrange - 9;
+    const double  kBandAlpha  = 0.18;
+    const double  kLabelYNDC  = 0.83;     // inside data area, near top, below legend strip
+    const double  kLabelSize  = 0.022;
+
     // -- Pad 1 ----
     auto* p1 = (TPad*) c->cd(1);
     p1->SetLogy(); p1->SetGridx(); p1->SetGridy();
     p1->SetLeftMargin(0.10); p1->SetRightMargin(0.04);
-    p1->SetTopMargin(0.08);  p1->SetBottomMargin(0.13);
+    p1->SetTopMargin(0.13);  p1->SetBottomMargin(0.13);
 
-    auto* mg1 = new TMultiGraph();
-    mg1->SetTitle(TString::Format(
+    double y_max_p1 = 1.0;
+    for (long long c3 : cd.cum_pt3) y_max_p1 = std::max(y_max_p1, (double) c3);
+    y_max_p1 *= 1.5;
+    const double y_min_p1 = 1.0;
+
+    auto* frame1 = p1->DrawFrame(0.0, y_min_p1, xmax_chain, y_max_p1);
+    frame1->SetTitle(TString::Format(
         "cumulative trigger counts  (%s);chain event index;count",
         cd.label.c_str()));
-    mg1->Add(g_p3, "L");
-    mg1->Add(g_p2, "L");
-    mg1->Draw("A");
-    auto* leg1 = new TLegend(0.78, 0.78, 0.95, 0.93);
+
+    {
+        const double lm = p1->GetLeftMargin(), rm = p1->GetRightMargin();
+        for (size_t i = 0; i < cd.files.size(); ++i) {
+            const double xb_lo = (double) cd.files[i].chain_offset;
+            const double xb_hi = xb_lo + (double) cd.files[i].n_events;
+            auto* box = new TBox(xb_lo, y_min_p1, xb_hi, y_max_p1);
+            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetLineWidth(0);
+            box->Draw();
+            const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_chain)
+                                       * (1.0 - lm - rm);
+            auto* lbl = new TLatex();
+            lbl->SetNDC();
+            lbl->SetTextSize(kLabelSize);
+            lbl->SetTextAlign(22);
+            lbl->SetTextColor(kGray + 3);
+            lbl->DrawLatex(ndc_x, kLabelYNDC, TString::Format("%zu", i));
+        }
+    }
+
+    g_p3->Draw("L");
+    g_p2->Draw("L");
+
+    auto* leg1 = new TLegend(0.55, 0.89, 0.96, 0.985);
+    leg1->SetTextSize(0.026);
+    leg1->SetBorderSize(0);
+    leg1->SetFillColorAlpha(kWhite, 0.7);
+    leg1->SetNColumns(2);
     leg1->AddEntry(g_p3, "cum N_{PT3}", "l");
     leg1->AddEntry(g_p2, "cum N_{PT2}", "l");
     leg1->Draw();
-
-    // File boundaries on pad 1 (light gray dashed verticals).
-    for (size_t i = 1; i < cd.files.size(); ++i) {
-        const double xb = (double) cd.files[i].chain_offset;
-        auto* lv = new TLine(xb,
-                             p1->GetUymin(), xb, p1->GetUymax());
-        lv->SetLineColor(kGray + 1);
-        lv->SetLineStyle(3);
-        lv->Draw();
-    }
 
     // -- Pad 2 ----
     auto* p2 = (TPad*) c->cd(2);
     p2->SetGridx(); p2->SetGridy();
     p2->SetLeftMargin(0.10); p2->SetRightMargin(0.04);
-    p2->SetTopMargin(0.08);  p2->SetBottomMargin(0.16);
+    p2->SetTopMargin(0.13);  p2->SetBottomMargin(0.16);
 
-    auto* mg2 = new TMultiGraph();
-    mg2->SetTitle(TString::Format(
+    // Frame manually so axis stack is: axes < bands < cumulative-line/segments.
+    auto* frame2 = p2->DrawFrame(0.0, y_lo, xmax_chain, y_hi);
+    frame2->SetTitle(TString::Format(
         "weight w = 63 #upoint N_{PT2}/N_{PT3}  (%s);chain event index;w",
         cd.label.c_str()));
-    mg2->Add(g_cw, "L");
-    mg2->Draw("A");
 
-    auto* leg2 = new TLegend(0.74, 0.80, 0.95, 0.95);
-    leg2->AddEntry(g_cw, "cumulative w_{cum}", "l");
+    // Alternating semi-transparent file bands spanning the full pad height,
+    // with the file index labelled at the top of each band (NDC). Replaces
+    // the old gray-dashed file-boundary verticals with something that
+    // simultaneously identifies WHICH file you're looking at.
+    {
+        const double lm = p2->GetLeftMargin(), rm = p2->GetRightMargin();
+        for (size_t i = 0; i < cd.files.size(); ++i) {
+            const double xb_lo = (double) cd.files[i].chain_offset;
+            const double xb_hi = xb_lo + (double) cd.files[i].n_events;
+            auto* box = new TBox(xb_lo, y_lo, xb_hi, y_hi);
+            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetLineWidth(0);
+            box->Draw();
+            const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_chain)
+                                       * (1.0 - lm - rm);
+            auto* lbl = new TLatex();
+            lbl->SetNDC();
+            lbl->SetTextSize(kLabelSize);
+            lbl->SetTextAlign(22);
+            lbl->SetTextColor(kGray + 3);
+            lbl->DrawLatex(ndc_x, kLabelYNDC, TString::Format("%zu", i));
+        }
+    }
+
+    // Cumulative w drawn ON TOP of bands.
+    g_cw->Draw("L");
 
     // Each segment drawn as: a thick blue horizontal line (the value w_seg
     // spanning the segment's chain range) PLUS a thin BLACK vertical error
@@ -376,28 +433,21 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
 
         if (!seg_legend_line) seg_legend_line = lh;
     }
+
+    // Compact legend in the freed top-margin strip (above the data area).
+    auto* leg2 = new TLegend(0.55, 0.89, 0.96, 0.985);
+    leg2->SetTextSize(0.026);
+    leg2->SetBorderSize(0);
+    leg2->SetFillColorAlpha(kWhite, 0.7);
+    leg2->SetNColumns(2);
+    leg2->AddEntry(g_cw, "cumulative w_{cum}", "l");
     if (seg_legend_line) {
         leg2->AddEntry(seg_legend_line,
-                       TString::Format("segments (N=%zu)", cd.seg_spans.size()),
+                       TString::Format("segments  w_{seg} #pm #sigma_{seg}  (N=%zu)",
+                                       cd.seg_spans.size()),
                        "l");
     }
     leg2->Draw();
-
-    // Pin Y range to the user-requested band so all three channels share
-    // the same scale and segments can be compared at a glance.
-    mg2->GetYaxis()->SetRangeUser(y_lo, y_hi);
-
-    // File boundaries (light gray dotted verticals). Segment boundary
-    // verticals removed — segment ranges are already visible from the
-    // horizontal lines themselves.
-    p2->Update();
-    for (size_t i = 1; i < cd.files.size(); ++i) {
-        const double xb = (double) cd.files[i].chain_offset;
-        auto* lv = new TLine(xb, y_lo, xb, y_hi);
-        lv->SetLineColor(kGray + 1);
-        lv->SetLineStyle(3);
-        lv->Draw();
-    }
 
     gSystem->mkdir("plots/output", kTRUE);
     const TString stem = TString::Format(
@@ -411,8 +461,9 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
                  double y_lo, double y_hi) {
     auto* c = new TCanvas("c_calib_overlay", "c_calib_overlay", 1500, 700);
     c->SetGridx(); c->SetGridy();
-    c->SetLeftMargin(0.08); c->SetRightMargin(0.04);
-    c->SetTopMargin(0.08);  c->SetBottomMargin(0.13);
+    // Wider left margin so the y-axis title isn't pushed off the canvas.
+    c->SetLeftMargin(0.11); c->SetRightMargin(0.04);
+    c->SetTopMargin(0.13);  c->SetBottomMargin(0.13);
 
     // X-axis = file index (continuous, with fractional position WITHIN
     // each file = local_event_idx / n_events_in_file). This is the only
@@ -431,7 +482,33 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
                     "file index (fractional within each file);"
                     "w = 63 #upoint N_{PT2}/N_{PT3}");
 
-    auto* leg = new TLegend(0.83, 0.78, 0.97, 0.95);
+    // Alternating per-file bands across the full pad height.
+    {
+        const Color_t kBandA     = kAzure  - 9;
+        const Color_t kBandB     = kOrange - 9;
+        const double  kBandAlpha = 0.18;
+        const double  lm = c->GetLeftMargin(), rm = c->GetRightMargin();
+        for (int i = 0; i < n_files_max; ++i) {
+            auto* box = new TBox((double) i, y_lo, (double)(i + 1), y_hi);
+            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetLineWidth(0);
+            box->Draw();
+            const double ndc_x = lm + ((i + 0.5) / (double) n_files_max)
+                                       * (1.0 - lm - rm);
+            auto* lbl = new TLatex();
+            lbl->SetNDC();
+            lbl->SetTextSize(0.022);
+            lbl->SetTextAlign(22);
+            lbl->SetTextColor(kGray + 3);
+            lbl->DrawLatex(ndc_x, 0.83, TString::Format("%d", i));
+        }
+    }
+
+    auto* leg = new TLegend(0.55, 0.89, 0.96, 0.985);
+    leg->SetTextSize(0.026);
+    leg->SetBorderSize(0);
+    leg->SetFillColorAlpha(kWhite, 0.7);
+    leg->SetNColumns(3);
     const int colors[3] = { kBlack, kBlue+1, kRed+1 };
     int ci = 0;
     for (auto* cd : chans) {
