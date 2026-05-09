@@ -349,6 +349,15 @@ public:
     int getNTrees() const {
         return is_chain_ ? chain_->GetNtrees() : 1;
     }
+    std::string getTreeFilePath(int idx) const {
+        if (!is_chain_) {
+            return (idx == 0 && file_) ? file_->GetName() : std::string{};
+        }
+        auto* files = chain_->GetListOfFiles();
+        if (!files || idx < 0 || idx >= files->GetEntries()) return {};
+        auto* el = files->At(idx);
+        return el ? el->GetTitle() : std::string{};
+    }
     
     /**
      * @brief Get number of bound variables

@@ -26,8 +26,11 @@
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
 #include "src/console_box.h"
+#include <TFile.h>
+#include <TTree.h>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
 
 // Use Physics namespace for mass constants
@@ -699,6 +702,57 @@ int main(int argc, char* argv[]) {
                       << "  w=" << std::fixed << std::setprecision(5)
                       << w_per_file[f] << "\n";
         }
+
+        // ----------------------------------------------------------------
+        // Dump per-file PT3/PT2 counts so a downstream research macro can
+        // study the run-by-run drift and decide on a segmentation strategy
+        // (per-file weights have poor stats; we want to merge consecutive
+        // files into segments of statistically-consistent ratio).
+        // Dump path is derived from output_file by replacing the leading
+        // "output_" with "pt3_perfile_"; otherwise "pt3_perfile.root".
+        // ----------------------------------------------------------------
+        const std::string out_file = config.getOutputFilename();
+        const std::string out_prefix = "output_";
+        const auto slash = out_file.find_last_of('/');
+        const std::string dir  = (slash == std::string::npos)
+                                     ? std::string{}
+                                     : out_file.substr(0, slash + 1);
+        const std::string base = (slash == std::string::npos)
+                                     ? out_file
+                                     : out_file.substr(slash + 1);
+        const std::string dump_path =
+            (base.rfind(out_prefix, 0) == 0)
+                ? dir + "pt3_perfile_" + base.substr(out_prefix.size())
+                : dir + "pt3_perfile.root";
+
+        TFile* fdump = TFile::Open(dump_path.c_str(), "RECREATE");
+        if (fdump && !fdump->IsZombie()) {
+            TTree* td = new TTree("pt3_perfile",
+                                  "Per-file PT3/PT2 trigger counts");
+            Int_t       b_idx  = 0;
+            Long64_t    b_pt3  = 0;
+            Long64_t    b_pt2  = 0;
+            std::string b_path;
+            td->Branch("file_idx",  &b_idx,  "file_idx/I");
+            td->Branch("n_pt3",     &b_pt3,  "n_pt3/L");
+            td->Branch("n_pt2",     &b_pt2,  "n_pt2/L");
+            td->Branch("file_path", &b_path);
+            for (int f = 0; f < n_files; ++f) {
+                b_idx  = f;
+                b_pt3  = n_PT3[f];
+                b_pt2  = n_PT2[f];
+                b_path = reader.getTreeFilePath(f);
+                td->Fill();
+            }
+            td->Write();
+            fdump->Close();
+            std::cout << "Per-file PT3/PT2 counts dumped to: "
+                      << dump_path << "\n";
+        } else {
+            std::cerr << "WARNING: could not open " << dump_path
+                      << " for writing — per-file counts NOT dumped.\n";
+        }
+        delete fdump;
     } else {
         std::cout << "PT3 trigger-bias correction DISABLED"
                   << " (config.trigger.bias_correction == false)."
