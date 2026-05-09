@@ -260,6 +260,10 @@ int main(int argc, char* argv[]) {
     }
 
     // -- Finalise output ---------------------------------------------------
+    // Snapshot entry count BEFORE Close() — TTree memory is owned by TFile
+    // and is freed on Close()/delete, so dereferencing t_events after that
+    // is undefined (segfault observed in pp45 runs).
+    const Long64_t n_emitted = t_events->GetEntries();
     fout->cd();
     t_events->Write();
     t_files->Write();
@@ -272,7 +276,7 @@ int main(int argc, char* argv[]) {
               << "  totals: events=" << total_evt
               << "  N_PT3=" << total_pt3
               << "  N_PT2=" << total_pt2
-              << "  trigger_events_emitted=" << t_events->GetEntries()
+              << "  trigger_events_emitted=" << n_emitted
               << "\n";
 
     std::cout << "Scan Complete!\n";
