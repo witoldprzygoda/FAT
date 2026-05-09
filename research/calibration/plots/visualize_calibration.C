@@ -461,46 +461,64 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
                  double y_lo, double y_hi) {
     auto* c = new TCanvas("c_calib_overlay", "c_calib_overlay", 1500, 700);
     c->SetGridx(); c->SetGridy();
-    // Wider left margin so the y-axis title isn't pushed off the canvas.
     c->SetLeftMargin(0.11); c->SetRightMargin(0.04);
     c->SetTopMargin(0.13);  c->SetBottomMargin(0.13);
 
-    // X-axis = file index (continuous, with fractional position WITHIN
-    // each file = local_event_idx / n_events_in_file). This is the only
-    // axis common to all three channels: epem/epep/emem scan the SAME
-    // .list file but their per-channel trees (EpEm_ID etc.) have very
-    // different entry counts per file, so each channel's "chain event
-    // index" axis has different total length. File index IS shared.
-    int n_files_max = 0;
+    // X-axis = REFERENCE channel's chain event index. Reference is the
+    // channel with the most events overall — typically epem at pp45.
+    // Bands have widths = reference channel's per-file event counts (so
+    // wider bands = files with more data in the reference channel = the
+    // "important" days). Segments from non-reference channels are
+    // re-projected per file: a segment covering events [a, b] in file F
+    // of channel C (which has Nc events in F) maps onto the reference
+    // axis as
+    //   x_lo_ref = ref.chain_offset[F] + (a / Nc) * Nref
+    //   x_hi_ref = ref.chain_offset[F] + (b / Nc) * Nref
+    // i.e. the fractional position inside file F is preserved when
+    // crossing channels (the file is the same physical .root, just
+    // selected differently). Files unique to a non-reference channel
+    // (none expected in our setup but defensive) are skipped.
+    ChannelData* ref = nullptr;
+    Long64_t     ref_total = -1;
     for (auto* cd : chans) {
-        if (cd) n_files_max = std::max(n_files_max, (int) cd->files.size());
+        if (!cd || cd->files.empty()) continue;
+        const Long64_t total = cd->files.back().chain_offset
+                             + cd->files.back().n_events;
+        if (total > ref_total) { ref_total = total; ref = cd; }
     }
-    if (n_files_max == 0) n_files_max = 1;
+    if (!ref) return;
 
-    auto* frame = c->DrawFrame(0.0, y_lo, (double) n_files_max, y_hi);
-    frame->SetTitle("PT3 trigger-bias segment weights, all channels overlaid;"
-                    "file index (fractional within each file);"
-                    "w = 63 #upoint N_{PT2}/N_{PT3}");
+    const double xmax_ref = (double) ref_total;
 
-    // Alternating per-file bands across the full pad height.
+    auto* frame = c->DrawFrame(0.0, y_lo, xmax_ref, y_hi);
+    frame->SetTitle(TString::Format(
+        "PT3 trigger-bias segment weights, all channels overlaid;"
+        "chain event index (%s reference);"
+        "w = 63 #upoint N_{PT2}/N_{PT3}",
+        ref->label.c_str()));
+
+    // Alternating per-file bands across the full pad height — widths
+    // proportional to the reference channel's per-file event counts.
     {
         const Color_t kBandA     = kAzure  - 9;
         const Color_t kBandB     = kOrange - 9;
         const double  kBandAlpha = 0.18;
         const double  lm = c->GetLeftMargin(), rm = c->GetRightMargin();
-        for (int i = 0; i < n_files_max; ++i) {
-            auto* box = new TBox((double) i, y_lo, (double)(i + 1), y_hi);
+        for (size_t i = 0; i < ref->files.size(); ++i) {
+            const double xb_lo = (double) ref->files[i].chain_offset;
+            const double xb_hi = xb_lo + (double) ref->files[i].n_events;
+            auto* box = new TBox(xb_lo, y_lo, xb_hi, y_hi);
             box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
             box->SetLineWidth(0);
             box->Draw();
-            const double ndc_x = lm + ((i + 0.5) / (double) n_files_max)
+            const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_ref)
                                        * (1.0 - lm - rm);
             auto* lbl = new TLatex();
             lbl->SetNDC();
             lbl->SetTextSize(0.022);
             lbl->SetTextAlign(22);
             lbl->SetTextColor(kGray + 3);
-            lbl->DrawLatex(ndc_x, 0.83, TString::Format("%d", i));
+            lbl->DrawLatex(ndc_x, 0.83, TString::Format("%zu", i));
         }
     }
 
@@ -515,12 +533,20 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
         if (!cd || cd->cal_rows.empty()) { ++ci; continue; }
         TLine* legend_line = nullptr;
         for (const CalRow& r : cd->cal_rows) {
-            auto fi = cd->path2idx.find(r.file_path);
-            if (fi == cd->path2idx.end()) continue;
-            const Long64_t Nf = cd->files[fi->second].n_events;
-            if (Nf <= 0) continue;
-            const double x_lo = fi->second + (double) r.event_lo / (double) Nf;
-            const double x_hi = fi->second + (double) r.event_hi / (double) Nf;
+            // Look up SAME physical file in BOTH this channel and the
+            // reference channel, then project event_lo/event_hi from this
+            // channel's file-local indexing onto the reference's chain
+            // event coordinates by preserving fractional in-file position.
+            auto fi_cd  = cd->path2idx.find(r.file_path);
+            auto fi_ref = ref->path2idx.find(r.file_path);
+            if (fi_cd  == cd->path2idx.end())  continue;
+            if (fi_ref == ref->path2idx.end()) continue;
+            const Long64_t Nc = cd->files[fi_cd->second].n_events;
+            const Long64_t Nr = ref->files[fi_ref->second].n_events;
+            if (Nc <= 0 || Nr <= 0) continue;
+            const double off_ref = (double) ref->files[fi_ref->second].chain_offset;
+            const double x_lo = off_ref + (double) r.event_lo / (double) Nc * (double) Nr;
+            const double x_hi = off_ref + (double) r.event_hi / (double) Nc * (double) Nr;
             auto* lc = new TLine(x_lo, r.w, x_hi, r.w);
             lc->SetLineColor(colors[ci]); lc->SetLineWidth(2);
             lc->Draw();
