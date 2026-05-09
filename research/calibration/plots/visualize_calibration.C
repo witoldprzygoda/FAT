@@ -23,10 +23,10 @@
 //              * per-window w   (black markers, window of K consecutive
 //                                trigger events; Poisson-propagated bars)
 //              * cumulative w   (red line, growing from the chain start)
-//              * segment w      (green piecewise-constant step function,
+//              * segment w      (blue piecewise-constant step function,
 //                                ±1σ thin dashed band per segment)
 //              * file boundaries (light gray dashed verticals)
-//              * segment boundaries (green dashed verticals at top)
+//              * segment boundaries (blue dashed verticals)
 //
 // Cross-channel overlay canvas:
 //   * Segment-only piecewise-constant w for epem, epep, emem on one axis,
@@ -383,7 +383,10 @@ void drawChannelCanvas(const ChannelData& cd) {
     leg2->AddEntry(g_w,  "per window w[K] #pm #sigma", "lp");
     leg2->AddEntry(g_cw, "cumulative w_{cum}",         "l");
 
-    // Segments overlaid as green horizontal lines per segment.
+    // Segments overlaid as blue horizontal lines per segment (with ±σ
+    // band as thin dotted siblings). Blue chosen because the original
+    // green lay on top of green vertical boundaries and was unreadable.
+    const Color_t kSegColor = kBlue + 1;
     TLine* seg_legend_line = nullptr;
     for (const SegmentSpan& s : cd.seg_spans) {
         const double xlo = (double) s.global_lo;
@@ -392,13 +395,13 @@ void drawChannelCanvas(const ChannelData& cd) {
             for (int sgn : {-1, 1}) {
                 auto* lb = new TLine(xlo, s.w + sgn * s.sigma,
                                      xhi, s.w + sgn * s.sigma);
-                lb->SetLineColor(kGreen+2);
+                lb->SetLineColor(kSegColor);
                 lb->SetLineStyle(3); lb->SetLineWidth(1);
                 lb->Draw();
             }
         }
         auto* lc = new TLine(xlo, s.w, xhi, s.w);
-        lc->SetLineColor(kGreen+2); lc->SetLineWidth(3);
+        lc->SetLineColor(kSegColor); lc->SetLineWidth(3);
         lc->Draw();
         if (!seg_legend_line) seg_legend_line = lc;
     }
@@ -409,7 +412,7 @@ void drawChannelCanvas(const ChannelData& cd) {
     }
     leg2->Draw();
 
-    // File boundaries (light gray) and segment boundaries (green) on pad 2.
+    // File boundaries (light gray) and segment boundaries (blue) on pad 2.
     p2->Update();
     const double yymin = p2->GetUymin();
     const double yymax = p2->GetUymax();
@@ -423,7 +426,7 @@ void drawChannelCanvas(const ChannelData& cd) {
     for (size_t i = 1; i < cd.seg_spans.size(); ++i) {
         const double xb = (double) cd.seg_spans[i].global_lo;
         auto* lv = new TLine(xb, yymin, xb, yymax);
-        lv->SetLineColor(kGreen + 2);
+        lv->SetLineColor(kSegColor);
         lv->SetLineStyle(2);
         lv->SetLineWidth(2);
         lv->Draw();
@@ -485,7 +488,12 @@ void drawOverlay(const std::vector<ChannelData*>& chans) {
 
 }  // anonymous namespace
 
-void visualize_calibration(Long64_t window_size = 1000) {
+// `window_size` counts entries of trigger_events — i.e. PT3 + PT2 events
+// MIXED (~98% PT3 / ~2% PT2 at pp45 leptons). 1000 is too small (only ~15
+// PT2 per window → ~25% Poisson error per marker, very noisy). 10000 gives
+// ~150 PT2/window → ~8% error, much cleaner. Pure visualisation parameter,
+// does not affect the segmenter.
+void visualize_calibration(Long64_t window_size = 10000) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
