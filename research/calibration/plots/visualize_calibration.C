@@ -3,7 +3,7 @@
 // Phase (c) of the trigger-bias calibration pipeline: visualisation only.
 //
 // Reads BOTH artefacts produced by phases (a) and (b):
-//   ../trigger_scan_<channel>.root        (trigger_events + files TTrees)
+//   trigger_scan_<channel>.root           (trigger_events + files TTrees)
 //   ../../pt3_calibration_<channel>.root  (pt3_calibration TTree, in repo root)
 //
 // and produces per-channel and overlay diagnostic plots in
@@ -251,7 +251,11 @@ bool loadCalibration(const std::string& path, ChannelData& cd) {
 
 bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_size) {
     cd.label     = chan;
-    cd.scan_path = "../trigger_scan_"   + chan + ".root";
+    // Paths are relative to the cwd from which root is invoked. Standard
+    // usage is `cd research/calibration && root -l -b -q plots/...` so the
+    // scan ROOTs live next to the cwd (./) and the calibration ROOTs in
+    // the repo root (../../) per the project convention.
+    cd.scan_path = "trigger_scan_"   + chan + ".root";
     cd.cal_path  = "../../pt3_calibration_" + chan + ".root";
 
     TFile* fscan = TFile::Open(cd.scan_path.c_str(), "READ");

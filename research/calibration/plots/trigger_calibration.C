@@ -2,7 +2,7 @@
 //
 // Phase (b) of the trigger-bias calibration pipeline: compute-only.
 //
-// Reads ../trigger_scan_<channel>.root produced by trigger_scan (phase a),
+// Reads trigger_scan_<channel>.root produced by trigger_scan (phase a),
 // streams through trigger_events in chain order, runs an online z-test
 // change-point segmenter to discover where the PT3/PT2 ratio shifts, and
 // writes the calibration table as a ROOT TTree to the REPO ROOT (../../).
@@ -406,9 +406,13 @@ void trigger_calibration(double    z_threshold    = 3.0,
               << "  min_n_pt2_test=" << min_n_pt2_test
               << " ===\n";
 
+    // Paths are relative to the cwd from which root is invoked. Standard
+    // usage is `cd research/calibration && root -l -b -q plots/...` so the
+    // scan ROOTs live next to the cwd (./) and the calibration ROOTs go
+    // to the repo root (../../) per the project convention.
     const std::vector<std::string> chans = {"epem", "epep", "emem"};
     for (const std::string& chan : chans) {
-        const std::string in_path  = "../trigger_scan_"   + chan + ".root";
+        const std::string in_path  = "trigger_scan_"   + chan + ".root";
         const std::string out_path = "../../pt3_calibration_" + chan + ".root";
         processChannel(chan, in_path, out_path,
                        z_threshold, min_n_pt3_test, min_n_pt2_test);
