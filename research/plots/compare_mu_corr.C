@@ -2,12 +2,18 @@
 // energy-scale correction.
 //
 // Reads:
-//   fit_results_<fl>.root           — uncorrected (μ_orig)
-//   fit_results_<fl>_ecalcor.root   — corrected   (μ_corr)
+//   fit_results_<fl>.root                     — uncorrected (μ_orig)
+//   fit_results_<fl>_ecalcor<corr_sfx>.root   — corrected   (μ_corr)
 // for the π⁰ pipeline, and the analogous fit_results_eta_*.root files
-// for the η pipeline. Produces:
-//   plots/output/compare_mu_pi0_<fl>_vs_oa.{pdf,png}
-//   plots/output/compare_mu_eta_<fl>_vs_oa.{pdf,png}
+// for the η pipeline. corr_sfx selects which calibration map's fits
+// to overlay against the uncorrected baseline:
+//     ""           → 2D map (legacy fit_results_*_ecalcor.root)
+//     "_3dmap"     → 3D π⁰-only map
+//     "_combined"  → combined π⁰+η peak map
+//
+// Produces:
+//   plots/output/compare_mu_pi0_<fl><corr_sfx>_vs_oa.{pdf,png}
+//   plots/output/compare_mu_eta_<fl><corr_sfx>_vs_oa.{pdf,png}
 //
 // Each panel overlays two TGraphErrors on the same axes:
 //   - black: μ original
@@ -15,8 +21,9 @@
 // plus a horizontal PDG reference line.
 //
 // Usage (from research/):
-//   root -l -b -q plots/compare_mu_corr.C            # REC, both pi0 + eta
-//   root -l -b -q 'plots/compare_mu_corr.C("cor")'   # COR (if available)
+//   root -l -b -q plots/compare_mu_corr.C                     # REC, 2D
+//   root -l -b -q 'plots/compare_mu_corr.C("rec","_combined")' // combined
+//   root -l -b -q 'plots/compare_mu_corr.C("rec","_3dmap")'    // 3D
 
 #include <TFile.h>
 #include <TTree.h>
@@ -138,31 +145,35 @@ void plotPanel(const std::string& title, const std::string& xtitle,
     std::cout << "  wrote " << out_png << "\n";
 }
 
-void compare_mu_corr(const char* flavour = "rec") {
+void compare_mu_corr(const char* flavour    = "rec",
+                     const char* corr_suffix = "") {
 
     std::string fl = flavour;
     for (auto& c : fl) c = std::tolower(c);
+    const std::string sfx = corr_suffix ? corr_suffix : "";
 
     gStyle->SetOptStat(0);
     gSystem->mkdir("plots/output", kTRUE);
 
     // -- π⁰ ---------------------------------------------------------------
     OAGraph pi0_orig = readMuVsOA("fit_results_" + fl + ".root");
-    OAGraph pi0_corr = readMuVsOA("fit_results_" + fl + "_ecalcor.root");
+    OAGraph pi0_corr = readMuVsOA("fit_results_" + fl + "_ecalcor" + sfx + ".root");
     plotPanel(
-        TString::Format("#pi^{0} #mu vs OA (%s) — before/after ECAL correction", fl.c_str()).Data(),
+        TString::Format("#pi^{0} #mu vs OA (%s) — before/after ECAL%s correction",
+                        fl.c_str(), sfx.empty() ? "" : sfx.c_str()).Data(),
         "OA(e^{+}e^{-}) [deg]",
         "#mu_{CB} [GeV/c^{2}]  (vertical bars = #pm#sigma_{CB})",
         pi0_orig, pi0_corr, kPi0PDG,
-        "compare_mu_pi0_" + fl + "_vs_oa");
+        "compare_mu_pi0_" + fl + sfx + "_vs_oa");
 
     // -- η ----------------------------------------------------------------
     OAGraph eta_orig = readMuVsOA("fit_results_eta_" + fl + ".root");
-    OAGraph eta_corr = readMuVsOA("fit_results_eta_" + fl + "_ecalcor.root");
+    OAGraph eta_corr = readMuVsOA("fit_results_eta_" + fl + "_ecalcor" + sfx + ".root");
     plotPanel(
-        TString::Format("#eta #mu vs OA (%s) — before/after ECAL correction", fl.c_str()).Data(),
+        TString::Format("#eta #mu vs OA (%s) — before/after ECAL%s correction",
+                        fl.c_str(), sfx.empty() ? "" : sfx.c_str()).Data(),
         "OA(e^{+}e^{-}) [deg]",
         "#mu_{CB} [GeV/c^{2}]  (vertical bars = #pm#sigma_{CB})",
         eta_orig, eta_corr, kEtaPDG,
-        "compare_mu_eta_" + fl + "_vs_oa");
+        "compare_mu_eta_" + fl + sfx + "_vs_oa");
 }

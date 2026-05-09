@@ -83,16 +83,21 @@ void processChannel(const std::string& in_path,
             "neutr_cluster_energy",
             "neutr_cluster_theta",
             "neutr_cluster_phi",
+            "neutr_mult",
+            "neutr_cluster_ncells",
             "oa_epem"
          }) t->SetBranchStatus(b, 1);
 
     float m_ee=0, m_eg=0, ecal_q=0, ne_E=0, ne_th=0, ne_ph=0, oa=0;
+    float nmult=0, nncells=0;
     t->SetBranchAddress("m_ee",                 &m_ee);
     t->SetBranchAddress("m_epemg",              &m_eg);
     t->SetBranchAddress("ecal_quality_pass",    &ecal_q);
     t->SetBranchAddress("neutr_cluster_energy", &ne_E);
     t->SetBranchAddress("neutr_cluster_theta",  &ne_th);
     t->SetBranchAddress("neutr_cluster_phi",    &ne_ph);
+    t->SetBranchAddress("neutr_mult",           &nmult);
+    t->SetBranchAddress("neutr_cluster_ncells", &nncells);
     t->SetBranchAddress("oa_epem",              &oa);
 
     TFile* fout = TFile::Open(out_path.c_str(), "RECREATE");
@@ -156,7 +161,12 @@ void processChannel(const std::string& in_path,
     Long64_t n_pass = 0, n_filled = 0;
     for (Long64_t ev = 0; ev < N; ++ev) {
         t->GetEntry(ev);
-        if (ecal_q != 1.0f) continue;
+        if (ecal_q != 1.0f)        continue;
+        // Photon-quality cuts (must match ecal_combined_3dscan.C):
+        // single ECAL cluster of single-cell shower size — clean γ
+        // hypothesis on which the calibration map was built.
+        if (static_cast<int>(nmult)   != 1) continue;
+        if (static_cast<int>(nncells) != 1) continue;
         ++n_pass;
 
         // Lookup s and compute corrected mass squared:
@@ -207,7 +217,13 @@ void apply_ecal_correction(const char* flavour = "rec",
     EcalLookup look;
     std::string map_path, map_hist;
     bool loaded = false;
-    if (md == "3d") {
+    if (md == "combined") {
+        // Combined π⁰+η peak fits per (E,θ,φ) cell, per-sector neighbour
+        // fill. Map produced by ecal_combined_3dscan.C("exp").
+        map_path = "ecal_combined_3dscan_exp.root";
+        map_hist = "h_s_combined_3d";
+        loaded = look.load3D(map_path, map_hist);
+    } else if (md == "3d") {
         map_path = "ecal_pi0_3dscan_" + fl + ".root";
         map_hist = "h_s_" + fl + "_3d";
         loaded = look.load3D(map_path, map_hist);
@@ -217,8 +233,7 @@ void apply_ecal_correction(const char* flavour = "rec",
         loaded = look.load(map_path, map_hist);
     }
     if (!loaded) {
-        std::cerr << "Run ecal_pi0_" << md << "scan.C first to produce "
-                  << map_path << "\n";
+        std::cerr << "Cannot open " << map_path << "\n";
         return;
     }
     std::cout << "ECAL correction map loaded from " << map_path
@@ -226,8 +241,10 @@ void apply_ecal_correction(const char* flavour = "rec",
 
     gSystem->mkdir("plots/output", kTRUE);
 
-    // Output filename suffix distinguishes 2D vs 3D maps.
-    const std::string sfx = (md == "3d") ? "_3dmap" : "";
+    // Output filename suffix distinguishes 2D vs 3D vs combined π⁰+η maps.
+    const std::string sfx = (md == "combined") ? "_combined"
+                          : (md == "3d")       ? "_3dmap"
+                                               : "";
 
     processChannel("../output_epem_exp.root",
                    "research_epem_ecalcor" + sfx + ".root", look);
