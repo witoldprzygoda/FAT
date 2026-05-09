@@ -165,57 +165,91 @@ int findFileIdx(const std::vector<FileInfo>& files, const std::string& path) {
 }
 
 // Convert closed-segment list (chain-coord boundaries) into per-file ranges
-// covering the chain end-to-end.
+// covering the chain END-TO-END WITHOUT GAPS. Each event in the chain
+// belongs to exactly one segment.
+//
+// Tiling rules:
+//   * Segment 0 always starts at (files[0], event 0). Any non-trigger
+//     events before the first PT3/PT2 trigger belong to segment 0.
+//   * Boundary between segments N and N+1: just before segment N+1's
+//     first trigger event. Concretely:
+//        - if segs[N+1].first_local > 0:
+//             segment N ends at (segs[N+1].first_file,
+//                                segs[N+1].first_local - 1).
+//             segment N may extend INTO segs[N+1].first_file (covering
+//             non-trigger events at the start of that file).
+//        - if segs[N+1].first_local == 0:
+//             segment N ends at the LAST event of the file immediately
+//             before segs[N+1].first_file.
+//   * Last segment always ends at (files.back(), n_events - 1).
+//
+// Without these rules: segment 0 starts wherever the first trigger sits
+// (loses leading events), and segment N stops at the end of the file
+// containing its last trigger (loses non-trigger events at the start of
+// the next file before segment N+1's first trigger). Either creates
+// holes in coverage that the user correctly flagged as bugs.
 std::vector<OutRange> expandSegments(const std::vector<ClosedSegment>& segs,
                                      const std::vector<FileInfo>& files) {
     std::vector<OutRange> out;
     if (segs.empty() || files.empty()) return out;
 
-    // For each segment N, its range runs from (segs[N].first_file, first_local)
-    // up to (segs[N+1].first_file, first_local - 1). For the last segment,
-    // run to (files.back().path, files.back().n_events - 1).
     for (size_t s = 0; s < segs.size(); ++s) {
         const ClosedSegment& seg = segs[s];
-        const int fi_start = findFileIdx(files, seg.first_file);
-        if (fi_start < 0) {
-            std::cerr << "  WARNING: segment first_file not in files TTree: "
-                      << seg.first_file << "\n";
-            continue;
-        }
-        // End coordinates
-        std::string end_file;
-        Long64_t    end_local;
-        if (s + 1 < segs.size()) {
-            const ClosedSegment& nxt = segs[s + 1];
-            const int fi_next = findFileIdx(files, nxt.first_file);
-            if (fi_next == fi_start) {
-                end_file  = seg.first_file;
-                end_local = nxt.first_local - 1;
-            } else if (fi_next > fi_start) {
-                // End at last event of file just before nxt.first_file
-                end_file  = files[fi_next - 1].path;
-                end_local = files[fi_next - 1].n_events - 1;
-            } else {
-                std::cerr << "  WARNING: segment ordering inconsistency between "
-                          << seg.first_file << " and " << nxt.first_file << "\n";
+
+        // -- Start coordinates -------------------------------------------
+        int      fi_start;
+        Long64_t start_local;
+        if (s == 0) {
+            fi_start    = 0;
+            start_local = 0;
+        } else {
+            fi_start = findFileIdx(files, seg.first_file);
+            if (fi_start < 0) {
+                std::cerr << "  WARNING: segment first_file not in files: "
+                          << seg.first_file << "\n";
                 continue;
             }
-        } else {
-            end_file  = files.back().path;
-            end_local = files.back().n_events - 1;
+            start_local = seg.first_local;
         }
-        const int fi_end = findFileIdx(files, end_file);
-        if (fi_end < 0) continue;
 
-        // Emit one OutRange per file in [fi_start..fi_end].
+        // -- End coordinates --------------------------------------------
+        int      fi_end;
+        Long64_t end_local;
+        if (s + 1 < segs.size()) {
+            const ClosedSegment& nxt = segs[s + 1];
+            const int fi_nxt = findFileIdx(files, nxt.first_file);
+            if (fi_nxt < 0) {
+                std::cerr << "  WARNING: next segment first_file not in files: "
+                          << nxt.first_file << "\n";
+                continue;
+            }
+            if (nxt.first_local == 0) {
+                // Boundary at end of the file before nxt.first_file.
+                if (fi_nxt == 0) {
+                    std::cerr << "  WARNING: segment "
+                              << (s + 1) << " starts at file 0 local 0 — "
+                              << "would leave segment " << s << " empty.\n";
+                    continue;
+                }
+                fi_end    = fi_nxt - 1;
+                end_local = files[fi_end].n_events - 1;
+            } else {
+                fi_end    = fi_nxt;
+                end_local = nxt.first_local - 1;
+            }
+        } else {
+            fi_end    = (int) files.size() - 1;
+            end_local = files[fi_end].n_events - 1;
+        }
+
+        // -- Emit one OutRange per file in [fi_start..fi_end] -----------
         for (int fi = fi_start; fi <= fi_end; ++fi) {
             OutRange r;
             r.seg_idx   = seg.seg_idx;
             r.file_path = files[fi].path;
-            r.event_lo  = (fi == fi_start) ? seg.first_local : 0;
-            r.event_hi  = (fi == fi_end)
-                              ? end_local
-                              : (files[fi].n_events - 1);
+            r.event_lo  = (fi == fi_start) ? start_local : 0;
+            r.event_hi  = (fi == fi_end)   ? end_local
+                                           : (files[fi].n_events - 1);
             r.w     = seg.w();
             r.sigma = seg.sigma();
             r.n_pt3 = seg.n_pt3;
