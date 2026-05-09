@@ -300,7 +300,7 @@ bool loadChannel(const std::string& chan, ChannelData& cd, Long64_t window_pt2) 
 
 // ----- drawing ---------------------------------------------------------
 
-void drawChannelCanvas(const ChannelData& cd) {
+void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     if (cd.cum_x.empty()) return;
 
     // -- Pad 1: cumulative N_PT3, N_PT2 vs chain event idx (log-y) --------
@@ -390,27 +390,30 @@ void drawChannelCanvas(const ChannelData& cd) {
     leg2->AddEntry(g_w,  "per window  w (N_{PT2}=K)  #pm #sigma", "lp");
     leg2->AddEntry(g_cw, "cumulative w_{cum}",         "l");
 
-    // Segments overlaid as blue horizontal lines per segment (with ±σ
-    // band as thin dotted siblings). Blue chosen because the original
-    // green lay on top of green vertical boundaries and was unreadable.
+    // Each segment drawn as: a thick blue horizontal line (the value w_seg
+    // spanning the segment's chain range) PLUS a thin blue vertical error
+    // bar at the segment midpoint (±σ_seg). The error is the spread that
+    // the main analysis will actually inherit when applying this weight,
+    // so it's the one worth seeing — not the ±σ of an arbitrary sampling
+    // window.
     const Color_t kSegColor = kBlue + 1;
     TLine* seg_legend_line = nullptr;
     for (const SegmentSpan& s : cd.seg_spans) {
-        const double xlo = (double) s.global_lo;
-        const double xhi = (double) s.global_hi;
+        const double xlo  = (double) s.global_lo;
+        const double xhi  = (double) s.global_hi;
+        const double xmid = 0.5 * (xlo + xhi);
+
+        auto* lh = new TLine(xlo, s.w, xhi, s.w);
+        lh->SetLineColor(kSegColor); lh->SetLineWidth(3);
+        lh->Draw();
+
         if (s.sigma > 0) {
-            for (int sgn : {-1, 1}) {
-                auto* lb = new TLine(xlo, s.w + sgn * s.sigma,
-                                     xhi, s.w + sgn * s.sigma);
-                lb->SetLineColor(kSegColor);
-                lb->SetLineStyle(3); lb->SetLineWidth(1);
-                lb->Draw();
-            }
+            auto* lv = new TLine(xmid, s.w - s.sigma, xmid, s.w + s.sigma);
+            lv->SetLineColor(kSegColor); lv->SetLineWidth(2);
+            lv->Draw();
         }
-        auto* lc = new TLine(xlo, s.w, xhi, s.w);
-        lc->SetLineColor(kSegColor); lc->SetLineWidth(3);
-        lc->Draw();
-        if (!seg_legend_line) seg_legend_line = lc;
+
+        if (!seg_legend_line) seg_legend_line = lh;
     }
     if (seg_legend_line) {
         leg2->AddEntry(seg_legend_line,
@@ -419,23 +422,19 @@ void drawChannelCanvas(const ChannelData& cd) {
     }
     leg2->Draw();
 
-    // File boundaries (light gray) and segment boundaries (blue) on pad 2.
+    // Pin Y range to the user-requested band so all three channels share
+    // the same scale and segments can be compared at a glance.
+    mg2->GetYaxis()->SetRangeUser(y_lo, y_hi);
+
+    // File boundaries (light gray dotted verticals). Segment boundary
+    // verticals removed — segment ranges are already visible from the
+    // horizontal lines themselves.
     p2->Update();
-    const double yymin = p2->GetUymin();
-    const double yymax = p2->GetUymax();
     for (size_t i = 1; i < cd.files.size(); ++i) {
         const double xb = (double) cd.files[i].chain_offset;
-        auto* lv = new TLine(xb, yymin, xb, yymax);
+        auto* lv = new TLine(xb, y_lo, xb, y_hi);
         lv->SetLineColor(kGray + 1);
         lv->SetLineStyle(3);
-        lv->Draw();
-    }
-    for (size_t i = 1; i < cd.seg_spans.size(); ++i) {
-        const double xb = (double) cd.seg_spans[i].global_lo;
-        auto* lv = new TLine(xb, yymin, xb, yymax);
-        lv->SetLineColor(kSegColor);
-        lv->SetLineStyle(2);
-        lv->SetLineWidth(2);
         lv->Draw();
     }
 
@@ -447,25 +446,24 @@ void drawChannelCanvas(const ChannelData& cd) {
     std::cout << "  saved " << stem << ".{pdf,png}\n";
 }
 
-void drawOverlay(const std::vector<ChannelData*>& chans) {
+void drawOverlay(const std::vector<ChannelData*>& chans,
+                 double y_lo, double y_hi) {
     auto* c = new TCanvas("c_calib_overlay", "c_calib_overlay", 1500, 700);
     c->SetGridx(); c->SetGridy();
     c->SetLeftMargin(0.08); c->SetRightMargin(0.04);
     c->SetTopMargin(0.08);  c->SetBottomMargin(0.13);
 
-    // Build a dummy frame so segments draw within proper axes.
-    double xmin = +1e18, xmax = -1e18, ymin = +1e18, ymax = -1e18;
+    // Build a frame matching the per-channel y-range so the overlay can be
+    // compared directly with the channel canvases.
+    double xmin = +1e18, xmax = -1e18;
     for (auto* cd : chans) {
         for (const SegmentSpan& s : cd->seg_spans) {
             xmin = std::min(xmin, (double) s.global_lo);
             xmax = std::max(xmax, (double) s.global_hi);
-            ymin = std::min(ymin, s.w - s.sigma);
-            ymax = std::max(ymax, s.w + s.sigma);
         }
     }
     if (xmin >= xmax) { xmin = 0; xmax = 1; }
-    const double pad = (ymax - ymin) * 0.1 + 1e-3;
-    auto* frame = c->DrawFrame(xmin, ymin - pad, xmax, ymax + pad);
+    auto* frame = c->DrawFrame(xmin, y_lo, xmax, y_hi);
     frame->SetTitle("PT3 trigger-bias segment weights, all channels overlaid;"
                     "chain event index;w = 63 #upoint N_{PT2}/N_{PT3}");
 
@@ -505,7 +503,12 @@ void drawOverlay(const std::vector<ChannelData*>& chans) {
 //   window_pt2 =  200  →  ~7% error per marker
 // Pure visualisation parameter — does NOT affect the segmenter (which is
 // PT2/PT3 stat-driven, not window-driven).
-void visualize_calibration(Long64_t window_pt2 = 1000) {
+//
+// `y_lo`, `y_hi` pin the weight-pad y-range identically across all three
+// channels so they can be compared at a glance.
+void visualize_calibration(Long64_t window_pt2 = 1000,
+                           double   y_lo       = 1.0,
+                           double   y_hi       = 2.5) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
@@ -526,15 +529,15 @@ void visualize_calibration(Long64_t window_pt2 = 1000) {
         return;
     }
 
-    if (ok_e) drawChannelCanvas(epem);
-    if (ok_p) drawChannelCanvas(epep);
-    if (ok_m) drawChannelCanvas(emem);
+    if (ok_e) drawChannelCanvas(epem, y_lo, y_hi);
+    if (ok_p) drawChannelCanvas(epep, y_lo, y_hi);
+    if (ok_m) drawChannelCanvas(emem, y_lo, y_hi);
 
     std::vector<ChannelData*> chans;
     if (ok_e) chans.push_back(&epem);
     if (ok_p) chans.push_back(&epep);
     if (ok_m) chans.push_back(&emem);
-    if (chans.size() >= 2) drawOverlay(chans);
+    if (chans.size() >= 2) drawOverlay(chans, y_lo, y_hi);
 
     std::cout << "Done.\n";
 }
