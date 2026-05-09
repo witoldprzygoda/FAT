@@ -9,21 +9,35 @@
 //
 // NO PLOTS. Visualisation lives in plots/visualize_calibration.C.
 //
-// Algorithm (online, single forward pass over trigger events):
-//   For each (file_path, local_event_idx, trigbit) trigger event in order:
-//     1. Add to candidate pool (n_pt3_cand or n_pt2_cand).
-//     2. If candidate has enough stats to test (n_pt3_cand >= min_n_pt3_test
-//        AND n_pt2_cand >= min_n_pt2_test), compute
-//          z = (w_cand - w_seg) / sqrt(sigma_w_cand^2 + sigma_w_seg^2),
-//        where w = 63 * n_pt2 / n_pt3 and sigma_w = w * sqrt(1/a + 1/b).
-//        - If |z| > z_threshold:    SPLIT.  Close open segment at the last
-//                                   trigger event seen BEFORE candidate
-//                                   started; candidate becomes the new
-//                                   open segment; reset candidate.
-//        - Else:                    MERGE.  Absorb candidate into open
-//                                   segment; reset candidate.
-//   At end of stream: close the final open segment at the last trigger
-//   event of the chain.
+// Algorithm (online, single forward pass over trigger events, two-phase):
+//   Phase 1 — open segment is "ripening": its rel_err = sqrt(1/N_PT3 +
+//             1/N_PT2) is still > max_rel_err. Add events to it without
+//             considering splits. Without this gate the very first segment
+//             would start with a single event and any second event would
+//             trigger a meaningless z-test on noise.
+//   Phase 2 — open is statistically determined (rel_err ≤ max_rel_err).
+//             New events go to candidate. Once candidate ALSO reaches
+//             rel_err ≤ max_rel_err, run the z-test:
+//               z = (w_cand - w_seg) / sqrt(σ_cand² + σ_seg²)
+//             - |z| > z_threshold:  SPLIT — close open at the trigger event
+//                                   right before candidate started; the
+//                                   candidate becomes the new open
+//                                   (already ripe by construction);
+//                                   candidate resets.
+//             - else:               MERGE — fold candidate into open;
+//                                   candidate resets.
+//   At end of stream: any leftover candidate that didn't ripen is folded
+//   into open; final open is closed at the last trigger event.
+//
+// max_rel_err controls BOTH the validity of the z-test AND the minimum
+// segment precision (every closed segment has σ_w/w ≤ max_rel_err by
+// construction, possibly much better if it merged for a long time).
+// Tightening max_rel_err (e.g. 0.02) requires more PT2 stats per pool;
+// loosening it (e.g. 0.10) accepts noisier candidates and produces more
+// segments. At pp45 (PT3:PT2 ≈ 64:1), the rule of thumb is
+//   max_rel_err = 0.03  →  N_PT2 ≳ 1100 per pool   (default)
+//   max_rel_err = 0.05  →  N_PT2 ≳  400 per pool
+//   max_rel_err = 0.10  →  N_PT2 ≳  100 per pool
 //
 // Output ROOT contains one TTree:
 //
@@ -46,9 +60,10 @@
 // from these endpoints using the `files` TTree of the scan output.
 //
 // Usage (from research/calibration/):
-//   root -l -b -q plots/trigger_calibration.C                # default z=3
-//   root -l -b -q 'plots/trigger_calibration.C(2.5)'         # tighter
-//   root -l -b -q 'plots/trigger_calibration.C(3.0, 50, 50)' # higher min stats
+//   root -l -b -q plots/trigger_calibration.C                  # default
+//   root -l -b -q 'plots/trigger_calibration.C(3.0, 0.02)'     # tighter pool
+//   root -l -b -q 'plots/trigger_calibration.C(4.0, 0.03)'     # stricter z
+//   root -l -b -q 'plots/trigger_calibration.C(3.0, 0.05)'     # looser pool
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -58,6 +73,7 @@
 #include <TString.h>
 #include <iostream>
 #include <iomanip>
+#include <limits>
 #include <vector>
 #include <string>
 #include <cmath>
@@ -210,12 +226,20 @@ std::vector<OutRange> expandSegments(const std::vector<ClosedSegment>& segs,
     return out;
 }
 
+// Relative Poisson error of w = K·N_PT2/N_PT3 propagated as
+//   sigma_w / w  =  sqrt(1/N_PT3 + 1/N_PT2).
+// Returns +inf if either count is zero (treat as "not yet stable").
+double relErr(long long n_pt3, long long n_pt2) {
+    if (n_pt3 <= 0 || n_pt2 <= 0)
+        return std::numeric_limits<double>::infinity();
+    return std::sqrt(1.0/(double) n_pt3 + 1.0/(double) n_pt2);
+}
+
 void processChannel(const std::string& chan,
                     const std::string& in_path,
                     const std::string& out_path,
                     double      z_thr,
-                    long long   min_n_pt3_test,
-                    long long   min_n_pt2_test,
+                    double      max_rel_err,
                     int         trig_pt3 = 8192,
                     int         trig_pt2 = 4096) {
     std::cout << "\n--- channel " << chan << " ---\n"
@@ -297,26 +321,36 @@ void processChannel(const std::string& chan,
                   << "\n";
     };
 
+    // Two-phase streaming:
+    //  Phase 1 — open segment is "ripening": its rel_err > max_rel_err so
+    //            we keep adding events to it without testing for change.
+    //            Without this gate the very first segment starts with 1
+    //            event and any second event triggers a meaningless z-test.
+    //  Phase 2 — open is statistically determined (rel_err ≤ max_rel_err);
+    //            new events go to candidate. Once candidate ALSO reaches
+    //            rel_err ≤ max_rel_err, run the z-test and split or merge.
+    // After a split the new open is the old candidate (already ripe by
+    // construction), so we re-enter phase 2 immediately.
     const Long64_t N_evts = t_evts->GetEntries();
     for (Long64_t i = 0; i < N_evts; ++i) {
         t_evts->GetEntry(i);
 
-        if (open_seg.empty()) {
-            // First trigger event ever — initialise open segment.
+        if (relErr(open_seg.n_pt3, open_seg.n_pt2) > max_rel_err) {
+            // Phase 1: keep growing open until it's well-determined.
             open_seg.addTrigger(e_path, e_local, e_trigbit, trig_pt3, trig_pt2);
             continue;
         }
 
+        // Phase 2: open is stable. Build up candidate.
         cand.addTrigger(e_path, e_local, e_trigbit, trig_pt3, trig_pt2);
+        if (relErr(cand.n_pt3, cand.n_pt2) > max_rel_err) continue;
 
-        // Test only when candidate has enough events of BOTH classes.
-        if (cand.n_pt3 < min_n_pt3_test || cand.n_pt2 < min_n_pt2_test) continue;
-
+        // Both pools are statistically ripe — run the z-test.
         const double w_o = open_seg.w(), s_o = open_seg.sigma();
         const double w_c = cand.w(),     s_c = cand.sigma();
         const double s2  = s_o*s_o + s_c*s_c;
         if (s2 <= 0) {
-            // Defensive: shouldn't happen given the min-stats guard.
+            // Defensive: shouldn't happen given the relErr guard above.
             cand.reset();
             continue;
         }
@@ -397,13 +431,11 @@ void processChannel(const std::string& chan,
 
 }  // anonymous namespace
 
-void trigger_calibration(double    z_threshold    = 3.0,
-                         long long min_n_pt3_test = 30,
-                         long long min_n_pt2_test = 30) {
+void trigger_calibration(double z_threshold = 3.0,
+                         double max_rel_err = 0.03) {
     std::cout << "=== trigger_calibration"
               << "  z_threshold=" << z_threshold
-              << "  min_n_pt3_test=" << min_n_pt3_test
-              << "  min_n_pt2_test=" << min_n_pt2_test
+              << "  max_rel_err=" << max_rel_err
               << " ===\n";
 
     // Paths are relative to the cwd from which root is invoked. Standard
@@ -414,8 +446,7 @@ void trigger_calibration(double    z_threshold    = 3.0,
     for (const std::string& chan : chans) {
         const std::string in_path  = "trigger_scan_"   + chan + ".root";
         const std::string out_path = "../../pt3_calibration_" + chan + ".root";
-        processChannel(chan, in_path, out_path,
-                       z_threshold, min_n_pt3_test, min_n_pt2_test);
+        processChannel(chan, in_path, out_path, z_threshold, max_rel_err);
     }
     std::cout << "\nDone.\n";
 }
