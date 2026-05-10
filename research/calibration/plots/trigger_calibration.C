@@ -2,8 +2,23 @@
 //
 // Phase (b) of the trigger-bias calibration pipeline: compute-only.
 //
-// Reads trigger_scan_<channel>.root produced by trigger_scan (phase a),
-// streams through trigger_events in chain order, runs an online z-test
+// Reads output_<channel>_cal.root from the repo root — that is the output
+// of ./ana on pp45_epem run with config_<channel>_cal.json (mode =
+// "trigger_calibration"). The cal-mode ./ana writes:
+//   trigger_cal_nt    one entry per event (113.6M for epem) with raw
+//                     branches: file_idx, local_event_idx, trigbit, oa,
+//                     isBest, eVertReco_z, start_iteration. NO cuts at
+//                     fill time — both PT3 and PT2 events present.
+//   trigger_cal_files one entry per input file: file_idx, n_events_total,
+//                     file_path. Used here for the segment-to-file mapping.
+//
+// This macro applies the SAME quality cuts the main analysis uses
+// (isBest == 1, eVertReco_z > -500, start_iteration == 3) plus an
+// opening-angle cut (oa > 2 deg) that filters close lepton pairs whose
+// reconstruction wobble would otherwise leak into the trigger calibration.
+// Surviving events with trigbit ∈ {8192, 4096} feed the online segmenter.
+//
+// Streams through trigger_cal_nt in chain order, runs an online z-test
 // change-point segmenter to discover where the PT3/PT2 ratio shifts, and
 // writes the calibration table as a ROOT TTree to the REPO ROOT (../../).
 //
@@ -57,13 +72,22 @@
 // its first event up to and including the event right before segment N+1's
 // first event. The first segment starts at event 0 of the first file; the
 // last segment runs to end of the last file. Per-file ranges are computed
-// from these endpoints using the `files` TTree of the scan output.
+// from these endpoints using the `trigger_cal_files` TTree.
 //
 // Usage (from research/calibration/):
 //   root -l -b -q plots/trigger_calibration.C                  # default
 //   root -l -b -q 'plots/trigger_calibration.C(3.0, 0.02)'     # tighter pool
 //   root -l -b -q 'plots/trigger_calibration.C(4.0, 0.03)'     # stricter z
 //   root -l -b -q 'plots/trigger_calibration.C(3.0, 0.05)'     # looser pool
+//
+// Cuts applied (mirror main-analysis convention from src/setup_cuts.h):
+//   isBest          == 1      best-candidate selection
+//   eVertReco_z     > -500    vertex quality [mm]
+//   start_iteration == 3      start-detector quality
+//   oa              > 2.0     opening-angle filter [deg] — looser than the
+//                             physics analysis (which uses oa > 4) because
+//                             we just want to drop close-pair perturbations
+//                             of the trigger signal, not select Dalitz pairs
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -82,12 +106,13 @@ namespace {
 
 constexpr double kK = 63.0;
 
-// Per-file metadata loaded from the scan output's `files` TTree.
+// Per-file metadata loaded from the cal output's `trigger_cal_files` TTree.
+// (n_pt3 / n_pt2 used to live here — the legacy raw scanner pre-counted
+// them per file. The cal-mode pipeline no longer pre-counts; segmenter
+// computes counts from the streamed events instead.)
 struct FileInfo {
     std::string path;
     Long64_t    n_events;
-    Long64_t    n_pt3;
-    Long64_t    n_pt2;
 };
 
 // Open segment + candidate state during streaming. Both track an interval
@@ -287,49 +312,53 @@ void processChannel(const std::string& chan,
         return;
     }
 
-    TTree* t_files = dynamic_cast<TTree*>(fin->Get("files"));
-    TTree* t_evts  = dynamic_cast<TTree*>(fin->Get("trigger_events"));
+    TTree* t_files = dynamic_cast<TTree*>(fin->Get("trigger_cal_files"));
+    TTree* t_evts  = dynamic_cast<TTree*>(fin->Get("trigger_cal_nt"));
     if (!t_files || !t_evts) {
-        std::cerr << "  WARNING: missing trigger_events or files TTree in "
+        std::cerr << "  WARNING: missing trigger_cal_nt or trigger_cal_files in "
                   << in_path << " — skipping\n";
         fin->Close(); delete fin;
         return;
     }
 
-    // Load files metadata.
+    // Load files metadata. file_idx in trigger_cal_files is local to each
+    // run_parallel chunk and after hadd often degenerates to all-zero (1
+    // file per chunk), so we use ENTRY ORDER instead — split is line-aligned
+    // and hadd merges chunks lexically, which means trigger_cal_files entry
+    // order matches the original .list order.
     std::vector<FileInfo> files;
     {
         std::string  f_path;
         std::string* p_path = &f_path;
-        Long64_t f_n = 0, f_p3 = 0, f_p2 = 0;
+        Long64_t f_n = 0;
         t_files->SetBranchAddress("file_path",      &p_path);
         t_files->SetBranchAddress("n_events_total", &f_n);
-        t_files->SetBranchAddress("n_pt3",          &f_p3);
-        t_files->SetBranchAddress("n_pt2",          &f_p2);
         const Long64_t N = t_files->GetEntries();
         files.reserve(N);
         for (Long64_t i = 0; i < N; ++i) {
             t_files->GetEntry(i);
-            files.push_back({f_path, f_n, f_p3, f_p2});
+            files.push_back({f_path, f_n});
         }
     }
     std::cout << "  files: " << files.size()
-              << "  trigger events: " << t_evts->GetEntries() << "\n";
+              << "  events in trigger_cal_nt: " << t_evts->GetEntries() << "\n";
 
     if (t_evts->GetEntries() == 0) {
-        std::cerr << "  WARNING: no trigger events — channel skipped\n";
+        std::cerr << "  WARNING: trigger_cal_nt is empty — channel skipped\n";
         fin->Close(); delete fin;
         return;
     }
 
-    // Stream through trigger_events.
-    std::string  e_path;
-    std::string* p_e_path = &e_path;
-    Long64_t e_local = 0;
-    Int_t    e_trigbit = 0;
-    t_evts->SetBranchAddress("file_path",       &p_e_path);
-    t_evts->SetBranchAddress("local_event_idx", &e_local);
-    t_evts->SetBranchAddress("trigbit",         &e_trigbit);
+    // Stream through trigger_cal_nt. All branches are Float_t (TNtuple).
+    Float_t f_file_idx = 0, f_local_idx = 0, f_trigbit = 0;
+    Float_t f_oa = 0, f_isBest = 0, f_vz = 0, f_si = 0;
+    t_evts->SetBranchAddress("file_idx",        &f_file_idx);
+    t_evts->SetBranchAddress("local_event_idx", &f_local_idx);
+    t_evts->SetBranchAddress("trigbit",         &f_trigbit);
+    t_evts->SetBranchAddress("oa",              &f_oa);
+    t_evts->SetBranchAddress("isBest",          &f_isBest);
+    t_evts->SetBranchAddress("eVertReco_z",     &f_vz);
+    t_evts->SetBranchAddress("start_iteration", &f_si);
 
     PoolState open_seg;
     PoolState cand;
@@ -355,28 +384,62 @@ void processChannel(const std::string& chan,
                   << "\n";
     };
 
-    // Two-phase streaming:
-    //  Phase 1 — open segment is "ripening": its rel_err > max_rel_err so
-    //            we keep adding events to it without testing for change.
-    //            Without this gate the very first segment starts with 1
-    //            event and any second event triggers a meaningless z-test.
-    //  Phase 2 — open is statistically determined (rel_err ≤ max_rel_err);
-    //            new events go to candidate. Once candidate ALSO reaches
-    //            rel_err ≤ max_rel_err, run the z-test and split or merge.
-    // After a split the new open is the old candidate (already ripe by
-    // construction), so we re-enter phase 2 immediately.
+    // Two-phase streaming with cuts applied INLINE per event. Cuts mirror
+    // src/setup_cuts.h on pp45_epem (isBest, vertex_z, start_detector) plus
+    // an opening-angle filter (oa > 2 deg) specific to this calibration.
+    // Events failing any cut — or carrying a trigbit other than PT3 / PT2
+    // (e.g. trigbit == 12288 = PT3+PT2 simultaneously) — are skipped
+    // entirely: they don't update the segmenter pool and don't trigger the
+    // z-test. Tile-end-to-end of segments still holds because the
+    // segmenter only records WHERE the first kept trigger of each segment
+    // sits; cut events fall inside whatever segment was open at their
+    // chain position.
+    //
+    // File boundary in trigger_cal_nt is detected via local_event_idx
+    // resets (it's monotonic non-decreasing within a file, drops to 0 at
+    // every file change — including chunk boundaries after hadd, since
+    // each chunk's events were written in chain order).
     const Long64_t N_evts = t_evts->GetEntries();
+    int      current_file_idx = 0;
+    Long64_t prev_local_idx   = -1;
+    Long64_t n_pass_cuts      = 0;
+    Long64_t n_pass_trigbit   = 0;
+
     for (Long64_t i = 0; i < N_evts; ++i) {
         t_evts->GetEntry(i);
 
+        const Long64_t li = static_cast<Long64_t>(f_local_idx);
+        if (i > 0 && li < prev_local_idx) ++current_file_idx;
+        prev_local_idx = li;
+
+        // Quality cuts (mirror src/setup_cuts.h on pp45_epem).
+        if (f_isBest != 1.0f)  continue;
+        if (f_vz   <= -500.0f) continue;
+        if (f_si   != 3.0f)    continue;
+        // Opening-angle cut, looser than the physics analysis (oa > 4):
+        // this is a perturbation filter for the trigger signal, not a
+        // Dalitz-pair selection.
+        if (f_oa   <=  2.0f)   continue;
+        ++n_pass_cuts;
+
+        // Only single-trigger PT3 or PT2 events feed the calibration.
+        // Multi-trigger events (e.g. trigbit == 12288 = PT3 + PT2) are
+        // ignored, matching the existing main.cc:687 convention.
+        const int tb = static_cast<int>(f_trigbit);
+        if (tb != trig_pt3 && tb != trig_pt2) continue;
+        ++n_pass_trigbit;
+
+        if (current_file_idx >= static_cast<int>(files.size())) continue;
+        const std::string& path = files[current_file_idx].path;
+
         if (relErr(open_seg.n_pt3, open_seg.n_pt2) > max_rel_err) {
             // Phase 1: keep growing open until it's well-determined.
-            open_seg.addTrigger(e_path, e_local, e_trigbit, trig_pt3, trig_pt2);
+            open_seg.addTrigger(path, li, tb, trig_pt3, trig_pt2);
             continue;
         }
 
         // Phase 2: open is stable. Build up candidate.
-        cand.addTrigger(e_path, e_local, e_trigbit, trig_pt3, trig_pt2);
+        cand.addTrigger(path, li, tb, trig_pt3, trig_pt2);
         if (relErr(cand.n_pt3, cand.n_pt2) > max_rel_err) continue;
 
         // Both pools are statistically ripe — run the z-test.
@@ -415,6 +478,12 @@ void processChannel(const std::string& chan,
     }
     closeOpen("END  ");
 
+    std::cout << "  -> events: total=" << N_evts
+              << "  pass_cuts=" << n_pass_cuts
+              << "  PT3+PT2=" << n_pass_trigbit
+              << "  (acceptance: "
+              << std::fixed << std::setprecision(2)
+              << (100.0 * n_pass_trigbit / std::max<Long64_t>(1, N_evts)) << "%)\n";
     std::cout << "  -> " << segs.size() << " segments closed\n";
 
     // Expand to per-file ranges.
@@ -474,11 +543,11 @@ void trigger_calibration(double z_threshold = 3.0,
 
     // Paths are relative to the cwd from which root is invoked. Standard
     // usage is `cd research/calibration && root -l -b -q plots/...` so the
-    // scan ROOTs live next to the cwd (./) and the calibration ROOTs go
-    // to the repo root (../../) per the project convention.
+    // cal-mode ./ana outputs live in repo root (../../output_*_cal.root)
+    // and the calibration ROOTs go to the repo root too.
     const std::vector<std::string> chans = {"epem", "epep", "emem"};
     for (const std::string& chan : chans) {
-        const std::string in_path  = "trigger_scan_"   + chan + ".root";
+        const std::string in_path  = "../../output_" + chan + "_cal.root";
         const std::string out_path = "../../pt3_calibration_" + chan + ".root";
         processChannel(chan, in_path, out_path, z_threshold, max_rel_err);
     }

@@ -3,7 +3,7 @@
 // Phase (c) of the trigger-bias calibration pipeline: visualisation only.
 //
 // Reads BOTH artefacts produced by phases (a) and (b):
-//   trigger_scan_<channel>.root           (trigger_events + files TTrees)
+//   ../../output_<channel>_cal.root       (trigger_cal_nt + trigger_cal_files)
 //   ../../pt3_calibration_<channel>.root  (pt3_calibration TTree, in repo root)
 //
 // and produces per-channel and overlay diagnostic plots in
@@ -113,11 +113,9 @@ struct ChannelData {
 bool loadFiles(TTree* t_files, ChannelData& cd) {
     std::string  fpath;
     std::string* pp = &fpath;
-    Long64_t     fn = 0, fp3 = 0, fp2 = 0;
+    Long64_t     fn = 0;
     t_files->SetBranchAddress("file_path",      &pp);
     t_files->SetBranchAddress("n_events_total", &fn);
-    t_files->SetBranchAddress("n_pt3",          &fp3);
-    t_files->SetBranchAddress("n_pt2",          &fp2);
     const Long64_t N = t_files->GetEntries();
     cd.files.reserve(N);
     Long64_t cum = 0;
@@ -131,38 +129,64 @@ bool loadFiles(TTree* t_files, ChannelData& cd) {
     return !cd.files.empty();
 }
 
+// Stream trigger_cal_nt with the same quality cuts trigger_calibration.C
+// applies, accumulating cumulative N_PT3 and N_PT2 at periodic checkpoints
+// for the cumulative-counts pad and the cumulative-w line. Cuts are mirrored
+// here so the visualisation reflects what the calibration actually saw —
+// not the raw 113.6M-entry stream.
+//
+// File-boundary detection mirrors trigger_calibration.C: local_event_idx
+// monotonically non-decreases within a file and resets to 0 at each file
+// change (including post-hadd chunk boundaries).
 bool loadEvents(TTree* t_evts, ChannelData& cd) {
-    std::string  epath;
-    std::string* pp = &epath;
-    Long64_t e_local = 0;
-    Int_t    e_trig  = 0;
-    t_evts->SetBranchAddress("file_path",       &pp);
-    t_evts->SetBranchAddress("local_event_idx", &e_local);
-    t_evts->SetBranchAddress("trigbit",         &e_trig);
+    Float_t f_file_idx = 0, f_local_idx = 0, f_trigbit = 0;
+    Float_t f_oa = 0, f_isBest = 0, f_vz = 0, f_si = 0;
+    t_evts->SetBranchAddress("file_idx",        &f_file_idx);
+    t_evts->SetBranchAddress("local_event_idx", &f_local_idx);
+    t_evts->SetBranchAddress("trigbit",         &f_trigbit);
+    t_evts->SetBranchAddress("oa",              &f_oa);
+    t_evts->SetBranchAddress("isBest",          &f_isBest);
+    t_evts->SetBranchAddress("eVertReco_z",     &f_vz);
+    t_evts->SetBranchAddress("start_iteration", &f_si);
 
     const Long64_t N = t_evts->GetEntries();
     if (N == 0) return false;
 
     long long cum_p3 = 0, cum_p2 = 0;
+    int      current_file_idx = 0;
+    Long64_t prev_local_idx   = -1;
 
-    // Cumulative checkpoint cadence: every CHECK_EVERY trigger events we
-    // record (chain_idx, cum_pt3, cum_pt2) — keeps the cumulative graph
-    // tractable to draw (~few thousand points) for ~5M trigger events.
+    // Cumulative checkpoint cadence: keep the curve at ~few thousand
+    // points regardless of input size.
     const Long64_t CHECK_EVERY = std::max<Long64_t>(1, N / 5000);
 
     for (Long64_t i = 0; i < N; ++i) {
         t_evts->GetEntry(i);
-        auto it = cd.path2idx.find(epath);
-        if (it == cd.path2idx.end()) continue;
-        const Long64_t global_idx = cd.files[it->second].chain_offset + e_local;
 
-        if (e_trig == 8192) ++cum_p3;
-        else if (e_trig == 4096) ++cum_p2;
+        const Long64_t li = static_cast<Long64_t>(f_local_idx);
+        if (i > 0 && li < prev_local_idx) ++current_file_idx;
+        prev_local_idx = li;
+
+        // Same cuts as trigger_calibration.C
+        if (f_isBest != 1.0f)  continue;
+        if (f_vz   <= -500.0f) continue;
+        if (f_si   != 3.0f)    continue;
+        if (f_oa   <=  2.0f)   continue;
+        const int tb = static_cast<int>(f_trigbit);
+        if (tb != 8192 && tb != 4096) continue;
+
+        if (tb == 8192) ++cum_p3;
+        else            ++cum_p2;
 
         if (i % CHECK_EVERY == 0 || i == N - 1) {
-            cd.cum_x.push_back(global_idx);
-            cd.cum_pt3.push_back(cum_p3);
-            cd.cum_pt2.push_back(cum_p2);
+            if (current_file_idx >= 0 &&
+                current_file_idx < (int) cd.files.size()) {
+                const Long64_t global_idx =
+                    cd.files[current_file_idx].chain_offset + li;
+                cd.cum_x.push_back(global_idx);
+                cd.cum_pt3.push_back(cum_p3);
+                cd.cum_pt2.push_back(cum_p2);
+            }
         }
     }
     return true;
@@ -229,7 +253,7 @@ bool loadChannel(const std::string& chan, ChannelData& cd) {
     // usage is `cd research/calibration && root -l -b -q plots/...` so the
     // scan ROOTs live next to the cwd (./) and the calibration ROOTs in
     // the repo root (../../) per the project convention.
-    cd.scan_path = "trigger_scan_"   + chan + ".root";
+    cd.scan_path = "../../output_" + chan + "_cal.root";
     cd.cal_path  = "../../pt3_calibration_" + chan + ".root";
 
     TFile* fscan = TFile::Open(cd.scan_path.c_str(), "READ");
@@ -238,8 +262,8 @@ bool loadChannel(const std::string& chan, ChannelData& cd) {
         if (fscan) delete fscan;
         return false;
     }
-    TTree* t_files = dynamic_cast<TTree*>(fscan->Get("files"));
-    TTree* t_evts  = dynamic_cast<TTree*>(fscan->Get("trigger_events"));
+    TTree* t_files = dynamic_cast<TTree*>(fscan->Get("trigger_cal_files"));
+    TTree* t_evts  = dynamic_cast<TTree*>(fscan->Get("trigger_cal_nt"));
     if (!t_files || !t_evts) {
         std::cerr << "  WARNING: missing trees in " << cd.scan_path << "\n";
         fscan->Close(); delete fscan;

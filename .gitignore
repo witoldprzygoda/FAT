@@ -56,10 +56,11 @@ research/meson_research
 research/plots/output/*
 !research/plots/output/.gitkeep
 
-# research/calibration/ — analogous standalone tool (PT3/PT2 trigger scan).
-# Outputs (trigger_scan_*.root) land directly in research/calibration/
-# (covered by the global *.root rule above).
-research/calibration/trigger_scan
+# research/calibration/ — calibration macros that read output_*_cal.root
+# produced by ./ana in trigger_calibration mode. The pre-cal-mode raw-data
+# scanner was moved to legacy_raw_scan/ for reference; its binary lives
+# there too and is gitignored.
+research/calibration/legacy_raw_scan/trigger_scan
 research/calibration/plots/output/*
 !research/calibration/plots/output/.gitkeep
 
