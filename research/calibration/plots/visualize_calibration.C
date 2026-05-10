@@ -36,7 +36,10 @@
 //
 // Usage (from research/calibration/):
 //   root -l -b -q plots/visualize_calibration.C
-//   root -l -b -q 'plots/visualize_calibration.C(0.8, 3.0)'   # custom y-range
+//
+// Per-channel pad-2 y-ranges and pad-1 fixed [1e2, 1e8] log range are
+// hardcoded in visualize_calibration() at the bottom of this file —
+// edit there to tune.
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -353,10 +356,12 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     p1->SetLeftMargin(0.10); p1->SetRightMargin(0.04);
     p1->SetTopMargin(0.13);  p1->SetBottomMargin(0.13);
 
-    double y_max_p1 = 1.0;
-    for (long long c3 : cd.cum_pt3) y_max_p1 = std::max(y_max_p1, (double) c3);
-    y_max_p1 *= 1.5;
-    const double y_min_p1 = 1.0;
+    // Pad 1 y-range: pinned to a fixed log decade [1e2, 1e8] across all
+    // three channels so the cumulative-counts curves are directly visually
+    // comparable. The dynamic-fit version made each channel's pad 1
+    // self-similar but mutually incomparable.
+    const double y_min_p1 = 1e2;
+    const double y_max_p1 = 1e8;
 
     auto* frame1 = p1->DrawFrame(0.0, y_min_p1, xmax_chain, y_max_p1);
     frame1->SetTitle(TString::Format(
@@ -594,19 +599,21 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
 
 }  // anonymous namespace
 
-// `y_lo`, `y_hi` pin the weight-pad y-range identically across all three
-// channels so they can be compared at a glance.
-void visualize_calibration(double y_lo = 1.0,
-                           double y_hi = 2.5) {
+// Per-channel y-ranges for the weight pad. Hardcoded because the
+// observed dynamic range is genuinely different between channels:
+//   epem — chunkier sample, real run-to-run drift in [1.4, 2.6]
+//   epep, emem — flat near unity (range ~[1.0, 1.5])
+// Same scale across {epep, emem} so they're mutually comparable; epem
+// gets its own band to keep its detail visible without compressing the
+// other two. Overlay uses a span that covers all three.
+void visualize_calibration() {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
     gStyle->SetLabelSize(0.045, "xy");
     gStyle->SetPadTickX(1); gStyle->SetPadTickY(1);
 
-    std::cout << "=== visualize_calibration"
-              << "  y=[" << y_lo << ", " << y_hi << "]"
-              << " ===\n";
+    std::cout << "=== visualize_calibration ===\n";
 
     ChannelData epem, epep, emem;
     const bool ok_e = loadChannel("epem", epem);
@@ -614,20 +621,21 @@ void visualize_calibration(double y_lo = 1.0,
     const bool ok_m = loadChannel("emem", emem);
 
     if (!ok_e && !ok_p && !ok_m) {
-        std::cerr << "ERROR: no scan files found. Run "
-                  << "./run_parallel_scan.sh and trigger_calibration.C first.\n";
+        std::cerr << "ERROR: no input files found. Make sure "
+                  << "output_<channel>_cal.root and "
+                  << "pt3_calibration_<channel>.root exist in repo root.\n";
         return;
     }
 
-    if (ok_e) drawChannelCanvas(epem, y_lo, y_hi);
-    if (ok_p) drawChannelCanvas(epep, y_lo, y_hi);
-    if (ok_m) drawChannelCanvas(emem, y_lo, y_hi);
+    if (ok_e) drawChannelCanvas(epem, 1.8, 2.8);   // epem wider band
+    if (ok_p) drawChannelCanvas(epep, 1.0, 2.0);   // epep / emem share scale
+    if (ok_m) drawChannelCanvas(emem, 1.0, 2.0);
 
     std::vector<ChannelData*> chans;
     if (ok_e) chans.push_back(&epem);
     if (ok_p) chans.push_back(&epep);
     if (ok_m) chans.push_back(&emem);
-    if (chans.size() >= 2) drawOverlay(chans, y_lo, y_hi);
+    if (chans.size() >= 2) drawOverlay(chans, 1.0, 2.8);  // covers epem range
 
     std::cout << "Done.\n";
 }
