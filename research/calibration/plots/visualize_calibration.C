@@ -59,6 +59,7 @@
 #include <TSystem.h>
 #include <TString.h>
 #include <TAxis.h>
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <limits>
@@ -292,7 +293,43 @@ bool loadChannel(const std::string& chan, ChannelData& cd) {
 
 // ----- drawing ---------------------------------------------------------
 
-void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
+// Identify "outlier" segments: short-duration AND deviating significantly
+// from the local baseline (mean of left + right neighbour weights).
+// Returns one bool per segment in cd.seg_spans order.
+//   min_jump_pct       — required relative deviation from neighbour
+//                        baseline (default 0.05 = 5%)
+//   max_duration_frac  — segment span must be SHORTER than this fraction
+//                        of the channel's total chain to qualify
+//                        (default 0.01 = 1% of chain)
+// Both conditions ANDed: a segment is flagged only if it's both brief AND
+// far from its neighbours. A long-duration segment that genuinely shifts
+// the baseline is NOT an outlier — that's a real trend change.
+std::vector<bool> tagOutliers(const ChannelData& cd,
+                              double min_jump_pct,
+                              double max_duration_frac) {
+    const size_t N = cd.seg_spans.size();
+    std::vector<bool> out(N, false);
+    if (N < 2 || cd.total_chain_events <= 0) return out;
+    for (size_t s = 0; s < N; ++s) {
+        const SegmentSpan& seg = cd.seg_spans[s];
+        const Long64_t span = seg.global_hi - seg.global_lo + 1;
+        const double dur_frac = (double) span / (double) cd.total_chain_events;
+        if (dur_frac >= max_duration_frac) continue;       // too long
+        double baseline = 0; int nb = 0;
+        if (s > 0)     { baseline += cd.seg_spans[s-1].w; ++nb; }
+        if (s + 1 < N) { baseline += cd.seg_spans[s+1].w; ++nb; }
+        if (nb == 0)   continue;
+        baseline /= nb;
+        if (baseline <= 0) continue;
+        const double rel_jump = std::abs(seg.w - baseline) / baseline;
+        if (rel_jump >= min_jump_pct) out[s] = true;
+    }
+    return out;
+}
+
+void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
+                       double min_jump_pct      = 0.05,
+                       double max_duration_frac = 0.01) {
     if (cd.cum_x.empty()) return;
 
     // Outlier accounting — count segments whose w falls outside the fixed
@@ -439,41 +476,74 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi) {
     // Cumulative w drawn ON TOP of bands.
     g_cw->Draw("L");
 
-    // Each segment drawn as: a thick blue horizontal line (the value w_seg
+    // Each segment drawn as: a thick horizontal line (the value w_seg
     // spanning the segment's chain range) PLUS a thin BLACK vertical error
-    // bar at the segment midpoint (±σ_seg). Black so the error of the
-    // calibration value reads cleanly off the colour of the segment line.
-    const Color_t kSegColor = kBlue + 1;
-    TLine* seg_legend_line = nullptr;
-    for (const SegmentSpan& s : cd.seg_spans) {
-        const double xlo  = (double) s.global_lo;
-        const double xhi  = (double) s.global_hi;
-        const double xmid = 0.5 * (xlo + xhi);
+    // bar at the segment midpoint (±σ_seg). Colour is BLUE for "trend"
+    // segments and RED for short-duration outliers (per tagOutliers
+    // criteria — short segment far from local baseline). The red band
+    // marks segments that the user may want to drop entirely from the
+    // physics analysis via a downstream weight-acceptance cut in main.cc.
+    const std::vector<bool> outlier = tagOutliers(cd, min_jump_pct,
+                                                  max_duration_frac);
+    int n_brief_outliers = std::count(outlier.begin(), outlier.end(), true);
+    std::cout << "  [" << cd.label << "]  brief-outliers: "
+              << n_brief_outliers << " / " << cd.seg_spans.size()
+              << " (jump > " << std::fixed << std::setprecision(1)
+              << 100*min_jump_pct << "% AND duration < "
+              << 100*max_duration_frac << "% of chain)\n";
+    for (size_t s = 0; s < cd.seg_spans.size(); ++s) {
+        if (!outlier[s]) continue;
+        const SegmentSpan& seg = cd.seg_spans[s];
+        const Long64_t span = seg.global_hi - seg.global_lo + 1;
+        std::cout << "    seg " << std::setw(3) << seg.seg_idx
+                  << "  w=" << std::fixed << std::setprecision(3) << seg.w
+                  << " +/-" << seg.sigma
+                  << "  span=" << std::setw(8) << span
+                  << " (" << std::setprecision(2)
+                  << 100.0*span/cd.total_chain_events << "%)\n";
+    }
 
-        auto* lh = new TLine(xlo, s.w, xhi, s.w);
-        lh->SetLineColor(kSegColor); lh->SetLineWidth(3);
+    const Color_t kSegColor    = kBlue + 1;
+    const Color_t kSegOutColor = kRed  + 1;
+    TLine* seg_legend_normal = nullptr;
+    TLine* seg_legend_outlier = nullptr;
+    for (size_t s = 0; s < cd.seg_spans.size(); ++s) {
+        const SegmentSpan& sp = cd.seg_spans[s];
+        const double xlo  = (double) sp.global_lo;
+        const double xhi  = (double) sp.global_hi;
+        const double xmid = 0.5 * (xlo + xhi);
+        const Color_t col = outlier[s] ? kSegOutColor : kSegColor;
+
+        auto* lh = new TLine(xlo, sp.w, xhi, sp.w);
+        lh->SetLineColor(col); lh->SetLineWidth(3);
         lh->Draw();
 
-        if (s.sigma > 0) {
-            auto* lv = new TLine(xmid, s.w - s.sigma, xmid, s.w + s.sigma);
+        if (sp.sigma > 0) {
+            auto* lv = new TLine(xmid, sp.w - sp.sigma, xmid, sp.w + sp.sigma);
             lv->SetLineColor(kBlack); lv->SetLineWidth(1);
             lv->Draw();
         }
 
-        if (!seg_legend_line) seg_legend_line = lh;
+        if (outlier[s] && !seg_legend_outlier) seg_legend_outlier = lh;
+        if (!outlier[s] && !seg_legend_normal)  seg_legend_normal  = lh;
     }
 
     // Compact legend in the freed top-margin strip (above the data area).
-    auto* leg2 = new TLegend(0.55, 0.86, 0.96, 0.93);
+    auto* leg2 = new TLegend(0.45, 0.86, 0.96, 0.93);
     leg2->SetTextSize(0.026);
     leg2->SetBorderSize(0);
     leg2->SetFillColorAlpha(kWhite, 0.7);
-    leg2->SetNColumns(2);
+    leg2->SetNColumns(3);
     leg2->AddEntry(g_cw, "cumulative w_{cum}", "l");
-    if (seg_legend_line) {
-        leg2->AddEntry(seg_legend_line,
-                       TString::Format("segments  w_{seg} #pm #sigma_{seg}  (N=%zu)",
-                                       cd.seg_spans.size()),
+    if (seg_legend_normal) {
+        leg2->AddEntry(seg_legend_normal,
+                       TString::Format("trend (N=%zu)",
+                                       cd.seg_spans.size() - n_brief_outliers),
+                       "l");
+    }
+    if (seg_legend_outlier) {
+        leg2->AddEntry(seg_legend_outlier,
+                       TString::Format("outliers (N=%d)", n_brief_outliers),
                        "l");
     }
     leg2->Draw();
@@ -606,7 +676,17 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
 // Same scale across {epep, emem} so they're mutually comparable; epem
 // gets its own band to keep its detail visible without compressing the
 // other two. Overlay uses a span that covers all three.
-void visualize_calibration() {
+//
+// Outlier-tagging parameters (default 5% jump, 1% chain duration):
+//   min_jump_pct       — required relative deviation from neighbour
+//                        baseline to flag a segment as outlier
+//   max_duration_frac  — segment must be SHORTER than this fraction of
+//                        chain to qualify; long deviations are real
+//                        trend changes, not outliers
+// Outlier segments are drawn RED on pad 2 instead of BLUE so the user
+// can immediately spot brief excursions.
+void visualize_calibration(double min_jump_pct      = 0.05,
+                           double max_duration_frac = 0.01) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
@@ -627,9 +707,9 @@ void visualize_calibration() {
         return;
     }
 
-    if (ok_e) drawChannelCanvas(epem, 1.8, 2.8);   // epem wider band
-    if (ok_p) drawChannelCanvas(epep, 1.0, 2.0);   // epep / emem share scale
-    if (ok_m) drawChannelCanvas(emem, 1.0, 2.0);
+    if (ok_e) drawChannelCanvas(epem, 1.8, 2.8, min_jump_pct, max_duration_frac);
+    if (ok_p) drawChannelCanvas(epep, 1.0, 2.0, min_jump_pct, max_duration_frac);
+    if (ok_m) drawChannelCanvas(emem, 1.0, 2.0, min_jump_pct, max_duration_frac);
 
     std::vector<ChannelData*> chans;
     if (ok_e) chans.push_back(&epem);
