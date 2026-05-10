@@ -66,6 +66,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include <cmath>
 
 namespace {
@@ -557,7 +558,9 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
 }
 
 void drawOverlay(const std::vector<ChannelData*>& chans,
-                 double y_lo, double y_hi) {
+                 double y_lo, double y_hi,
+                 double min_jump_pct,
+                 double max_duration_frac) {
     auto* c = new TCanvas("c_calib_overlay", "c_calib_overlay", 1500, 700);
     c->SetGridx(); c->SetGridy();
     // Wider right margin so the axis-overflow indicator (×10⁶ or similar)
@@ -626,15 +629,29 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
         }
     }
 
-    auto* leg = new TLegend(0.55, 0.86, 0.96, 0.93);
+    auto* leg = new TLegend(0.45, 0.86, 0.96, 0.93);
     leg->SetTextSize(0.026);
     leg->SetBorderSize(0);
     leg->SetFillColorAlpha(kWhite, 0.7);
-    leg->SetNColumns(3);
+    leg->SetNColumns(4);
     const int colors[3] = { kBlack, kBlue+1, kRed+1 };
+    const Color_t kOutColor = kRed + 1;   // outliers are RED across all channels
     int ci = 0;
+    TLine* legend_outlier = nullptr;
+    int total_outliers = 0;
     for (auto* cd : chans) {
         if (!cd || cd->cal_rows.empty()) { ++ci; continue; }
+
+        // Tag outliers in this channel using the same criteria as pad 2.
+        // Build a set of outlier seg_idx values for fast lookup per row.
+        const std::vector<bool> outlier =
+            tagOutliers(*cd, min_jump_pct, max_duration_frac);
+        std::set<int> outlier_seg_ids;
+        for (size_t s = 0; s < cd->seg_spans.size(); ++s) {
+            if (outlier[s]) outlier_seg_ids.insert(cd->seg_spans[s].seg_idx);
+        }
+        total_outliers += (int) outlier_seg_ids.size();
+
         TLine* legend_line = nullptr;
         for (const CalRow& r : cd->cal_rows) {
             // Look up SAME physical file in BOTH this channel and the
@@ -651,13 +668,21 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
             const double off_ref = (double) ref->files[fi_ref->second].chain_offset;
             const double x_lo = off_ref + (double) r.event_lo / (double) Nc * (double) Nr;
             const double x_hi = off_ref + (double) r.event_hi / (double) Nc * (double) Nr;
+            const bool is_outlier = (outlier_seg_ids.count(r.seg_idx) > 0);
+            const Color_t col = is_outlier ? kOutColor : (Color_t) colors[ci];
+
             auto* lc = new TLine(x_lo, r.w, x_hi, r.w);
-            lc->SetLineColor(colors[ci]); lc->SetLineWidth(2);
+            lc->SetLineColor(col); lc->SetLineWidth(2);
             lc->Draw();
-            if (!legend_line) legend_line = lc;
+            if (is_outlier && !legend_outlier) legend_outlier = lc;
+            if (!is_outlier && !legend_line)   legend_line    = lc;
         }
         if (legend_line) leg->AddEntry(legend_line, cd->label.c_str(), "l");
         ++ci;
+    }
+    if (legend_outlier) {
+        leg->AddEntry(legend_outlier,
+                      TString::Format("outliers (N=%d)", total_outliers), "l");
     }
     leg->Draw();
 
@@ -677,16 +702,21 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
 // gets its own band to keep its detail visible without compressing the
 // other two. Overlay uses a span that covers all three.
 //
-// Outlier-tagging parameters (default 5% jump, 1% chain duration):
+// Outlier-tagging parameters (defaults: 6% jump, 0.5% chain duration —
+// validated by the user against the epem PDF as catching the brief
+// excursions cleanly without polluting the trend):
 //   min_jump_pct       — required relative deviation from neighbour
 //                        baseline to flag a segment as outlier
 //   max_duration_frac  — segment must be SHORTER than this fraction of
 //                        chain to qualify; long deviations are real
 //                        trend changes, not outliers
-// Outlier segments are drawn RED on pad 2 instead of BLUE so the user
-// can immediately spot brief excursions.
-void visualize_calibration(double min_jump_pct      = 0.05,
-                           double max_duration_frac = 0.01) {
+// Outlier segments are drawn RED on pad 2 (and on the cross-channel
+// overlay) instead of the channel's normal colour, so the user can
+// immediately spot brief excursions across all channels at a glance.
+// These red-tagged segments are exactly the candidates for a downstream
+// weight-acceptance cut in main.cc on pp45_epem.
+void visualize_calibration(double min_jump_pct      = 0.06,
+                           double max_duration_frac = 0.005) {
     gStyle->SetOptStat(0);
     gStyle->SetTitleSize(0.05, "t");
     gStyle->SetTitleSize(0.05, "xy");
@@ -715,7 +745,8 @@ void visualize_calibration(double min_jump_pct      = 0.05,
     if (ok_e) chans.push_back(&epem);
     if (ok_p) chans.push_back(&epep);
     if (ok_m) chans.push_back(&emem);
-    if (chans.size() >= 2) drawOverlay(chans, 1.0, 2.8);  // covers epem range
+    if (chans.size() >= 2)
+        drawOverlay(chans, 1.0, 2.8, min_jump_pct, max_duration_frac);
 
     std::cout << "Done.\n";
 }
