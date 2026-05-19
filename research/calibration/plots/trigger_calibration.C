@@ -13,9 +13,20 @@
 //                     file_path. Used here for the segment-to-file mapping.
 //
 // This macro applies the SAME quality cuts the main analysis uses
-// (isBest == 1, eVertReco_z > -500, start_iteration == 3) plus an
-// opening-angle cut (oa > 2 deg) that filters close lepton pairs whose
-// reconstruction wobble would otherwise leak into the trigger calibration.
+// (isBest == 1, eVertReco_z > -500, start_iteration == 3).
+//
+// NO opening-angle cut is applied: empirically, the segmentation
+// boundaries (the WHEN of trigger-bias changes) are independent of the
+// physics selection — only the absolute correction values w(seg) depend
+// on it. Since the segmentation defines the calibration's validity
+// ranges (i.e. the schedule of bias changes in real time) rather than
+// the correction magnitudes, leaving OA inclusive maximises statistics
+// per pool and tightens the segment-boundary precision. Correction
+// magnitudes ARE consumer-specific, so the main analysis on pp45_epem
+// must recompute / re-use a calibration matching its own physics
+// selection — but the segment EDGES from this run are reusable across
+// any OA threshold.
+//
 // Surviving events with trigbit ∈ {8192, 4096} feed the online segmenter.
 //
 // Streams through trigger_cal_nt in chain order, runs an online z-test
@@ -50,9 +61,18 @@
 // Tightening max_rel_err (e.g. 0.02) requires more PT2 stats per pool;
 // loosening it (e.g. 0.10) accepts noisier candidates and produces more
 // segments. At pp45 (PT3:PT2 ≈ 64:1), the rule of thumb is
-//   max_rel_err = 0.03  →  N_PT2 ≳ 1100 per pool   (default)
-//   max_rel_err = 0.05  →  N_PT2 ≳  400 per pool
-//   max_rel_err = 0.10  →  N_PT2 ≳  100 per pool
+//   max_rel_err = 0.005 →  N_PT2 ≳ 40000 per pool   (only deep trend changes)
+//   max_rel_err = 0.01  →  N_PT2 ≳ 10000 per pool   (default — trend-only;
+//                                                    brief excursions
+//                                                    naturally absorb into
+//                                                    the surrounding segment)
+//   max_rel_err = 0.02  →  N_PT2 ≳  2500 per pool   ⚠ resurfaces outliers
+//   max_rel_err = 0.03  →  N_PT2 ≳  1100 per pool   ⚠ resurfaces outliers
+//
+// Anything looser than 0.01 will recover brief outlier-segments because
+// the candidate threshold becomes shorter than typical outlier durations.
+// Use 0.02 / 0.03 only AFTER outliers have been filtered upstream by a
+// dedicated macro — otherwise they pollute the calibration trend.
 //
 // Output ROOT contains one TTree:
 //
@@ -84,10 +104,8 @@
 //   isBest          == 1      best-candidate selection
 //   eVertReco_z     > -500    vertex quality [mm]
 //   start_iteration == 3      start-detector quality
-//   oa              > 2.0     opening-angle filter [deg] — looser than the
-//                             physics analysis (which uses oa > 4) because
-//                             we just want to drop close-pair perturbations
-//                             of the trigger signal, not select Dalitz pairs
+// (no OA cut — see header note above on why segmentation boundaries are
+//  OA-independent while correction magnitudes are not)
 //
 // @author Witold Przygoda (witold.przygoda@uj.edu.pl)
 // @date 2026
@@ -115,9 +133,21 @@ struct FileInfo {
     Long64_t    n_events;
 };
 
+// One stored trigger event inside the candidate's per-event buffer.
+// Populated only when track == true at addTrigger() — i.e. for the
+// candidate pool only. Used by findOptimalSplit to refine where exactly
+// the regime change happened within the candidate's span.
+struct CandEvent {
+    int       file_idx;   // index into the FileInfo vector
+    Long64_t  local_idx;  // event index inside that file
+    bool      is_pt3;     // true=PT3, false=PT2
+};
+
 // Open segment + candidate state during streaming. Both track an interval
 // in chain coordinates by recording first and last trigger event positions
-// (file_path + local_event_idx).
+// (file_path + local_event_idx). Candidate additionally stores its per-
+// event sequence so the split point can be sharpened by likelihood scan
+// after the z-test fires.
 struct PoolState {
     long long n_pt3 = 0;
     long long n_pt2 = 0;
@@ -125,10 +155,13 @@ struct PoolState {
     long long   first_local = 0;
     std::string last_file;
     long long   last_local = 0;
+    std::vector<CandEvent> events;   // populated only when track==true
     bool empty() const { return n_pt3 == 0 && n_pt2 == 0; }
     void reset() { *this = PoolState{}; }
     void addTrigger(const std::string& fp, long long lidx, int trigbit,
-                    int trig_pt3, int trig_pt2) {
+                    int trig_pt3, int trig_pt2,
+                    int  file_idx_global = -1,
+                    bool track           = false) {
         if (empty()) {
             first_file  = fp;
             first_local = lidx;
@@ -137,6 +170,9 @@ struct PoolState {
         last_local = lidx;
         if      (trigbit == trig_pt3) ++n_pt3;
         else if (trigbit == trig_pt2) ++n_pt2;
+        if (track && file_idx_global >= 0) {
+            events.push_back({file_idx_global, lidx, trigbit == trig_pt3});
+        }
     }
     double w() const {
         return (n_pt3 > 0 && n_pt2 > 0)
@@ -148,6 +184,43 @@ struct PoolState {
         return w() * std::sqrt(1.0/a + 1.0/b);
     }
 };
+
+// Find the within-candidate position k* that maximises the z² test
+// statistic for "merged-left vs right" split:
+//     left  = (open + cand[0..k])
+//     right = cand[k+1..end]
+//     z²(k) = (w_left - w_right)² / (σ²_left + σ²_right)
+// The crude algorithm sets the new segment boundary at cand.events[0]
+// (i.e. the first candidate event), which is at most a candidate-span
+// of slack from the true change point. The refinement narrows this to
+// the single event with maximum left/right separation.
+//
+// Returns the index k* in cand.events (0 ≤ k* < cand.events.size()-1).
+// Caller should treat cand.events[0..k*] as belonging to the closing
+// segment, and cand.events[k*+1..end] as the new open segment.
+size_t findOptimalSplit(const PoolState& open, const PoolState& cand) {
+    const size_t N = cand.events.size();
+    if (N < 2) return 0;
+    long long L_pt3 = open.n_pt3;
+    long long L_pt2 = open.n_pt2;
+    double   best_z2 = -1.0;
+    size_t   best_k  = 0;
+    for (size_t k = 0; k + 1 < N; ++k) {
+        if (cand.events[k].is_pt3) ++L_pt3; else ++L_pt2;
+        const long long R_pt3 = (open.n_pt3 + cand.n_pt3) - L_pt3;
+        const long long R_pt2 = (open.n_pt2 + cand.n_pt2) - L_pt2;
+        if (L_pt3 <= 0 || L_pt2 <= 0 || R_pt3 <= 0 || R_pt2 <= 0) continue;
+        const double w_L = kK * (double) L_pt2 / (double) L_pt3;
+        const double w_R = kK * (double) R_pt2 / (double) R_pt3;
+        const double s2_L = w_L * w_L * (1.0/L_pt3 + 1.0/L_pt2);
+        const double s2_R = w_R * w_R * (1.0/R_pt3 + 1.0/R_pt2);
+        const double s2   = s2_L + s2_R;
+        if (s2 <= 0) continue;
+        const double z2 = (w_L - w_R) * (w_L - w_R) / s2;
+        if (z2 > best_z2) { best_z2 = z2; best_k = k; }
+    }
+    return best_k;
+}
 
 // Final closed segment (logical), still in chain coordinates. Will be
 // expanded to per-file ranges before writing to the output TTree.
@@ -385,8 +458,8 @@ void processChannel(const std::string& chan,
     };
 
     // Two-phase streaming with cuts applied INLINE per event. Cuts mirror
-    // src/setup_cuts.h on pp45_epem (isBest, vertex_z, start_detector) plus
-    // an opening-angle filter (oa > 2 deg) specific to this calibration.
+    // src/setup_cuts.h on pp45_epem (isBest, vertex_z, start_detector).
+    // OA is NOT cut here — see header docstring for the rationale.
     // Events failing any cut — or carrying a trigbit other than PT3 / PT2
     // (e.g. trigbit == 12288 = PT3+PT2 simultaneously) — are skipped
     // entirely: they don't update the segmenter pool and don't trigger the
@@ -416,10 +489,8 @@ void processChannel(const std::string& chan,
         if (f_isBest != 1.0f)  continue;
         if (f_vz   <= -500.0f) continue;
         if (f_si   != 3.0f)    continue;
-        // Opening-angle cut, looser than the physics analysis (oa > 4):
-        // this is a perturbation filter for the trigger signal, not a
-        // Dalitz-pair selection.
-        if (f_oa   <=  2.0f)   continue;
+        // OA cut intentionally NOT applied — segmentation edges are
+        // selection-independent (see header docstring).
         ++n_pass_cuts;
 
         // Only single-trigger PT3 or PT2 events feed the calibration.
@@ -434,12 +505,18 @@ void processChannel(const std::string& chan,
 
         if (relErr(open_seg.n_pt3, open_seg.n_pt2) > max_rel_err) {
             // Phase 1: keep growing open until it's well-determined.
-            open_seg.addTrigger(path, li, tb, trig_pt3, trig_pt2);
+            // Open never needs per-event history (refinement scans only
+            // the candidate's events), so track=false here.
+            open_seg.addTrigger(path, li, tb, trig_pt3, trig_pt2,
+                                current_file_idx, /*track=*/false);
             continue;
         }
 
-        // Phase 2: open is stable. Build up candidate.
-        cand.addTrigger(path, li, tb, trig_pt3, trig_pt2);
+        // Phase 2: open is stable. Build up candidate. Track each event
+        // (file_idx + local_idx + PT3/PT2 flag) so we can refine the
+        // boundary later by scanning within the candidate.
+        cand.addTrigger(path, li, tb, trig_pt3, trig_pt2,
+                        current_file_idx, /*track=*/true);
         if (relErr(cand.n_pt3, cand.n_pt2) > max_rel_err) continue;
 
         // Both pools are statistically ripe — run the z-test.
@@ -454,12 +531,43 @@ void processChannel(const std::string& chan,
         const double z = (w_c - w_o) / std::sqrt(s2);
 
         if (std::abs(z) > z_thr) {
-            // SPLIT — close open segment, candidate becomes new open.
-            closeOpen("SPLIT |z|=" + std::to_string(std::abs(z)));
-            open_seg = cand;
+            // SPLIT with boundary refinement. The crude algorithm puts
+            // the new segment start at cand.events[0]; the true change
+            // point can be anywhere inside cand's span. findOptimalSplit
+            // returns the index k* maximising the left/right z²; events
+            // [0..k*] are merged into the closing segment, [k*+1..end]
+            // become the new open segment with a refined start position.
+            const size_t k = findOptimalSplit(open_seg, cand);
+
+            long long abs_pt3 = 0, abs_pt2 = 0;
+            for (size_t i = 0; i <= k; ++i) {
+                if (cand.events[i].is_pt3) ++abs_pt3; else ++abs_pt2;
+            }
+            // Extend open with cand[0..k] then close it.
+            open_seg.n_pt3      += abs_pt3;
+            open_seg.n_pt2      += abs_pt2;
+            open_seg.last_file   = files[cand.events[k].file_idx].path;
+            open_seg.last_local  = cand.events[k].local_idx;
+            closeOpen("SPLIT |z|=" + std::to_string(std::abs(z))
+                      + " refined@" + std::to_string(k));
+
+            // Build new open from cand[k+1..end].
+            PoolState new_open;
+            new_open.first_file  = files[cand.events[k+1].file_idx].path;
+            new_open.first_local = cand.events[k+1].local_idx;
+            new_open.last_file   = cand.last_file;
+            new_open.last_local  = cand.last_local;
+            for (size_t i = k + 1; i < cand.events.size(); ++i) {
+                if (cand.events[i].is_pt3) ++new_open.n_pt3;
+                else                       ++new_open.n_pt2;
+            }
+            // Don't carry events into the new open — the next candidate
+            // (in Phase 2 again) will collect its own per-event history.
+            open_seg = std::move(new_open);
             cand.reset();
         } else {
-            // MERGE — absorb candidate into open.
+            // MERGE — absorb candidate into open (counts only; events
+            // discarded since open never needs per-event history).
             open_seg.n_pt3 += cand.n_pt3;
             open_seg.n_pt2 += cand.n_pt2;
             open_seg.last_file  = cand.last_file;
@@ -535,7 +643,7 @@ void processChannel(const std::string& chan,
 }  // anonymous namespace
 
 void trigger_calibration(double z_threshold = 3.0,
-                         double max_rel_err = 0.03) {
+                         double max_rel_err = 0.01) {
     std::cout << "=== trigger_calibration"
               << "  z_threshold=" << z_threshold
               << "  max_rel_err=" << max_rel_err

@@ -53,6 +53,7 @@
 #include <TLegend.h>
 #include <TLine.h>
 #include <TBox.h>
+#include <TColor.h>
 #include <TLatex.h>
 #include <TPad.h>
 #include <TStyle.h>
@@ -72,6 +73,23 @@
 namespace {
 
 constexpr double kK = 63.0;
+
+// Pastel band colours, registered once. Done as explicit RGB rather than
+// named ROOT colour indices because (a) named "kAzure-9 / kOrange-9" can
+// render unexpectedly saturated in some PDF viewers, and (b) PDF/ROOT
+// alpha rendering is unreliable across viewer combinations. Using a flat
+// pale fill avoids both pitfalls — the bands are always faint by
+// construction, no transparency required.
+int paleColor(float r, float g, float b) {
+    static std::map<int, int> cache;
+    const int key = (int(r*255)) | (int(g*255)<<8) | (int(b*255)<<16);
+    auto it = cache.find(key);
+    if (it != cache.end()) return it->second;
+    const int idx = TColor::GetFreeColorIndex();
+    new TColor(idx, r, g, b);
+    cache[key] = idx;
+    return idx;
+}
 
 // One file's metadata + its cumulative offset in the chain.
 struct FileInfo {
@@ -172,11 +190,11 @@ bool loadEvents(TTree* t_evts, ChannelData& cd) {
         if (i > 0 && li < prev_local_idx) ++current_file_idx;
         prev_local_idx = li;
 
-        // Same cuts as trigger_calibration.C
+        // Same cuts as trigger_calibration.C — NO OA cut, segmentation
+        // edges are OA-independent (see trigger_calibration.C header).
         if (f_isBest != 1.0f)  continue;
         if (f_vz   <= -500.0f) continue;
         if (f_si   != 3.0f)    continue;
-        if (f_oa   <=  2.0f)   continue;
         const int tb = static_cast<int>(f_trigbit);
         if (tb != 8192 && tb != 4096) continue;
 
@@ -382,9 +400,10 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
         : (double) (cd.files.back().chain_offset + cd.files.back().n_events);
 
     // Shared band styling (alternating per file across the full pad height).
-    const Color_t kBandA      = kAzure  - 9;
-    const Color_t kBandB      = kOrange - 9;
-    const double  kBandAlpha  = 0.18;
+    // Very pale pastel RGB — same hue family as kAzure/kOrange but flat
+    // light so they don't depend on alpha rendering at all.
+    const Color_t kBandA = paleColor(0.92f, 0.95f, 0.99f);  // pale azure
+    const Color_t kBandB = paleColor(0.99f, 0.95f, 0.92f);  // pale linen / orange
     const double  kLabelYNDC  = 0.83;     // inside data area, near top, below legend strip
     const double  kLabelSize  = 0.022;
 
@@ -412,7 +431,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
             const double xb_lo = (double) cd.files[i].chain_offset;
             const double xb_hi = xb_lo + (double) cd.files[i].n_events;
             auto* box = new TBox(xb_lo, y_min_p1, xb_hi, y_max_p1);
-            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetFillColor((i % 2 == 0) ? kBandA : kBandB);
             box->SetLineWidth(0);
             box->Draw();
             const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_chain)
@@ -425,6 +444,9 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
             lbl->DrawLatex(ndc_x, kLabelYNDC, TString::Format("%zu", i));
         }
     }
+    // Force tick marks back on top of the bands so they remain visible
+    // even when alpha rendering is unreliable in the user's PDF viewer.
+    p1->RedrawAxis();
 
     g_p3->Draw("L");
     g_p2->Draw("L");
@@ -460,7 +482,7 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
             const double xb_lo = (double) cd.files[i].chain_offset;
             const double xb_hi = xb_lo + (double) cd.files[i].n_events;
             auto* box = new TBox(xb_lo, y_lo, xb_hi, y_hi);
-            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetFillColor((i % 2 == 0) ? kBandA : kBandB);
             box->SetLineWidth(0);
             box->Draw();
             const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_chain)
@@ -473,6 +495,8 @@ void drawChannelCanvas(const ChannelData& cd, double y_lo, double y_hi,
             lbl->DrawLatex(ndc_x, kLabelYNDC, TString::Format("%zu", i));
         }
     }
+    // Force tick marks back on top of the bands.
+    p2->RedrawAxis();
 
     // Cumulative w drawn ON TOP of bands.
     g_cw->Draw("L");
@@ -607,15 +631,14 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
     // Alternating per-file bands across the full pad height — widths
     // proportional to the reference channel's per-file event counts.
     {
-        const Color_t kBandA     = kAzure  - 9;
-        const Color_t kBandB     = kOrange - 9;
-        const double  kBandAlpha = 0.18;
+        const Color_t kBandA = paleColor(0.92f, 0.95f, 0.99f);
+        const Color_t kBandB = paleColor(0.99f, 0.95f, 0.92f);
         const double  lm = c->GetLeftMargin(), rm = c->GetRightMargin();
         for (size_t i = 0; i < ref->files.size(); ++i) {
             const double xb_lo = (double) ref->files[i].chain_offset;
             const double xb_hi = xb_lo + (double) ref->files[i].n_events;
             auto* box = new TBox(xb_lo, y_lo, xb_hi, y_hi);
-            box->SetFillColorAlpha((i % 2 == 0) ? kBandA : kBandB, kBandAlpha);
+            box->SetFillColor((i % 2 == 0) ? kBandA : kBandB);
             box->SetLineWidth(0);
             box->Draw();
             const double ndc_x = lm + (0.5 * (xb_lo + xb_hi) / xmax_ref)
@@ -628,6 +651,8 @@ void drawOverlay(const std::vector<ChannelData*>& chans,
             lbl->DrawLatex(ndc_x, 0.83, TString::Format("%zu", i));
         }
     }
+    // Force tick marks back on top of the bands.
+    c->RedrawAxis();
 
     auto* leg = new TLegend(0.45, 0.86, 0.96, 0.93);
     leg->SetTextSize(0.026);
@@ -737,7 +762,7 @@ void visualize_calibration(double min_jump_pct      = 0.06,
         return;
     }
 
-    if (ok_e) drawChannelCanvas(epem, 1.8, 2.8, min_jump_pct, max_duration_frac);
+    if (ok_e) drawChannelCanvas(epem, 1.0, 4.0, min_jump_pct, max_duration_frac);
     if (ok_p) drawChannelCanvas(epep, 1.0, 2.0, min_jump_pct, max_duration_frac);
     if (ok_m) drawChannelCanvas(emem, 1.0, 2.0, min_jump_pct, max_duration_frac);
 
@@ -746,7 +771,7 @@ void visualize_calibration(double min_jump_pct      = 0.06,
     if (ok_p) chans.push_back(&epep);
     if (ok_m) chans.push_back(&emem);
     if (chans.size() >= 2)
-        drawOverlay(chans, 1.0, 2.8, min_jump_pct, max_duration_frac);
+        drawOverlay(chans, 1.0, 4.0, min_jump_pct, max_duration_frac);
 
     std::cout << "Done.\n";
 }
