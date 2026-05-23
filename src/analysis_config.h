@@ -703,48 +703,15 @@ public:
     }
 
     // ========================================================================
-    // Trigger configuration
+    // Trigger
     //
-    //   "trigger": {
-    //       "selection":       "PT3" | "PT2" | "none",   default "PT3"
-    //       "bias_correction": true | false,             default true
-    //   }
-    //
-    // selection drives the per-event trigbit cut applied in processEvent.
-    // bias_correction controls whether main.cc runs Pass 1 (per-file
-    // trigbit counters) and weights every fill / ntuple row by the
-    // PT3 trigger-bias factor w = (63·N_PT2)/N_PT3 (or 1.0 when off).
+    // The full-mode analysis no longer cuts on the trigbit: every event with
+    // trigbit ∈ {8192 (PT3), 4096 (PT2)} is processed, and Manager auto-routes
+    // every fill to either the histogram (PT3) or its "_pt2" twin (PT2). The
+    // bin-by-bin PT2/PT3 ratio is the trigger correction. No JSON knobs for
+    // trigger selection or bias correction — the cal-mode is the only path
+    // that still treats the trigbit specially (and it accepts everything).
     // ========================================================================
-
-    /**
-     * @brief Trigger selection: "PT3", "PT2", or "none".
-     */
-    std::string getTriggerSelection() const {
-        const JsonValue& trig = config_["trigger"];
-        // Default PT3 to preserve historical behaviour for configs that
-        // don't yet include a "trigger" section.
-        std::string sel = trig["selection"].asString("PT3");
-        for (auto& c : sel) c = std::toupper(c);
-        if (sel == "PT3" || sel == "PT2" || sel == "NONE") return sel;
-        return "PT3";  // unknown values fall back to historical default
-    }
-
-    /**
-     * @brief Cut name to apply in processEvent — empty when "none".
-     */
-    std::string getTriggerCutName() const {
-        const std::string sel = getTriggerSelection();
-        if (sel == "PT3") return "trigger_PT3";
-        if (sel == "PT2") return "trigger_PT2";
-        return "";
-    }
-
-    /**
-     * @brief Whether the PT3 bias correction (per-file w) is applied.
-     */
-    bool isTriggerBiasCorrectionEnabled() const {
-        return config_["trigger"]["bias_correction"].asBool(true);
-    }
 
     // ========================================================================
     // Run mode
@@ -934,12 +901,9 @@ public:
         printConfigLine(os, "Kinetic energy", ke_str.str());
         os << "║                                                                ║\n";
 
-        // Trigger section
-        os << "║ Trigger:                                                       ║\n";
-        printConfigLine(os, "Selection", getTriggerSelection());
-        printConfigLine(os, "Bias correction (PT3)",
-                        std::string(isTriggerBiasCorrectionEnabled() ? "enabled" : "disabled"));
-
+        // Trigger handling is now implicit: PT3 → original histograms,
+        // PT2 → "_pt2" twins, both written to the output ROOT file.
+        os << "║ Trigger:  auto-route per event (PT3 → H, PT2 → H_pt2)          ║\n";
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }
 

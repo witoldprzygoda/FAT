@@ -80,20 +80,14 @@ void processEventCalibration(NTupleReader& reader, Manager& mgr) {
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
-    // Event-level cuts (applied before particle creation)
+    // Event-level cuts (applied before particle creation). The trigger bit
+    // is NOT cut on here — it is a flag set by main.cc's event loop, and
+    // every mgr.fill() is auto-routed to the H (PT3) or H_pt2 (PT2) twin
+    // by Manager::setEventTriggerType. Every dynamic ntuple receives BOTH
+    // PT3 and PT2 rows, distinguished by the `trigbit` branch (8192 = PT3,
+    // 4096 = PT2) stamped automatically inside setEventTriggerType.
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-
-    // Trigger selection (driven by config.trigger.selection):
-    //   "PT3"  -> trigbit == 8192   (default; 2-particle leptonic with bias)
-    //   "PT2"  -> trigbit == 4096   (unbiased 2-particle hadronic, downscale 64)
-    //   "none" -> no trigger filter (debug / no-bias ≥3-particle topologies)
-    {
-        const std::string trig_cut = config.getTriggerCutName();
-        if (!trig_cut.empty() &&
-            !cuts.passValueCut(trig_cut, reader["trigbit"])) return;
-    }
-
     if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
 
     // Create e+ and e- with reconstructed kinematics
@@ -554,7 +548,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
     }
 
-    // Forward Tracker objects (forward hadrons, up to 3 hits)
+    // Forward Tracker objects (forward hadrons, up to 3 hits). fwdet_nt is
+    // filled for both PT3 and PT2 events; downstream consumers filter on
+    // the `trigbit` branch (8192 / 4096) stamped automatically.
     if (config.isFwdEnabled()) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
 
@@ -676,6 +672,10 @@ int main(int argc, char* argv[]) {
     // fill time. Avoids polluting output_*_cal.root with empty TH1/TH2.
     if (!config.isTriggerCalibrationOnly()) {
         setupHistograms(manager);
+        // Mirror every registered histogram with a "_pt2" twin so PT2 events
+        // populate a separate, identically-binned histogram. Bin-by-bin
+        // trigger correction is later 63·PT2/PT3 of the matching pair.
+        manager.createPT2Clones();
     }
     setupNtuples(manager, config);
 
@@ -786,124 +786,30 @@ int main(int argc, char* argv[]) {
     }
 
     // ------------------------------------------------------------------
-    // Pass 1 (only if PT3 trigger-bias correction is enabled).
-    //   Counts trigbit==8192 (PT3) and trigbit==4096 (PT2) per input
-    //   ROOT file (= per HADES run) — beam conditions and trigger rates
-    //   drift between runs, so a single global w would carry a few-%
-    //   systematic. Per-file:
-    //
-    //       w[file] = (63 · N_PT2[file]) / N_PT3[file]
-    //
-    //   Pass 2 then sets the per-event weight to w[current_file]; every
-    //   histogram fill is multiplied by it and the trigger_corr branch
-    //   on every dynamic ntuple records the same number per event.
-    //   When the correction is disabled, this pass is skipped and every
-    //   event keeps weight 1.0.
+    // Trigger routing.
+    //   Each event is classified by trigbit: 8192 → PT3, 4096 → PT2,
+    //   anything else is skipped. Manager auto-routes every histogram fill
+    //   to the H (PT3) or H_pt2 (PT2) twin created by createPT2Clones().
+    //   Dynamic ntuples receive BOTH PT3 and PT2 rows, distinguished by a
+    //   `trigbit` branch (8192 or 4096) stamped automatically by Manager.
+    //   The bin-by-bin trigger correction is recovered downstream as the
+    //   PT2/PT3 histogram ratio per channel — never as a single global w.
     // ------------------------------------------------------------------
-    const bool do_trigger_corr = config.isTriggerBiasCorrectionEnabled();
-    const int  n_files = reader.getNTrees();
-    std::vector<double> w_per_file(n_files, 1.0);
-
-    if (do_trigger_corr) {
-        ConsoleBox::newLine();
-        std::cout << "Pass 1/2: per-file trigger-bias counts (PT3=8192, PT2=4096)...\n\n";
-
-        std::vector<Long64_t> n_PT3(n_files, 0), n_PT2(n_files, 0);
-        ProgressBar pre_progress(events_to_process);
-        Long64_t pre_processed = 0;
-        for (Long64_t i = start_event; i < end_event; ++i) {
-            if (SignalHandler::wasInterrupted()) break;
-            reader.getEntry(i);
-            ++pre_processed;
-            pre_progress.update(pre_processed);
-            const int fi      = reader.getCurrentTreeNumber();
-            const int trigbit = static_cast<int>(reader["trigbit"]);
-            if      (trigbit == 8192) ++n_PT3[fi];
-            else if (trigbit == 4096) ++n_PT2[fi];
-        }
-        pre_progress.finish(SignalHandler::wasInterrupted());
-
-        std::cout << "\nPer-file PT3 trigger-bias correction"
-                  << " w = (63·N_PT2)/N_PT3:\n";
-        for (int f = 0; f < n_files; ++f) {
-            if (n_PT3[f] > 0 && n_PT2[f] > 0) {
-                w_per_file[f] = (63.0 * static_cast<double>(n_PT2[f]))
-                                       / static_cast<double>(n_PT3[f]);
-            }
-            std::cout << "  file " << std::setw(3) << f
-                      << "  N_PT3=" << std::setw(10) << n_PT3[f]
-                      << "  N_PT2=" << std::setw(8)  << n_PT2[f]
-                      << "  w=" << std::fixed << std::setprecision(5)
-                      << w_per_file[f] << "\n";
-        }
-
-        // ----------------------------------------------------------------
-        // Dump per-file PT3/PT2 counts so a downstream research macro can
-        // study the run-by-run drift and decide on a segmentation strategy
-        // (per-file weights have poor stats; we want to merge consecutive
-        // files into segments of statistically-consistent ratio).
-        // Dump path is derived from output_file by replacing the leading
-        // "output_" with "pt3_perfile_"; otherwise "pt3_perfile.root".
-        // ----------------------------------------------------------------
-        const std::string out_file = config.getOutputFilename();
-        const std::string out_prefix = "output_";
-        const auto slash = out_file.find_last_of('/');
-        const std::string dir  = (slash == std::string::npos)
-                                     ? std::string{}
-                                     : out_file.substr(0, slash + 1);
-        const std::string base = (slash == std::string::npos)
-                                     ? out_file
-                                     : out_file.substr(slash + 1);
-        const std::string dump_path =
-            (base.rfind(out_prefix, 0) == 0)
-                ? dir + "pt3_perfile_" + base.substr(out_prefix.size())
-                : dir + "pt3_perfile.root";
-
-        TFile* fdump = TFile::Open(dump_path.c_str(), "RECREATE");
-        if (fdump && !fdump->IsZombie()) {
-            TTree* td = new TTree("pt3_perfile",
-                                  "Per-file PT3/PT2 trigger counts");
-            Int_t       b_idx  = 0;
-            Long64_t    b_pt3  = 0;
-            Long64_t    b_pt2  = 0;
-            std::string b_path;
-            td->Branch("file_idx",  &b_idx,  "file_idx/I");
-            td->Branch("n_pt3",     &b_pt3,  "n_pt3/L");
-            td->Branch("n_pt2",     &b_pt2,  "n_pt2/L");
-            td->Branch("file_path", &b_path);
-            for (int f = 0; f < n_files; ++f) {
-                b_idx  = f;
-                b_pt3  = n_PT3[f];
-                b_pt2  = n_PT2[f];
-                b_path = reader.getTreeFilePath(f);
-                td->Fill();
-            }
-            td->Write();
-            fdump->Close();
-            std::cout << "Per-file PT3/PT2 counts dumped to: "
-                      << dump_path << "\n";
-        } else {
-            std::cerr << "WARNING: could not open " << dump_path
-                      << " for writing — per-file counts NOT dumped.\n";
-        }
-        delete fdump;
-    } else {
-        std::cout << "PT3 trigger-bias correction DISABLED"
-                  << " (config.trigger.bias_correction == false)."
-                  << " All event weights = 1.\n";
-    }
 
     ConsoleBox::newLine();
     ConsoleBox::printInfoBox("Press Ctrl+C at any time to stop and save partial results");
     ConsoleBox::newLine();
-    std::cout << (do_trigger_corr ? "Pass 2/2: " : "")
-              << "Processing events " << start_event << " to " << end_event
+    std::cout << "Processing events " << start_event << " to " << end_event
               << " (" << events_to_process << " events)...\n\n";
 
     Long64_t processed = 0;
     bool was_interrupted = false;
 
     ProgressBar progress(events_to_process);
+
+    Long64_t n_pt3  = 0;
+    Long64_t n_pt2  = 0;
+    Long64_t n_skip = 0;
 
     for (Long64_t i = start_event; i < end_event; ++i) {
         if (SignalHandler::wasInterrupted()) {
@@ -915,8 +821,14 @@ int main(int argc, char* argv[]) {
         ++processed;
         progress.update(processed);
 
-        // Set per-event weight (1.0 when correction disabled).
-        manager.setEventWeight(w_per_file[reader.getCurrentTreeNumber()]);
+        // Classify trigger. Events with neither PT3 nor PT2 are skipped
+        // (other trigger combinations don't enter this analysis).
+        const int trigbit = static_cast<int>(reader["trigbit"]);
+        Manager::TriggerType ttype = Manager::TRIG_NONE;
+        if      (trigbit == 8192) { ttype = Manager::TRIG_PT3; ++n_pt3; }
+        else if (trigbit == 4096) { ttype = Manager::TRIG_PT2; ++n_pt2; }
+        else                      { ++n_skip; continue; }
+        manager.setEventTriggerType(ttype);
 
         try {
             processEvent(reader, manager, cuts, config);
@@ -926,6 +838,11 @@ int main(int argc, char* argv[]) {
     }
 
     progress.finish(was_interrupted);
+
+    std::cout << "Trigger classification (event counts):\n"
+              << "  PT3  = " << n_pt3  << "\n"
+              << "  PT2  = " << n_pt2  << "\n"
+              << "  skip = " << n_skip << "  (neither PT3 nor PT2)\n";
 
     // Finalization
     std::cout << "\n";

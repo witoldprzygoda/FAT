@@ -37,11 +37,12 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create2D("em_dp_vs_p", "e^{-}: #Deltap vs p;p_{rec} [MeV/c];p_{corr} - p_{rec} [MeV/c]",
                  100, 0, 2000, 100, 0, 10, "corrections");
 
-    // Dilepton invariant mass (REC + COR)
+    // Dilepton invariant mass (REC + COR). 280 bins over [0, 1.4] GeV/c²
+    // → 5 MeV/bin, matching the binning of mass_spectra_*_exp.C macros.
     mgr.create1D("mass_ee", "e^{+}e^{-} invariant mass;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
     mgr.create1D("mass_ee_cor", "e^{+}e^{-} invariant mass (corr);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
 
     // e+e-gamma invariant mass — pi0 Dalitz candidate (only when ecal_mult == 1)
     mgr.create1D("mass_epemg", "e^{+}e^{-}#gamma invariant mass;M_{e^{+}e^{-}#gamma} [GeV/c^{2}];Counts",
@@ -65,13 +66,13 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
                  180, 0, 180, "dilepton");
     mgr.create1D("mass_ee_before_oa", "M_{ee} before OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
     mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
     mgr.create1D("mass_ee_before_oa_cor", "M_{ee} before OA cut (corr);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
     mgr.create1D("mass_ee_after_oa_cor", "M_{ee} after OA cut (corr);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
-                 200, 0.0, 1.0, "dilepton");
+                 280, 0.0, 1.4, "dilepton");
 
     // CMS frame observables (after boost to beam-target CMS)
     mgr.create1D("rapidity_cms", "Dilepton rapidity in CMS;y_{CMS};Counts",
@@ -81,7 +82,7 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("theta_cms", "Dilepton polar angle in CMS;#theta_{CMS} [deg];Counts",
                  90, 0, 180, "cms");
     mgr.create2D("rapidity_vs_mass", "y_{CMS} vs M_{ee};M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
-                 100, 0.0, 1.0, 100, -2.0, 2.0, "cms");
+                 140, 0.0, 1.4, 100, -2.0, 2.0, "cms");
 
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }

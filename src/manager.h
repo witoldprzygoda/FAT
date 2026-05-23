@@ -348,81 +348,135 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // Fill helpers (shorthand for common operations)
+    // PT3 / PT2 trigger flag — drives auto-routing in fill().
+    //
+    // Each event in main.cc is classified by trigbit:
+    //     trigbit == 8192  →  TRIG_PT3   (biased dilepton trigger; main analysis)
+    //     trigbit == 4096  →  TRIG_PT2   (downscaled unbiased trigger;
+    //                                     control sample for trigger correction)
+    //     anything else    →  TRIG_NONE  (event skipped)
+    //
+    // setEventTriggerType() is called ONCE per event before processEvent.
+    // fill()/fillw() then route to either H (PT3) or H_pt2 (PT2). Both
+    // versions of every histogram are created by createPT2Clones() right
+    // after setupHistograms — so downstream analysis can compute the
+    // per-bin trigger correction directly as PT2/PT3 ratio (no time-segment
+    // averaging buried inside the value).
     // ------------------------------------------------------------------------
+    enum TriggerType { TRIG_NONE, TRIG_PT3, TRIG_PT2 };
 
-    // ------------------------------------------------------------------------
-    // Per-event weight (e.g. PT3 trigger-bias correction).
-    //
-    // setEventWeight(w) is called once per event in the analysis loop. It:
-    //   1. Updates current_event_weight_ — every fill()/fillw() below
-    //      multiplies the user-supplied weight by this scalar.
-    //   2. Pushes w into the trigger_corr branch of every dynamic ntuple
-    //      so a per-event branch persists in the output (DynamicHNtuple
-    //      resets fields after each fill(), so we re-set them here).
-    //
-    // When the bias correction is disabled (config flag or sim), main.cc
-    // never calls setEventWeight, so current_event_weight_ stays at 1.0
-    // and behaviour is identical to the pre-correction code.
-    // ------------------------------------------------------------------------
-    void setEventWeight(double w) {
-        current_event_weight_ = w;
+    /// Set the per-event trigger flag. In addition to driving histogram
+    /// auto-routing in fill(), this stamps a `trigbit` branch on every
+    /// dynamic ntuple so downstream analyses can filter by trigger:
+    ///     trigbit == 8192  → PT3
+    ///     trigbit == 4096  → PT2
+    /// The stamp happens here (once per event) and persists through any
+    /// subsequent nt.fill() because DynamicHNtuple only resets fields it
+    /// has written — `trigbit` stays committed for the row.
+    void setEventTriggerType(TriggerType t) {
+        current_trigger_ = t;
+        const Float_t code = (t == TRIG_PT3) ? 8192.0f
+                           : (t == TRIG_PT2) ? 4096.0f
+                           : 0.0f;
         for (auto& pair : dynamic_ntuples_) {
             if (pair.second && !pair.second->isFinalized()) {
-                (*pair.second)["trigger_corr"] = static_cast<Float_t>(w);
+                (*pair.second)["trigbit"] = code;
             }
         }
     }
+    TriggerType eventTriggerType() const { return current_trigger_; }
 
-    double getEventWeight() const { return current_event_weight_; }
+    /// Clone every registered histogram with a "_pt2" suffix (same folder,
+    /// same metadata, empty contents). Call once after setupHistograms.
+    /// Idempotent: existing "_pt2" entries are left alone.
+    void createPT2Clones() {
+        std::vector<std::string> names = registry_.listAll();
+        for (const auto& name : names) {
+            const std::string suffix = "_pt2";
+            if (name.size() >= suffix.size() &&
+                name.compare(name.size() - suffix.size(),
+                             suffix.size(), suffix) == 0) {
+                continue;  // already a _pt2 clone
+            }
+            const std::string pt2_name = name + suffix;
+            if (registry_.has(pt2_name)) continue;
 
-    /**
-     * @brief Fill 1D histogram (shorthand, no extra weight)
-     *
-     * Example:
-     *   manager.fill("h_theta", 45.0);
-     */
+            TH1* src = registry_.get(name);
+            std::unique_ptr<TH1> clone(
+                static_cast<TH1*>(src->Clone(pt2_name.c_str())));
+            clone->Reset();
+            // Append " (PT2)" to the title portion (the part before the
+            // first ';' which separates title from axis labels in ROOT).
+            std::string t = src->GetTitle();
+            const size_t semi = t.find(';');
+            if (semi == std::string::npos) {
+                t += " (PT2)";
+            } else {
+                t.insert(semi, " (PT2)");
+            }
+            clone->SetTitle(t.c_str());
+            clone->SetDirectory(nullptr);  // registry owns; not gDirectory
+
+            HistogramMetadata meta = registry_.getMetadata(name);
+            meta.name = pt2_name;
+            registry_.add(std::move(clone), meta);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Fill helpers (PT3/PT2 auto-routed).
+    //
+    //   current_trigger_ == TRIG_PT3 → fill <name>
+    //   current_trigger_ == TRIG_PT2 → fill <name>_pt2
+    //   current_trigger_ == TRIG_NONE → no-op (defensive)
+    // ------------------------------------------------------------------------
+private:
+    const std::string& targetName_(const std::string& name) const {
+        if (current_trigger_ == TRIG_PT2) {
+            // Resolve _pt2 target name lazily; static thread-unsafe storage
+            // is fine because main.cc is single-threaded.
+            static thread_local std::string buf;
+            buf = name + "_pt2";
+            return buf;
+        }
+        return name;
+    }
+
+public:
+    /// Fill 1D histogram (unweighted), auto-routed by current trigger flag.
     void fill(const std::string& name, double value) {
-        getHistogram(name)->Fill(value, current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogram(targetName_(name))->Fill(value);
     }
 
-    /**
-     * @brief Fill 1D histogram with explicit weight (multiplied with the
-     *        per-event weight set by setEventWeight()).
-     *
-     * Example:
-     *   manager.fillw("h_theta", 45.0, sim_genweight);
-     */
+    /// Fill 1D histogram with explicit weight (auto-routed).
     void fillw(const std::string& name, double value, double weight) {
-        getHistogram(name)->Fill(value, weight * current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogram(targetName_(name))->Fill(value, weight);
     }
 
-    /**
-     * @brief Fill 2D histogram (shorthand, no extra weight)
-     */
+    /// Fill 2D histogram (unweighted), auto-routed.
     void fill(const std::string& name, double x, double y) {
-        getHistogramAs<TH2>(name)->Fill(x, y, current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogramAs<TH2>(targetName_(name))->Fill(x, y);
     }
 
-    /**
-     * @brief Fill 2D histogram with explicit weight (× per-event weight)
-     */
+    /// Fill 2D histogram with explicit weight, auto-routed.
     void fillw(const std::string& name, double x, double y, double weight) {
-        getHistogramAs<TH2>(name)->Fill(x, y, weight * current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogramAs<TH2>(targetName_(name))->Fill(x, y, weight);
     }
 
-    /**
-     * @brief Fill 3D histogram (shorthand, no extra weight)
-     */
+    /// Fill 3D histogram (unweighted), auto-routed.
     void fill(const std::string& name, double x, double y, double z) {
-        getHistogramAs<TH3>(name)->Fill(x, y, z, current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogramAs<TH3>(targetName_(name))->Fill(x, y, z);
     }
 
-    /**
-     * @brief Fill 3D histogram with explicit weight (× per-event weight)
-     */
+    /// Fill 3D histogram with explicit weight, auto-routed.
     void fillw(const std::string& name, double x, double y, double z, double weight) {
-        getHistogramAs<TH3>(name)->Fill(x, y, z, weight * current_event_weight_);
+        if (current_trigger_ == TRIG_NONE) return;
+        getHistogramAs<TH3>(targetName_(name))->Fill(x, y, z, weight);
     }
 
     // ------------------------------------------------------------------------
@@ -499,10 +553,10 @@ private:
     // Dynamic ntuples (managed separately due to finalization needs)
     std::map<std::string, std::unique_ptr<DynamicHNtuple>> dynamic_ntuples_;
 
-    // Per-event weight used by setEventWeight(); multiplies all fill() calls.
-    // Defaults to 1.0 so that analyses which never call setEventWeight() are
-    // unaffected by this hook.
-    double current_event_weight_ = 1.0;
+    // Current event's trigger classification — set once per event by main.cc
+    // before processEvent. Drives auto-routing of fill()/fillw() to either
+    // the H (PT3) or the H_pt2 (PT2) variant of every registered histogram.
+    TriggerType current_trigger_ = TRIG_NONE;
 };
 
 #endif // MANAGER_H
