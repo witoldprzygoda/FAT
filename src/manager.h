@@ -348,60 +348,137 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // Fill helpers (shorthand for common operations)
+    // SMASH trigger flags (PT3 and PT2, decoded from trigbit bits 13 and 12).
+    //
+    // Sim differs from exp data in TWO important ways:
+    //   * PT3 ⊂ PT2 but the same event may have BOTH bits set (no stream
+    //     separation, no downscale) — so flags are two independent booleans
+    //     instead of a single "trigger type" enum.
+    //   * We keep the un-triggered histograms too (the full simulated sample
+    //     is the unbiased reference), so every fill produces THREE entries:
+    //          H         — always (no trigger condition)
+    //          H_pt3     — only when is_pt3_ == true
+    //          H_pt2     — only when is_pt2_ == true
+    //
+    // main.cc calls setEventTriggerFlags(pt3, pt2) once per event before
+    // processEvent. This also stamps two ntuple branches:
+    //          pt3 = 1.0 / 0.0
+    //          pt2 = 1.0 / 0.0
+    // so downstream macros can filter ntuple rows by trigger condition
+    // (e.g. "pt3==1" for PT3-selected, "pt3==1 && pt2==1" for both).
     // ------------------------------------------------------------------------
+    void setEventTriggerFlags(bool is_pt3, bool is_pt2) {
+        is_pt3_ = is_pt3;
+        is_pt2_ = is_pt2;
+        const Float_t fp3 = is_pt3 ? 1.0f : 0.0f;
+        const Float_t fp2 = is_pt2 ? 1.0f : 0.0f;
+        for (auto& pair : dynamic_ntuples_) {
+            if (pair.second && !pair.second->isFinalized()) {
+                (*pair.second)["pt3"] = fp3;
+                (*pair.second)["pt2"] = fp2;
+            }
+        }
+    }
+    bool eventIsPT3() const { return is_pt3_; }
+    bool eventIsPT2() const { return is_pt2_; }
 
-    /**
-     * @brief Fill 1D histogram (shorthand, no weight)
-     *
-     * Example:
-     *   manager.fill("h_theta", 45.0);
-     */
+    /// Clone every already-registered histogram with "_pt3" and "_pt2"
+    /// suffixes, same folder and metadata, empty contents. Call once after
+    /// setupHistograms. Idempotent — existing twins are left alone.
+    void createPT3PT2Clones() {
+        const std::vector<std::string> sfx = {"_pt3", "_pt2"};
+        const std::vector<std::string> names = registry_.listAll();
+        for (const auto& name : names) {
+            // Skip names that already end with one of our suffixes (idempotent).
+            bool already = false;
+            for (const auto& s : sfx) {
+                if (name.size() >= s.size() &&
+                    name.compare(name.size() - s.size(), s.size(), s) == 0) {
+                    already = true; break;
+                }
+            }
+            if (already) continue;
+            TH1* src = registry_.get(name);
+            for (const auto& s : sfx) {
+                const std::string clone_name = name + s;
+                if (registry_.has(clone_name)) continue;
+                std::unique_ptr<TH1> clone(
+                    static_cast<TH1*>(src->Clone(clone_name.c_str())));
+                clone->Reset();
+                std::string t = src->GetTitle();
+                const size_t semi = t.find(';');
+                const std::string tag = (s == "_pt3") ? " (PT3)" : " (PT2)";
+                if (semi == std::string::npos) t += tag;
+                else                            t.insert(semi, tag);
+                clone->SetTitle(t.c_str());
+                clone->SetDirectory(nullptr);
+                HistogramMetadata meta = registry_.getMetadata(name);
+                meta.name = clone_name;
+                registry_.add(std::move(clone), meta);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Fill helpers — every fill always goes to the unbiased H, plus to
+    // H_pt3 / H_pt2 when the corresponding flag is set. Mirrors the exp
+    // routing but keeps the no-trigger histogram so SMASH can be plotted
+    // as the unbiased reference alongside the trigger-filtered variants.
+    // ------------------------------------------------------------------------
+    /// Fill 1D histogram (unweighted) — base + PT3 + PT2 twins.
     void fill(const std::string& name, double value) {
-        getHistogram(name)->Fill(value);
+        TH1* h = getHistogram(name);
+        h->Fill(value);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            registry_.get(name + "_pt3")->Fill(value);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            registry_.get(name + "_pt2")->Fill(value);
     }
 
-    /**
-     * @brief Fill 1D histogram with weight
-     *
-     * Example:
-     *   manager.fillw("h_theta", 45.0, weight);
-     *   // Or for cross-section normalization:
-     *   manager.fillw("h_theta", 45.0, event_weight * luminosity);
-     */
+    /// Fill 1D histogram with weight (per-event genweight).
     void fillw(const std::string& name, double value, double weight) {
-        getHistogram(name)->Fill(value, weight);
+        TH1* h = getHistogram(name);
+        h->Fill(value, weight);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            registry_.get(name + "_pt3")->Fill(value, weight);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            registry_.get(name + "_pt2")->Fill(value, weight);
     }
 
-    /**
-     * @brief Fill 2D histogram (shorthand, no weight)
-     */
+    /// Fill 2D histogram (unweighted).
     void fill(const std::string& name, double x, double y) {
         getHistogramAs<TH2>(name)->Fill(x, y);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            static_cast<TH2*>(registry_.get(name + "_pt3"))->Fill(x, y);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            static_cast<TH2*>(registry_.get(name + "_pt2"))->Fill(x, y);
     }
 
-    /**
-     * @brief Fill 2D histogram with weight
-     *
-     * Example:
-     *   manager.fillw("h_xy", x, y, weight);
-     */
+    /// Fill 2D histogram with weight.
     void fillw(const std::string& name, double x, double y, double weight) {
         getHistogramAs<TH2>(name)->Fill(x, y, weight);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            static_cast<TH2*>(registry_.get(name + "_pt3"))->Fill(x, y, weight);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            static_cast<TH2*>(registry_.get(name + "_pt2"))->Fill(x, y, weight);
     }
 
-    /**
-     * @brief Fill 3D histogram (shorthand, no weight)
-     */
+    /// Fill 3D histogram (unweighted).
     void fill(const std::string& name, double x, double y, double z) {
         getHistogramAs<TH3>(name)->Fill(x, y, z);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            static_cast<TH3*>(registry_.get(name + "_pt3"))->Fill(x, y, z);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            static_cast<TH3*>(registry_.get(name + "_pt2"))->Fill(x, y, z);
     }
 
-    /**
-     * @brief Fill 3D histogram with weight
-     */
+    /// Fill 3D histogram with weight.
     void fillw(const std::string& name, double x, double y, double z, double weight) {
         getHistogramAs<TH3>(name)->Fill(x, y, z, weight);
+        if (is_pt3_ && registry_.has(name + "_pt3"))
+            static_cast<TH3*>(registry_.get(name + "_pt3"))->Fill(x, y, z, weight);
+        if (is_pt2_ && registry_.has(name + "_pt2"))
+            static_cast<TH3*>(registry_.get(name + "_pt2"))->Fill(x, y, z, weight);
     }
 
     // ------------------------------------------------------------------------
@@ -477,6 +554,14 @@ private:
 
     // Dynamic ntuples (managed separately due to finalization needs)
     std::map<std::string, std::unique_ptr<DynamicHNtuple>> dynamic_ntuples_;
+
+    // SMASH trigger flags decoded from trigbit bits 13 (PT3) and 12 (PT2).
+    // Set once per event by setEventTriggerFlags(); drive routing of every
+    // fill() / fillw() to the H_pt3 / H_pt2 twins created by
+    // createPT3PT2Clones(). Both default to false until the first call so
+    // any fill() before flags are set lands ONLY on the unbiased H.
+    bool is_pt3_ = false;
+    bool is_pt2_ = false;
 };
 
 #endif // MANAGER_H

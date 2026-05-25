@@ -179,6 +179,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
         nt["epem_same_vertex"] = 1.0f;          // hard-gated above (always 1)
         nt["sim_genweight"]    = w;             // per-event SMASH luminosity weight
+
+        // SMASH channel-decomposition truth (sim_id and sim_geninfo2 are
+        // hard-gated above so omitted). geninfo1 encodes the meson + decay
+        // mode (e.g. 7051 = π⁰ Dalitz, 17051 = η Dalitz, 41 = ω direct e+e-).
+        nt["ep_sim_geninfo1"]      = reader["ep_sim_geninfo1"];
+        nt["em_sim_geninfo1"]      = reader["em_sim_geninfo1"];
+        nt["ep_sim_parentid"]      = reader["ep_sim_parentid"];
+        nt["em_sim_parentid"]      = reader["em_sim_parentid"];
+        nt["ep_sim_grandparentid"] = reader["ep_sim_grandparentid"];
+        nt["em_sim_grandparentid"] = reader["em_sim_grandparentid"];
+        nt["ep_sim_processid"]     = reader["ep_sim_processid"];
+        nt["em_sim_processid"]     = reader["em_sim_processid"];
         nt.fill();
     }
 
@@ -219,6 +231,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
         nt["epem_same_vertex"] = 1.0f;
         nt["sim_genweight"]    = w;
+
+        nt["ep_sim_geninfo1"]      = reader["ep_sim_geninfo1"];
+        nt["em_sim_geninfo1"]      = reader["em_sim_geninfo1"];
+        nt["ep_sim_parentid"]      = reader["ep_sim_parentid"];
+        nt["em_sim_parentid"]      = reader["em_sim_parentid"];
+        nt["ep_sim_grandparentid"] = reader["ep_sim_grandparentid"];
+        nt["em_sim_grandparentid"] = reader["em_sim_grandparentid"];
+        nt["ep_sim_processid"]     = reader["ep_sim_processid"];
+        nt["em_sim_processid"]     = reader["em_sim_processid"];
         nt.fill();
     }
 
@@ -797,6 +818,10 @@ int main(int argc, char* argv[]) {
     manager.openFile(config.getOutputFilename(), config.getOutputOption());
 
     setupHistograms(manager);
+    // Mirror every registered histogram with "_pt3" and "_pt2" twins so the
+    // SMASH sample can be split by trigger condition while keeping the full
+    // (untriggered) histograms as the unbiased reference. See Manager.h.
+    manager.createPT3PT2Clones();
     setupNtuples(manager, config);
 
     CutManager cuts;
@@ -822,6 +847,7 @@ int main(int argc, char* argv[]) {
 
     Long64_t processed = 0;
     bool was_interrupted = false;
+    Long64_t n_pt3 = 0, n_pt2 = 0, n_both = 0;
 
     ProgressBar progress(events_to_process);
 
@@ -835,6 +861,18 @@ int main(int argc, char* argv[]) {
         ++processed;
         progress.update(processed);
 
+        // SMASH trigger flags: bit 12 = PT2, bit 13 = PT3. Both can be set on
+        // the same event (no stream separation, no downscale in sim — every
+        // event is fully simulated and each trigger condition is evaluated
+        // independently). flags drive the H/_pt3/_pt2 routing in Manager.
+        const int trigbit = static_cast<int>(reader["trigbit"]);
+        const bool is_pt3 = (trigbit >> 13) & 1;
+        const bool is_pt2 = (trigbit >> 12) & 1;
+        manager.setEventTriggerFlags(is_pt3, is_pt2);
+        if (is_pt3) ++n_pt3;
+        if (is_pt2) ++n_pt2;
+        if (is_pt3 && is_pt2) ++n_both;
+
         try {
             processEvent(reader, manager, cuts, config);
         } catch (const std::exception& e) {
@@ -843,6 +881,12 @@ int main(int argc, char* argv[]) {
     }
 
     progress.finish(was_interrupted);
+
+    std::cout << "Trigger flag counts:\n"
+              << "  PT3   = " << n_pt3 << "\n"
+              << "  PT2   = " << n_pt2 << "\n"
+              << "  both  = " << n_both
+              << "  (in sim PT3 ⊂ PT2 so 'both' equals 'PT3' for unbiased samples)\n";
 
     // Finalization
     std::cout << "\n";
