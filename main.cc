@@ -42,25 +42,24 @@ using namespace Physics;
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
-    // Event-level cuts (applied before particle creation).
-    // Simulation: no trigger_PT3 / start_detector cuts (no such fields in SMASH).
-    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
-    if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-
     // ========================================================================
-    // MC truth purity gate — keep only correctly-IDed tracks
+    // NO HARD CUTS — every reconstructed e⁺e⁻ candidate is propagated to the
+    // dilepton ntuples with the cut INPUT VALUES carried as fields. The user
+    // applies the desired selection at TTree::Draw time via weight strings:
+    //   (isBest==1) * (eVertReco_z>-500) *                          ← quality
+    //   (ep_sim_id==2) * (em_sim_id==3) *                           ← PID purity
+    //   (ep_sim_geninfo2==em_sim_geninfo2) *                        ← same vertex
+    // This makes the gate thresholds adjustable per study without re-running
+    // the analysis. Drawback: the dilepton ntuples grow significantly because
+    // fake e⁺e⁻ candidates (misidentified hadrons, multi-pair combinations,
+    // low-quality tracks) are no longer filtered out at fill time.
     // ========================================================================
-    // Geant3 PIDs: 2 = e+, 3 = e-
-    // Reject events where any reconstructed lepton is misidentified.
-    int ep_pid = static_cast<int>(reader["ep_sim_id"]);
-    int em_pid = static_cast<int>(reader["em_sim_id"]);
-    if (ep_pid != 2 || em_pid != 3) return;
-
-    // Same-vertex gate: e+ and e- must originate from the same parent decay
-    // (sim_geninfo2 is the per-track parent-decay tag in the SMASH ntuple).
-    // Treated as a hard early return — events failing this are excluded from
-    // both histograms and ntuples, mirroring the PID purity gate above.
-    if (reader["ep_sim_geninfo2"] != reader["em_sim_geninfo2"]) return;
+    const float v_isBest     = reader["isBest"];
+    const float v_vertReco_z = reader["eVertReco_z"];
+    const float v_ep_sim_id  = reader["ep_sim_id"];
+    const float v_em_sim_id  = reader["em_sim_id"];
+    const float v_ep_g2      = reader["ep_sim_geninfo2"];
+    const float v_em_g2      = reader["em_sim_geninfo2"];
 
     // ========================================================================
     // Generator weight (per-event)
@@ -177,12 +176,23 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["theta_cms"]     = theta_cms;
 
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
-        nt["epem_same_vertex"] = 1.0f;          // hard-gated above (always 1)
+        // Same-vertex flag: 1 when ep and em share decay vertex (sim_geninfo2 equal)
+        nt["epem_same_vertex"] = (v_ep_g2 == v_em_g2) ? 1.0f : 0.0f;
         nt["sim_genweight"]    = w;             // per-event SMASH luminosity weight
 
-        // SMASH channel-decomposition truth (sim_id and sim_geninfo2 are
-        // hard-gated above so omitted). geninfo1 encodes the meson + decay
-        // mode (e.g. 7051 = π⁰ Dalitz, 17051 = η Dalitz, 41 = ω direct e+e-).
+        // Cut-input values — formerly hard-gated, now available for selection
+        // at plot time. See processEvent header for the suggested selection
+        // string. Stored verbatim from the source ntuple.
+        nt["isBest"]           = v_isBest;
+        nt["eVertReco_z"]      = v_vertReco_z;
+        nt["ep_sim_id"]        = v_ep_sim_id;
+        nt["em_sim_id"]        = v_em_sim_id;
+        nt["ep_sim_geninfo2"]  = v_ep_g2;
+        nt["em_sim_geninfo2"]  = v_em_g2;
+
+        // SMASH channel-decomposition truth. geninfo1 encodes the meson + decay
+        // mode (e.g. 7051 = π⁰ Dalitz, 17051 = η Dalitz, 52 = ω direct e+e-,
+        // 52051 = ω Dalitz, 41 = ρ⁰ direct, 55 = φ direct).
         nt["ep_sim_geninfo1"]      = reader["ep_sim_geninfo1"];
         nt["em_sim_geninfo1"]      = reader["em_sim_geninfo1"];
         nt["ep_sim_parentid"]      = reader["ep_sim_parentid"];
@@ -191,6 +201,21 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_sim_grandparentid"] = reader["em_sim_grandparentid"];
         nt["ep_sim_processid"]     = reader["ep_sim_processid"];
         nt["em_sim_processid"]     = reader["em_sim_processid"];
+
+        // RICH ring-quality variables. richmatchqualitynorm range in SMASH is
+        // 0-1672 (much wider than exp's 0-22). richmatchquality is the raw
+        // (un-normalized) version, 0-12. centr and radius describe the fitted
+        // Cherenkov ring geometry.
+        nt["ep_rich_padnum"]          = reader["ep_rich_padnum"];
+        nt["em_rich_padnum"]          = reader["em_rich_padnum"];
+        nt["ep_richmatchqualitynorm"] = reader["ep_richmatchqualitynorm"];
+        nt["em_richmatchqualitynorm"] = reader["em_richmatchqualitynorm"];
+        nt["ep_richmatchquality"]     = reader["ep_richmatchquality"];
+        nt["em_richmatchquality"]     = reader["em_richmatchquality"];
+        nt["ep_rich_centr"]           = reader["ep_rich_centr"];
+        nt["em_rich_centr"]           = reader["em_rich_centr"];
+        nt["ep_rich_radius"]          = reader["ep_rich_radius"];
+        nt["em_rich_radius"]          = reader["em_rich_radius"];
         nt.fill();
     }
 
@@ -229,8 +254,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["theta_cms_sim"] = theta_cms_sim;
 
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
-        nt["epem_same_vertex"] = 1.0f;
+        nt["epem_same_vertex"] = (v_ep_g2 == v_em_g2) ? 1.0f : 0.0f;
         nt["sim_genweight"]    = w;
+
+        // Cut-input values (same as in dilepton_nt).
+        nt["isBest"]           = v_isBest;
+        nt["eVertReco_z"]      = v_vertReco_z;
+        nt["ep_sim_id"]        = v_ep_sim_id;
+        nt["em_sim_id"]        = v_em_sim_id;
+        nt["ep_sim_geninfo2"]  = v_ep_g2;
+        nt["em_sim_geninfo2"]  = v_em_g2;
 
         nt["ep_sim_geninfo1"]      = reader["ep_sim_geninfo1"];
         nt["em_sim_geninfo1"]      = reader["em_sim_geninfo1"];
@@ -240,6 +273,17 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_sim_grandparentid"] = reader["em_sim_grandparentid"];
         nt["ep_sim_processid"]     = reader["ep_sim_processid"];
         nt["em_sim_processid"]     = reader["em_sim_processid"];
+
+        nt["ep_rich_padnum"]          = reader["ep_rich_padnum"];
+        nt["em_rich_padnum"]          = reader["em_rich_padnum"];
+        nt["ep_richmatchqualitynorm"] = reader["ep_richmatchqualitynorm"];
+        nt["em_richmatchqualitynorm"] = reader["em_richmatchqualitynorm"];
+        nt["ep_richmatchquality"]     = reader["ep_richmatchquality"];
+        nt["em_richmatchquality"]     = reader["em_richmatchquality"];
+        nt["ep_rich_centr"]           = reader["ep_rich_centr"];
+        nt["em_rich_centr"]           = reader["em_rich_centr"];
+        nt["ep_rich_radius"]          = reader["ep_rich_radius"];
+        nt["em_rich_radius"]          = reader["em_rich_radius"];
         nt.fill();
     }
 
