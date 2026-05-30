@@ -182,6 +182,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["theta_cms"]     = theta_v;
 
         nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
+
+        // RICH ring quality parameters per leg — for ring-quality scan studies
+        // (trigger-correction factor / efficiency vs ring-quality threshold).
+        // rich_padnum: number of pads in the fitted ring (5-60 typical).
+        // richmatchqualitynorm: normalized RICH↔track match quality (0-22).
+        // (rich_avg_ringcharge / rich_amp are all-zero in GEN4 LEPTONS, omitted.)
+        // For EpEp / EmEm same-sign channels these get filled automatically
+        // via the same fillDileptonNt path through lepton_prefixes mapping.
+        nt["ep_rich_padnum"]            = reader["ep_rich_padnum"];
+        nt["ep_richmatchqualitynorm"]   = reader["ep_richmatchqualitynorm"];
+        nt["em_rich_padnum"]            = reader["em_rich_padnum"];
+        nt["em_richmatchqualitynorm"]   = reader["em_richmatchqualitynorm"];
         nt.fill();
     };
 
