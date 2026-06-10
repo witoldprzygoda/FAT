@@ -24,6 +24,7 @@
 #include "src/setup_histograms.h"
 #include "src/setup_ntuples.h"
 #include "src/setup_cuts.h"
+#include "src/segment_lookup.h"
 #include "src/progressbar.h"
 #include "src/console_box.h"
 #include <TFile.h>
@@ -31,6 +32,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 // Use Physics namespace for mass constants
@@ -78,7 +80,8 @@ void processEventCalibration(NTupleReader& reader, Manager& mgr) {
 // ============================================================================
 
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
-                 const AnalysisConfig& config) {
+                 const AnalysisConfig& config,
+                 const SegmentLookup& seg_lookup) {
 
     // Event-level cuts (applied before particle creation). The trigger bit
     // is NOT cut on here — it is a flag set by main.cc's event loop, and
@@ -155,6 +158,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // OA > 4 deg is the active analysis selection.
     bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
 
+    // Per-event PT3 trigger-bias segment lookup. Identifies which
+    // calibration segment the current (file, local_event_idx) belongs to,
+    // and returns (seg_idx, w_seg). Miss → (-1, 1.0). The lookup result is
+    // stamped on every dilepton_nt row so downstream analysis can apply
+    // the per-segment correction uniformly without re-deriving weights.
+    const int      cur_file_idx = reader.getCurrentTreeNumber();
+    const Long64_t cur_local    = reader.getLocalEntryInTree();
+    const std::string cur_path  = reader.getTreeFilePath(cur_file_idx);
+    int    seg_idx_v = -1;
+    double w_seg_v   = 1.0;
+    std::tie(seg_idx_v, w_seg_v) = seg_lookup.Lookup(cur_path, cur_local);
+
     // Helper to fill either dilepton_nt (REC) or dilepton_nt_cor (CORRECTED) —
     // identical field layout, only compound observables (m_ee, CMS) differ.
     auto fillDileptonNt = [&](const char* nt_name,
@@ -194,6 +209,13 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["ep_richmatchqualitynorm"]   = reader["ep_richmatchqualitynorm"];
         nt["em_rich_padnum"]            = reader["em_rich_padnum"];
         nt["em_richmatchqualitynorm"]   = reader["em_richmatchqualitynorm"];
+
+        // PT3 trigger-bias per-segment weight. seg_idx < 0 means no match
+        // was found in pt3_calibration_<channel>.root (either calibration
+        // not loaded or this (file, local_idx) falls outside any segment);
+        // in that case w_seg defaults to 1.0 (no correction).
+        nt["seg_idx"]                   = static_cast<float>(seg_idx_v);
+        nt["w_seg"]                     = static_cast<float>(w_seg_v);
         nt.fill();
     };
 
@@ -798,6 +820,29 @@ int main(int argc, char* argv[]) {
     }
 
     // ------------------------------------------------------------------
+    // Load per-segment PT3 trigger-bias weights (optional).
+    //   If config has "calibration.trigger_bias_file", load it now so each
+    //   dilepton_nt row can be stamped with (seg_idx, w_seg) for the
+    //   matching segment. The OLD per-file Pass 1 weight-derivation path is
+    //   intentionally NOT executed anymore: per-segment weights are pre-
+    //   computed by research/calibration/ and consumed here.
+    // ------------------------------------------------------------------
+    SegmentLookup seg_lookup;
+    {
+        std::string cal_file = config.getCalibrationFile();
+        if (!cal_file.empty()) {
+            if (!seg_lookup.Load(cal_file)) {
+                std::cerr << "WARNING: calibration file '" << cal_file
+                          << "' could not be loaded — dilepton_nt rows will "
+                          << "fall back to seg_idx=-1, w_seg=1.0\n";
+            }
+        } else {
+            std::cout << "No 'calibration.trigger_bias_file' in config — "
+                      << "dilepton_nt will use seg_idx=-1, w_seg=1.0\n";
+        }
+    }
+
+    // ------------------------------------------------------------------
     // Trigger routing.
     //   Each event is classified by trigbit: 8192 → PT3, 4096 → PT2,
     //   anything else is skipped. Manager auto-routes every histogram fill
@@ -843,13 +888,19 @@ int main(int argc, char* argv[]) {
         manager.setEventTriggerType(ttype);
 
         try {
-            processEvent(reader, manager, cuts, config);
+            processEvent(reader, manager, cuts, config, seg_lookup);
         } catch (const std::exception& e) {
             continue;
         }
     }
 
     progress.finish(was_interrupted);
+
+    // PT3 trigger-bias lookup diagnostics (segments hit / missed)
+    if (seg_lookup.isLoaded()) {
+        std::cout << "\n";
+        seg_lookup.printSummary();
+    }
 
     std::cout << "Trigger classification (event counts):\n"
               << "  PT3  = " << n_pt3  << "\n"

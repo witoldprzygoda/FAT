@@ -733,6 +733,17 @@ public:
     }
 
     // ========================================================================
+    // Calibration consumption — per-segment PT3 trigger-bias weights produced
+    // by the trigger_calibration mode + downstream research/calibration/
+    // pipeline. When set, main.cc loads the file with SegmentLookup and
+    // stamps (seg_idx, w_seg) onto every dilepton_nt / dilepton_nt_cor row.
+    // Returns "" if the JSON section or key is absent (disabled).
+    // ========================================================================
+    std::string getCalibrationFile() const {
+        return getString("calibration.trigger_bias_file", "");
+    }
+
+    // ========================================================================
     // Cut Configuration
     // ========================================================================
     

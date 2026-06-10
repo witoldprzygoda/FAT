@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/hdd2/przygoda/hades/pp45/exp/GEN4/LEPTONS/pp45_leptons_tot.list",
+        "source": "/home/damian/hdd1/HADES/pp45/exp/gen4/epem_innermdc.list",
         "tree_name": "EmEm_ID",
         "channel": "EmEm",
         "lepton_prefixes": ["em1", "em2"],
@@ -25,5 +25,8 @@
     },
     "fwdet": true,
     "ecal": true,
-    "mode": "full"
+    "mode": "full",
+    "calibration": {
+        "trigger_bias_file": "pt3_calibration_emem.root"
+    }
 }

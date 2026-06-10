@@ -43,13 +43,17 @@ inline void setupNtuples(Manager& manager, const AnalysisConfig& config) {
         return;
     }
 
-    // Dilepton ntuple (ep_*, em_*, oa, m_ee, CMS variables, cut flags)
+    // Dilepton ntuple (ep_*, em_*, oa, m_ee, CMS variables, cut flags).
+    // Also carries (seg_idx, w_seg) — per-segment PT3 trigger-bias weight
+    // looked up from pt3_calibration_<channel>.root by (file_path,
+    // local_event_idx); seg_idx == -1 / w_seg == 1.0 means no match.
     // Default uses RECONSTRUCTED-derived compound observables.
     manager.createDynamicNtuple("dilepton_nt", "Dilepton event data (RECONSTRUCTED)");
     std::cout << "  Created output ntuple 'dilepton_nt'\n";
 
     // Mirror ntuple: same field names but compound observables computed from
     // CORRECTED kinematics (energy-loss corrected momenta of the constituents).
+    // Same seg_idx / w_seg semantics as dilepton_nt.
     manager.createDynamicNtuple("dilepton_nt_cor", "Dilepton event data (CORRECTED)");
     std::cout << "  Created output ntuple 'dilepton_nt_cor'\n";
 
