@@ -81,42 +81,6 @@ void pippimepem_spectra_rec_exp() {
     pu.save(cv5, "mm_pippimepem_rec_exp");
     printIntegrals("MM(pi+pi-e+e-)", a5, c5, s5);
 
-    // --- 5a-5c. MM observables with the 2D graphical cut (cut_2d) ---------
-    // cut_2d is a TCutG on (mm_pippimepem, m_pippimepem) — see cuts/cut_2d.root
-    {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
-            "pippimepem_nt", "mm_epem",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(e^{+}e^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(e^{+}e^{-}) after cut_2d", "c_mm_epem_cut2d");
-        pu.save(cv, "mm_epem_cut2d_rec_exp");
-        printIntegrals("MM(e+e-) after cut_2d", a, c, s);
-    }
-    {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
-            "pippimepem_nt", "mm_pippim",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(#pi^{+}#pi^{-}) after cut_2d", "c_mm_pippim_cut2d");
-        pu.save(cv, "mm_pippim_cut2d_rec_exp");
-        printIntegrals("MM(pi+pi-) after cut_2d", a, c, s);
-    }
-    {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
-            "pippimepem_nt", "mm_pippimepem",
-            200, 0.0, 4.0, "cut2d_pass==1",
-            ";MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d", "c_mm_pippimepem_cut2d");
-        pu.save(cv, "mm_pippimepem_cut2d_rec_exp");
-        printIntegrals("MM(pi+pi-e+e-) after cut_2d", a, c, s);
-    }
-
     // --- 5d. OA observables driving the pippimepem_selection cut chain ----
     // No selection applied — full all/CB/signal so the chosen cut thresholds
     // (LAB < 50 deg, eta-rest > 140 deg) can be read off the spectra.
@@ -160,34 +124,20 @@ void pippimepem_spectra_rec_exp() {
     pu.save(cv6, "m_pippimepem_selected_rec_exp");
     printIntegrals("M(pi+pi-e+e-) after selection", a6, c6, s6);
 
-    // --- 6a. Same as plot 6 but with cut_2d additionally applied ----------
-    {
-        TH1D *a, *c, *s;
-        std::tie(a, c, s) = pu.drawSignal(
-            "pippimepem_nt", "m_pippimepem",
-            200, 0.2, 1.4, "sel_pass==1 && cut2d_pass==1",
-            ";M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts");
-        auto* cv = pu.drawTriple(a, c, s,
-                                 "M_{#pi^{+}#pi^{-}e^{+}e^{-}} (after selection + cut_2d)",
-                                 "c_m_pippimepem_selected_cut2d");
-        pu.save(cv, "m_pippimepem_selected_cut2d_rec_exp");
-        printIntegrals("M(pi+pi-e+e-) after selection + cut_2d", a, c, s);
-    }
 
     // --- 7-12. M(pi+pi-e+e-) in MM(pi+pi-e+e-) slice windows --------------
     // Each slice plot applies: sel_pass==1 && lo <= mm_pippimepem <= hi
     // (matches the in-code RangeCut semantics, inclusive on both endpoints).
-    auto drawSlice = [&](double lo, double hi, const std::string& tag, bool cut2d = false) {
+    auto drawSlice = [&](double lo, double hi, const std::string& tag) {
         std::ostringstream cut;
         cut << "sel_pass==1 && mm_pippimepem>=" << lo
             << " && mm_pippimepem<=" << hi;
-        if (cut2d) cut << " && cut2d_pass==1";
 
         std::ostringstream title;
-        title << "M_{#pi^{+}#pi^{-}e^{+}e^{-}} sel" << (cut2d ? "+cut_2d" : "")
+        title << "M_{#pi^{+}#pi^{-}e^{+}e^{-}} sel"
               << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
 
-        std::string suffix = tag + (cut2d ? "_cut2d" : "") + "_rec_exp";
+        std::string suffix = tag + "_rec_exp";
 
         TH1D *a, *c, *s;
         std::tie(a, c, s) = pu.drawSignal(
@@ -200,24 +150,18 @@ void pippimepem_spectra_rec_exp() {
         pu.save(cv, "m_pippimepem_slice_" + suffix);
 
         std::ostringstream lbl;
-        lbl << "M(pi+pi-e+e-) sel" << (cut2d ? "+cut_2d" : "")
+        lbl << "M(pi+pi-e+e-) sel"
             << ", MM in [" << lo << ", " << hi << "]";
         printIntegrals(lbl.str().c_str(), a, c, s);
     };
 
-    // Slice plots without 2D cut
+    // Slice plots
     drawSlice(2.0, 2.2, "20_22");
     drawSlice(2.2, 2.4, "22_24");
     drawSlice(2.4, 2.6, "24_26");
     drawSlice(2.6, 2.8, "26_28");
     drawSlice(2.8, 3.0, "28_30");
 
-    // Same slices, additionally with cut_2d
-    drawSlice(2.0, 2.2, "20_22", true);
-    drawSlice(2.2, 2.4, "22_24", true);
-    drawSlice(2.4, 2.6, "24_26", true);
-    drawSlice(2.6, 2.8, "26_28", true);
-    drawSlice(2.8, 3.0, "28_30", true);
 
     std::cout << "\nDone. Check plots/output/\n";
 }

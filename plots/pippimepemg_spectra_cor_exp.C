@@ -7,7 +7,7 @@
 //     Selection driven by pippimepemg_pass_narrow==1; the wide [0.10, 0.18] cut
 //     is also stored (pippimepemg_pass) for fallback / systematics.
 // Fields read from pippimepem_nt_cor: m_pippimepem, m_pippimepemg,
-// pippimepemg_pass_narrow, sel_pass, cut2d_pass, mm_pippimepem, mm_pippimepemg.
+// pippimepemg_pass_narrow, sel_pass, mm_pippimepem, mm_pippimepemg.
 //
 // Two sections:
 //   (A) OVERLAY — for each cut configuration, draw M(pippimepem) all/CB/signal and
@@ -159,36 +159,28 @@ void pippimepemg_spectra_cor_exp() {
 
     run("",                                 "M (no cut)",                                   "base",                  200);
     run("sel_pass==1",                      "M (after selection)",                          "selected",              200);
-    run("sel_pass==1 && cut2d_pass==1",     "M (after selection + cut_2d)",                 "selected_cut2d",        200);
 
     // Slice configurations — same MM(pippimepem) windows as the main macro
-    auto runSlice = [&](double lo, double hi, const std::string& tag_suffix, bool with_cut2d) {
+    auto runSlice = [&](double lo, double hi, const std::string& tag_suffix) {
         std::ostringstream cut;
         cut << "sel_pass==1 && mm_pippimepem>=" << lo
             << " && mm_pippimepem<=" << hi;
-        if (with_cut2d) cut << " && cut2d_pass==1";
 
         std::ostringstream title;
-        title << "M, sel" << (with_cut2d ? "+cut_2d" : "")
+        title << "M, sel"
               << ", MM #in [" << lo << ", " << hi << "] GeV/c^{2}";
 
-        std::string tag = "slice_" + tag_suffix + (with_cut2d ? "_cut2d" : "");
+        std::string tag = "slice_" + tag_suffix;
         run(cut.str(), title.str(), tag, 100);
     };
 
-    // Slices without cut_2d
-    runSlice(2.0, 2.2, "20_22", false);
-    runSlice(2.2, 2.4, "22_24", false);
-    runSlice(2.4, 2.6, "24_26", false);
-    runSlice(2.6, 2.8, "26_28", false);
-    runSlice(2.8, 3.0, "28_30", false);
+    // Slices
+    runSlice(2.0, 2.2, "20_22");
+    runSlice(2.2, 2.4, "22_24");
+    runSlice(2.4, 2.6, "24_26");
+    runSlice(2.6, 2.8, "26_28");
+    runSlice(2.8, 3.0, "28_30");
 
-    // Slices with cut_2d
-    runSlice(2.0, 2.2, "20_22", true);
-    runSlice(2.2, 2.4, "22_24", true);
-    runSlice(2.4, 2.6, "24_26", true);
-    runSlice(2.6, 2.8, "26_28", true);
-    runSlice(2.8, 3.0, "28_30", true);
 
     std::cout << "\nDone. Plots saved to plots/output/pippimepemg_*_cor_exp\n";
 }

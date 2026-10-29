@@ -72,22 +72,6 @@ inline void setupHistograms(Manager& mgr) {
                  "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel, MM in [2.8,3.0] GeV/c^{2};M [GeV/c^{2}];Counts",
                  100, 0.0, 2.0, "slices");
 
-    // Same slice histograms with the 2D graphical cut (cut_2d) additionally applied
-    mgr.create1D("mass_pippimepem_slice_20_22_cut2d",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d, MM in [2.0,2.2] GeV/c^{2};M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices");
-    mgr.create1D("mass_pippimepem_slice_22_24_cut2d",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d, MM in [2.2,2.4] GeV/c^{2};M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices");
-    mgr.create1D("mass_pippimepem_slice_24_26_cut2d",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d, MM in [2.4,2.6] GeV/c^{2};M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices");
-    mgr.create1D("mass_pippimepem_slice_26_28_cut2d",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d, MM in [2.6,2.8] GeV/c^{2};M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices");
-    mgr.create1D("mass_pippimepem_slice_28_30_cut2d",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d, MM in [2.8,3.0] GeV/c^{2};M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices");
 
     // Missing masses: MM(X) = beam + target - X
     mgr.create1D("mm_epem", "MM(e^{+}e^{-});MM(e^{+}e^{-}) [GeV/c^{2}];Counts",
@@ -106,23 +90,13 @@ inline void setupHistograms(Manager& mgr) {
                  "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} after selection;MM [GeV/c^{2}];M [GeV/c^{2}]",
                  1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses");
 
-    // Versions with the 2D graphical cut (cut_2d) applied
-    mgr.create1D("mm_epem_cut2d", "MM(e^{+}e^{-}) after cut_2d;MM(e^{+}e^{-}) [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses");
-    mgr.create1D("mm_pippim_cut2d", "MM(#pi^{+}#pi^{-}) after cut_2d;MM(#pi^{+}#pi^{-}) [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses");
-    mgr.create1D("mm_pippimepem_cut2d", "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d;MM(#pi^{+}#pi^{-}e^{+}e^{-}) [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses");
-    mgr.create2D("mm_vs_m_pippimepem_cut2d",
-                 "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} after cut_2d;MM [GeV/c^{2}];M [GeV/c^{2}]",
-                 1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses");
 
     // Opening angle and before/after OA cut mass spectra
     mgr.create1D("opening_angle", "e^{+}e^{-} opening angle;#theta_{open} [deg];Counts",
                  180, 0, 180, "dilepton");
     mgr.create1D("mass_ee_before_oa", "M_{ee} before OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
-    mgr.create1D("mass_ee_after_oa", "M_{ee} after OA cut;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+    mgr.create1D("mass_ee_after_oa", "M_{ee}, 2#circ #leq OA #leq 6#circ;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton");
 
     // Control histograms for the pippimepem_selection cut chain.
@@ -203,22 +177,6 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create1D("mass_pippimepem_slice_28_30_cor",
                  "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel cor, MM in [2.8,3.0];M [GeV/c^{2}];Counts",
                  100, 0.0, 2.0, "slices_cor");
-    // Same slices, additionally with cut_2d (CORRECTED)
-    mgr.create1D("mass_pippimepem_slice_20_22_cut2d_cor",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d cor, MM in [2.0,2.2];M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices_cor");
-    mgr.create1D("mass_pippimepem_slice_22_24_cut2d_cor",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d cor, MM in [2.2,2.4];M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices_cor");
-    mgr.create1D("mass_pippimepem_slice_24_26_cut2d_cor",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d cor, MM in [2.4,2.6];M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices_cor");
-    mgr.create1D("mass_pippimepem_slice_26_28_cut2d_cor",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d cor, MM in [2.6,2.8];M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices_cor");
-    mgr.create1D("mass_pippimepem_slice_28_30_cut2d_cor",
-                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) sel+cut_2d cor, MM in [2.8,3.0];M [GeV/c^{2}];Counts",
-                 100, 0.0, 2.0, "slices_cor");
 
     // Missing masses (CORRECTED)
     mgr.create1D("mm_epem_cor", "MM(e^{+}e^{-}) (cor);MM [GeV/c^{2}];Counts",
@@ -233,21 +191,12 @@ inline void setupHistograms(Manager& mgr) {
     mgr.create2D("mm_vs_m_pippimepem_selected_cor",
                  "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} after selection (cor);MM [GeV/c^{2}];M [GeV/c^{2}]",
                  1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses_cor");
-    mgr.create1D("mm_epem_cut2d_cor", "MM(e^{+}e^{-}) after cut_2d (cor);MM [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses_cor");
-    mgr.create1D("mm_pippim_cut2d_cor", "MM(#pi^{+}#pi^{-}) after cut_2d (cor);MM [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses_cor");
-    mgr.create1D("mm_pippimepem_cut2d_cor", "MM(#pi^{+}#pi^{-}e^{+}e^{-}) after cut_2d (cor);MM [GeV/c^{2}];Counts",
-                 200, 0.0, 4.0, "missing_masses_cor");
-    mgr.create2D("mm_vs_m_pippimepem_cut2d_cor",
-                 "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} after cut_2d (cor);MM [GeV/c^{2}];M [GeV/c^{2}]",
-                 1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses_cor");
 
     // Dilepton OA-cut spectra (CORRECTED). opening_angle itself is direction-only,
     // identical to RECONSTRUCTED, so it is NOT duplicated.
     mgr.create1D("mass_ee_before_oa_cor", "M_{ee} before OA cut (cor);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton_cor");
-    mgr.create1D("mass_ee_after_oa_cor", "M_{ee} after OA cut (cor);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+    mgr.create1D("mass_ee_after_oa_cor", "M_{ee}, 2#circ #leq OA #leq 6#circ (cor);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
                  200, 0.0, 1.0, "dilepton_cor");
 
     // CMS frame observables (CORRECTED)

@@ -54,7 +54,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             !cuts.passValueCut(trig_cut, reader["trigbit"])) return;
     }
 
-    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
+    // No start-detector requirement: the betanew productions reconstruct the
+    // relative time (beta_new) without START. start_iteration is only stored
+    // in the ntuples.
 
     // Create e+ and e- with reconstructed kinematics
     PParticle positron(MASS_ELECTRON, "e+");
@@ -178,22 +180,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     mgr.fill("mm_pippimepem_cor", mm_pippimepem_cor);
     mgr.fill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
 
-    // 2D graphical cut on (mm_pippimepem, m_pippimepem) — separate decisions for REC and COR
-    bool cut2d_pass     = cuts.passGraphicalCut("cut_2d", mm_pippimepem,     m_pippimepem);
-    bool cut2d_pass_cor = cuts.passGraphicalCut("cut_2d", mm_pippimepem_cor, m_pippimepem_cor);
-    if (cut2d_pass) {
-        mgr.fill("mm_epem_cut2d", mm_epem);
-        mgr.fill("mm_pippim_cut2d", mm_pippim);
-        mgr.fill("mm_pippimepem_cut2d", mm_pippimepem);
-        mgr.fill("mm_vs_m_pippimepem_cut2d", mm_pippimepem, m_pippimepem);
-    }
-    if (cut2d_pass_cor) {
-        mgr.fill("mm_epem_cut2d_cor", mm_epem_cor);
-        mgr.fill("mm_pippim_cut2d_cor", mm_pippim_cor);
-        mgr.fill("mm_pippimepem_cut2d_cor", mm_pippimepem_cor);
-        mgr.fill("mm_vs_m_pippimepem_cut2d_cor", mm_pippimepem_cor, m_pippimepem_cor);
-    }
-
     // Boost compound systems to beam-target CMS frame.
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
@@ -257,15 +243,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26", m_pippimepem);
         if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28", m_pippimepem);
         if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30", m_pippimepem);
-
-        // Same slices, additionally requiring cut_2d
-        if (cut2d_pass) {
-            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28_cut2d", m_pippimepem);
-            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30_cut2d", m_pippimepem);
-        }
     }
 
     // === CORRECTED selection block (mirror of the above, using *_cor values) ===
@@ -278,14 +255,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
         if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
         if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
-
-        if (cut2d_pass_cor) {
-            if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cut2d_cor", m_pippimepem_cor);
-            if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cut2d_cor", m_pippimepem_cor);
-        }
     }
 
     // === ETA / f1 candidates from ECAL (REC + COR) ===============================
@@ -381,9 +350,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         }
     }
 
-    // Fill pi+pi-e+e- ntuple (before OA cut, store cut decision as flag)
-    // opening_angle_4 is the ACTIVE cut; opening_angle_9 is kept defined for future use.
-    bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
+    // Fill pi+pi-e+e- ntuple (no OA cut applied; the decision is stored as a flag)
+    // oa_pass: 2 deg <= OA(e+e-) <= 6 deg (opening_angle_2_6).
+    bool oa_pass = cuts.passRangeCut("opening_angle_2_6", oa);
 
     auto& nt = mgr.getDynamicNtuple("pippimepem_nt");
 
@@ -393,6 +362,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["ep_phi"] = positron.phi();
     nt["ep_theta_rich"] = reader["ep_theta_rich"];
     nt["ep_phi_rich"] = reader["ep_phi_rich"];
+    nt["ep_beta_new"] = reader["ep_beta_new"];
 
     nt["em_p_rec"] = em_p_rec;
     nt["em_p_cor"] = em_p_cor;
@@ -400,16 +370,21 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["em_phi"] = electron.phi();
     nt["em_theta_rich"] = reader["em_theta_rich"];
     nt["em_phi_rich"] = reader["em_phi_rich"];
+    nt["em_beta_new"] = reader["em_beta_new"];
 
     nt["pip_p_rec"] = pip_p_rec;
     nt["pip_p_cor"] = pip_p_cor;
     nt["pip_theta"] = piplus.theta();
     nt["pip_phi"] = piplus.phi();
+    nt["pip_beta_new"] = reader["pip_beta_new"];
 
     nt["pim_p_rec"] = pim_p_rec;
     nt["pim_p_cor"] = pim_p_cor;
     nt["pim_theta"] = piminus.theta();
     nt["pim_phi"] = piminus.phi();
+    nt["pim_beta_new"] = reader["pim_beta_new"];
+
+    nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
 
     nt["oa"] = oa;
 
@@ -428,9 +403,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["pt"] = pt;
     nt["theta_cms"] = theta_cms;
 
-    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;       // opening_angle_4 decision
+    nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;       // 2 <= OA <= 6 deg decision
     nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // pippimepem_selection chain decision
-    nt["cut2d_pass"] = cut2d_pass ? 1.0f : 0.0f; // TCutG cut_2d on (MM, M) of pi+pi-e+e-
 
     // ECAL-derived eta / f1 fields — RECONSTRUCTED.
     //   mult==1: shared compound M(pi+pi-e+e-gamma); pi0 vs eta window flags
@@ -458,6 +432,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["ep_phi"] = positron.phi();
     nt_cor["ep_theta_rich"] = reader["ep_theta_rich"];
     nt_cor["ep_phi_rich"] = reader["ep_phi_rich"];
+    nt_cor["ep_beta_new"] = reader["ep_beta_new"];
 
     nt_cor["em_p_rec"] = em_p_rec;
     nt_cor["em_p_cor"] = em_p_cor;
@@ -465,16 +440,21 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["em_phi"] = electron.phi();
     nt_cor["em_theta_rich"] = reader["em_theta_rich"];
     nt_cor["em_phi_rich"] = reader["em_phi_rich"];
+    nt_cor["em_beta_new"] = reader["em_beta_new"];
 
     nt_cor["pip_p_rec"] = pip_p_rec;
     nt_cor["pip_p_cor"] = pip_p_cor;
     nt_cor["pip_theta"] = piplus.theta();
     nt_cor["pip_phi"] = piplus.phi();
+    nt_cor["pip_beta_new"] = reader["pip_beta_new"];
 
     nt_cor["pim_p_rec"] = pim_p_rec;
     nt_cor["pim_p_cor"] = pim_p_cor;
     nt_cor["pim_theta"] = piminus.theta();
     nt_cor["pim_phi"] = piminus.phi();
+    nt_cor["pim_beta_new"] = reader["pim_beta_new"];
+
+    nt_cor["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
 
     nt_cor["oa"] = oa;  // single-pair OA is direction-only — same as REC
 
@@ -496,7 +476,6 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     nt_cor["oa_pass"] = oa_pass ? 1.0f : 0.0f;             // OA single-pair: same decision
     nt_cor["sel_pass"] = sel_pass_cor ? 1.0f : 0.0f;       // CORRECTED selection chain
-    nt_cor["cut2d_pass"] = cut2d_pass_cor ? 1.0f : 0.0f;   // CORRECTED cut_2d
 
     // ECAL-derived eta / f1 fields — CORRECTED.
     //   mult==1: shared compound M(pi+pi-e+e-gamma); two flags select interpretation
@@ -516,10 +495,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     nt_cor.fill();
 
-    // Apply opening angle cut (reject close pairs)
-    // if (!oa_pass) return;
+    // No OA cut on the event: only the 2-6 deg window spectrum is filled separately
     if (oa_pass) {
-    // Still fill histograms for failed OA cut for comparison
         mgr.fill("mass_ee_after_oa", m_ee);
         mgr.fill("mass_ee_after_oa_cor", m_ee_cor);
     }
@@ -541,6 +518,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
         int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+        // PAT stores -100 when there is no ECAL cluster; clamp before reserve()
+        if (neutr_mult < 0) neutr_mult = 0;
 
         std::vector<PParticleEcal> ecal_objects;
         ecal_objects.reserve(neutr_mult);
@@ -659,6 +638,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Forward Tracker objects (forward hadrons, up to 3 hits)
     if (config.isFwdEnabled()) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
+        // PAT stores -100 when there is no FwDet track; clamp before reserve()
+        if (fwdet_mult < 0) fwdet_mult = 0;
 
         std::vector<PParticleFwd> fwd_objects;
         fwd_objects.reserve(fwdet_mult);

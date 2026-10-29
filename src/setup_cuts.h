@@ -30,17 +30,12 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
     cuts.defineValueCut("trigger_PT2", 4096, "Trigger PT2 (trigbit == 4096, downscale 64)");
 
-    // Start detector (LGAD) — defined as a cut set so future iteration/timing
-    // conditions can be appended without changing the call site.
-    // Only the first iteration (start_iteration == 3) is required for now.
-    cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
-        .addValueCut("start_iteration", 3.0, "start_iteration == 3");
+    // No start-detector (LGAD) requirement: the betanew productions use the
+    // relative-time reconstruction (beta_new); start_iteration is only stored.
 
-    // Opening angle cuts (reject close e+e- pairs)
-    // opening_angle_4 is the ACTIVE cut applied in data.
-    // opening_angle_9 is defined but not applied (kept for future studies).
-    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (active)");
-    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (for future use)");
+    // Opening angle window of the e+e- pair. Not applied as an event cut —
+    // stored as the oa_pass flag in the ntuples.
+    cuts.defineRangeCut("opening_angle_2_6", 2.0, 6.0, "2 deg <= OA(e+e-) <= 6 deg (oa_pass)");
 
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
@@ -62,10 +57,6 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineRangeCut("mm_slice_24_26", 2.4, 2.6, "MM(pi+pi-e+e-) in [2.4, 2.6] GeV/c^2");
     cuts.defineRangeCut("mm_slice_26_28", 2.6, 2.8, "MM(pi+pi-e+e-) in [2.6, 2.8] GeV/c^2");
     cuts.defineRangeCut("mm_slice_28_30", 2.8, 3.0, "MM(pi+pi-e+e-) in [2.8, 3.0] GeV/c^2");
-
-    // 2D graphical cut on (MM, M) of pi+pi-e+e- — loaded from ROOT file
-    cuts.loadGraphicalCut("cut_2d", "cuts/cut_2d.root", "cut_2d",
-                          "TCutG on (mm_pippimepem, m_pippimepem)");
 
     // pi0 invariant-mass windows for the e+e-gamma Dalitz hypothesis.
     // Two variants:

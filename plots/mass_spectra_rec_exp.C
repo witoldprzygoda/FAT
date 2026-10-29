@@ -1,4 +1,4 @@
-// mass_spectra_rec_exp.C — Dilepton invariant mass: no OA cut vs OA > 9 deg (RECONSTRUCTED, exp data)
+// mass_spectra_rec_exp.C — Dilepton invariant mass: no OA cut vs 2 <= OA <= 6 deg (oa_pass) (RECONSTRUCTED, exp data)
 // Usage: root -l -b -q plots/mass_spectra_rec_exp.C
 
 #include "PlotUtils.h"
@@ -46,19 +46,19 @@ void mass_spectra_rec_exp() {
     double ymax = all1->GetMaximum();
     double ymin = all1->GetMinimum();
 
-    // --- 2. Mass spectrum with OA > 9 deg cut (same Y range) ---
+    // --- 2. Mass spectrum in the 2-6 deg OA window, oa_pass==1 (same Y range) ---
     TH1D *all2, *cb2, *sig2;
     std::tie(all2, cb2, sig2) = pu.drawSignal("pippimepem_nt", "m_ee",
-                                              160, 0, 0.8, "oa>9",
+                                              160, 0, 0.8, "oa_pass==1",
                                               ";M_{e^{+}e^{-}} [GeV/c^{2}];Counts");
     auto* c2 = pu.drawTriple(all2, cb2, sig2,
-                             "M_{e^{+}e^{-}} (OA > 9#circ)", "c_mass_oa9",
+                             "M_{e^{+}e^{-}} (2#circ #leq OA #leq 6#circ)", "c_mass_oa2_6",
                              /*logy=*/true);
     all2->SetMaximum(ymax);
     all2->SetMinimum(ymin);
     c2->Update();
-    pu.save(c2, "mass_ee_oa9_rec_exp");
-    printIntegrals("OA > 9 deg", all2, cb2, sig2);
+    pu.save(c2, "mass_ee_oa2_6_rec_exp");
+    printIntegrals("2 <= OA <= 6 deg", all2, cb2, sig2);
 
     std::cout << "\nDone. Check plots/output/\n";
 }
