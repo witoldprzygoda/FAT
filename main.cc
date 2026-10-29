@@ -565,6 +565,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 ecal_nt["ecal_tof" + suffix] = obj.ecal_tof;
                 ecal_nt["ecal_r" + suffix] = obj.ecal_r;
                 ecal_nt["ecal_z" + suffix] = obj.ecal_z;
+            } else {
+                // Absent hit: still write every column (as -1), so ntuples from
+                // separate run_parallel chunks have identical columns for hadd.
+                for (const char* name : {"ecal_pass", "cluster_energy", "cluster_theta",
+                                         "cluster_phi", "ecal_beta", "ecal_pid",
+                                         "ecal_energy", "ecal_theta", "ecal_phi",
+                                         "ecal_chi2", "ecal_tof", "ecal_r", "ecal_z"}) {
+                    ecal_nt[name + suffix] = -1.0f;
+                }
             }
         };
 
@@ -675,6 +684,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 fwd_nt["fwd_r" + suffix] = obj.fwd_r;
                 fwd_nt["fwd_z" + suffix] = obj.fwd_z;
                 fwd_nt["fwd_distToRpc" + suffix] = obj.fwd_distToRpc;
+            } else {
+                // Absent hit: write every column as -1 (same reason as in ecal_nt)
+                for (const char* name : {"fwd_p", "fwd_theta", "fwd_phi", "fwd_beta",
+                                         "fwd_mass", "fwd_mass2", "fwd_charge",
+                                         "fwd_chi2", "fwd_ndf", "fwd_chi2ndf",
+                                         "fwd_r", "fwd_z", "fwd_distToRpc"}) {
+                    fwd_nt[name + suffix] = -1.0f;
+                }
             }
         };
 
