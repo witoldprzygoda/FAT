@@ -72,8 +72,8 @@ constexpr double kXmax = 1.4;
 constexpr double kTrigCorr = 63.0;
 
 // Trigger bit cuts (EXP) — NO additional selection.
-constexpr const char* kCutPT3 = "trigbit==8192";
-constexpr const char* kCutPT2 = "trigbit==4096";
+std::string kCutPT3 = "trigbit==8192";   // extended by " && isBest==1" when best_only
+std::string kCutPT2 = "trigbit==4096";
 
 // MID-only pol0 fit range.
 constexpr double kMdLo = 0.14;
@@ -248,7 +248,14 @@ void styleHist(TH1D* h, Color_t c, Style_t m) {
 
 }  // anonymous namespace
 
-void mass_ee_pt_ratio_betanew() {
+void mass_ee_pt_ratio_betanew(bool best_only = false) {
+    // best_only=false: all e+e- combinations (standard like-sign CB scheme);
+    // best_only=true : one best pair per event and hypothesis (isBest==1).
+    if (best_only) {
+        kCutPT3 += " && isBest==1";
+        kCutPT2 += " && isBest==1";
+    }
+    const std::string scheme_suffix = best_only ? "_best" : "";
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
     gStyle->SetPadTickX(1);
@@ -303,12 +310,12 @@ void mass_ee_pt_ratio_betanew() {
     gSystem->mkdir("plots/output", true);
 
     // ---------- Build raw mass histograms per trigger ----------
-    TH1D* h_epem_PT3 = drawWithCut(t_em, "m_ee", kCutPT3, "h_epem_PT3");
-    TH1D* h_epem_PT2 = drawWithCut(t_em, "m_ee", kCutPT2, "h_epem_PT2");
-    TH1D* h_epep_PT3 = drawWithCut(t_pp, "m_ee", kCutPT3, "h_epep_PT3");
-    TH1D* h_epep_PT2 = drawWithCut(t_pp, "m_ee", kCutPT2, "h_epep_PT2");
-    TH1D* h_emem_PT3 = drawWithCut(t_mm, "m_ee", kCutPT3, "h_emem_PT3");
-    TH1D* h_emem_PT2 = drawWithCut(t_mm, "m_ee", kCutPT2, "h_emem_PT2");
+    TH1D* h_epem_PT3 = drawWithCut(t_em, "m_ee", kCutPT3.c_str(), "h_epem_PT3");
+    TH1D* h_epem_PT2 = drawWithCut(t_em, "m_ee", kCutPT2.c_str(), "h_epem_PT2");
+    TH1D* h_epep_PT3 = drawWithCut(t_pp, "m_ee", kCutPT3.c_str(), "h_epep_PT3");
+    TH1D* h_epep_PT2 = drawWithCut(t_pp, "m_ee", kCutPT2.c_str(), "h_epep_PT2");
+    TH1D* h_emem_PT3 = drawWithCut(t_mm, "m_ee", kCutPT3.c_str(), "h_emem_PT3");
+    TH1D* h_emem_PT2 = drawWithCut(t_mm, "m_ee", kCutPT2.c_str(), "h_emem_PT2");
 
     std::cout << "Raw yields:\n";
     std::cout << "  PT3: epem=" << h_epem_PT3->Integral()
@@ -632,7 +639,7 @@ void mass_ee_pt_ratio_betanew() {
              kHighLo, kXmax, mean_high, sig_high));
 
     // ---------- Save ----------
-    const std::string base = "plots/output/mass_ee_pt_ratio_betanew";
+    const std::string base = "plots/output/mass_ee_pt_ratio_betanew" + scheme_suffix;
     c->SaveAs((base + ".pdf").c_str());
     c->SaveAs((base + ".png").c_str());
     std::cout << "\nSaved: " << base << ".{pdf,png}\n";

@@ -89,7 +89,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // by Manager::setEventTriggerType. Every dynamic ntuple receives BOTH
     // PT3 and PT2 rows, distinguished by the `trigbit` branch (8192 = PT3,
     // 4096 = PT2) stamped automatically inside setEventTriggerType.
-    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
+    // No isBest requirement: every combination is kept and isBest is stored
+    // in dilepton_nt, so both schemes (best pair per event / all pairs) can
+    // be compared and the like-sign CB estimator checked from one output.
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
     // No start-detector requirement: the betanew productions reconstruct the
     // relative time (beta_new) without START. start_iteration is only stored.
@@ -196,6 +198,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["ep_beta_new"]   = reader["ep_beta_new"];
         nt["em_beta_new"]   = reader["em_beta_new"];
         nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+
+        // Event identity and lepton multiplicities: isBest selection offline,
+        // event mixing and k-factor, per-event pair counting.
+        nt["isBest"]        = reader["isBest"];
+        nt["runnumber"]     = reader["runnumber"];
+        nt["event"]         = reader["event"];
+        nt["lpos_mult"]     = reader["lpos_mult"];
+        nt["lneg_mult"]     = reader["lneg_mult"];
 
         nt["oa"]            = oa;
         nt["m_ee"]          = m_ee_v;

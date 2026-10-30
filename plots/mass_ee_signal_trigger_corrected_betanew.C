@@ -43,8 +43,8 @@ constexpr const char* kFilePp = "output_epep_exp.root";
 constexpr const char* kFileMm = "output_emem_exp.root";
 constexpr const char* kTree   = "dilepton_nt";
 
-constexpr const char* kCutPT3 = "trigbit==8192";
-constexpr const char* kCutPT2 = "trigbit==4096";
+std::string kCutPT3 = "trigbit==8192";   // extended by " && isBest==1" when best_only
+std::string kCutPT2 = "trigbit==4096";
 
 constexpr double kTrigCorr = 63.0;
 
@@ -208,7 +208,14 @@ double sumByCenter(TH1D* h, double xlo, double xhi) {
 
 }  // anonymous namespace
 
-void mass_ee_signal_trigger_corrected_betanew() {
+void mass_ee_signal_trigger_corrected_betanew(bool best_only = false) {
+    // best_only=false: all e+e- combinations (standard like-sign CB scheme);
+    // best_only=true : one best pair per event and hypothesis (isBest==1).
+    if (best_only) {
+        kCutPT3 += " && isBest==1";
+        kCutPT2 += " && isBest==1";
+    }
+    const std::string scheme_suffix = best_only ? "_best" : "";
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
     gStyle->SetPadTickX(1);
@@ -251,9 +258,9 @@ void mass_ee_signal_trigger_corrected_betanew() {
     // =====================================================================
     std::cout << "============ SECTION A: fine-binned PT3 signal ============\n";
 
-    TH1D* h_pt3_epem = drawFine(t_em, kCutPT3, "h_pt3_epem");
-    TH1D* h_pt3_epep = drawFine(t_pp, kCutPT3, "h_pt3_epep");
-    TH1D* h_pt3_emem = drawFine(t_mm, kCutPT3, "h_pt3_emem");
+    TH1D* h_pt3_epem = drawFine(t_em, kCutPT3.c_str(), "h_pt3_epem");
+    TH1D* h_pt3_epep = drawFine(t_pp, kCutPT3.c_str(), "h_pt3_epep");
+    TH1D* h_pt3_emem = drawFine(t_mm, kCutPT3.c_str(), "h_pt3_emem");
 
     TH1D* h_pt3_cb     = makeCB(h_pt3_epep, h_pt3_emem, "h_pt3_cb");
     TH1D* h_pt3_signal = makeSignal(h_pt3_epem, h_pt3_cb, "h_pt3_signal");
@@ -270,12 +277,12 @@ void mass_ee_signal_trigger_corrected_betanew() {
     // =====================================================================
     std::cout << "\n========== SECTION B: sparse ratio + pol0 MID fit =========\n";
 
-    TH1D* h_sp_em_PT3 = drawSparse(t_em, kCutPT3, "h_sp_em_PT3");
-    TH1D* h_sp_em_PT2 = drawSparse(t_em, kCutPT2, "h_sp_em_PT2");
-    TH1D* h_sp_pp_PT3 = drawSparse(t_pp, kCutPT3, "h_sp_pp_PT3");
-    TH1D* h_sp_pp_PT2 = drawSparse(t_pp, kCutPT2, "h_sp_pp_PT2");
-    TH1D* h_sp_mm_PT3 = drawSparse(t_mm, kCutPT3, "h_sp_mm_PT3");
-    TH1D* h_sp_mm_PT2 = drawSparse(t_mm, kCutPT2, "h_sp_mm_PT2");
+    TH1D* h_sp_em_PT3 = drawSparse(t_em, kCutPT3.c_str(), "h_sp_em_PT3");
+    TH1D* h_sp_em_PT2 = drawSparse(t_em, kCutPT2.c_str(), "h_sp_em_PT2");
+    TH1D* h_sp_pp_PT3 = drawSparse(t_pp, kCutPT3.c_str(), "h_sp_pp_PT3");
+    TH1D* h_sp_pp_PT2 = drawSparse(t_pp, kCutPT2.c_str(), "h_sp_pp_PT2");
+    TH1D* h_sp_mm_PT3 = drawSparse(t_mm, kCutPT3.c_str(), "h_sp_mm_PT3");
+    TH1D* h_sp_mm_PT2 = drawSparse(t_mm, kCutPT2.c_str(), "h_sp_mm_PT2");
 
     TH1D* h_sp_cb_PT3  = makeCB(h_sp_pp_PT3, h_sp_mm_PT3, "h_sp_cb_PT3");
     TH1D* h_sp_cb_PT2  = makeCB(h_sp_pp_PT2, h_sp_mm_PT2, "h_sp_cb_PT2");
@@ -461,7 +468,7 @@ void mass_ee_signal_trigger_corrected_betanew() {
     leg->Draw();
 
     // ---------- Save ----------
-    const std::string base = "plots/output/mass_ee_signal_trigger_corrected_betanew";
+    const std::string base = "plots/output/mass_ee_signal_trigger_corrected_betanew" + scheme_suffix;
     c->SaveAs((base + ".pdf").c_str());
     c->SaveAs((base + ".png").c_str());
     std::cout << "\nSaved: " << base << ".{pdf,png}\n";

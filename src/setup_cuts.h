@@ -21,8 +21,8 @@
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
-    // Event-level cuts (applied before particle creation)
-    cuts.defineValueCut("isBest", 1, "Best candidate selection");
+    // Event-level cuts (applied before particle creation).
+    // No isBest cut: all combinations are kept, isBest is stored in the ntuples.
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
     // Trigger: PT3 only (trigbit == 8192). PT2 (trigbit == 4096) is defined
