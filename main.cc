@@ -199,13 +199,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_beta_new"]   = reader["em_beta_new"];
         nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
 
-        // Event identity and lepton multiplicities: isBest selection offline,
-        // event mixing and k-factor, per-event pair counting.
+        // Event identity: isBest selection offline, event mixing / k-factor.
+        // Lepton multiplicities after selection are NOT taken from PAT
+        // (lpos_mult/lneg_mult are counted before the correlation window,
+        // PID and the relative-time reconstruction); derive them offline by
+        // grouping dilepton_nt rows by (runnumber, event) and counting the
+        // distinct e+ / e- legs.
         nt["isBest"]        = reader["isBest"];
         nt["runnumber"]     = reader["runnumber"];
         nt["event"]         = reader["event"];
-        nt["lpos_mult"]     = reader["lpos_mult"];
-        nt["lneg_mult"]     = reader["lneg_mult"];
 
         nt["oa"]            = oa;
         nt["m_ee"]          = m_ee_v;
