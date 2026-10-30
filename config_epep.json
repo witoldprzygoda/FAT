@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "/home/damian/hdd1/HADES/pp45/exp/gen4/epem_innermdc.list",
+        "source": "/hdd3/przygoda/HADES/files/exp/gen4/lep_betanew.list",
         "tree_name": "EpEp_ID",
         "channel": "EpEp",
         "lepton_prefixes": ["ep1", "ep2"],

@@ -91,7 +91,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // 4096 = PT2) stamped automatically inside setEventTriggerType.
     if (!cuts.passValueCut("isBest", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
-    if (!cuts.passCutSet("start_detector", { reader["start_iteration"] })) return;
+    // No start-detector requirement: the betanew productions reconstruct the
+    // relative time (beta_new) without START. start_iteration is only stored.
 
     // Create e+ and e- with reconstructed kinematics
     PParticle positron(MASS_ELECTRON, "e+");
@@ -154,9 +155,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt_cor = dilepton_cms.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = dilepton_cms.theta(KinematicType::CORRECTED);
 
-    // Fill dilepton ntuple (before OA cut, store cut decision as flag).
-    // OA > 4 deg is the active analysis selection.
-    bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
+    // Opening-angle decisions stored as flags (no event is rejected here).
+    // oa_pass keeps its old meaning (OA > 4 deg) for the existing macros.
+    bool oa_pass_2 = cuts.passMinCut("opening_angle_2", oa);
+    bool oa_pass_4 = cuts.passMinCut("opening_angle_4", oa);
+    bool oa_pass_9 = cuts.passMinCut("opening_angle_9", oa);
+    bool oa_pass   = oa_pass_4;
 
     // Per-event PT3 trigger-bias segment lookup. Identifies which
     // calibration segment the current (file, local_event_idx) belongs to,
@@ -189,6 +193,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_theta_rich"] = reader["em_theta_rich"];
         nt["em_phi_rich"]   = reader["em_phi_rich"];
 
+        nt["ep_beta_new"]   = reader["ep_beta_new"];
+        nt["em_beta_new"]   = reader["em_beta_new"];
+        nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+
         nt["oa"]            = oa;
         nt["m_ee"]          = m_ee_v;
 
@@ -196,7 +204,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["pt"]            = pt_v;
         nt["theta_cms"]     = theta_v;
 
-        nt["oa_pass"]       = oa_pass ? 1.0f : 0.0f;
+        nt["oa_pass"]       = oa_pass   ? 1.0f : 0.0f;   // == oa_pass_4
+        nt["oa_pass_2"]     = oa_pass_2 ? 1.0f : 0.0f;
+        nt["oa_pass_4"]     = oa_pass_4 ? 1.0f : 0.0f;
+        nt["oa_pass_9"]     = oa_pass_9 ? 1.0f : 0.0f;
 
         // RICH ring quality parameters per leg — for ring-quality scan studies
         // (trigger-correction factor / efficiency vs ring-quality threshold).
@@ -255,6 +266,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
         int neutr_mult = static_cast<int>(reader["neutr_mult"]);
+        // PAT stores -100 when there is no ECAL cluster; clamp before reserve()
+        if (neutr_mult < 0) neutr_mult = 0;
 
         std::vector<PParticleEcal> ecal_objects;
         ecal_objects.reserve(neutr_mult);
@@ -307,6 +320,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 ecal_nt["ecal_tof" + suffix] = obj.ecal_tof;
                 ecal_nt["ecal_r" + suffix] = obj.ecal_r;
                 ecal_nt["ecal_z" + suffix] = obj.ecal_z;
+            } else {
+                // Absent hit: still write every column (as -1), so ntuples from
+                // separate run_parallel chunks have identical columns for hadd.
+                for (const char* name : {"ecal_pass", "cluster_energy", "cluster_theta",
+                                         "cluster_phi", "ecal_beta", "ecal_pid",
+                                         "ecal_energy", "ecal_theta", "ecal_phi",
+                                         "ecal_chi2", "ecal_tof", "ecal_r", "ecal_z"}) {
+                    ecal_nt[name + suffix] = -1.0f;
+                }
             }
         };
 
@@ -587,6 +609,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // the `trigbit` branch (8192 / 4096) stamped automatically.
     if (config.isFwdEnabled()) {
         int fwdet_mult = static_cast<int>(reader["fwdet_mult"]);
+        // PAT stores -100 when there is no FwDet track; clamp before reserve()
+        if (fwdet_mult < 0) fwdet_mult = 0;
 
         std::vector<PParticleFwd> fwd_objects;
         fwd_objects.reserve(fwdet_mult);
@@ -622,6 +646,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 fwd_nt["fwd_r" + suffix] = obj.fwd_r;
                 fwd_nt["fwd_z" + suffix] = obj.fwd_z;
                 fwd_nt["fwd_distToRpc" + suffix] = obj.fwd_distToRpc;
+            } else {
+                // Absent hit: write every column as -1 (same reason as in ecal_nt)
+                for (const char* name : {"fwd_p", "fwd_theta", "fwd_phi", "fwd_beta",
+                                         "fwd_mass", "fwd_mass2", "fwd_charge",
+                                         "fwd_chi2", "fwd_ndf", "fwd_chi2ndf",
+                                         "fwd_r", "fwd_z", "fwd_distToRpc"}) {
+                    fwd_nt[name + suffix] = -1.0f;
+                }
             }
         };
 

@@ -30,14 +30,14 @@ inline void setupCuts(CutManager& cuts) {
     cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
     cuts.defineValueCut("trigger_PT2", 4096, "Trigger PT2 (trigbit == 4096, downscale 64)");
 
-    // Start detector (LGAD) — defined as a cut set so future iteration/timing
-    // conditions can be appended without changing the call site.
-    // Only the first iteration (start_iteration == 3) is required for now.
-    cuts.defineCutSet("start_detector", "Start detector (LGAD) response")
-        .addValueCut("start_iteration", 3.0, "start_iteration == 3");
+    // No start-detector (LGAD) requirement: the betanew productions use the
+    // relative-time reconstruction (beta_new); start_iteration is only stored.
 
-    // Opening angle cut: reject close e+e- pairs (active analysis selection).
-    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (active)");
+    // Opening angle thresholds. None of them rejects events: each decision is
+    // stored in dilepton_nt as oa_pass_2 / oa_pass_4 / oa_pass_9 (oa_pass == oa_pass_4).
+    cuts.defineMinCut("opening_angle_2", 2.0, "Opening angle > 2 deg (flag)");
+    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (flag, oa_pass)");
+    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (flag)");
 
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
