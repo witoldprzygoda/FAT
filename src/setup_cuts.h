@@ -21,17 +21,19 @@
 inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
-    // Event-level cuts (applied before particle creation).
-    // Simulation: trigger_PT3 and start_detector cuts are NOT applied because
-    // SMASH-generated events have no trigger word and no LGAD response.
-    cuts.defineValueCut("isBest", 1, "Best candidate selection");
+    // Event-level cuts (applied before particle creation), as in the exp
+    // betanew analysis. No isBest == 1 cut: all combinations are kept and
+    // isBest is stored; only inactive hypotheses (isBest = -1, not written by
+    // the betanew PAT productions) are dropped. No trigger and no
+    // start-detector cut: sim has no START, trigger flags are stored.
+    cuts.defineMinCut("isBest_written", -0.5, "isBest >= 0 (active hypothesis)");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
-    // Opening angle cuts (reject close e+e- pairs).
-    // opening_angle_4 is the ACTIVE cut applied in data.
-    // opening_angle_9 is defined but not applied (kept for future studies).
-    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (active)");
-    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (for future use)");
+    // Opening angle thresholds. None of them rejects events: each decision is
+    // stored in dilepton_nt as oa_pass_2 / oa_pass_4 / oa_pass_9 (oa_pass == oa_pass_4).
+    cuts.defineMinCut("opening_angle_2", 2.0, "Opening angle > 2 deg (flag)");
+    cuts.defineMinCut("opening_angle_4", 4.0, "Opening angle > 4 deg (flag, oa_pass)");
+    cuts.defineMinCut("opening_angle_9", 9.0, "Opening angle > 9 deg (flag)");
 
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")

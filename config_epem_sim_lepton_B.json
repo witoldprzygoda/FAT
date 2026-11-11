@@ -1,0 +1,34 @@
+{
+    "input": {
+        "source": "/hdd3/przygoda/HADES/files/sim/smash_lepton_default_B.list",
+        "tree_name": "EpEm_ID",
+        "channel": "EpEm",
+        "lepton_prefixes": [
+            "ep",
+            "em"
+        ],
+        "start_event": 0,
+        "max_events": 0
+    },
+    "output": {
+        "filename": "/hdd3/przygoda/HADES/FAT_out/sim/output_epem_sim_lepton_jun26_B.root",
+        "option": "RECREATE",
+        "keep_intermediate_tree": false,
+        "missing_value": -1.0
+    },
+    "beam": {
+        "kinetic_energy": 4500.0,
+        "luminosity": 1.0
+    },
+    "kinematics": {
+        "reconstructed": true,
+        "corrected": true,
+        "simulated": true,
+        "analysis_type": "reconstructed"
+    },
+    "fwdet": true,
+    "ecal": true,
+    "simulation": {
+        "use_genweight": true
+    }
+}

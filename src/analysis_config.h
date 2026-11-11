@@ -701,6 +701,20 @@ public:
     bool isEcalEnabled() const {
         return config_["ecal"].asBool(false);
     }
+
+    // ========================================================================
+    // Simulation Configuration
+    // ========================================================================
+
+    /**
+     * @brief Use the SMASH generator weight (ep_sim_genweight) in histogram fills
+     * @return true for weighted (lepton-enriched) productions (default);
+     *         false for productions without weights ("standard" SMASH), where
+     *         every fill then has weight 1
+     */
+    bool useGenWeight() const {
+        return config_["simulation"]["use_genweight"].asBool(true);
+    }
     
     // ========================================================================
     // Cut Configuration

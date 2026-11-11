@@ -3,7 +3,12 @@
 // ========================================================================
 // e+e- dilepton analysis for HADES SMASH simulation (pp @ 4.5 GeV).
 // Processes lepton pairs, ECAL photons, and Forward Tracker hadrons.
-// EpEm channel only — like-sign CB extraction is not applicable to sim.
+// EpEm channel only: the SMASH PAT outputs contain no EpEp_ID / EmEm_ID
+// trees, so the like-sign CB cannot be built from simulation.
+//
+// Event selection follows the exp betanew analysis on pp45_epem: vertex cut,
+// all e+e- combinations kept with isBest as a column, no START requirement,
+// opening-angle thresholds 2/4/9 deg stored as flags only.
 //
 // Per-event SMASH luminosity weight (ep_sim_genweight) is applied to every
 // histogram fill (fillw) and stored on the output ntuples for plotting macros.
@@ -43,19 +48,24 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
     // ========================================================================
-    // NO HARD CUTS — every reconstructed e⁺e⁻ candidate is propagated to the
-    // dilepton ntuples with the cut INPUT VALUES carried as fields. The user
-    // applies the desired selection at TTree::Draw time via weight strings:
-    //   (isBest==1) * (eVertReco_z>-500) *                          ← quality
-    //   (ep_sim_id==2) * (em_sim_id==3) *                           ← PID purity
-    //   (ep_sim_geninfo2==em_sim_geninfo2) *                        ← same vertex
-    // This makes the gate thresholds adjustable per study without re-running
-    // the analysis. Drawback: the dilepton ntuples grow significantly because
-    // fake e⁺e⁻ candidates (misidentified hadrons, multi-pair combinations,
-    // low-quality tracks) are no longer filtered out at fill time.
+    // Event-level selection — the same sample definition as the exp betanew
+    // analysis (pp45_epem):
+    //   * eVertReco_z > -500 mm: reactions must come from the target; rows
+    //     without a reconstructed vertex are rejected (start of the selection).
+    //   * isBest >= 0: the betanew PAT productions do not write inactive
+    //     hypotheses (isBest = -1); the SMASH productions still do, so they
+    //     are dropped here.
+    //   * NO isBest == 1 requirement: every e+e- combination is written and
+    //     isBest is a column (best-pair and all-pairs schemes from one output).
+    //   * NO trigger and NO start-detector requirement: sim has no START;
+    //     the trigger flags pt3 / pt2 are stamped on every row by Manager.
+    // Everything else is stored as columns and applied at plot time, e.g.
+    //   (isBest==1) * (ep_sim_id==2) * (em_sim_id==3) * (oa_pass_4==1)
     // ========================================================================
     const float v_isBest     = reader["isBest"];
     const float v_vertReco_z = reader["eVertReco_z"];
+    if (!cuts.passMinCut("isBest_written", v_isBest)) return;
+    if (!cuts.passMinCut("vertex_z", v_vertReco_z)) return;
     const float v_ep_sim_id  = reader["ep_sim_id"];
     const float v_em_sim_id  = reader["em_sim_id"];
     const float v_ep_g2      = reader["ep_sim_geninfo2"];
@@ -68,7 +78,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // (same value on em — they share the parent decay). After the purity gate
     // above the leptons are genuine, so ep_sim_genweight is the correct event
     // weight, used as-is for every fillw call and stored on the output ntuple.
-    double w = reader["ep_sim_genweight"];
+    // Productions without weights ("standard" SMASH, config
+    // simulation.use_genweight = false): every fill has weight 1.
+    double w = config.useGenWeight() ? static_cast<double>(reader["ep_sim_genweight"]) : 1.0;
 
     // ========================================================================
     // Create e+ and e- — RECONSTRUCTED + CORRECTED + SIMULATED kinematics
@@ -147,9 +159,60 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt_sim        = dilepton_cms.vec(KinematicType::SIMULATED).Pt();
     double theta_cms_sim = dilepton_cms.theta(KinematicType::SIMULATED);
 
-    // Fill dilepton ntuple (before OA cut, store cut decision as flag)
-    // opening_angle_4 is the ACTIVE cut applied via the oa_pass flag below.
-    bool oa_pass = cuts.passMinCut("opening_angle_4", oa);
+    // Opening-angle decisions stored as flags (no event is rejected here).
+    // oa_pass keeps its old meaning (OA > 4 deg) for the existing macros.
+    bool oa_pass_2 = cuts.passMinCut("opening_angle_2", oa);
+    bool oa_pass_4 = cuts.passMinCut("opening_angle_4", oa);
+    bool oa_pass_9 = cuts.passMinCut("opening_angle_9", oa);
+    bool oa_pass   = oa_pass_4;
+
+    // Columns added with the betanew port, written to dilepton_nt and
+    // dilepton_nt_cor (names as in the exp dilepton_nt where they exist):
+    //   * relative-time beta (beta_new) and, because PID in the SMASH
+    //     productions was still done on it, the old beta;
+    //   * event identity (runnumber, event) for per-event grouping — group
+    //     ADJACENT rows, the event counter restarts within a file;
+    //   * OA flags 2/4/9 deg;
+    //   * inputs of the PAT best-pair ranking (reduced TOF chi2 of the
+    //     hypothesis, META system of each leg: 0 = RPC, 1 = TOF);
+    //   * per-leg truth needed to tell the genuine pair from a combinatorial
+    //     one (full geninfo code, creation vertex, ghost flag).
+    // No lpos_mult / lneg_mult: PAT counts them before the correlation
+    // window and PID, so they do not describe the selected sample.
+    auto fillPortedColumns = [&](auto& nt) {
+        nt["oa_pass_2"]       = oa_pass_2 ? 1.0f : 0.0f;
+        nt["oa_pass_4"]       = oa_pass_4 ? 1.0f : 0.0f;
+        nt["oa_pass_9"]       = oa_pass_9 ? 1.0f : 0.0f;
+
+        nt["ep_beta_new"]     = reader["ep_beta_new"];
+        nt["em_beta_new"]     = reader["em_beta_new"];
+        nt["ep_beta"]         = reader["ep_beta"];
+        nt["em_beta"]         = reader["em_beta"];
+
+        nt["runnumber"]       = reader["runnumber"];
+        nt["event"]           = reader["event"];
+
+        nt["hyp_chi2"]        = reader["ep_hyp_best_chi2_red"];
+        nt["ep_system"]       = reader["ep_system"];
+        nt["em_system"]       = reader["em_system"];
+
+        nt["ep_sim_geninfo"]  = reader["ep_sim_geninfo"];
+        nt["em_sim_geninfo"]  = reader["em_sim_geninfo"];
+        nt["ep_sim_vertexx"]  = reader["ep_sim_vertexx"];
+        nt["ep_sim_vertexy"]  = reader["ep_sim_vertexy"];
+        nt["ep_sim_vertexz"]  = reader["ep_sim_vertexz"];
+        nt["em_sim_vertexx"]  = reader["em_sim_vertexx"];
+        nt["em_sim_vertexy"]  = reader["em_sim_vertexy"];
+        nt["em_sim_vertexz"]  = reader["em_sim_vertexz"];
+        nt["ep_sim_isghost"]  = reader["ep_sim_isghost"];
+        nt["em_sim_isghost"]  = reader["em_sim_isghost"];
+
+        // Per-leg generator weights. sim_genweight (= ep weight) is right for a
+        // genuine pair; a combinatorial pair built from two different forced
+        // decays needs ep_sim_genweight * em_sim_genweight.
+        nt["ep_sim_genweight"] = reader["ep_sim_genweight"];
+        nt["em_sim_genweight"] = reader["em_sim_genweight"];
+    };
 
     // === REC ntuple — compound observables from RECONSTRUCTED kinematics ===
     {
@@ -216,6 +279,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_rich_centr"]           = reader["em_rich_centr"];
         nt["ep_rich_radius"]          = reader["ep_rich_radius"];
         nt["em_rich_radius"]          = reader["em_rich_radius"];
+        fillPortedColumns(nt);
         nt.fill();
     }
 
@@ -284,6 +348,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         nt["em_rich_centr"]           = reader["em_rich_centr"];
         nt["ep_rich_radius"]          = reader["ep_rich_radius"];
         nt["em_rich_radius"]          = reader["em_rich_radius"];
+        fillPortedColumns(nt);
         nt.fill();
     }
 
@@ -386,6 +451,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 ecal_nt["ecal_tof" + suffix] = obj.ecal_tof;
                 ecal_nt["ecal_r" + suffix] = obj.ecal_r;
                 ecal_nt["ecal_z" + suffix] = obj.ecal_z;
+            } else {
+                // Absent hit: still write every column (as -1), so ntuples from
+                // separate run_parallel chunks have identical columns for hadd.
+                for (const char* name : {"ecal_pass", "cluster_energy", "cluster_theta",
+                                         "cluster_phi", "ecal_beta", "ecal_pid",
+                                         "ecal_energy", "ecal_theta", "ecal_phi",
+                                         "ecal_chi2", "ecal_tof", "ecal_r", "ecal_z"}) {
+                    ecal_nt[name + suffix] = -1.0f;
+                }
             }
         };
 
@@ -783,6 +857,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                 fwd_nt["fwd_r" + suffix] = obj.fwd_r;
                 fwd_nt["fwd_z" + suffix] = obj.fwd_z;
                 fwd_nt["fwd_distToRpc" + suffix] = obj.fwd_distToRpc;
+            } else {
+                // Absent hit: write every column as -1 (same reason as in ecal_nt)
+                for (const char* name : {"fwd_p", "fwd_theta", "fwd_phi", "fwd_beta",
+                                         "fwd_mass", "fwd_mass2", "fwd_charge",
+                                         "fwd_chi2", "fwd_ndf", "fwd_chi2ndf",
+                                         "fwd_r", "fwd_z", "fwd_distToRpc"}) {
+                    fwd_nt[name + suffix] = -1.0f;
+                }
             }
         };
 

@@ -63,7 +63,7 @@ FAT/
 │   ├── test_improved_manager.cc
 │   └── Makefile
 │
-├── doc/                             # Documentation
+├── docs/                            # Documentation
 │   └── ANALYSIS_TUTORIAL.md         # This file
 │
 └── Documentation (*.md files in root)
