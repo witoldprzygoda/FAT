@@ -22,7 +22,11 @@ inline void setupCuts(CutManager& cuts) {
     std::cout << "Setting up cuts...\n";
 
     // Event-level cuts (applied before particle creation)
-    cuts.defineValueCut("isBest", 1, "Best candidate selection");
+    // isBestAll: all stored combinations (isBest >= 0). The flag takes the values
+    // 0 and 1 and MinCut is a strict ">", hence the threshold -0.5.
+    cuts.defineMinCut("isBestAll", -0.5, "isBest >= 0 (all stored combinations)");
+    // isBest == 1 (best combination only): kept defined, but NOT applied in main.cc.
+    cuts.defineValueCut("isBest", 1, "Best candidate selection (defined, not applied)");
     cuts.defineMinCut("vertex_z", -500, "Vertex Z quality [mm]");
 
     // Trigger: PT3 only (trigbit == 8192). PT2 (trigbit == 4096) is defined
@@ -37,18 +41,27 @@ inline void setupCuts(CutManager& cuts) {
     // stored as the oa_pass flag in the ntuples.
     cuts.defineRangeCut("opening_angle_2_6", 2.0, 6.0, "2 deg <= OA(e+e-) <= 6 deg (oa_pass)");
 
+    // The same opening angle cut from below and from above, as two standalone
+    // cuts (flags pass_oa_min, pass_oa_max in scan_nt). Both are strict, while
+    // the window above is inclusive at 2 and 6 deg.
+    cuts.defineMinCut("oa_min", 2.0, "OA(e+e-) > 2 deg");
+    cuts.defineMaxCut("oa_max", 6.0, "OA(e+e-) < 6 deg");
+
     // ECAL quality cuts (AND logic; passCutSet values must match this order)
     cuts.defineCutSet("ecal_quality", "ECAL particle quality")
         .addValueCut("ecal_pid", 1.0, "PID == 1")
         .addRangeCut("ecal_beta", 0.8, 1.2, "0.8 < beta < 1.2")
         .addMinCut("cluster_energy", 100.0, "Cluster energy > 100 MeV");
 
-    // 4-body pi+pi-e+e- selection chain (AND logic; order matches passCutSet values)
-    cuts.defineCutSet("pippimepem_selection", "pi+pi-e+e- 4-body selection")
-        .addMaxCut("oa_pippim_epem_lab",  50.0, "OA_LAB((pi+pi-),(e+e-)) < 50 deg")
-        .addMaxCut("m_pippim",            0.420, "M(pi+pi-) < 0.420 GeV/c^2")
-        .addMinCut("oa_pippim_epem_eta_rest", 140.0,
-                   "OA((pi+pi-),(e+e-)) in m_eta-constrained rest frame > 140 deg");
+    // 4-body pi+pi-e+e- selection: three standalone cuts (the former cut set
+    // "pippimepem_selection", same thresholds). main.cc evaluates each of them
+    // on every row and stores the decisions as flags; sel_pass is their AND.
+    // The same cut objects are used for RECONSTRUCTED and CORRECTED values
+    // (no "_cor" twins), so their cut-flow counters mix REC and COR.
+    cuts.defineMaxCut("oa_pippim_epem_lab", 50.0, "OA_LAB((pi+pi-),(e+e-)) < 50 deg");
+    cuts.defineMaxCut("m_pippim", 0.420, "M(pi+pi-) < 0.420 GeV/c^2");
+    cuts.defineMinCut("oa_pippim_epem_eta_rest", 140.0,
+                      "OA((pi+pi-),(e+e-)) in m_eta-constrained rest frame > 140 deg");
 
     // MM(pi+pi-e+e-) slice windows [GeV/c^2] — 6 adjacent bins for scan studies.
     // Used in tandem with the selection chain (see main.cc).

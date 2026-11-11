@@ -1,7 +1,7 @@
 // ========================================================================
 // FAT Framework - Dilepton Analysis
 // ========================================================================
-// e+e- dilepton analysis for HADES experiment (pp @ 4.5 GeV).
+// e+e- dilepton analysis for HADES experiment (pp @ 4.53 GeV, T_kin = 4530 MeV).
 // Processes lepton pairs, ECAL photons, and Forward Tracker hadrons.
 // Supports EpEm, EpEp, EmEm channels via config-driven prefix mapping.
 //
@@ -26,12 +26,211 @@
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
 #include "src/console_box.h"
+#include <TError.h>
+#include <algorithm>
+#include <cctype>
+#include <cerrno>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <vector>
 
 // Use Physics namespace for mass constants
 using namespace Physics;
+
+// ============================================================================
+// FAILURE HANDLING
+// ============================================================================
+// Exit codes of ./ana (run_parallel.sh does not retry 2, 3 and 130):
+//     0  output written and verified
+//     1  configuration or input cannot be opened
+//     2  input variables missing in the tree, or bound only inside the event loop
+//     3  exception in processEvent
+//     5  read error, ROOT error, or output file not written correctly
+//   130  interrupted (Ctrl+C); the partial output is kept
+// In the cases 2, 3 and 5 no output file is left behind.
+
+// ROOT reports I/O trouble (input file that cannot be opened, read error, full
+// disk) only as a printed message and carries on. This handler counts the
+// messages of level Error and above; main() treats a non-zero count as failure.
+static long g_root_errors = 0;
+
+void countingErrorHandler(int level, Bool_t abort_bool, const char* location, const char* msg) {
+    if (level >= kError) ++g_root_errors;
+    DefaultErrorHandler(level, abort_bool, location, msg);
+}
+
+// End the program after a failure without leaving a valid-looking output file:
+// close the output if asked (this also converts the ntuples and removes their
+// intermediate files), remove it, remove intermediate ntuple files that are
+// still there, and exit with `code`. std::_Exit skips the destructors: after a
+// failed closeFile() the Manager destructor would finalize the ntuples again.
+[[noreturn]] void abandonOutput(Manager& manager, const std::string& output, int code,
+                                bool close_first) {
+    if (close_first) {
+        try {
+            manager.closeFile();
+        } catch (const std::exception& e) {
+            std::cerr << "ERROR while closing the output file: " << e.what() << "\n";
+        }
+    }
+    if (std::remove(output.c_str()) == 0) {
+        std::cerr << "ERROR: incomplete output file removed: " << output << "\n";
+    } else if (errno != ENOENT) {
+        std::cerr << "ERROR: could not remove the incomplete output file: " << output << "\n";
+    }
+    // Same naming rule as in DynamicHNtuple
+    const size_t dot = output.rfind('.');
+    const std::string base = (dot != std::string::npos) ? output.substr(0, dot) : output;
+    for (const auto& name : outputNtupleNames()) {
+        std::remove((base + "_" + name + "_tree.root").c_str());
+    }
+    std::cerr << "ERROR: job failed (exit code " << code << ").\n";
+    std::cout.flush();
+    std::cerr.flush();
+    std::_Exit(code);
+}
+
+// Reopen the closed output file and compare every ntuple with the number of
+// fills. Returns an empty string if the file is good, otherwise the reason.
+// (A write error does not stop ROOT: the file can end up truncated.)
+std::string verifyOutputFile(const std::string& output, Manager& manager) {
+    std::unique_ptr<TFile> file(TFile::Open(output.c_str(), "READ"));
+    if (!file || file->IsZombie()) return "the file cannot be reopened";
+    if (file->TestBit(TFile::kRecovered)) return "the file was not closed properly (ROOT had to recover it)";
+    for (const auto& name : outputNtupleNames()) {
+        if (!manager.hasDynamicNtuple(name)) continue;
+        const DynamicHNtuple& nt = manager.getDynamicNtuple(name);
+        if (nt.getVariableCount() == 0) continue;   // an ntuple without columns is not written
+        TTree* tree = dynamic_cast<TTree*>(file->Get(name.c_str()));
+        if (!tree) return "ntuple '" + name + "' is missing in the file";
+        if (tree->GetEntries() != nt.getFillCount()) {
+            return "ntuple '" + name + "' has " + std::to_string(tree->GetEntries()) +
+                   " rows in the file, but " + std::to_string(nt.getFillCount()) + " were filled";
+        }
+    }
+    return "";
+}
+
+// ============================================================================
+// READER VARIABLES USED BY processEvent
+// ============================================================================
+// Every PAT branch that processEvent reads (directly, or through
+// PParticleEcal / PParticleFwd::setFromReader) is listed here. main() binds
+// the whole list BEFORE the output file is opened: a missing branch (wrong
+// tree name or lepton prefix in the config, different PAT production) then
+// stops the program with a message, instead of throwing on every row.
+// Keep this list in step with processEvent.
+
+std::vector<std::string> requiredReaderVariables(const AnalysisConfig& config) {
+    // Event level
+    std::vector<std::string> vars = {
+        "isBest", "trigbit", "runnumber", "event",
+        "eVertReco_x", "eVertReco_y", "eVertReco_z", "eVertReco_chi2",
+        "neutr_mult", "fwdet_mult", "evtStart", "start_iteration",
+        "ep_hyp_chi2_combined"
+    };
+
+    // All four particles ("ep_"/"em_" go through the lepton prefix mapping)
+    for (const std::string prefix : {"ep", "em", "pip", "pim"}) {
+        for (const char* name : {"p", "theta", "phi", "beta_new", "system", "sector",
+                                 "r", "z", "rkchi2", "isUsedVertex", "oa_lept",
+                                 "oa_hadr", "tof_new", "tof_mom"}) {
+            vars.push_back(prefix + "_" + name);
+        }
+        vars.push_back(prefix + "_p_corr_" + prefix);   // energy-loss corrected momentum
+    }
+    // Leptons only
+    for (const std::string prefix : {"ep", "em"}) {
+        for (const char* name : {"theta_rich", "phi_rich", "rich_ind", "richmatchquality",
+                                 "rich_padnum", "ringchi2", "kIsLepton"}) {
+            vars.push_back(prefix + "_" + name);
+        }
+    }
+    // Pions only
+    for (const std::string prefix : {"pip", "pim"}) {
+        for (const char* name : {"isring", "dedx_mdc"}) {
+            vars.push_back(prefix + "_" + name);
+        }
+    }
+
+    // ECAL neutral candidates, slots 1-5 (PParticleEcal::setFromReader)
+    if (config.isEcalEnabled()) {
+        vars.push_back("neutr_counter");
+        for (int i = 1; i <= 5; ++i) {
+            for (const char* name : {"cluster_theta", "cluster_phi", "cluster_energy", "p",
+                                     "theta", "phi", "pid", "clusterid", "q", "energy",
+                                     "p_pid", "mass", "mass2", "beta", "tof", "tofrec",
+                                     "dist", "r", "z", "chi2", "phi2", "theta2", "r2", "z2"}) {
+                vars.push_back(std::string("neutr_") + name + "_" + std::to_string(i));
+            }
+        }
+    }
+
+    // Forward detector candidates, slots 1-3 (PParticleFwd::setFromReader)
+    if (config.isFwdEnabled()) {
+        vars.push_back("fwdet_counter");
+        for (int i = 1; i <= 3; ++i) {
+            for (const char* name : {"p", "theta", "phi", "beta", "mass", "mass2", "q",
+                                     "tofrec", "tof", "r", "z", "phi2", "theta2", "r2",
+                                     "z2", "chi2", "ndf", "dist_tofhit"}) {
+                vars.push_back(std::string("fwdet_") + name + "_" + std::to_string(i));
+            }
+        }
+    }
+
+    return vars;
+}
+
+// ============================================================================
+// FILE NUMBER OF THE CURRENT INPUT FILE
+// ============================================================================
+// The last group of digits in the base name of the input file being read
+// (lep_034.root -> 34); -1 if the name contains no digit. The name is parsed
+// once per file (cached by the tree number of the chain).
+
+float currentFileId(NTupleReader& reader) {
+    static int   cached_tree = -1;
+    static float cached_id   = -1.0f;
+
+    const int tree_number = reader.getCurrentTreeNumber();
+    if (tree_number != cached_tree) {
+        cached_tree = tree_number;
+        cached_id   = -1.0f;
+
+        TFile* file = reader.getTree() ? reader.getTree()->GetCurrentFile() : nullptr;
+        if (file) {
+            std::string name = file->GetName();
+            size_t slash = name.find_last_of('/');
+            if (slash != std::string::npos) name = name.substr(slash + 1);
+            size_t dot = name.find_last_of('.');
+            if (dot != std::string::npos) name = name.substr(0, dot);
+
+            size_t last = name.find_last_of("0123456789");
+            if (last != std::string::npos) {
+                size_t first = last;
+                while (first > 0 && std::isdigit(static_cast<unsigned char>(name[first - 1]))) --first;
+                cached_id = static_cast<float>(std::stol(name.substr(first, last - first + 1)));
+            }
+        }
+    }
+    return cached_id;
+}
+
+// Entry index of the current row inside its own PAT file. For a chain of
+// several files this differs from the chain index reader.currentEntry(), so
+// that (file_id, pat_entry) addresses a PAT row however the list was split.
+Long64_t currentFileEntry(NTupleReader& reader) {
+    TTree* tree = reader.getTree();
+    if (reader.isChain() && tree && tree->GetTree()) {
+        return tree->GetTree()->GetReadEntry();
+    }
+    return reader.currentEntry();
+}
 
 // ============================================================================
 // PROCESS SINGLE EVENT
@@ -40,8 +239,14 @@ using namespace Physics;
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                  const AnalysisConfig& config) {
 
+    // NOTE: with isBestAll (isBest >= 0) one call = one stored COMBINATION, and
+    // one event can give several rows (same e+e- pair with another pion, ...).
+    // Every histogram entry and every ntuple row below is therefore per
+    // combination, not per event.
+
     // Event-level cuts (applied before particle creation)
-    if (!cuts.passValueCut("isBest", reader["isBest"])) return;
+    // All stored combinations are used; the "isBest" (== 1) cut is not applied.
+    if (!cuts.passMinCut("isBestAll", reader["isBest"])) return;
     if (!cuts.passMinCut("vertex_z", reader["eVertReco_z"])) return;
 
     // Trigger selection (driven by config.trigger.selection):
@@ -212,7 +417,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                                             pippim, epem, MASS_ETA,
                                             KinematicType::CORRECTED);
 
-    // Control histograms — filled BEFORE pippimepem_selection so the cut
+    // Control histograms — filled BEFORE the 4-body selection so the cut
     // boundaries (oa_pippim_epem_lab < 50, oa_pippim_epem_eta_rest > 140) can
     // be verified directly on these spectra.
     mgr.fill("oa_pippim_epem_lab",          oa_pippim_epem_lab);
@@ -220,18 +425,34 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     mgr.fill("oa_pippim_epem_lab_cor",      oa_pippim_epem_lab_cor);
     mgr.fill("oa_pippim_epem_eta_rest_cor", oa_pippim_epem_eta_rest_cor);
 
-    // 4-body selection (RECONSTRUCTED): OA_LAB < 50, M(pi+pi-) < 0.420, eta-rest OA > 140
-    bool sel_pass = cuts.passCutSet("pippimepem_selection", {
-        oa_pippim_epem_lab,
-        m_pippim,
-        oa_pippim_epem_eta_rest
-    });
-    // Same selection with CORRECTED inputs
-    bool sel_pass_cor = cuts.passCutSet("pippimepem_selection", {
-        oa_pippim_epem_lab_cor,
-        m_pippim_cor,
-        oa_pippim_epem_eta_rest_cor
-    });
+    // 4-body selection as standalone cuts: OA_LAB < 50, M(pi+pi-) < 0.420,
+    // eta-rest OA > 140. Each cut is evaluated on EVERY row (no short-circuit)
+    // and its decision is kept as a flag. RECONSTRUCTED and CORRECTED values go
+    // through the same cut objects, so the cut-flow counters of these three
+    // cuts mix REC and COR (each row is tested twice).
+    bool pass_oa_lab      = cuts.passMaxCut("oa_pippim_epem_lab", oa_pippim_epem_lab);
+    bool pass_m_pippim    = cuts.passMaxCut("m_pippim", m_pippim);
+    bool pass_oa_eta_rest = cuts.passMinCut("oa_pippim_epem_eta_rest", oa_pippim_epem_eta_rest);
+    // Same cuts with CORRECTED inputs
+    bool pass_oa_lab_cor      = cuts.passMaxCut("oa_pippim_epem_lab", oa_pippim_epem_lab_cor);
+    bool pass_m_pippim_cor    = cuts.passMaxCut("m_pippim", m_pippim_cor);
+    bool pass_oa_eta_rest_cor = cuts.passMinCut("oa_pippim_epem_eta_rest", oa_pippim_epem_eta_rest_cor);
+
+    // sel_pass keeps its meaning: the AND of the three cuts (REC / COR)
+    bool sel_pass     = pass_oa_lab && pass_m_pippim && pass_oa_eta_rest;
+    bool sel_pass_cor = pass_oa_lab_cor && pass_m_pippim_cor && pass_oa_eta_rest_cor;
+
+    // Plain e+e- opening angle from below and from above (direction only: REC == COR)
+    bool pass_oa_min = cuts.passMinCut("oa_min", oa);
+    bool pass_oa_max = cuts.passMaxCut("oa_max", oa);
+
+    // Four-body system for scan_nt: transverse momentum in the lab [MeV/c] and
+    // rapidity in the beam-target centre-of-mass frame (REC + COR).
+    double pt4     = pippimepem.vec().Pt();
+    double pt4_cor = pippimepem.vec(KinematicType::CORRECTED).Pt();
+    PParticle pippimepem_cms = frames.getFrame("beam").boost(pippimepem);  // boosts both kinematics
+    double y4_cms     = pippimepem_cms.rapidity();
+    double y4_cms_cor = pippimepem_cms.rapidity(KinematicType::CORRECTED);
 
     if (sel_pass) {
         mgr.fill("mass_pippimepem_selected", m_pippimepem);
@@ -386,6 +607,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
 
+    // Combination keys: isBest (0/1; exactly one row with 1 per event), run, event.
+    // (runnumber, event) is NOT unique; rows of one event are adjacent.
+    nt["isBest"] = reader["isBest"];
+    nt["runnumber"] = reader["runnumber"];
+    nt["event"] = reader["event"];
+
     nt["oa"] = oa;
 
     nt["m_ee"] = m_ee;                       // M(e+e-)
@@ -404,7 +631,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["theta_cms"] = theta_cms;
 
     nt["oa_pass"] = oa_pass ? 1.0f : 0.0f;       // 2 <= OA <= 6 deg decision
-    nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // pippimepem_selection chain decision
+    nt["sel_pass"] = sel_pass ? 1.0f : 0.0f;     // 4-body selection decision (AND of three cuts)
 
     // ECAL-derived eta / f1 fields — RECONSTRUCTED.
     //   mult==1: shared compound M(pi+pi-e+e-gamma); pi0 vs eta window flags
@@ -455,6 +682,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["pim_beta_new"] = reader["pim_beta_new"];
 
     nt_cor["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+
+    // Combination keys (same as in pippimepem_nt)
+    nt_cor["isBest"] = reader["isBest"];
+    nt_cor["runnumber"] = reader["runnumber"];
+    nt_cor["event"] = reader["event"];
 
     nt_cor["oa"] = oa;  // single-pair OA is direction-only — same as REC
 
@@ -514,6 +746,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Dilepton invariant mass (after all cuts)
     mgr.fill("mass_ee", m_ee);
     mgr.fill("mass_ee_cor", m_ee_cor);
+
+    // Photon and forward-candidate values for scan_nt (written at the end of
+    // processEvent). -1 = absent slot; n_gam stays -1 when ECAL is off in the config.
+    double scan_n_gam = -1.0;
+    double scan_g_e[3]      = {-1.0, -1.0, -1.0};
+    double scan_g_theta[3]  = {-1.0, -1.0, -1.0};
+    double scan_g_phi[3]    = {-1.0, -1.0, -1.0};
+    double scan_fw_p[2]     = {-1.0, -1.0};
+    double scan_fw_theta[2] = {-1.0, -1.0};
+    double scan_fw_phi[2]   = {-1.0, -1.0};
 
     // ECAL objects (electromagnetic calorimeter, up to 5 hits)
     if (config.isEcalEnabled()) {
@@ -605,6 +847,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             rank_map[pass_indices[r]] = static_cast<int>(r + 1);
         }
 
+        // scan_nt: number of clusters passing ecal_quality (among the five
+        // slots) and the three most energetic of them
+        scan_n_gam = static_cast<double>(pass_indices.size());
+        for (size_t r = 0; r < pass_indices.size() && r < 3; ++r) {
+            const auto& obj = ecal_objects[pass_indices[r]];
+            scan_g_e[r]     = obj.cluster_energy;
+            scan_g_theta[r] = obj.cluster_theta;
+            scan_g_phi[r]   = obj.cluster_phi;
+        }
+
         for (size_t j = 0; j < ecal_objects.size(); ++j) {
             if (!ecal_pass[j]) continue;
 
@@ -640,6 +892,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             epemg_nt["mm_epemg_mass"] = miss_epemg.massGeV();
             epemg_nt["mm_epemg_mass2"] = miss_epemg.vec().M2() / 1e6;  // GeV²/c⁴
 
+            // fill() resets every column and Manager::setEventWeight() sets
+            // trigger_corr only once per PAT row: set it again for each photon
+            // (it was -1 for the second and later photons of a combination).
+            epemg_nt["trigger_corr"] = static_cast<Float_t>(mgr.getEventWeight());
+
             epemg_nt.fill();
         }
     }
@@ -658,6 +915,13 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             if (fwd_obj.setFromReader(reader, i)) {
                 fwd_objects.push_back(fwd_obj);
             }
+        }
+
+        // scan_nt: the first two forward candidates
+        for (size_t k = 0; k < fwd_objects.size() && k < 2; ++k) {
+            scan_fw_p[k]     = fwd_objects[k].momentum();
+            scan_fw_theta[k] = fwd_objects[k].fwd_theta;
+            scan_fw_phi[k]   = fwd_objects[k].fwd_phi;
         }
 
         auto& fwd_nt = mgr.getDynamicNtuple("fwdet_nt");
@@ -702,6 +966,155 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         fwd_nt.fill();
     }
 
+    // ========================================================================
+    // scan_nt: cut-scan ntuple, one row per combination
+    // ========================================================================
+    // Filled for every row that passed isBestAll + vertex + trigger; there is
+    // no other pre-selection (no mass window). EVERY column is assigned on
+    // EVERY fill, all of them in this one block: a DynamicHNtuple column first
+    // written after N fills would be shifted by N rows. Do not write a scan_nt
+    // column anywhere else. (trigger_corr is added by Manager::setEventWeight.)
+    {
+        auto& sn = mgr.getDynamicNtuple("scan_nt");
+
+        // --- Keys and event ---
+        // file_id: number in the name of the input file (lep_034.root -> 34).
+        // pat_entry: entry index of the row in the tree of that file (equal to
+        // the index in the chain of the job when the job reads one file).
+        // Float columns hold integers exactly below 2^24.
+        sn["pat_entry"] = static_cast<Float_t>(currentFileEntry(reader));
+        sn["file_id"]   = currentFileId(reader);
+        sn["runnumber"] = reader["runnumber"];
+        sn["event"]     = reader["event"];
+        sn["isBest"]    = reader["isBest"];
+        sn["trigbit"]   = reader["trigbit"];
+        // Ranking chi2 of the hypothesis (lowest in the event <=> isBest == 1);
+        // PAT stores the same value on all four particles.
+        sn["hyp_chi2"]  = reader["ep_hyp_chi2_combined"];
+
+        sn["eVertReco_x"]    = reader["eVertReco_x"];
+        sn["eVertReco_y"]    = reader["eVertReco_y"];
+        sn["eVertReco_z"]    = reader["eVertReco_z"];
+        sn["eVertReco_chi2"] = reader["eVertReco_chi2"];
+
+        // PAT stores -100 when there is no ECAL cluster / forward candidate: 0 here
+        sn["neutr_mult"] = std::max(0.0f, reader["neutr_mult"]);
+        sn["fwdet_mult"] = std::max(0.0f, reader["fwdet_mult"]);
+
+        sn["evtStart"]        = reader["evtStart"];         // stored only, not cut on
+        sn["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+
+        // --- Tracks ---
+        // p_rec, p_cor, theta, phi as in pippimepem_nt (phi in -180..180 deg);
+        // all other columns are copied from PAT (phi_rich in 0..360 deg).
+        auto fillTrack = [&](const std::string& prefix, const PParticle& particle,
+                             double p_rec, double p_cor) {
+            sn[prefix + "p_rec"] = p_rec;
+            sn[prefix + "p_cor"] = p_cor;
+            sn[prefix + "theta"] = particle.theta();
+            sn[prefix + "phi"]   = particle.phi();
+            for (const char* name : {"beta_new", "system", "sector", "r", "z", "rkchi2",
+                                     "isUsedVertex", "oa_lept", "oa_hadr", "tof_new",
+                                     "tof_mom"}) {
+                sn[prefix + name] = reader[prefix + name];
+            }
+        };
+
+        fillTrack("ep_",  positron, ep_p_rec,  ep_p_cor);
+        fillTrack("em_",  electron, em_p_rec,  em_p_cor);
+        fillTrack("pip_", piplus,   pip_p_rec, pip_p_cor);
+        fillTrack("pim_", piminus,  pim_p_rec, pim_p_cor);
+
+        // cor_ok: 1 if all four energy-loss corrected momenta are finite. PAT
+        // gives NaN for some pi- (pim_p_corr_pim); every _cor quantity with
+        // that pion is then NaN and the _cor flags are 0. The values are stored
+        // as they come: no replacement by the reconstructed momentum.
+        sn["cor_ok"] = (std::isfinite(ep_p_cor) && std::isfinite(em_p_cor) &&
+                        std::isfinite(pip_p_cor) && std::isfinite(pim_p_cor)) ? 1.0f : 0.0f;
+
+        // Leptons only: RICH ring and lepton flag
+        for (const std::string prefix : {"ep_", "em_"}) {
+            for (const char* name : {"theta_rich", "phi_rich", "rich_ind", "richmatchquality",
+                                     "rich_padnum", "ringchi2", "kIsLepton"}) {
+                sn[prefix + name] = reader[prefix + name];
+            }
+        }
+
+        // Pions only: ring flag, MDC dE/dx and mass squared.
+        // mass2 = p_rec^2 (1/beta_new^2 - 1) in (MeV/c^2)^2 is computed here: all
+        // PAT mass2 branches (mass2, mass2_pip, mass2_corr_pip, ...) are built
+        // from the START-based beta, none from beta_new.
+        auto mass2FromBetaNew = [](double p, double beta_new) {
+            return beta_new > 0.0 ? p * p * (1.0 / (beta_new * beta_new) - 1.0) : -1.0e6;
+        };
+        for (const std::string prefix : {"pip_", "pim_"}) {
+            sn[prefix + "isring"]   = reader[prefix + "isring"];
+            sn[prefix + "dedx_mdc"] = reader[prefix + "dedx_mdc"];
+        }
+        sn["pip_mass2"] = mass2FromBetaNew(pip_p_rec, reader["pip_beta_new"]);
+        sn["pim_mass2"] = mass2FromBetaNew(pim_p_rec, reader["pim_beta_new"]);
+
+        // --- Cut variables as values: RECONSTRUCTED (plain name) and CORRECTED (_cor) ---
+        sn["oa"] = oa;                                   // OA(e+e-), direction only
+
+        sn["m_pippimepem"]     = m_pippimepem;           // M(pi+pi-e+e-) [GeV/c^2]
+        sn["m_pippimepem_cor"] = m_pippimepem_cor;
+        sn["m_ee"]             = m_ee;                   // M(e+e-)
+        sn["m_ee_cor"]         = m_ee_cor;
+        sn["m_pippim"]         = m_pippim;               // M(pi+pi-)
+        sn["m_pippim_cor"]     = m_pippim_cor;
+
+        sn["oa_pippim_epem_lab"]          = oa_pippim_epem_lab;
+        sn["oa_pippim_epem_lab_cor"]      = oa_pippim_epem_lab_cor;
+        sn["oa_pippim_epem_eta_rest"]     = oa_pippim_epem_eta_rest;
+        sn["oa_pippim_epem_eta_rest_cor"] = oa_pippim_epem_eta_rest_cor;
+
+        sn["mm_pippimepem"]     = mm_pippimepem;         // MM(pi+pi-e+e-) [GeV/c^2]
+        sn["mm_pippimepem_cor"] = mm_pippimepem_cor;
+        sn["mm_pippim"]         = mm_pippim;             // MM(pi+pi-)
+        sn["mm_pippim_cor"]     = mm_pippim_cor;
+        sn["mm_epem"]           = mm_epem;               // MM(e+e-)
+        sn["mm_epem_cor"]       = mm_epem_cor;
+
+        sn["pt4"]        = pt4;                          // pT of pi+pi-e+e-, lab [MeV/c]
+        sn["pt4_cor"]    = pt4_cor;
+        sn["y4_cms"]     = y4_cms;                       // rapidity of pi+pi-e+e-, beam-target CMS
+        sn["y4_cms_cor"] = y4_cms_cor;
+
+        // --- Cut decisions (1/0), each evaluated on every row ---
+        sn["pass_oa_min"] = pass_oa_min ? 1.0f : 0.0f;   // OA(e+e-) > 2 deg
+        sn["pass_oa_max"] = pass_oa_max ? 1.0f : 0.0f;   // OA(e+e-) < 6 deg
+        sn["oa_pass"]     = oa_pass     ? 1.0f : 0.0f;   // 2 <= OA(e+e-) <= 6 deg (legacy flag)
+
+        sn["pass_oa_lab"]          = pass_oa_lab          ? 1.0f : 0.0f;
+        sn["pass_oa_lab_cor"]      = pass_oa_lab_cor      ? 1.0f : 0.0f;
+        sn["pass_m_pippim"]        = pass_m_pippim        ? 1.0f : 0.0f;
+        sn["pass_m_pippim_cor"]    = pass_m_pippim_cor    ? 1.0f : 0.0f;
+        sn["pass_oa_eta_rest"]     = pass_oa_eta_rest     ? 1.0f : 0.0f;
+        sn["pass_oa_eta_rest_cor"] = pass_oa_eta_rest_cor ? 1.0f : 0.0f;
+        sn["sel_pass"]             = sel_pass             ? 1.0f : 0.0f;
+        sn["sel_pass_cor"]         = sel_pass_cor         ? 1.0f : 0.0f;
+
+        // --- ECAL: clusters passing ecal_quality, the three most energetic ---
+        sn["n_gam"] = scan_n_gam;
+        for (int k = 0; k < 3; ++k) {
+            const std::string prefix = "g" + std::to_string(k + 1) + "_";
+            sn[prefix + "e"]     = scan_g_e[k];          // cluster energy [MeV]
+            sn[prefix + "theta"] = scan_g_theta[k];
+            sn[prefix + "phi"]   = scan_g_phi[k];
+        }
+
+        // --- Forward detector: the first two candidates ---
+        for (int k = 0; k < 2; ++k) {
+            const std::string prefix = "fw" + std::to_string(k + 1) + "_";
+            sn[prefix + "p"]     = scan_fw_p[k];
+            sn[prefix + "theta"] = scan_fw_theta[k];
+            sn[prefix + "phi"]   = scan_fw_phi[k];
+        }
+
+        sn.fill();
+    }
+
 }
 
 // ============================================================================
@@ -711,6 +1124,9 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 int main(int argc, char* argv[]) {
     // Install signal handler for graceful Ctrl+C termination
     SignalHandler::install();
+
+    // Count ROOT error messages (see FAILURE HANDLING at the top of this file)
+    SetErrorHandler(countingErrorHandler);
 
     ConsoleBox::newLine();
     ConsoleBox::printHeader("FAT Framework",
@@ -755,6 +1171,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // A file of the list that is missing, unreadable or has no such tree gives
+    // only a ROOT error message; the chain would skip the file silently.
+    if (g_root_errors > 0) {
+        std::cerr << "\nERROR: ROOT reported " << g_root_errors
+                  << " error(s) while the input was opened (messages above):"
+                  << " a file of the input list is missing, unreadable or has no tree '"
+                  << config.getInputTreeName() << "'. No output file was written.\n";
+        return 1;
+    }
+
     // Lepton prefix mapping (for like-sign channels: EpEp, EmEm)
     auto [prefix1, prefix2] = config.getLeptonPrefixes();
     if (!prefix1.empty()) {
@@ -766,15 +1192,56 @@ int main(int argc, char* argv[]) {
         std::cout << "\n";
     }
 
+    // Resolve every PAT branch used in processEvent now, before the output
+    // file exists. A missing branch stops the program here (exit code 2).
+    {
+        const std::vector<std::string> required = requiredReaderVariables(config);
+        std::vector<std::string> missing;
+        for (const auto& var : required) {
+            try {
+                reader.bindVariables({var});
+            } catch (const std::exception& e) {
+                missing.push_back(e.what());
+            }
+        }
+        if (!missing.empty()) {
+            std::cerr << "\nERROR: " << missing.size() << " of " << required.size()
+                      << " input variables used by the analysis are missing in tree '"
+                      << config.getInputTreeName() << "':\n";
+            for (const auto& msg : missing) std::cerr << "  " << msg << "\n";
+            std::cerr << "Check input.tree_name and input.lepton_prefixes in "
+                      << config_file << ". No output file was written.\n";
+            return 2;
+        }
+        if (g_root_errors > 0) {
+            std::cerr << "\nERROR: ROOT reported " << g_root_errors
+                      << " error(s) while the input variables were bound (messages above)."
+                      << " No output file was written.\n";
+            return 2;
+        }
+        std::cout << "NTupleReader: all " << required.size()
+                  << " input variables used by the analysis are bound.\n";
+    }
+    const size_t n_bound_before_loop = reader.boundVariableCount();
+
     // Open output file and setup analysis components
+    const std::string output_filename = config.getOutputFilename();
     Manager manager;
-    manager.openFile(config.getOutputFilename(), config.getOutputOption());
-
-    setupHistograms(manager);
-    setupNtuples(manager, config);
-
     CutManager cuts;
-    setupCuts(cuts);
+    try {
+        manager.openFile(output_filename, config.getOutputOption());
+    } catch (const std::exception& e) {
+        std::cerr << "\nERROR: " << e.what() << "\n";
+        return 5;   // nothing was created
+    }
+    try {
+        setupHistograms(manager);
+        setupNtuples(manager, config);
+        setupCuts(cuts);
+    } catch (const std::exception& e) {
+        std::cerr << "\nERROR while setting up histograms, ntuples or cuts: " << e.what() << "\n";
+        abandonOutput(manager, output_filename, 5, true);
+    }
 
     // Event loop
     Long64_t total_entries = reader.entries();
@@ -807,6 +1274,19 @@ int main(int argc, char* argv[]) {
     const int  n_files = reader.getNTrees();
     std::vector<double> w_per_file(n_files, 1.0);
 
+    // Entries that could not be read (getEntry returns <= 0): the variables
+    // would keep the values of the previous row. Counted here, fatal after the loop.
+    Long64_t n_read_errors = 0;
+    const Long64_t max_errors_printed = 5;
+    auto readEntry = [&](Long64_t entry) {
+        if (reader.getEntry(entry) > 0) return true;
+        ++n_read_errors;
+        if (n_read_errors <= max_errors_printed) {
+            std::cerr << "\nERROR: entry " << entry << " could not be read from the input.\n";
+        }
+        return false;
+    };
+
     if (do_trigger_corr) {
         ConsoleBox::newLine();
         std::cout << "Pass 1/2: per-file trigger-bias counts (PT3=8192, PT2=4096)...\n\n";
@@ -816,9 +1296,10 @@ int main(int argc, char* argv[]) {
         Long64_t pre_processed = 0;
         for (Long64_t i = start_event; i < end_event; ++i) {
             if (SignalHandler::wasInterrupted()) break;
-            reader.getEntry(i);
+            const bool entry_ok = readEntry(i);
             ++pre_processed;
             pre_progress.update(pre_processed);
+            if (!entry_ok) continue;
             const int fi      = reader.getCurrentTreeNumber();
             const int trigbit = static_cast<int>(reader["trigbit"]);
             if      (trigbit == 8192) ++n_PT3[fi];
@@ -853,6 +1334,8 @@ int main(int argc, char* argv[]) {
               << " (" << events_to_process << " events)...\n\n";
 
     Long64_t processed = 0;
+    Long64_t n_exceptions = 0;          // entries on which processEvent threw
+    const Long64_t max_exceptions_printed = max_errors_printed;
     bool was_interrupted = false;
 
     ProgressBar progress(events_to_process);
@@ -863,16 +1346,24 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        reader.getEntry(i);
+        const bool entry_ok = readEntry(i);
         ++processed;
         progress.update(processed);
+        if (!entry_ok) continue;
 
         // Set per-event weight (1.0 when correction disabled).
         manager.setEventWeight(w_per_file[reader.getCurrentTreeNumber()]);
 
+        // An exception leaves the row half-written (some ntuples filled, others
+        // not), so it is never ignored: counted here, fatal after the loop.
         try {
             processEvent(reader, manager, cuts, config);
         } catch (const std::exception& e) {
+            ++n_exceptions;
+            if (n_exceptions <= max_exceptions_printed) {
+                std::cerr << "\nERROR: exception in processEvent at entry " << i
+                          << ": " << e.what() << "\n";
+            }
             continue;
         }
     }
@@ -890,9 +1381,73 @@ int main(int argc, char* argv[]) {
 
     cuts.printCutFlow();
 
-    std::cout << "\nSaving results to " << config.getOutputFilename() << "...\n";
+    // Failures found in the loop: report, remove the output file (closeFile()
+    // also removes the intermediate ntuple files) and exit with a non-zero code.
+    int fail_code = 0;
+
+    // Entries that could not be read: the output is incomplete (code 5).
+    if (n_read_errors > 0) {
+        std::cerr << "\nERROR: " << n_read_errors << " entries could not be read from the input"
+                  << " (the first " << std::min(n_read_errors, max_errors_printed)
+                  << " are printed above).\n";
+        fail_code = 5;
+    }
+
+    // A variable bound only inside the loop is missing in requiredReaderVariables():
+    // the check of the input branches before the loop was not complete (code 2).
+    if (reader.boundVariableCount() != n_bound_before_loop) {
+        std::cerr << "\nERROR: " << (reader.boundVariableCount() - n_bound_before_loop)
+                  << " input variable(s) were bound inside the event loop;"
+                  << " add them to requiredReaderVariables() in main.cc.\n";
+        fail_code = 2;
+    }
+
+    // Exceptions in the event loop: rows are half-written (code 3).
+    if (n_exceptions > 0) {
+        std::cerr << "\nERROR: processEvent threw an exception on " << n_exceptions
+                  << " of " << processed << " entries (the first "
+                  << std::min(n_exceptions, max_exceptions_printed)
+                  << " are printed above).\n";
+        fail_code = 3;
+    }
+
+    if (fail_code != 0) {
+        abandonOutput(manager, output_filename, fail_code, true);
+    }
+
+    std::cout << "\nSaving results to " << output_filename << "...\n";
     manager.printSummary();
-    manager.closeFile();
+    try {
+        manager.closeFile();
+    } catch (const std::exception& e) {
+        std::cerr << "\nERROR while writing the output file: " << e.what() << "\n";
+        abandonOutput(manager, output_filename, 5, false);
+    }
+
+    // ROOT errors during the run (read error, full disk, ...) do not stop ROOT.
+    if (g_root_errors > 0) {
+        std::cerr << "\nERROR: ROOT reported " << g_root_errors
+                  << " error(s) during the run (messages above); the output cannot be trusted.\n";
+        abandonOutput(manager, output_filename, 5, false);
+    }
+
+    // Final check of the written file
+    const std::string output_problem = verifyOutputFile(output_filename, manager);
+    if (!output_problem.empty() || g_root_errors > 0) {
+        std::cerr << "\nERROR: check of the output file failed: "
+                  << (output_problem.empty() ? "ROOT error while reading it back" : output_problem)
+                  << "\n";
+        abandonOutput(manager, output_filename, 5, false);
+    }
+    std::cout << "Output file checked: every ntuple has as many rows as were filled.\n";
+
+    // Interrupted: the partial output is kept, but the job is not a success.
+    // ("Analysis Complete!" is not printed: monitor_parallel.sh reads it as done.)
+    if (was_interrupted) {
+        std::cerr << "\nINTERRUPTED: the output file holds only the first " << processed
+                  << " of " << events_to_process << " entries (exit code 130).\n";
+        return 130;
+    }
 
     ConsoleBox::newLine();
     ConsoleBox::printStatus("Analysis Complete!");

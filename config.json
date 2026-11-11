@@ -8,13 +8,13 @@
         "max_events": 0 
     },
     "output": {
-        "filename": "output_pippimepem_exp.root",
+        "filename": "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/output_pippimepem_exp.root",
         "option": "RECREATE",
         "keep_intermediate_tree": false,
         "missing_value": -1.0
     },
     "beam": {
-        "kinetic_energy": 4500.0,
+        "kinetic_energy": 4530.0,
         "luminosity": 1.0
     },
     "trigger": {

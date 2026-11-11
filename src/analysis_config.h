@@ -608,7 +608,7 @@ public:
     // ========================================================================
     
     double getBeamKineticEnergy() const {
-        return config_["beam"]["kinetic_energy"].asDouble(1580.0);
+        return config_["beam"]["kinetic_energy"].asDouble(4530.0);
     }
     
     /**

@@ -40,6 +40,22 @@ OUTPUT=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['output
 [[ "$SOURCE" == *.list ]] || { echo "ERROR: source must be a .list file (got: $SOURCE)"; exit 1; }
 [[ -f "$SOURCE"        ]] || { echo "ERROR: source list not found: $SOURCE"; exit 1; }
 
+# The merged output is written only at the very end: check its directory now.
+OUTDIR=$(dirname "$OUTPUT")
+[[ -d "$OUTDIR" && -w "$OUTDIR" ]] || {
+    echo "ERROR: output directory missing or not writable: $OUTDIR"
+    exit 1
+}
+
+# Called on every failure: a file left at the output path by an earlier run
+# must not be taken for the result of this run.
+warn_stale_output() {
+    if [[ -e "$OUTPUT" ]]; then
+        echo "WARNING: $OUTPUT exists from an EARLIER run" \
+             "($(date -r "$OUTPUT" '+%F %T')) — it is NOT the result of this run."
+    fi
+}
+
 # Pick work-dir base.
 # Order: FAT_TMPDIR env var > /mnt/scratch/fat_tmp (auto-create if /mnt/scratch
 # is a writable mount) > $TMPDIR > /tmp. Each chunk holds ~3-4 intermediate
@@ -160,20 +176,31 @@ for cfg in "$TMPDIR"/cfg_*.json; do
                 log="${cfg%.json}_retry${try}.log"
                 printf '  [retry %d] %s\n' "$try" "$(basename "$cfg")"
             fi
-            if ./ana "$cfg" > "$log" 2>&1; then
+            ./ana "$cfg" > "$log" 2>&1
+            rc=$?
+            if (( rc == 0 )); then
                 success=1
+                break
+            fi
+            # A retry cannot help: 2 = input variables missing in the tree,
+            # 3 = exception in the event loop, 130 = interrupted (Ctrl+C).
+            if (( rc == 2 || rc == 3 || rc == 130 )); then
                 break
             fi
         done
         if (( success )); then
+            # Positive record of success, required for the merge below.
+            touch "${cfg%.json}.ok"
             if (( try == 0 )); then
                 printf '  [OK]   %s\n' "$(basename "$cfg")"
             else
                 printf '  [OK after %d retries] %s\n' "$try" "$(basename "$cfg")"
             fi
         else
-            printf '  [FAIL after %d tries] %s  (see %s and *_retry*.log)\n' \
-                $((N_RETRIES + 1)) "$(basename "$cfg")" "$base_log"
+            printf '  [FAIL after %d tries, exit code %d] %s  (see %s and *_retry*.log)\n' \
+                $((try + 1)) "$rc" "$(basename "$cfg")" "$base_log"
+            # Informational marker; the merge below requires cfg_NNN.ok.
+            touch "${cfg%.json}.failed"
         fi
     ) &
 done
@@ -183,44 +210,75 @@ wait
 
 ELAPSED=$((SECONDS - START))
 echo
-echo "All jobs finished in ${ELAPSED}s ($(printf '%.1f' "$(echo "$ELAPSED/60" | bc -l)") min)."
+echo "All jobs finished in ${ELAPSED}s ($((ELAPSED / 60)) min $((ELAPSED % 60)) s)."
 
 # ---------- verify and merge ----------
+# A part is good only if one of its tries returned zero (marker cfg_NNN.ok).
+# A part without the marker has failed: all its tries returned non-zero, or
+# its job was killed. Any failed part: name it, do NOT merge, keep the work
+# dir with the logs.
 shopt -s nullglob
+FAILED=()
+for cfg in "$TMPDIR"/cfg_*.json; do
+    [[ -e "${cfg%.json}.ok" ]] || FAILED+=("$cfg")
+done
 OUTPUTS=("$TMPDIR"/output_part_*.root)
 shopt -u nullglob
 
+if (( ${#FAILED[@]} > 0 )); then
+    echo "ERROR: ${#FAILED[@]} of $CFG_COUNT parts failed — no hadd, $OUTPUT not written."
+    for cfg in "${FAILED[@]}"; do
+        idx=$(basename "$cfg" .json | sed 's/cfg_//')
+        echo "    part $idx: logs $TMPDIR/cfg_${idx}.log (and cfg_${idx}_retry*.log);" \
+             "rerun with: ./ana $TMPDIR/cfg_${idx}.json"
+    done
+    warn_stale_output
+    echo "Tmp kept at $TMPDIR"
+    exit 4
+fi
+
 if (( ${#OUTPUTS[@]} == 0 )); then
     echo "ERROR: no output_part_*.root produced — aborting (tmp kept at $TMPDIR)"
+    warn_stale_output
     exit 2
 fi
 if (( ${#OUTPUTS[@]} != CFG_COUNT )); then
-    echo "WARNING: expected $CFG_COUNT outputs, found ${#OUTPUTS[@]} — some jobs failed."
-    echo "Inspect logs in $TMPDIR. Continuing with hadd of what we have."
+    echo "ERROR: expected $CFG_COUNT outputs, found ${#OUTPUTS[@]} — no hadd (tmp kept at $TMPDIR)"
+    warn_stale_output
+    exit 2
 fi
 
+# Merge into a temporary name next to the target and rename on success: a
+# failed hadd must not leave a truncated file at the output path.
+MERGE_TMP="${OUTPUT%.root}.merging.root"
 echo "Merging ${#OUTPUTS[@]} files into $OUTPUT ..."
-hadd -f "$OUTPUT" "${OUTPUTS[@]}"
+hadd -f "$MERGE_TMP" "${OUTPUTS[@]}"
 HADD_RC=$?
 
 if (( HADD_RC != 0 )); then
-    echo "ERROR: hadd failed (rc=$HADD_RC) — tmp kept at $TMPDIR"
+    rm -f "$MERGE_TMP"
+    echo "ERROR: hadd failed (rc=$HADD_RC) — $OUTPUT not written, tmp kept at $TMPDIR"
+    warn_stale_output
+    exit 3
+fi
+if ! mv -f "$MERGE_TMP" "$OUTPUT"; then
+    echo "ERROR: could not rename $MERGE_TMP to $OUTPUT — tmp kept at $TMPDIR"
+    warn_stale_output
     exit 3
 fi
 
-# Cleanup only when ALL jobs succeeded (no missing outputs)
-if (( ${#OUTPUTS[@]} == CFG_COUNT )); then
-    rm -rf "$TMPDIR"
-else
-    echo
-    echo "NOTE: ${#OUTPUTS[@]}/$CFG_COUNT chunks succeeded — tmp kept at $TMPDIR"
-    echo "      Failed chunks: inspect cfg_NNN.log and rerun those configs:"
-    for cfg in "$TMPDIR"/cfg_*.json; do
-        idx=$(basename "$cfg" .json | sed 's/cfg_//')
-        out="$TMPDIR/output_part_${idx}.root"
-        [[ -f "$out" ]] || echo "        ./ana $cfg"
-    done
+# All parts succeeded and were merged. The job logs go away with the work
+# dir: show first what ROOT or ana warned about in them (errors of a try that
+# was repeated are listed too).
+LOG_NOTES=$(grep -ohE $'(Warning|Error|SysError) in <[^\r]*|Warning: [^\r]*' \
+                 "$TMPDIR"/cfg_*.log 2>/dev/null | sort | uniq -c)
+if [[ -n "$LOG_NOTES" ]]; then
+    echo "Messages found in the job logs (count, text):"
+    echo "$LOG_NOTES" | head -30
 fi
+
+# Remove the work dir
+rm -rf "$TMPDIR"
 
 echo "================================================================"
 echo "Done. Output: $OUTPUT"
