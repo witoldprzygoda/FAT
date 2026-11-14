@@ -564,6 +564,22 @@ public:
     }
 
     /**
+     * @brief Input variables that may be absent from the tree
+     *
+     * In config: "optional_variables": ["ep_rich_ind", "em_rich_ind"]. A listed variable that the
+     * input tree does not contain is provided as the constant output.missing_value instead of
+     * stopping the program (use only for variables that are written to the output for
+     * information and do not enter any selection). Logical names, before the lepton-prefix mapping.
+     */
+    std::vector<std::string> getOptionalInputVariables() const {
+        std::vector<std::string> out;
+        const JsonValue& arr = config_["input"]["optional_variables"];
+        if (arr.isArray())
+            for (size_t i = 0; i < arr.size(); ++i) out.push_back(arr[i].asString());
+        return out;
+    }
+
+    /**
      * @brief Get starting event number
      * @return Starting event index (default 0)
      */
@@ -644,11 +660,45 @@ public:
     }
     
     /**
-     * @brief Check if SIMULATED kinematic type is enabled
-     * @return true if simulated data should be loaded (default: false)
+     * @brief Master switch for simulation input (kinematics.simulated)
+     * @return true if the input is simulation (default: false)
+     *
+     * When true, main.cc reads the GEANT truth columns of the four tracks and
+     * writes them, with the classes and weights of src/sim_truth.h, to scan_nt.
      */
     bool hasSimulated() const {
         return config_["kinematics"]["simulated"].asBool(false);
+    }
+
+    // ========================================================================
+    // Simulation Configuration (read only when kinematics.simulated is true)
+    //
+    //   "simulation": {
+    //       "set":           1 | 2 | 3,   SMASH standard / lepton / eta set (required)
+    //       "pdg_br":        true,        sim_w with PDG branching ratios
+    //                                     (false: converter database values)
+    //       "br_eta_pipiee": 2.68e-4,     BR(eta -> pi+ pi- e+ e-), eta set
+    //       "br_x17":        0.0          BR(eta -> X17 pi+ pi-) hypothesis, eta set
+    //   }
+    // ========================================================================
+
+    /**
+     * @brief Simulated set: 1 standard, 2 lepton, 3 eta; 0 if not given
+     */
+    int getSimSet() const {
+        return config_["simulation"]["set"].asInt(0);
+    }
+
+    bool isSimPdgBr() const {
+        return config_["simulation"]["pdg_br"].asBool(true);
+    }
+
+    double getSimBrEtaPiPiEE() const {
+        return config_["simulation"]["br_eta_pipiee"].asDouble(2.68e-4);
+    }
+
+    double getSimBrX17() const {
+        return config_["simulation"]["br_x17"].asDouble(0.0);
     }
     
     /**
@@ -708,9 +758,12 @@ public:
     //   "trigger": {
     //       "selection":       "PT3" | "PT2" | "none",   default "PT3"
     //       "bias_correction": true | false,             default true
+    //       "bit_test":        true | false,             default false
     //   }
     //
-    // selection drives the per-event trigbit cut applied in processEvent.
+    // selection drives the per-event trigbit cut applied in processEvent:
+    // trigbit == 8192 (PT3) / 4096 (PT2), or with bit_test (simulation, where
+    // PT3 rows carry 12288) (trigbit & 8192) != 0 / (trigbit & 4096) != 0.
     // bias_correction controls whether main.cc runs Pass 1 (per-file
     // trigbit counters) and weights every fill / ntuple row by the
     // PT3 trigger-bias factor w = (63·N_PT2)/N_PT3 (or 1.0 when off).
@@ -744,6 +797,13 @@ public:
      */
     bool isTriggerBiasCorrectionEnabled() const {
         return config_["trigger"]["bias_correction"].asBool(true);
+    }
+
+    /**
+     * @brief Trigger cut as a bit test (trigbit & mask) != 0 instead of trigbit == mask
+     */
+    bool isTriggerBitTest() const {
+        return config_["trigger"]["bit_test"].asBool(false);
     }
 
     // ========================================================================
@@ -920,6 +980,17 @@ public:
         printConfigLine(os, "Selection", getTriggerSelection());
         printConfigLine(os, "Bias correction (PT3)",
                         std::string(isTriggerBiasCorrectionEnabled() ? "enabled" : "disabled"));
+        if (isTriggerBitTest()) printConfigLine(os, "Bit test", "(trigbit & mask) != 0");
+
+        if (hasSimulated()) {
+            os << "║                                                                ║\n";
+            os << "║ Simulation:                                                    ║\n";
+            printConfigLine(os, "Set", std::to_string(getSimSet()) + " (1 std, 2 lep, 3 eta)");
+            printConfigLine(os, "Branching ratios", isSimPdgBr() ? "PDG" : "converter database");
+            std::ostringstream br;
+            br << "eta->pi+pi-e+e- " << getSimBrEtaPiPiEE() << ", X17 " << getSimBrX17();
+            printConfigLine(os, "BR", br.str());
+        }
 
         os << "╚════════════════════════════════════════════════════════════════╝\n";
     }

@@ -356,6 +356,17 @@ public:
     size_t boundVariableCount() const {
         return branch_values_.size();
     }
+
+    /**
+     * @brief Provide a variable that is absent from the tree as a constant value
+     *
+     * Used for the variables listed in input.optional_variables: operator[] then returns the
+     * constant for every entry. No branch is read.
+     */
+    Float_t& bindConstant(const std::string& logical_name, Float_t value) {
+        branch_values_[logical_name] = value;
+        return branch_values_[logical_name];
+    }
     
     /**
      * @brief Print summary of reader state

@@ -33,6 +33,10 @@ inline void setupCuts(CutManager& cuts) {
     // for the trigger-bias correction counters; it is NOT applied as a cut.
     cuts.defineValueCut("trigger_PT3", 8192, "Trigger PT3 (trigbit == 8192)");
     cuts.defineValueCut("trigger_PT2", 4096, "Trigger PT2 (trigbit == 4096, downscale 64)");
+    // Simulation (config trigger.bit_test): the trigger bit must be set;
+    // simulated PT3 rows carry trigbit 12288, none has trigbit == 8192.
+    cuts.defineTriggerCut("trigger_PT3_bit", 8192, true, "Trigger PT3 bit ((trigbit & 8192) != 0, simulation)");
+    cuts.defineTriggerCut("trigger_PT2_bit", 4096, true, "Trigger PT2 bit ((trigbit & 4096) != 0, simulation)");
 
     // No start-detector (LGAD) requirement: the betanew productions use the
     // relative-time reconstruction (beta_new); start_iteration is only stored.

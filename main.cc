@@ -26,6 +26,7 @@
 #include "src/setup_cuts.h"
 #include "src/progressbar.h"
 #include "src/console_box.h"
+#include "src/sim_truth.h"
 #include <TError.h>
 #include <algorithm>
 #include <cctype>
@@ -117,6 +118,55 @@ std::string verifyOutputFile(const std::string& output, Manager& manager) {
 }
 
 // ============================================================================
+// SIMULATION SETTINGS (kinematics.simulated)
+// ============================================================================
+// Read once in main(); processEvent uses them for the truth columns of scan_nt.
+
+struct SimSettings {
+    bool enabled = false;                     // kinematics.simulated
+    simtruth::Set set = simtruth::kStd;       // simulation.set
+    simtruth::Opt opt;                        // pdg_br, br_eta_pipiee, br_x17 (mode is not used for weights)
+    int q1 = 2, q2 = 3;                       // GEANT ids expected in the two lepton slots
+};
+
+// GEANT truth columns per track (<prefix>_sim_<name>); leptons also <prefix>_rich_sim_geanttrack
+const std::vector<std::string>& simTrackColumns() {
+    static const std::vector<std::string> names = {
+        "id", "parentid", "grandparentid", "processid", "mediumid", "p", "px", "py", "pz",
+        "vertexx", "vertexy", "vertexz", "geninfo", "geninfo1", "geninfo2", "genweight",
+        "iscommon", "isghost"};
+    return names;
+}
+
+// GEANT truth of the four slots (ep_/em_ = the two lepton slots, also in the
+// like-sign trees; pip_, pim_) as simtruth tracks.
+void readSimTracks(NTupleReader& reader, simtruth::Trk trk[4]) {
+    static const char* slots[4] = {"ep_", "em_", "pip_", "pim_"};
+    for (int i = 0; i < 4; ++i) {
+        const std::string prefix = slots[i];
+        trk[i] = simtruth::Trk{
+            static_cast<int>(reader[prefix + "sim_id"]),
+            static_cast<int>(reader[prefix + "sim_parentid"]),
+            static_cast<int>(reader[prefix + "sim_grandparentid"]),
+            static_cast<int>(reader[prefix + "sim_processid"]),
+            reader[prefix + "sim_geninfo"], reader[prefix + "sim_geninfo1"],
+            reader[prefix + "sim_geninfo2"], reader[prefix + "sim_genweight"],
+            reader[prefix + "sim_vertexx"], reader[prefix + "sim_vertexy"],
+            reader[prefix + "sim_vertexz"],
+            reader[prefix + "sim_px"], reader[prefix + "sim_py"], reader[prefix + "sim_pz"],
+            static_cast<int>(reader[prefix + "sim_isghost"])};
+    }
+}
+
+// GEANT id of the particle in a lepton slot from its prefix: "ep", "ep1", "ep2" -> 2 (e+),
+// "em", "em1", "em2" -> 3 (e-); 0 if unknown.
+int geantIdOfLeptonPrefix(const std::string& prefix) {
+    if (prefix.compare(0, 2, "ep") == 0) return 2;
+    if (prefix.compare(0, 2, "em") == 0) return 3;
+    return 0;
+}
+
+// ============================================================================
 // READER VARIABLES USED BY processEvent
 // ============================================================================
 // Every PAT branch that processEvent reads (directly, or through
@@ -131,9 +181,11 @@ std::vector<std::string> requiredReaderVariables(const AnalysisConfig& config) {
     std::vector<std::string> vars = {
         "isBest", "trigbit", "runnumber", "event",
         "eVertReco_x", "eVertReco_y", "eVertReco_z", "eVertReco_chi2",
-        "neutr_mult", "fwdet_mult", "evtStart", "start_iteration",
+        "neutr_mult", "fwdet_mult", "evtStart",
         "ep_hyp_chi2_combined"
     };
+    // Not in the simulation trees: written as -1 there (see processEvent)
+    if (!config.hasSimulated()) vars.push_back("start_iteration");
 
     // All four particles ("ep_"/"em_" go through the lepton prefix mapping)
     for (const std::string prefix : {"ep", "em", "pip", "pim"}) {
@@ -180,6 +232,18 @@ std::vector<std::string> requiredReaderVariables(const AnalysisConfig& config) {
                                      "z2", "chi2", "ndf", "dist_tofhit"}) {
                 vars.push_back(std::string("fwdet_") + name + "_" + std::to_string(i));
             }
+        }
+    }
+
+    // Simulation: GEANT truth of the four tracks (written to scan_nt)
+    if (config.hasSimulated()) {
+        for (const std::string prefix : {"ep", "em", "pip", "pim"}) {
+            for (const auto& name : simTrackColumns()) {
+                vars.push_back(prefix + "_sim_" + name);
+            }
+        }
+        for (const std::string prefix : {"ep", "em"}) {
+            vars.push_back(prefix + "_rich_sim_geanttrack");
         }
     }
 
@@ -237,7 +301,7 @@ Long64_t currentFileEntry(NTupleReader& reader) {
 // ============================================================================
 
 void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
-                 const AnalysisConfig& config) {
+                 const AnalysisConfig& config, const SimSettings& sim) {
 
     // NOTE: with isBestAll (isBest >= 0) one call = one stored COMBINATION, and
     // one event can give several rows (same e+e- pair with another pion, ...).
@@ -253,15 +317,38 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     //   "PT3"  -> trigbit == 8192   (default; 2-particle leptonic with bias)
     //   "PT2"  -> trigbit == 4096   (unbiased 2-particle hadronic, downscale 64)
     //   "none" -> no trigger filter (debug / no-bias ≥3-particle topologies)
+    // With config.trigger.bit_test (simulation, PT3 rows carry 12288) the bit
+    // is tested instead: (trigbit & 8192) != 0, (trigbit & 4096) != 0.
     {
         const std::string trig_cut = config.getTriggerCutName();
-        if (!trig_cut.empty() &&
-            !cuts.passValueCut(trig_cut, reader["trigbit"])) return;
+        if (!trig_cut.empty()) {
+            const bool trig_pass = config.isTriggerBitTest()
+                ? cuts.passTriggerCut(trig_cut + "_bit", static_cast<int>(reader["trigbit"]))
+                : cuts.passValueCut(trig_cut, reader["trigbit"]);
+            if (!trig_pass) return;
+        }
     }
 
     // No start-detector requirement: the betanew productions reconstruct the
     // relative time (beta_new) without START. start_iteration is only stored
-    // in the ntuples.
+    // in the ntuples (-1 in simulation: the sim trees have no such branch).
+    const Float_t start_iteration = sim.enabled ? -1.0f : reader["start_iteration"];
+
+    // Simulation: a row goes into the histograms only if this set owns it in
+    // partition mode A (sim_weights_spec.md a: rows with sim_own = 0 go into
+    // no histogram). The histograms stay unweighted (sim_w is never an event
+    // weight). Every row still goes to the ntuples. Data: always true.
+    bool fill_histos = true;
+    if (sim.enabled) {
+        simtruth::Trk trk[4];
+        readSimTracks(reader, trk);
+        simtruth::Opt optA = sim.opt;
+        optA.mode = 0;
+        fill_histos = simtruth::Owns(sim.set, trk, optA);
+    }
+    auto hfill = [&mgr, fill_histos](const std::string& name, auto... values) {
+        if (fill_histos) mgr.fill(name, values...);
+    };
 
     // Create e+ and e- with reconstructed kinematics
     PParticle positron(MASS_ELECTRON, "e+");
@@ -298,16 +385,16 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                              KinematicType::CORRECTED);
 
     // Lepton momentum histograms (RECONSTRUCTED + CORRECTED)
-    mgr.fill("ep_p", positron.momentum());
-    mgr.fill("em_p", electron.momentum());
-    mgr.fill("ep_p_cor", positron.momentum(KinematicType::CORRECTED));
-    mgr.fill("em_p_cor", electron.momentum(KinematicType::CORRECTED));
+    hfill("ep_p", positron.momentum());
+    hfill("em_p", electron.momentum());
+    hfill("ep_p_cor", positron.momentum(KinematicType::CORRECTED));
+    hfill("em_p_cor", electron.momentum(KinematicType::CORRECTED));
 
     // Pion momentum histograms (RECONSTRUCTED + CORRECTED)
-    mgr.fill("pip_p", piplus.momentum());
-    mgr.fill("pim_p", piminus.momentum());
-    mgr.fill("pip_p_cor", piplus.momentum(KinematicType::CORRECTED));
-    mgr.fill("pim_p_cor", piminus.momentum(KinematicType::CORRECTED));
+    hfill("pip_p", piplus.momentum());
+    hfill("pim_p", piminus.momentum());
+    hfill("pip_p_cor", piplus.momentum(KinematicType::CORRECTED));
+    hfill("pim_p_cor", piminus.momentum(KinematicType::CORRECTED));
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
@@ -326,14 +413,14 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pim_p_cor = piminus.momentum(KinematicType::CORRECTED);
     double pim_dp = pim_p_cor - pim_p_rec;
 
-    mgr.fill("ep_dp_vs_p", ep_p_rec, ep_dp);
-    mgr.fill("em_dp_vs_p", em_p_rec, em_dp);
-    mgr.fill("pip_dp_vs_p", pip_p_rec, pip_dp);
-    mgr.fill("pim_dp_vs_p", pim_p_rec, pim_dp);
+    hfill("ep_dp_vs_p", ep_p_rec, ep_dp);
+    hfill("em_dp_vs_p", em_p_rec, em_dp);
+    hfill("pip_dp_vs_p", pip_p_rec, pip_dp);
+    hfill("pim_dp_vs_p", pim_p_rec, pim_dp);
 
     // Opening angle between e+ and e- (must be computed before operator+)
     double oa = Physics::openingAngle(positron, electron);
-    mgr.fill("opening_angle", oa);
+    hfill("opening_angle", oa);
 
     // Compound objects
     PParticle epem = positron + electron;                   // e+ e-
@@ -349,13 +436,13 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double m_pippim_cor = pippim.massGeV(KinematicType::CORRECTED);
     double m_pippimepem_cor = pippimepem.massGeV(KinematicType::CORRECTED);
 
-    mgr.fill("mass_ee_before_oa", m_ee);
-    mgr.fill("mass_pippim", m_pippim);
-    mgr.fill("mass_pippimepem", m_pippimepem);
+    hfill("mass_ee_before_oa", m_ee);
+    hfill("mass_pippim", m_pippim);
+    hfill("mass_pippimepem", m_pippimepem);
 
-    mgr.fill("mass_ee_before_oa_cor", m_ee_cor);
-    mgr.fill("mass_pippim_cor", m_pippim_cor);
-    mgr.fill("mass_pippimepem_cor", m_pippimepem_cor);
+    hfill("mass_ee_before_oa_cor", m_ee_cor);
+    hfill("mass_pippim_cor", m_pippim_cor);
+    hfill("mass_pippimepem_cor", m_pippimepem_cor);
 
     // Beam + target for missing mass calculations (synthetic — REC == COR)
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
@@ -375,15 +462,15 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double mm_pippim_cor = miss_pippim.massGeV(KinematicType::CORRECTED);
     double mm_pippimepem_cor = miss_pippimepem.massGeV(KinematicType::CORRECTED);
 
-    mgr.fill("mm_epem", mm_epem);
-    mgr.fill("mm_pippim", mm_pippim);
-    mgr.fill("mm_pippimepem", mm_pippimepem);
-    mgr.fill("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem);
+    hfill("mm_epem", mm_epem);
+    hfill("mm_pippim", mm_pippim);
+    hfill("mm_pippimepem", mm_pippimepem);
+    hfill("mm_vs_m_pippimepem", mm_pippimepem, m_pippimepem);
 
-    mgr.fill("mm_epem_cor", mm_epem_cor);
-    mgr.fill("mm_pippim_cor", mm_pippim_cor);
-    mgr.fill("mm_pippimepem_cor", mm_pippimepem_cor);
-    mgr.fill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
+    hfill("mm_epem_cor", mm_epem_cor);
+    hfill("mm_pippim_cor", mm_pippim_cor);
+    hfill("mm_pippimepem_cor", mm_pippimepem_cor);
+    hfill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
 
     // Boost compound systems to beam-target CMS frame.
     EventFrames frames;
@@ -420,10 +507,10 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Control histograms — filled BEFORE the 4-body selection so the cut
     // boundaries (oa_pippim_epem_lab < 50, oa_pippim_epem_eta_rest > 140) can
     // be verified directly on these spectra.
-    mgr.fill("oa_pippim_epem_lab",          oa_pippim_epem_lab);
-    mgr.fill("oa_pippim_epem_eta_rest",     oa_pippim_epem_eta_rest);
-    mgr.fill("oa_pippim_epem_lab_cor",      oa_pippim_epem_lab_cor);
-    mgr.fill("oa_pippim_epem_eta_rest_cor", oa_pippim_epem_eta_rest_cor);
+    hfill("oa_pippim_epem_lab",          oa_pippim_epem_lab);
+    hfill("oa_pippim_epem_eta_rest",     oa_pippim_epem_eta_rest);
+    hfill("oa_pippim_epem_lab_cor",      oa_pippim_epem_lab_cor);
+    hfill("oa_pippim_epem_eta_rest_cor", oa_pippim_epem_eta_rest_cor);
 
     // 4-body selection as standalone cuts: OA_LAB < 50, M(pi+pi-) < 0.420,
     // eta-rest OA > 140. Each cut is evaluated on EVERY row (no short-circuit)
@@ -455,27 +542,27 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double y4_cms_cor = pippimepem_cms.rapidity(KinematicType::CORRECTED);
 
     if (sel_pass) {
-        mgr.fill("mass_pippimepem_selected", m_pippimepem);
-        mgr.fill("mm_vs_m_pippimepem_selected", mm_pippimepem, m_pippimepem);
+        hfill("mass_pippimepem_selected", m_pippimepem);
+        hfill("mm_vs_m_pippimepem_selected", mm_pippimepem, m_pippimepem);
 
         // MM(pi+pi-e+e-) slice scan (selection + one slice window)
-        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_20_22", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_22_24", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_24_26", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_26_28", m_pippimepem);
-        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) mgr.fill("mass_pippimepem_slice_28_30", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem)) hfill("mass_pippimepem_slice_20_22", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem)) hfill("mass_pippimepem_slice_22_24", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem)) hfill("mass_pippimepem_slice_24_26", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem)) hfill("mass_pippimepem_slice_26_28", m_pippimepem);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem)) hfill("mass_pippimepem_slice_28_30", m_pippimepem);
     }
 
     // === CORRECTED selection block (mirror of the above, using *_cor values) ===
     if (sel_pass_cor) {
-        mgr.fill("mass_pippimepem_selected_cor", m_pippimepem_cor);
-        mgr.fill("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor);
+        hfill("mass_pippimepem_selected_cor", m_pippimepem_cor);
+        hfill("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor);
 
-        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) mgr.fill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
+        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
     }
 
     // === ETA / f1 candidates from ECAL (REC + COR) ===============================
@@ -564,7 +651,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                     m_pippim_gg_rec = pippim_gg.massGeV(KinematicType::RECONSTRUCTED);
                     m_pippim_gg_cor = pippim_gg.massGeV(KinematicType::CORRECTED);
 
-                    mgr.fill("mass_gg_cor", m_gg);              // control plot
+                    hfill("mass_gg_cor", m_gg);              // control plot
                     eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg);
                 }
             }
@@ -605,7 +692,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["pim_phi"] = piminus.phi();
     nt["pim_beta_new"] = reader["pim_beta_new"];
 
-    nt["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+    nt["start_iteration"] = start_iteration;  // stored only, not cut on
 
     // Combination keys: isBest (0/1; exactly one row with 1 per event), run, event.
     // (runnumber, event) is NOT unique; rows of one event are adjacent.
@@ -681,7 +768,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["pim_phi"] = piminus.phi();
     nt_cor["pim_beta_new"] = reader["pim_beta_new"];
 
-    nt_cor["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+    nt_cor["start_iteration"] = start_iteration;  // stored only, not cut on
 
     // Combination keys (same as in pippimepem_nt)
     nt_cor["isBest"] = reader["isBest"];
@@ -729,23 +816,23 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
 
     // No OA cut on the event: only the 2-6 deg window spectrum is filled separately
     if (oa_pass) {
-        mgr.fill("mass_ee_after_oa", m_ee);
-        mgr.fill("mass_ee_after_oa_cor", m_ee_cor);
+        hfill("mass_ee_after_oa", m_ee);
+        hfill("mass_ee_after_oa_cor", m_ee_cor);
     }
     // CMS histograms (after OA cut)
-    mgr.fill("rapidity_cms", y_cms);
-    mgr.fill("pt_cms", pt);
-    mgr.fill("theta_cms", theta_cms);
-    mgr.fill("rapidity_vs_mass", m_ee, y_cms);
+    hfill("rapidity_cms", y_cms);
+    hfill("pt_cms", pt);
+    hfill("theta_cms", theta_cms);
+    hfill("rapidity_vs_mass", m_ee, y_cms);
 
-    mgr.fill("rapidity_cms_cor", y_cms_cor);
-    mgr.fill("pt_cms_cor", pt_cor);
-    mgr.fill("theta_cms_cor", theta_cms_cor);
-    mgr.fill("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor);
+    hfill("rapidity_cms_cor", y_cms_cor);
+    hfill("pt_cms_cor", pt_cor);
+    hfill("theta_cms_cor", theta_cms_cor);
+    hfill("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor);
 
     // Dilepton invariant mass (after all cuts)
-    mgr.fill("mass_ee", m_ee);
-    mgr.fill("mass_ee_cor", m_ee_cor);
+    hfill("mass_ee", m_ee);
+    hfill("mass_ee_cor", m_ee_cor);
 
     // Photon and forward-candidate values for scan_nt (written at the end of
     // processEvent). -1 = absent slot; n_gam stays -1 when ECAL is off in the config.
@@ -1002,7 +1089,7 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         sn["fwdet_mult"] = std::max(0.0f, reader["fwdet_mult"]);
 
         sn["evtStart"]        = reader["evtStart"];         // stored only, not cut on
-        sn["start_iteration"] = reader["start_iteration"];  // stored only, not cut on
+        sn["start_iteration"] = start_iteration;  // stored only, not cut on
 
         // --- Tracks ---
         // p_rec, p_cor, theta, phi as in pippimepem_nt (phi in -180..180 deg);
@@ -1112,6 +1199,38 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             sn[prefix + "phi"]   = scan_fw_phi[k];
         }
 
+        // --- Simulation only (kinematics.simulated): GEANT truth, classes, weights ---
+        // Raw truth columns <x>_sim_* of the four slots (ep_/em_ = the two lepton
+        // slots, also in the like-sign trees), then the rules of src/sim_truth.h.
+        // sim_w is never passed to setEventWeight (trigger_corr stays 1).
+        if (sim.enabled) {
+            simtruth::Trk trk[4];
+            const char* slots[4] = {"ep_", "em_", "pip_", "pim_"};
+            for (int i = 0; i < 4; ++i) {
+                const std::string prefix = slots[i];
+                for (const auto& name : simTrackColumns()) {
+                    sn[prefix + "sim_" + name] = reader[prefix + "sim_" + name];
+                }
+                if (i < 2) sn[prefix + "rich_sim_geanttrack"] = reader[prefix + "rich_sim_geanttrack"];
+            }
+            readSimTracks(reader, trk);
+            const simtruth::RowTruth truth = simtruth::EvaluateRow(sim.set, trk, sim.q1, sim.q2, sim.opt);
+            sn["sim_set"]       = static_cast<Float_t>(sim.set);
+            sn["sim_cls"]       = static_cast<Float_t>(truth.cls);     // four-particle class 0-8
+            sn["sim_lcls"]      = static_cast<Float_t>(truth.lcls);    // lepton-pair class L0-L11
+            sn["sim_pcls"]      = static_cast<Float_t>(truth.pcls);    // pion-pair class P0-P9
+            sn["sim_w"]         = static_cast<Float_t>(truth.w);       // weight (simulation.pdg_br, BRs of the config)
+            sn["sim_w_db"]      = static_cast<Float_t>(truth.wdb);     // weight with converter-database BRs
+            sn["sim_own_A"]     = truth.ownA ? 1.0f : 0.0f;            // set owns the row, partition mode A
+            sn["sim_own_B"]     = truth.ownB ? 1.0f : 0.0f;            // set owns the row, partition mode B
+            sn["sim_flags"]     = static_cast<Float_t>(truth.flags);   // simtruth::kFlag* bits
+            sn["sim_tmpl"]      = static_cast<Float_t>(truth.tmpl);    // template: 1 signal, 2 physical bkg, 3 fake lepton, 4 different sources
+            sn["sim_rules_ver"] = static_cast<Float_t>(simtruth::kRulesVersion);
+            sn["m4_true"]       = truth.m4;                            // true M(pi+pi-e+e-) [GeV/c^2], -1 misidentified
+            sn["mee_true"]      = truth.mee;                           // true M(e+e-)
+            sn["mpipi_true"]    = truth.mpipi;                         // true M(pi+pi-)
+        }
+
         sn.fill();
     }
 
@@ -1192,17 +1311,77 @@ int main(int argc, char* argv[]) {
         std::cout << "\n";
     }
 
+    // Simulation settings (kinematics.simulated). The data path is unchanged
+    // when the switch is off (default).
+    SimSettings sim;
+    if (config.hasSimulated()) {
+        sim.enabled = true;
+        const int set = config.getSimSet();
+        if (set < simtruth::kStd || set > simtruth::kEta) {
+            std::cerr << "\nERROR: kinematics.simulated is true, but simulation.set is " << set
+                      << " (must be 1 standard, 2 lepton or 3 eta) in " << config_file
+                      << ". No output file was written.\n";
+            return 1;
+        }
+        sim.set = static_cast<simtruth::Set>(set);
+        sim.opt.pdg = config.isSimPdgBr();
+        sim.opt.brEtaPPee = config.getSimBrEtaPiPiEE();
+        sim.opt.brX17 = config.getSimBrX17();
+        sim.q1 = geantIdOfLeptonPrefix(prefix1.empty() ? "ep" : prefix1);
+        sim.q2 = geantIdOfLeptonPrefix(prefix2.empty() ? "em" : prefix2);
+        if (sim.q1 == 0 || sim.q2 == 0) {
+            std::cerr << "\nERROR: input.lepton_prefixes must start with ep or em in simulation mode"
+                      << " (got " << prefix1 << ", " << prefix2 << "). No output file was written.\n";
+            return 1;
+        }
+        std::cout << "Simulation: set " << set << ", lepton slots GEANT ids " << sim.q1 << ", "
+                  << sim.q2 << ", rules version " << simtruth::kRulesVersion
+                  << "; truth columns, classes and weights go to scan_nt;"
+                  << " histograms take only the rows the set owns (partition mode A).\n";
+
+        // scan_nt stores pat_entry (entry of the row in its PAT file) as a
+        // Float_t, exact only up to 2^24 = 16777216: refuse a larger file
+        // (the rows could no longer be traced back to PAT).
+        Long64_t max_file_entries = reader.entries();
+        TChain* chain = reader.isChain() ? dynamic_cast<TChain*>(reader.getTree()) : nullptr;
+        if (chain) {
+            const Long64_t* offsets = chain->GetTreeOffset();
+            max_file_entries = 0;
+            for (int i = 0; i < chain->GetNtrees(); ++i) {
+                max_file_entries = std::max(max_file_entries, offsets[i + 1] - offsets[i]);
+            }
+        }
+        if (max_file_entries > 16777216LL) {
+            std::cerr << "\nERROR: an input file has " << max_file_entries << " entries in tree '"
+                      << config.getInputTreeName() << "'; scan_nt.pat_entry (Float_t) is exact only"
+                      << " up to 16777216. Split the file. No output file was written.\n";
+            return 1;
+        }
+    }
+
     // Resolve every PAT branch used in processEvent now, before the output
     // file exists. A missing branch stops the program here (exit code 2).
     {
         const std::vector<std::string> required = requiredReaderVariables(config);
-        std::vector<std::string> missing;
+        const std::vector<std::string> optional = config.getOptionalInputVariables();
+        std::vector<std::string> missing, substituted;
         for (const auto& var : required) {
             try {
                 reader.bindVariables({var});
             } catch (const std::exception& e) {
-                missing.push_back(e.what());
+                if (std::find(optional.begin(), optional.end(), var) != optional.end()) {
+                    reader.bindConstant(var, config.getMissingValue());
+                    substituted.push_back(var);
+                } else {
+                    missing.push_back(e.what());
+                }
             }
+        }
+        if (!substituted.empty()) {
+            std::cout << "WARNING: " << substituted.size() << " optional input variable(s) not in tree '"
+                      << config.getInputTreeName() << "', written as " << config.getMissingValue() << ":";
+            for (const auto& v : substituted) std::cout << " " << v;
+            std::cout << "\n";
         }
         if (!missing.empty()) {
             std::cerr << "\nERROR: " << missing.size() << " of " << required.size()
@@ -1357,7 +1536,7 @@ int main(int argc, char* argv[]) {
         // An exception leaves the row half-written (some ntuples filled, others
         // not), so it is never ignored: counted here, fatal after the loop.
         try {
-            processEvent(reader, manager, cuts, config);
+            processEvent(reader, manager, cuts, config, sim);
         } catch (const std::exception& e) {
             ++n_exceptions;
             if (n_exceptions <= max_exceptions_printed) {
