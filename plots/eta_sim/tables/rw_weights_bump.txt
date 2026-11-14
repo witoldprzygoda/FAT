@@ -1,0 +1,52 @@
+# rw_weights_bump: eta -> pi+pi-pi0 Dalitz-plot weight of the bump classes (2, 3) and the eta -> pi+pi-gamma weight of the conversion class (4)
+# f(X,Y) = 1 + aY + bY^2 + dX^2 + fY^3 + gX^2Y, KLOE-2 2016 (A. Anastasi et al., JHEP 05 (2016) 019, arXiv:1601.06985): a -1.095 b 0.145 d 0.081 f 0.141 g -0.044
+# variant 'slides' (X17 analysis, K. Proscinski): 1 + aY, a = -1.095
+# HGeant (GEANT3) eta -> pi+pi-pi0 ASSUMED phase space (flat Dalitz plot); m_eta = 0.547862, m_pi = 0.139570, m_pi0 = 0.134977 GeV, Q = 0.13374 GeV
+phase-space MC (TGenPhaseSpace, 4e6 weighted decays, seed 4530):
+  <f>_PS full KLOE f(X,Y)                        = 1.03838
+  <f>_PS with X^2 -> Xmax(Y)^2/3 (used)          = 1.03837   (difference to full: -5.86e-06, MC statistics)
+  <1 + aY + bY^2 + fY^3>_PS (X terms dropped, the earlier sim_cuts.C variant) = 1.02151
+  <1 + aY>_PS (slides)                            = 0.99004
+  largest |X| / Xmax(Y) over the MC events: 1.000000 (Dalitz boundary formula Xmax = 2 sqrt(3) p* q0* / (m_eta Q))
+  <X^2> per Y bin, MC against Xmax^2/3:
+    Y -1.00--0.80   MC 0.04311   formula 0.04320
+    Y -0.80--0.60   MC 0.10729   formula 0.10749
+    Y -0.60--0.40   MC 0.17059   formula 0.17042
+    Y -0.40--0.20   MC 0.22512   formula 0.22491
+    Y -0.20- 0.00   MC 0.26686   formula 0.26654
+    Y  0.00- 0.20   MC 0.29016   formula 0.28977
+    Y  0.20- 0.40   MC 0.28672   formula 0.28708
+    Y  0.40- 0.60   MC 0.24838   formula 0.24832
+    Y  0.60- 0.80   MC 0.16029   formula 0.16049
+    Y  0.80- 1.00   MC 0.05439   formula 0.05433
+weight wB(M(pipi)_true) = f_bar(Y) / <f>_PS (KLOE) and (1 + aY) / <1 + aY>_PS (slides):
+  M(pipi)    Y      Xmax    wB KLOE   wB slides   p3 (pi+pi-pi0 share of pion class 2)   wC (GP)   wC (GS)
+  0.285   0.827   0.442    0.2660     0.0953     0.9107     0.0898    0.0924
+  0.295   0.708   0.680    0.3418     0.2267     0.9096     0.2415    0.2479
+  0.305   0.585   0.810    0.4324     0.3625     0.9082     0.3900    0.3993
+  0.315   0.459   0.886    0.5373     0.5029     0.9065     0.5340    0.5455
+  0.325   0.328   0.926    0.6557     0.6478     0.9045     0.6722    0.6851
+  0.335   0.192   0.938    0.7868     0.7972     0.9020     0.8030    0.8165
+  0.345   0.053   0.928    0.9291     0.9512     0.8989     0.9250    0.9383
+  0.355  -0.090   0.898    1.0811     1.1097     0.8949     1.0365    1.0490
+  0.365  -0.237   0.848    1.2406     1.2727     0.8894     1.1360    1.1469
+  0.375  -0.389   0.778    1.4054     1.4402     0.8816     1.2218    1.2305
+  0.385  -0.545   0.685    1.5726     1.6123     0.8697     1.2921    1.2982
+  0.395  -0.704   0.560    1.7388     1.7889     0.8484     1.3452    1.3484
+  0.405  -0.868   0.378    1.9002     1.9701     0.7963     1.3796    1.3796
+  0.415  -1.000   0.000    0.0000     0.0000     0.0000     1.3936    1.3904
+  0.425  -1.000   0.000    0.0000     0.0000     0.0000     1.3859    1.3794
+  0.435  -1.000   0.000    0.0000     0.0000     0.0000     1.3553    1.3458
+  0.445  -1.000   0.000    0.0000     0.0000     0.0000     1.3009    1.2888
+  0.455  -1.000   0.000    0.0000     0.0000     0.0000     1.2225    1.2083
+  0.465  -1.000   0.000    0.0000     0.0000     0.0000     1.1204    1.1048
+  0.475  -1.000   0.000    0.0000     0.0000     0.0000     0.9959    0.9797
+  0.485  -1.000   0.000    0.0000     0.0000     0.0000     0.8514    0.8357
+  0.495  -1.000   0.000    0.0000     0.0000     0.0000     0.6912    0.6769
+  0.505  -1.000   0.000    0.0000     0.0000     0.0000     0.5216    0.5096
+  0.515  -1.000   0.000    0.0000     0.0000     0.0000     0.3520    0.3431
+  0.525  -1.000   0.000    0.0000     0.0000     0.0000     0.1957    0.1903
+  0.535  -1.000   0.000    0.0000     0.0000     0.0000     0.0712    0.0691
+conversion: wC = |F_V|^2 p*^2 k^2 / <|F_V|^2 p*^2 k^2>_PS (HGeant eta -> pi+pi-gamma ASSUMED phase space, dPhi/dM ~ p* k)
+  normalisation numeric (GP / GS): 5.229091e-04 / 4.883707e-04; TGenPhaseSpace 2e6: 5.228646e-04 / 4.883333e-04
+pion class 2 mixture: p3(M) = B3 rho3 / (B3 rho3 + Bg rhog), HGeant B3 = 0.2114, Bg = 0.0478, rho = phase-space M(pipi) densities

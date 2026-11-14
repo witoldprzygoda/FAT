@@ -1,0 +1,30 @@
+# VERSION 1 (copy kept by the write agent on 2026-11-13): the X17 selection used by the blind test. Superseded by s5_opt_x17_frozen.txt (v2).
+# s5_opt_x17_frozen: chosen X17 selection (frozen 2026-11-12), from s5_opt_x17.C
+# simulation only; std + lep + eta owned rows, mode A, w (PDG) x physics weights V3; signal = class 6 (W = 2 BR); B = T1 (no X17) + T2
+# all cut variables from corrected momenta; 'none' = no cut; M in GeV/c2 except M(ee) in MeV/c2; angles in deg
+base = pre (isBest >= 0, vertex z > -500 mm, PT3 bit, vertex z > -160 mm, cor_ok == 1)
+m4_lo = 0.5330
+m4_hi = 0.5555
+mee_lo_MeV = 13.0
+mee_hi_MeV = 26.5
+oa_lo_deg = none
+oa_hi_deg = none
+alpha_lab_hi_deg = none
+mpipi_lo = none
+mpipi_hi = none
+alpha_eta_lo_deg = none
+pions_in_vertex_fit = yes
+dz_pi_hi_mm = none
+mm4_hi = none
+pt4_lo = none
+x17_sigma_per_unit_BR_nb = 4484.32481 +- 6.36969
+x17_rows_per_unit_BR = 27266937.0   # L_data = 6080.5 nb^-1 (UNCONFIRMED)
+background_sigma_nb = 1.33280 +- 0.05052   # N_eff 696
+background_rows = 8104.1 +- 307.2   # L_data = 6080.5 nb^-1 (UNCONFIRMED)
+expected_UL90_BR_asimov_CLs = 5.479e-06 +- 1.0e-07   # counting, B known; error from the MC statistics of B
+expected_UL90_BR_median_CLs = 5.477e-06   # band 3.819e-06 .. 7.918e-06
+expected_UL90_BR_FC = 5.464e-06
+expected_UL90_BR_shape_Bknown = 4.845e-06   # binned M(ee) likelihood, Gaussian line
+expected_UL90_BR_shape_Bprofiled = 5.397e-06
+Z_BR_1e-5 = 3.01   # Asimov counting, B known
+expected_UL90_BR_slides_counting = 6.301e-06   # slides + peak window + the M(ee) window above

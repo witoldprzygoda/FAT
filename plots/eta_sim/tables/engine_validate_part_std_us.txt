@@ -1,0 +1,198 @@
+# /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/output_std_pippimepem.root scan_nt set 1, vz > -160 of the FAT output: 230115 of 230469 rows
+# columns: N, sum W (PDG), sum W^2, N_eff=(sum W)^2/sum W^2, sum W (database / note weights)
+
+## ownership
+dropped                                                                    114701        81762        76620      87249.0    1.147e+05
+mode B owned                                                               230115   1.9378e+05   1.8837e+05     199332.5            0
+owned                                                                      115414   1.1201e+05   1.1175e+05     112274.3   1.1541e+05
+owned rows: event-group variance sum_g (sum W)^2 = 133787, N_eff(group) = 93784.0
+
+## ownership x lepton-pair class
+dropped | L0 misid                                                            447       371.37        356.3        387.1          447
+dropped | L1 same pi0 Dalitz                                                78820        77237        75686      78819.2        78820
+dropped | L2 same eta Dalitz                                                35269       4028.4       460.12      35269.0        35269
+dropped | L7 two Dalitz (DD)                                                  106       78.882       73.184         85.0          106
+dropped | L8 Dalitz+conversion (DC)                                            50       37.742       35.699         39.9           50
+dropped | L9 other different                                                    9       8.8193       8.6423          9.0            9
+owned   | L0 misid                                                           1401       1393.6       1400.6       1386.6         1401
+owned   | L1 same pi0 Dalitz                                                28288        28168        28074      28261.8        28288
+owned   | L2 same eta Dalitz                                                 3250       371.27       42.413       3250.0         3250
+owned   | L3 same conversion                                                78491        78676        78906      78446.9        78491
+owned   | L7 two Dalitz (DD)                                                  104       99.234       99.326         99.1          104
+owned   | L8 Dalitz+conversion (DC)                                          2221         1707       1633.7       1783.5         2221
+owned   | L9 other different                                                 1659         1599       1598.2       1599.8         1659
+
+## ownership x four-particle class
+dropped | CB-like                                                             137       103.51       96.896        110.6          137
+dropped | fake misid                                                         3260         2525       2397.6       2659.2         3260
+dropped | fake pi->mu                                                        8932       6335.6       5932.2       6766.3         8932
+dropped | multi-pion                                                       102372        72798        68194      77713.3   1.0237e+05
+owned   | CB-like                                                            3443       2958.3       2896.5       3021.5         3443
+owned   | bump conversion                                                    1187       1286.7       1394.8       1187.0         1187
+owned   | bump pi0 Dalitz                                                    1649       1751.7       1860.7       1649.0         1649
+owned   | fake misid                                                         9500       7629.9         7394       7873.3         9500
+owned   | fake pi->mu                                                        8755       8649.4       8647.2       8651.5         8755
+owned   | multi-pion                                                        90573        89467        89321      89612.4        90573
+owned   | peak conversion                                                     307       270.89       239.03        307.0          307
+
+## rows the lepton set provides (std: dropped, lep: owned), by lepton pair + pions
+ALL provided by lep                                                        114701        81762        76620      87249.0    1.147e+05
+L0 misid + K0S                                                                  2       1.9599       1.9205          2.0            2
+L0 misid + both primary                                                       346       287.98       276.36        300.1          346
+L0 misid + fake pions                                                          50       42.071       40.435         43.8           50
+L0 misid + mixed/secondary                                                     49       39.359       37.581         41.2           49
+L1 same pi0 Dalitz + K0S                                                      569       557.58       546.39        569.0          569
+L1 same pi0 Dalitz + both primary                                           61073        59847        58646      61073.0        61073
+L1 same pi0 Dalitz + fake pions                                              8236       8069.7       7907.4       8235.2         8236
+L1 same pi0 Dalitz + mixed/secondary                                         8942       8762.5       8586.6       8942.0         8942
+L2 same eta Dalitz + both primary                                           27741       3168.6       361.91      27741.0        27741
+L2 same eta Dalitz + fake pions                                              3481       397.59       45.413       3481.0         3481
+L2 same eta Dalitz + mixed/secondary                                         4047       462.24       52.797       4047.0         4047
+L7 two Dalitz (DD) + K0S                                                        8       7.6821       7.3768          8.0            8
+L7 two Dalitz (DD) + both primary                                              47       32.407       29.695         35.4           47
+L7 two Dalitz (DD) + fake pions                                                20       14.963       13.894         16.1           20
+L7 two Dalitz (DD) + mixed/secondary                                           31        23.83       22.218         25.6           31
+L8 Dalitz+conversion (DC) + K0S                                                 5       4.8996       4.8013          5.0            5
+L8 Dalitz+conversion (DC) + both primary                                       14       10.256       9.6548         10.9           14
+L8 Dalitz+conversion (DC) + fake pions                                          6       5.0139       4.8143          5.2            6
+L8 Dalitz+conversion (DC) + mixed/secondary                                    25       17.573       16.429         18.8           25
+L9 other different + both primary                                               1      0.97993      0.96026          1.0            1
+L9 other different + fake pions                                                 2       1.9599       1.9205          2.0            2
+L9 other different + mixed/secondary                                            6       5.8796       5.7615          6.0            6
+
+## diagnostics
+FD lepton slot g0 1717 g1 1000001                                                2240
+FD lepton slot g0 1717 g1 1000005                                                75645
+FD lepton slot g0 420807 g1 1000001                                              52
+FD lepton slot g0 420807 g1 1000005                                              6549
+FD lepton slot g0 430907 g1 1000001                                              185
+FD lepton slot g0 430907 g1 1000005                                              15510
+FD lepton slot g0 707 g1 1000001                                                 3098
+FD lepton slot g0 707 g1 1000005                                                 149518
+FD pion slot g0 1717 g1 1000001                                                  3
+FD pion slot g0 1717 g1 1000005                                                  50
+FD pion slot g0 420807 g1 1000005                                                3
+FD pion slot g0 430907 g1 1000005                                                2
+FD pion slot g0 707 g1 1000005                                                   67
+LFM lepton slot g0 1717 id 2 par 1                                               6528
+LFM lepton slot g0 1717 id 2 par 7                                               4728
+LFM lepton slot g0 1717 id 3 par 1                                               6582
+LFM lepton slot g0 1717 id 3 par 2                                               13
+LFM lepton slot g0 1717 id 3 par 3                                               25
+LFM lepton slot g0 1717 id 3 par 7                                               4692
+LFM lepton slot g0 1717 id 5 par 8                                               5
+LFM lepton slot g0 1717 id 8 par 17                                              38
+LFM lepton slot g0 1717 id 9 par 17                                              1
+LFM lepton slot g0 410809 id 2 par 1                                             47
+LFM lepton slot g0 410809 id 2 par 7                                             41
+LFM lepton slot g0 410809 id 3 par 1                                             45
+LFM lepton slot g0 410809 id 3 par 7                                             43
+LFM lepton slot g0 410809 id 3 par 8                                             1
+LFM lepton slot g0 410809 id 3 par 9                                             1
+LFM lepton slot g0 410809 id 8 par -1                                            2
+LFM lepton slot g0 420807 id 2 par 1                                             2409
+LFM lepton slot g0 420807 id 2 par 7                                             4
+LFM lepton slot g0 420807 id 3 par 1                                             2391
+LFM lepton slot g0 420807 id 3 par 2                                             2
+LFM lepton slot g0 420807 id 3 par 3                                             1
+LFM lepton slot g0 420807 id 3 par 7                                             4
+LFM lepton slot g0 430907 id 2 par 1                                             5760
+LFM lepton slot g0 430907 id 2 par 7                                             3
+LFM lepton slot g0 430907 id 3 par 1                                             5682
+LFM lepton slot g0 430907 id 3 par 2                                             5
+LFM lepton slot g0 430907 id 3 par 3                                             6
+LFM lepton slot g0 430907 id 3 par 7                                             4
+LFM lepton slot g0 520107 id 2 par 1                                             27
+LFM lepton slot g0 520107 id 2 par 7                                             19
+LFM lepton slot g0 520107 id 3 par 1                                             27
+LFM lepton slot g0 520107 id 3 par 7                                             19
+LFM lepton slot g0 520809 id 2 par 1                                             1
+LFM lepton slot g0 520809 id 2 par 7                                             1
+LFM lepton slot g0 520809 id 3 par 1                                             1
+LFM lepton slot g0 520809 id 3 par 7                                             1
+LFM lepton slot g0 52080908 id 2 par 1                                           7932
+LFM lepton slot g0 52080908 id 2 par 7                                           11288
+LFM lepton slot g0 52080908 id 3 par 1                                           7776
+LFM lepton slot g0 52080908 id 3 par 3                                           5
+LFM lepton slot g0 52080908 id 3 par 7                                           11219
+LFM lepton slot g0 52080908 id 8 par -1                                          15
+LFM lepton slot g0 550117 id 2 par 1                                             1
+LFM lepton slot g0 550117 id 2 par 7                                             1
+LFM lepton slot g0 550117 id 3 par 1                                             1
+LFM lepton slot g0 550117 id 3 par 7                                             1
+LFM lepton slot g0 55080908 id 2 par 1                                           45
+LFM lepton slot g0 55080908 id 2 par 7                                           69
+LFM lepton slot g0 55080908 id 3 par 1                                           48
+LFM lepton slot g0 55080908 id 3 par 7                                           66
+LFM lepton slot g0 551616 id 2 par 1                                             2
+LFM lepton slot g0 551616 id 2 par 7                                             8
+LFM lepton slot g0 551616 id 3 par 1                                             2
+LFM lepton slot g0 551616 id 3 par 7                                             8
+LFM lepton slot g0 707 id 2 par 1                                                55070
+LFM lepton slot g0 707 id 3 par 1                                                54569
+LFM lepton slot g0 707 id 3 par 2                                                38
+LFM lepton slot g0 707 id 3 par 3                                                65
+LFM pion slot g0 1717 id 2 par 1                                                 187
+LFM pion slot g0 1717 id 3 par 1                                                 1884
+LFM pion slot g0 1717 id 3 par 2                                                 1
+LFM pion slot g0 1717 id 3 par 3                                                 3
+LFM pion slot g0 1717 id 3 par 7                                                 1
+LFM pion slot g0 1717 id 3 par 9                                                 2
+LFM pion slot g0 1717 id 5 par 8                                                 243
+LFM pion slot g0 1717 id 6 par 9                                                 435
+LFM pion slot g0 1717 id 8 par 17                                                5742
+LFM pion slot g0 1717 id 8 par 8                                                 99
+LFM pion slot g0 1717 id 8 par 9                                                 2
+LFM pion slot g0 1717 id 9 par 17                                                9754
+LFM pion slot g0 1717 id 9 par 8                                                 2
+LFM pion slot g0 1717 id 9 par 9                                                 103
+LFM pion slot g0 410809 id 5 par 8                                               242
+LFM pion slot g0 410809 id 6 par 9                                               308
+LFM pion slot g0 410809 id 8 par -1                                              6042
+LFM pion slot g0 410809 id 8 par 8                                               116
+LFM pion slot g0 410809 id 8 par 9                                               8
+LFM pion slot g0 410809 id 9 par -1                                              6913
+LFM pion slot g0 410809 id 9 par 8                                               4
+LFM pion slot g0 410809 id 9 par 9                                               132
+LFM pion slot g0 420807 id 2 par 1                                               12
+LFM pion slot g0 420807 id 3 par 1                                               156
+LFM pion slot g0 430907 id 2 par 1                                               18
+LFM pion slot g0 430907 id 3 par 1                                               30
+LFM pion slot g0 520107 id 2 par 1                                               1
+LFM pion slot g0 520107 id 3 par 1                                               24
+LFM pion slot g0 520809 id 5 par 8                                               2
+LFM pion slot g0 520809 id 8 par -1                                              16
+LFM pion slot g0 520809 id 9 par -1                                              17
+LFM pion slot g0 520809 id 9 par 9                                               2
+LFM pion slot g0 52080908 id 14 par 9                                            2
+LFM pion slot g0 52080908 id 2 par 1                                             18
+LFM pion slot g0 52080908 id 2 par 7                                             2
+LFM pion slot g0 52080908 id 3 par 1                                             28
+LFM pion slot g0 52080908 id 5 par 8                                             548
+LFM pion slot g0 52080908 id 6 par 9                                             927
+LFM pion slot g0 52080908 id 8 par -1                                            13063
+LFM pion slot g0 52080908 id 8 par 8                                             241
+LFM pion slot g0 52080908 id 8 par 9                                             5
+LFM pion slot g0 52080908 id 9 par -1                                            19327
+LFM pion slot g0 52080908 id 9 par 8                                             11
+LFM pion slot g0 52080908 id 9 par 9                                             245
+LFM pion slot g0 550117 id 8 par 17                                              1
+LFM pion slot g0 550117 id 9 par 17                                              2
+LFM pion slot g0 55080908 id 5 par 8                                             4
+LFM pion slot g0 55080908 id 6 par 9                                             5
+LFM pion slot g0 55080908 id 8 par -1                                            92
+LFM pion slot g0 55080908 id 8 par 8                                             1
+LFM pion slot g0 55080908 id 9 par -1                                            110
+LFM pion slot g0 55080908 id 9 par 9                                             1
+LFM pion slot g0 551616 id 5 par 8                                               2
+LFM pion slot g0 551616 id 6 par 10                                              1
+LFM pion slot g0 551616 id 8 par 10                                              1
+LFM pion slot g0 551616 id 8 par 16                                              7
+LFM pion slot g0 551616 id 9 par 16                                              14
+LFM pion slot g0 707 id 2 par 1                                                  221
+LFM pion slot g0 707 id 3 par 1                                                  3052
+LFM pion slot g0 707 id 3 par 2                                                  4
+LFM pion slot g0 707 id 3 par 3                                                  3
+std pi0-Dalitz e (gp -1) not FD, g0 520107                                       38
+std pi0-Dalitz e (gp -1) not FD, g0 52080908                                     22471
+std pi0-Dalitz e (gp -1) not FD, g0 55080908                                     135

@@ -1,0 +1,26 @@
+# DATA file /hdd3/przygoda/HADES/files/exp/gen4/lep_034.root, tree PipPimEpEm_ID, 136047 rows (544188 particles)
+#   stored tof_mom against the ONE-segment formula (the production's own):
+    pip max|stored - one-seg| = 1.846e-06 ns   max|stored - two-seg| = 2.326e+00 ns
+    pim max|stored - one-seg| = 1.759e-06 ns   max|stored - two-seg| = 1.800e+00 ns
+    ep  max|stored - one-seg| = 8.991e-07 ns   max|stored - two-seg| = 3.732e-05 ns
+    em  max|stored - one-seg| = 9.005e-07 ns   max|stored - two-seg| = 1.709e-05 ns
+    particles with |stored - own formula| > 1e-4 ns: 0 of 544188
+#   tof_new, beta_new, chi2 recomputed with HTimeCut::calcTof from the stored tof, tof_mom, resolution:
+    max|tof_new diff| = 1.669e-06 ns, max|beta_new diff| = 1.225e-07, particles with |beta_new diff| > 1e-5: 0
+    rows with hyp_best_chi2_red differing (abs > 1e-4 and rel > 1e-3): 0 of 136047 (max rel 0.00e+00)
+#   PID polygons of the production (exp betanew_v1):
+    particles inside: 544188 of 544188; rows with all four inside: 136047 of 136047
+
+# SIM file /hdd3/przygoda/HADES/files/sim/ppee_std_all.root, tree PipPimEpEm_ID, 238074 rows (952296 particles)
+#   stored tof_mom against the TWO-segment formula (the production's own):
+    pip max|stored - one-seg| = 1.833e+00 ns   max|stored - two-seg| = 1.456e-06 ns
+    pim max|stored - one-seg| = 1.801e+00 ns   max|stored - two-seg| = 1.557e-06 ns
+    ep  max|stored - one-seg| = 4.648e-05 ns   max|stored - two-seg| = 9.020e-07 ns
+    em  max|stored - one-seg| = 1.201e-05 ns   max|stored - two-seg| = 9.024e-07 ns
+    particles with |stored - own formula| > 1e-4 ns: 0 of 952296
+#   tof_new, beta_new, chi2 recomputed with HTimeCut::calcTof from the stored tof, tof_mom, resolution:
+    max|tof_new diff| = 1.669e-06 ns, max|beta_new diff| = 1.228e-07, particles with |beta_new diff| > 1e-5: 0
+    rows with hyp_best_chi2_red differing (abs > 1e-4 and rel > 1e-3): 0 of 238074 (max rel 0.00e+00)
+#   PID polygons of the production (sim betanew_v6):
+    particles inside: 952296 of 952296; rows with all four inside: 238074 of 238074
+

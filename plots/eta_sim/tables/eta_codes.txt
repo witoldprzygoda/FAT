@@ -1,0 +1,28 @@
+# eta_codes: stored generator codes of the eta set (all rows of the three outputs, four slots, three columns)
+# mapping by src/sim_truth.h CodeCandidates: every integer that rounds to the stored float is tested against the dictionary
+
+## column geninfo: 29 distinct stored values; unique 29 (13734136 slots), unknown 0 (0 slots), ambiguous 0 (0 slots)
+  values >= 2^24 with a unique candidate (stored float -> exact code):
+    17700808 -> 17700809 [forced eta decay (eta set)] (6352500 slots, 1860991 rows)
+    52080908 -> 52080907 [SMASH resonance decay] (73979 slots, 21251 rows)
+    55080908 -> 55080907 [SMASH resonance decay] (525 slots, 139 rows)
+    1702030848 -> 1702030809 [forced eta decay (eta set)] (4734132 slots, 1391248 rows)
+  unknown values:
+  ambiguous values:
+
+## column geninfo1: 8 distinct stored values; unique 8 (13734136 slots), unknown 0 (0 slots), ambiguous 0 (0 slots)
+  values >= 2^24 with a unique candidate (stored float -> exact code):
+  unknown values:
+  ambiguous values:
+
+## column geninfo2: 17 distinct stored values; unique 17 (13734136 slots), unknown 0 (0 slots), ambiguous 0 (0 slots)
+  values >= 2^24 with a unique candidate (stored float -> exact code):
+  unknown values:
+  ambiguous values:
+
+forced codes: stored 1702030848 -> 1 candidate(s): 1702030809 [forced eta decay (eta set)]
+forced codes: stored 17700808 -> 1 candidate(s): 17700809 [forced eta decay (eta set)]
+rows with an unknown value 0 (flag bit 3 set: 0; rows where they differ 0)
+rows with an ambiguous value 0 (flag bit 4 set: 0; rows where they differ 0)
+stored genweight of tracks with a forced-eta code (value: slots): 2:11086632
+stored genweight of the other tracks (value: slots): 0:2647504

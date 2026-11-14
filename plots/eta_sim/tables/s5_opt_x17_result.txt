@@ -1,0 +1,197 @@
+# s5_opt_x17_result: X17 selection, final numbers (simulation only; L_data = 6080.5 nb^-1 UNCONFIRMED for all rows and limits)
+# std + lep + eta owned rows, mode A, w (PDG) x physics weights V3; signal = class 6 with W = 2 BR; B = T1 (no X17) + T2
+# errors: event-group variance; N_eff = S^2 / V. Limits: 90 % CL, B known exactly (no systematic uncertainty)
+
+engine cross-check (optimum): X17 per unit BR 773334.000000 vs 773334.000000; T1+T2 194.188566 vs 194.188566; T3 9.813106 vs 9.813106; T4 0.138138 vs 0.138138 (sum w)
+  group variance: X17 1.54667e+06 vs 1.54667e+06; T1+T2 75.2043 vs 75.2043
+  reference: X17 at BR 1e-5 in pre + peak window 0.5333-0.5587: 0.06110 nb (eta_engine_reference uses 0.5336-0.5542: 0.05575)
+
+## pre + peak window + M(ee) 12-22 (start): M4 0.5333-0.5587, M(ee) 12.0-22.0 MeV
+X17 per unit BR: sigma 4648.38724 +- 6.48516 nb (N_eff 513763, rows 513763) = 28264518.6 expected rows per unit BR; at BR = 1e-5: 282.65 rows
+background group             sigma [nb]      error    N_eff      rows    data rows
+Gsig2 bump pi0 Dalitz         0.0019434    0.00194      1.0         1        11.82
+Gsig3 bump conversion         0.0068546    0.00498      1.9         2        41.68
+Gsig4 peak conversion          0.070159     0.0168     17.4        21       426.60
+Gsig5 direct eta->pipiee        0.24216    0.00122  39475.6     64908      1472.45
+G_eta                           0.13053     0.0172     57.6      2361       793.68
+G_pi0D                          0.99669     0.0428    541.9     11518      6060.38
+G_conv                          0.34102     0.0394     74.9        80      2073.55
+G_vec                        9.1958e-05   2.51e-05     13.4        30         0.56
+G_oth                          0.031107   0.000496   3937.3      6544       189.14
+G_fake (T3)                     0.20371     0.0281     52.6      1839      1238.68  (variant only)
+G_diff (T4)                   0.0057814    0.00515      1.3        94        35.15  (variant only)
+X17 other rows                   529.97       2.23  56450.9     58575   3222486.20  (per unit BR, x BR; not in B)
+B = T1(no X17) + T2              1.8206     0.0632    830.0               11069.86 +- 384.23
+B + T3 + T4 (variant)              2.03     0.0693    856.9               12343.69 +- 421.67
+expected 90% CL UL on BR, B known exactly (UL_stat) [x 1e-6]: Asimov CLs 6.1694 (1.64 sqrt(B) approx 6.1231; asymptotic 6.1548); median CLs (n = 11070) 6.1725, band n = 10965..11175: 4.3069..8.9168; FC (n = 11070) 6.1629
+  MC statistics of B: UL with B +- 1 sigma_MC: 6.2747 / 6.0622; variant B + T3 + T4: UL 6.5121, Z(1e-5) 2.53
+  X17 other rows (not class 6, W = 2 BR approx.): 3222486.20 rows per unit BR = 0.114 of the class-6 yield (would lower the UL by about this fraction)
+discovery significance for BR = 1e-5 (Asimov, B known): Z = 2.68 (s = 282.6, B = 11069.9, s/B = 0.026)
+v2 limits [x 1e-6]: UL_stat (B known exactly) 6.1694; MC error of B 384.2 rows -> 1.645 sigma_B,MC / s1 = 22.3609; UL including it 23.1963 (ratio 3.76); Z(1e-5) with the MC error of B: 0.71
+share of the MC variance of B by group (diagonal terms; rows of one event in two groups give the rest): Gsig2 bump pi0 Dalitz 0.001; Gsig3 bump conversion 0.006; Gsig4 peak conversion 0.071; Gsig5 direct eta->pipiee 0.000; G_eta 0.074; G_pi0D 0.459; G_conv 0.389; G_vec 0.000; G_oth 0.000; 
+
+## OPTIMUM (frozen, v2): M4 0.5333-0.5587, M(ee) 15.5-24.5 MeV, pions in vertex
+X17 per unit BR: sigma 3498.45736 +- 5.62611 nb (N_eff 386667, rows 386667) = 21272370.0 expected rows per unit BR; at BR = 1e-5: 212.72 rows
+background group             sigma [nb]      error    N_eff      rows    data rows
+Gsig2 bump pi0 Dalitz                 0          0      0.0         0         0.00
+Gsig3 bump conversion         0.0042395    0.00424      1.0         1        25.78
+Gsig4 peak conversion          0.011679    0.00606      3.7         4        71.01
+Gsig5 direct eta->pipiee        0.15297     0.0011  19420.0     26150       930.13
+G_eta                          0.073948     0.0137     29.0      1314       449.64
+G_pi0D                          0.53747     0.0304    313.3      6458      3268.09
+G_conv                         0.081855     0.0193     18.0        19       497.72
+G_vec                        2.8521e-05   1.39e-05      4.2        12         0.17
+G_oth                          0.016291   0.000406   1613.1      2223        99.06
+G_fake (T3)                    0.044393     0.0118     14.0       503       269.93  (variant only)
+G_diff (T4)                  0.00062492   0.000517      1.5        76         3.80  (variant only)
+X17 other rows                   308.71        1.7  32958.9     34120   1877101.65  (per unit BR, x BR; not in B)
+B = T1(no X17) + T2             0.87848     0.0392    501.4                5341.61 +- 238.54
+B + T3 + T4 (variant)            0.9235      0.041    507.7                5615.35 +- 249.21
+expected 90% CL UL on BR, B known exactly (UL_stat) [x 1e-6]: Asimov CLs 5.7132 (1.64 sqrt(B) approx 5.6514; asymptotic 5.6938); median CLs (n = 5341) 5.6953, band n = 5269..5415: 3.9914..8.2714; FC (n = 5341) 5.6850
+  MC statistics of B: UL with B +- 1 sigma_MC: 5.8380 / 5.5855; variant B + T3 + T4: UL 5.8561, Z(1e-5) 2.82
+  X17 other rows (not class 6, W = 2 BR approx.): 1877101.65 rows per unit BR = 0.088 of the class-6 yield (would lower the UL by about this fraction)
+discovery significance for BR = 1e-5 (Asimov, B known): Z = 2.89 (s = 212.7, B = 5341.6, s/B = 0.040)
+v2 limits [x 1e-6]: UL_stat (B known exactly) 5.7132; MC error of B 238.5 rows -> 1.645 sigma_B,MC / s1 = 18.4456; UL including it 19.3102 (ratio 3.38); Z(1e-5) with the MC error of B: 0.85
+share of the MC variance of B by group (diagonal terms; rows of one event in two groups give the rest): Gsig3 bump conversion 0.012; Gsig4 peak conversion 0.024; Gsig5 direct eta->pipiee 0.001; G_eta 0.123; G_pi0D 0.599; G_conv 0.242; G_vec 0.000; G_oth 0.000; 
+
+## v1 selection (frozen 2026-11-12, used by the blind test): M4 0.5330-0.5555, M(ee) 13.0-26.5 MeV, pions in vertex
+X17 per unit BR: sigma 4484.32481 +- 6.36969 nb (N_eff 495630, rows 495630) = 27266937.0 expected rows per unit BR; at BR = 1e-5: 272.67 rows
+background group             sigma [nb]      error    N_eff      rows    data rows
+Gsig2 bump pi0 Dalitz         0.0051138    0.00372      1.9         2        31.09
+Gsig3 bump conversion         0.0068546    0.00498      1.9         2        41.68
+Gsig4 peak conversion          0.042613     0.0131     10.5        12       259.11
+Gsig5 direct eta->pipiee        0.23443    0.00131  31913.9     48659      1425.45
+G_eta                           0.10878     0.0167     42.3      1830       661.45
+G_pi0D                          0.74786     0.0362    426.8      8858      4547.35
+G_conv                          0.16443     0.0274     36.0        39       999.82
+G_vec                         4.934e-05   1.84e-05      7.2        14         0.30
+G_oth                          0.023308   0.000468   2480.4      3807       141.72
+G_fake (T3)                     0.10873     0.0199     30.0      1004       661.16  (variant only)
+G_diff (T4)                   0.0062871    0.00518      1.5        92        38.23  (variant only)
+X17 other rows                   371.15       1.86  39885.3     41021   2256758.11  (per unit BR, x BR; not in B)
+B = T1(no X17) + T2              1.3334     0.0505    695.9                8107.98 +- 307.35
+B + T3 + T4 (variant)            1.4485     0.0546    704.9                8807.37 +- 331.72
+expected 90% CL UL on BR, B known exactly (UL_stat) [x 1e-6]: Asimov CLs 5.4801 (1.64 sqrt(B) approx 5.4320; asymptotic 5.4650); median CLs (n = 8108) 5.4805, band n = 8018..8198: 3.8217..7.9215; FC (n = 8108) 5.4669
+  MC statistics of B: UL with B +- 1 sigma_MC: 5.5821 / 5.3761; variant B + T3 + T4: UL 5.7095, Z(1e-5) 2.89
+  X17 other rows (not class 6, W = 2 BR approx.): 2256758.11 rows per unit BR = 0.083 of the class-6 yield (would lower the UL by about this fraction)
+discovery significance for BR = 1e-5 (Asimov, B known): Z = 3.01 (s = 272.7, B = 8108.0, s/B = 0.034)
+v2 limits [x 1e-6]: UL_stat (B known exactly) 5.4801; MC error of B 307.3 rows -> 1.645 sigma_B,MC / s1 = 18.5408; UL including it 19.3338 (ratio 3.53); Z(1e-5) with the MC error of B: 0.85
+share of the MC variance of B by group (diagonal terms; rows of one event in two groups give the rest): Gsig2 bump pi0 Dalitz 0.005; Gsig3 bump conversion 0.010; Gsig4 peak conversion 0.068; Gsig5 direct eta->pipiee 0.001; G_eta 0.110; G_pi0D 0.513; G_conv 0.294; G_vec 0.000; G_oth 0.000; 
+
+v1 cuts in the fixed peak window 0.5333-0.5587: UL_stat 5.6586, UL with MC error 20.6733 [x 1e-6]
+
+## slides + peak window (no M(ee) window): M4 0.5333-0.5587, OA > 2.0, a_lab < 50, M(pipi) < 0.460, a_eta > 140
+X17 per unit BR: sigma 5065.84031 +- 6.77011 nb (N_eff 559902, rows 559902) = 30802842.0 expected rows per unit BR; at BR = 1e-5: 308.03 rows
+background group             sigma [nb]      error    N_eff      rows    data rows
+Gsig2 bump pi0 Dalitz          0.024883     0.0111      5.1         6       151.30
+Gsig3 bump conversion         0.0081321    0.00514      2.5         3        49.45
+Gsig4 peak conversion           0.49456     0.0488    102.6       113      3007.17
+Gsig5 direct eta->pipiee        0.87644    0.00295  88130.2    251597      5329.21
+G_eta                           0.53961     0.0391    190.1      9155      3281.09
+G_pi0D                           3.2203     0.0822   1535.0     34604     19580.87
+G_conv                           1.5225     0.0832    334.8       378      9257.74
+G_vec                        0.00048637   5.79e-05     70.6       127         2.96
+G_oth                           0.10722    0.00111   9329.4     24684       651.94
+G_fake (T3)                     0.86672     0.0587    217.8     10839      5270.08  (variant only)
+G_diff (T4)                      0.2476     0.0343     52.2      6251      1505.51  (variant only)
+X17 other rows                   569.45        2.3  61105.0     62938   3462515.35  (per unit BR, x BR; not in B)
+B = T1(no X17) + T2              6.7941      0.133   2590.2               41311.72 +- 811.73
+B + T3 + T4 (variant)            7.9084       0.15   2774.1               48087.31 +- 912.99
+expected 90% CL UL on BR, B known exactly (UL_stat) [x 1e-6]: Asimov CLs 10.8962 (1.64 sqrt(B) approx 10.8539; asymptotic 10.8829); median CLs (n = 41312) 10.9017, band n = 41109..41515: 7.6073..15.7525; FC (n = 41312) 10.9024
+  MC statistics of B: UL with B +- 1 sigma_MC: 11.0023 / 10.7890; variant B + T3 + T4: UL 11.7525, Z(1e-5) 1.40
+  X17 other rows (not class 6, W = 2 BR approx.): 3462515.35 rows per unit BR = 0.112 of the class-6 yield (would lower the UL by about this fraction)
+discovery significance for BR = 1e-5 (Asimov, B known): Z = 1.51 (s = 308.0, B = 41311.7, s/B = 0.007)
+v2 limits [x 1e-6]: UL_stat (B known exactly) 10.8962; MC error of B 811.7 rows -> 1.645 sigma_B,MC / s1 = 43.3470; UL including it 44.6955 (ratio 4.10); Z(1e-5) with the MC error of B: 0.37
+share of the MC variance of B by group (diagonal terms; rows of one event in two groups give the rest): Gsig2 bump pi0 Dalitz 0.007; Gsig3 bump conversion 0.001; Gsig4 peak conversion 0.134; Gsig5 direct eta->pipiee 0.000; G_eta 0.086; G_pi0D 0.379; G_conv 0.389; G_vec 0.000; G_oth 0.000; 
+
+## slides + peak window + optimum M(ee) window: M4 0.5333-0.5587, M(ee) 15.5-24.5 MeV, OA > 2.0, a_lab < 50, M(pipi) < 0.460, a_eta > 140
+X17 per unit BR: sigma 3231.95657 +- 5.40757 nb (N_eff 357212, rows 357212) = 19651911.9 expected rows per unit BR; at BR = 1e-5: 196.52 rows
+background group             sigma [nb]      error    N_eff      rows    data rows
+Gsig2 bump pi0 Dalitz                 0          0      0.0         0         0.00
+Gsig3 bump conversion         0.0042395    0.00424      1.0         1        25.78
+Gsig4 peak conversion          0.011679    0.00606      3.7         4        71.01
+Gsig5 direct eta->pipiee        0.14782    0.00108  18730.4     25364       898.81
+G_eta                          0.075738     0.0135     31.6      1398       460.52
+G_pi0D                          0.57393     0.0322    317.9      6705      3489.77
+G_conv                         0.077332     0.0188     17.0        18       470.21
+G_vec                        6.3682e-05   2.09e-05      9.3        21         0.39
+G_oth                          0.018151   0.000421   1860.4      2510       110.37
+G_fake (T3)                     0.05403     0.0134     16.2       572       328.53  (variant only)
+G_diff (T4)                  0.00067164    0.00052      1.7        74         4.08  (variant only)
+X17 other rows                    348.8        1.8  37464.5     38551   2120871.80  (per unit BR, x BR; not in B)
+B = T1(no X17) + T2             0.90895     0.0403    508.3                5526.86 +- 245.15
+B + T3 + T4 (variant)           0.96365     0.0425    514.1                5859.48 +- 258.43
+expected 90% CL UL on BR, B known exactly (UL_stat) [x 1e-6]: Asimov CLs 6.2894 (1.64 sqrt(B) approx 6.2226; asymptotic 6.2684); median CLs (n = 5527) 6.2937, band n = 5453..5601: 4.3940..9.0836; FC (n = 5527) 6.2937
+  MC statistics of B: UL with B +- 1 sigma_MC: 6.4259 / 6.1499; variant B + T3 + T4: UL 6.4739, Z(1e-5) 2.55
+  X17 other rows (not class 6, W = 2 BR approx.): 2120871.80 rows per unit BR = 0.108 of the class-6 yield (would lower the UL by about this fraction)
+discovery significance for BR = 1e-5 (Asimov, B known): Z = 2.63 (s = 196.5, B = 5526.9, s/B = 0.036)
+v2 limits [x 1e-6]: UL_stat (B known exactly) 6.2894; MC error of B 245.2 rows -> 1.645 sigma_B,MC / s1 = 20.5198; UL including it 21.4620 (ratio 3.41); Z(1e-5) with the MC error of B: 0.77
+share of the MC variance of B by group (diagonal terms; rows of one event in two groups give the rest): Gsig3 bump conversion 0.011; Gsig4 peak conversion 0.023; Gsig5 direct eta->pipiee 0.001; G_eta 0.112; G_pi0D 0.637; G_conv 0.216; G_vec 0.000; G_oth 0.000; 
+
+optimum evaluated on half A (weights x 2): UL 27.6193 e-6 (UL_stat 5.8035), B 5506.8 +- 349.0 rows, s1 21259221.5, Z(1e-5) 2.85
+optimum evaluated on half B (weights x 2): UL 25.7594 e-6 (UL_stat 5.6216), B 5176.4 +- 325.3 rows, s1 21285518.5, Z(1e-5) 2.94
+optimum of half A: on its own half UL 28.0838 e-6 (B 9700.8), on the other half UL 30.1806 e-6 (B 10202.2), full 21.0096 e-6
+optimum of half B: on its own half UL 24.3815 e-6 (B 4632.7), on the other half UL 28.0808 e-6 (B 5125.9), full 19.0232 e-6
+
+## cut flow towards the optimum (UL x 1e-6, s1 = X17 rows per unit BR, B rows; L_data UNCONFIRMED)
+step                         UL    UL_stat         s1         B    dB(MC)  N_eff B   eps_S   eps_B Z(1e-5)
+pre + M4 window         50.5037    11.7165 37151373.6   69609.0    1109.5     3936   1.000  1.0000    1.41
++ M(ee) window          20.0408     5.8661 22867356.2    6521.1     266.4      599   0.616  0.0937    2.82
++ OA cuts               20.0408     5.8661 22867356.2    6521.1     266.4      599   0.616  0.0937    2.82
++ alpha_lab             20.0408     5.8661 22867356.2    6521.1     266.4      599   0.616  0.0937    2.82
++ M(pipi)               20.0408     5.8661 22867356.2    6521.1     266.4      599   0.616  0.0937    2.82
++ alpha_eta             20.0408     5.8661 22867356.2    6521.1     266.4      599   0.616  0.0937    2.82
++ pions in vertex       19.3102     5.7132 21272370.0    5341.6     238.5      501   0.573  0.0767    2.89
+
+## extra variables at the optimum (not adopted unless stated): best value and UL
+m4lo     no cut 23.8126 e-6, best 0.538 -> 19.1412 e-6 (gain 19.6 %)
+m4hi     no cut 24.7829 e-6, best 0.5555 -> 18.5757 e-6 (gain 25.0 %)
+dzhi     no cut 19.3102 e-6, best 20 -> 18.1867 e-6 (gain 5.8 %)
+mm4hi    no cut 19.3102 e-6, best 2.7 -> 18.2541 e-6 (gain 5.5 %)
+pt4lo    no cut 19.3102 e-6, best 450 -> 18.8115 e-6 (gain 2.6 %)
+rveehi   no cut 19.3102 e-6, best 6 -> 17.6240 e-6 (gain 8.7 %)
+docaeehi no cut 19.3102 e-6, best none -> 19.3102 e-6 (gain 0.0 %)
+
+## variants at the optimum (counting, Asimov CLs; UL x 1e-6; L_data UNCONFIRMED)
+baseline: UL (with MC error of B) 19.3102, UL_stat 5.7132, B = 5341.6 +- 238.5 (MC) rows -> UL_stat +- 0.1262 from a 1-sigma shift of B; Z(1e-5) 2.89
+# the variants below are UL_stat (B known exactly), as in v1
+physics weights OFF (same cuts): B 4756.4 rows (Gsig5 385.6 instead of 930.1; bump/conv. classes unweighted), UL_stat 5.3946, UL with MC error 19.1908, Z(1e-5) 3.06
+optimum re-found with the physics weights OFF (FOM mode 1): M4 0.5333-0.5587, M(ee) 15.5-24.5 MeV, pions in vertex; FOM (weights off) 19.1908, the same cuts with weights ON 19.3102
+B x 0.50: UL 4.0580 (x 0.710), Z(1e-5) 4.06
+B x 0.75: UL 4.9561 (x 0.867), Z(1e-5) 3.33
+B x 1.25: UL 6.3802 (x 1.117), Z(1e-5) 2.59
+B x 1.50: UL 6.9832 (x 1.222), Z(1e-5) 2.37
+B x 2.00: UL 8.0539 (x 1.410), Z(1e-5) 2.05
+template-2 groups (G_eta, G_pi0D, G_conv, G_vec, G_oth) x 0.7, Gsig2-5 unchanged: B 4047.2, UL 4.9810
+template-2 groups (G_eta, G_pi0D, G_conv, G_vec, G_oth) x 1.3, Gsig2-5 unchanged: B 6636.0, UL 6.3607
+signal including the X17 other rows (W = 2 BR, approximation): s1 2.315e+07 instead of 2.127e+07, UL 5.2499, Z(1e-5) 3.14
+background composition (share of B): Gsig2 bump pi0 Dalitz 0.000; Gsig3 bump conversion 0.005; Gsig4 peak conversion 0.013; Gsig5 direct eta->pipiee 0.174; G_eta 0.084; G_pi0D 0.612; G_conv 0.093; G_vec 0.000; G_oth 0.019; 
+
+## shape analysis: binned Poisson likelihood of M(ee) (2-62 MeV, 60 bins) in the M4 window, all other cuts applied
+# Asimov B-only data; median expected CLs limit from q(mu_up) = 2.706 (asymptotic); X17 = Gaussian line (core mean, sigma; carrying the
+# whole selected X17 yield in the fit range) or the simulated X17 template; background shape = simulation (Gsig5 and the rest separately
+# in the two-factor mode). Counting at the same selection with the optimum M(ee) window is given above.
+optimum (no M(ee) window)          X17 in 2-62 MeV: 34577290.70 rows per unit BR (x 1e-5: 345.77); line mean 17.25, sigma 4.04 MeV
+    B known                    UL(Gauss) 4.9578  UL(template) 5.0795 [x 1e-6];  Z(1e-5) Gauss 3.32  template 3.24
+    B norm. profiled           UL(Gauss) 5.5351  UL(template) 5.7067 [x 1e-6];  Z(1e-5) Gauss 2.96  template 2.88
+    Gsig5 and rest profiled    UL(Gauss) 6.4657  UL(template) 6.7047 [x 1e-6];  Z(1e-5) Gauss 2.52  template 2.43
+optimum cuts, M4 peak window       X17 in 2-62 MeV: 34577290.70 rows per unit BR (x 1e-5: 345.77); line mean 17.25, sigma 4.04 MeV
+    B known                    UL(Gauss) 4.9578  UL(template) 5.0795 [x 1e-6];  Z(1e-5) Gauss 3.32  template 3.24
+    B norm. profiled           UL(Gauss) 5.5351  UL(template) 5.7067 [x 1e-6];  Z(1e-5) Gauss 2.96  template 2.88
+    Gsig5 and rest profiled    UL(Gauss) 6.4657  UL(template) 6.7047 [x 1e-6];  Z(1e-5) Gauss 2.52  template 2.43
+slides (peak window)               X17 in 2-62 MeV: 30800311.31 rows per unit BR (x 1e-5: 308.00); line mean 17.39, sigma 3.96 MeV
+    B known                    UL(Gauss) 5.5043  UL(template) 5.5857 [x 1e-6];  Z(1e-5) Gauss 2.99  template 2.95
+    B norm. profiled           UL(Gauss) 6.4623  UL(template) 6.5955 [x 1e-6];  Z(1e-5) Gauss 2.54  template 2.49
+    Gsig5 and rest profiled    UL(Gauss) 7.0979  UL(template) 7.2967 [x 1e-6];  Z(1e-5) Gauss 2.30  template 2.24
+
+# robustness of the shape result at the optimum cuts (Gaussian line, mean 17.25, sigma 4.04 MeV): binning and fit range
+range, bin               X17 rows      B known   B profiled    2 factors  Z(1e-5)
+    2-62    0.5 MeV         345.8       4.9200       5.4826       6.3154     2.99
+    2-62    1.0 MeV         345.8       4.9578       5.5351       6.4657     2.96
+    2-62    2.0 MeV         345.8       4.9772       5.5623       6.5599     2.95
+    2-62    4.0 MeV         345.8       5.1534       5.8123       6.7777     2.82
+    8-40    1.0 MeV         339.7       4.9902       6.2848       7.8105     2.60
+    8-40    2.0 MeV         339.7       5.0098       6.3243       8.0776     2.59
+   10-30    1.0 MeV         328.6       5.0246       7.4730      12.3093     2.18
+# X17 rows column: expected X17 rows at BR = 1e-5 inside the fit range; Z with the background normalisation profiled
+check: one-bin likelihood at the optimum: UL 5.6938 e-6 (asymptotic counting 5.6938 e-6)

@@ -1,0 +1,34 @@
+# s5_opt_x17_frozen: chosen X17 selection, version 2 (frozen 2026-11-13), from s5_opt_x17.C
+# v2 (review findings H2, M2): the figure of merit includes the simulation (MC) error of the background, and the M4 window is fixed to the
+#   study peak window 0.5333-0.5587. The blind test of 2026-11-13 used v1 (tables/s5_opt_x17_frozen_v1.txt: M4 0.5330-0.5555, M(ee)
+#   13.0-26.5 MeV/c2, pions in the vertex fit; UL_stat 5.48e-6). UL_stat assumes the background known exactly; it is a statistical limit only.
+# simulation only; std + lep + eta owned rows, mode A, w (PDG) x physics weights V3; signal = class 6 (W = 2 BR); B = T1 (no X17) + T2
+# all cut variables from corrected momenta; 'none' = no cut; M in GeV/c2 except M(ee) in MeV/c2; angles in deg
+base = pre (isBest >= 0, vertex z > -500 mm, PT3 bit, vertex z > -160 mm, cor_ok == 1)
+m4_lo = 0.5333
+m4_hi = 0.5587
+mee_lo_MeV = 15.5
+mee_hi_MeV = 24.5
+oa_lo_deg = none
+oa_hi_deg = none
+alpha_lab_hi_deg = none
+mpipi_lo = none
+mpipi_hi = none
+alpha_eta_lo_deg = none
+pions_in_vertex_fit = yes
+dz_pi_hi_mm = none
+mm4_hi = none
+pt4_lo = none
+x17_sigma_per_unit_BR_nb = 3498.45736 +- 5.62611
+x17_rows_per_unit_BR = 21272370.0   # L_data = 6080.5 nb^-1 (UNCONFIRMED)
+background_sigma_nb = 0.87848 +- 0.03923   # N_eff 501
+background_rows = 5341.6 +- 238.5   # L_data = 6080.5 nb^-1 (UNCONFIRMED)
+expected_UL90_BR_with_MC_error_of_B = 1.931e-05   # PRIMARY (v2): counting, sqrt(UL_stat^2 + (1.645 sigma_B,MC / s1)^2), sigma_B,MC = 238.5 rows
+expected_UL90_BR_asimov_CLs = 5.713e-06 +- 1.3e-07   # UL_stat: counting, B known exactly; +- = shift for a 1-sigma change of B
+expected_UL90_BR_median_CLs = 5.695e-06   # band 3.991e-06 .. 8.271e-06
+expected_UL90_BR_FC = 5.685e-06
+expected_UL90_BR_shape_Bknown = 4.958e-06   # binned M(ee) likelihood, Gaussian line
+expected_UL90_BR_shape_Bprofiled = 5.535e-06
+Z_BR_1e-5 = 2.89   # Asimov counting, B known
+expected_UL90_BR_slides_counting = 2.146e-05   # slides + peak window + the M(ee) window above, with the MC error of B (UL_stat 6.289e-06)
+expected_UL90_BR_v1_selection_with_MC_error_of_B = 1.933e-05   # the v1 selection evaluated with the v2 figure of merit (UL_stat 5.480e-06)

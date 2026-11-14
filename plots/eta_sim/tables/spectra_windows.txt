@@ -1,0 +1,185 @@
+# Cross sections integrated in the data windows, simulation (std + lep owned rows), e+e- hypothesis
+# bump window 0.4550-0.5225, peak window 0.53364-0.55416 GeV/c2 (measured, corrected M4)
+# sigma = sum w / L_sim, L_sim = 221.05 nb^-1; errors: event-group variance; N_eff = (sum w)^2 / V
+# expected data rows = sum w * L_data / L_sim with L_data = 6080.5 nb^-1 (UNCONFIRMED); no efficiency correction
+# eta -> pi+pi-e+e- (direct) is NOT in the simulation (eta set missing)
+
+## selection "pre": pre: isBest #geq 0, PT3, v_{z} > -160 mm
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    6.1366 0.1717      1277      37314 1044     |    0.0288 0.0118         6        175 72       |
+signal: bump, conversion                                   |    4.4430 0.1476       906      27016 898      |    0.0147 0.0085         3         89 52       |
+signal: peak, conversion                                   |    0.0519 0.0144        13        316 88       |    0.9421 0.0613       236       5728 373      |
+phys. bkg: both pions primary (P7)                         |    6.3628 0.1273      2497      38689 774      |    3.5028 0.0909      1485      21299 553      |
+phys. bkg: pions mixed/secondary (P8)                      |    4.0074 0.1214      1090      24367 738      |    2.0334 0.0847       576      12364 515      |
+phys. bkg: pi -> mu (P1)                                   |    1.8630 0.0842       490      11328 512      |    0.6419 0.0433       220       3903 263      |
+phys. bkg: misidentified pion (P0)                         |    0.5421 0.0490       122       3296 298      |    0.2297 0.0315        53       1397 192      |
+phys. bkg: pions of one omega (P3)                         |    0.3665 0.0405        82       2229 246      |    0.3658 0.0404        82       2224 246      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0659 0.0162        16        400 99       |    0.0301 0.0111         7        183 67       |
+phys. bkg: pions of one K0S (P6)                           |    0.0002 0.0001         4          1 1        |    0.0002 0.0001         3          1 1        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.6399 0.0547       137       3891 332      |    0.3232 0.0389        69       1965 236      |
+physical background, total (T2)                            |   13.8478 0.2152      4143      84202 1308     |    7.1269 0.1474      2336      43335 897      |
+signal, total (T1)                                         |   10.6315 0.2269      2195      64645 1380     |    0.9856 0.0630       245       5993 383      |
+SUM: signal + physical background (T1+T2)                  |   24.4793 0.3178      5933     148847 1932     |    8.1125 0.1604      2556      49328 976      |
+fake lepton (T3, not in the sum)                           |    2.8483 0.1104       666      17319 671      |    1.3294 0.0725       336       8084 441      |
+different sources (T4, not in the sum)                     |    0.4935 0.0477       107       3001 290      |    0.2373 0.0324        54       1443 197      |
+variant A, w_db: SUM                                       |   23.7384 0.3050      6057     144341 1855     |    8.2657 0.1636      2552      50259 995      |
+variant A, w_db: signal T1                                 |    9.9344 0.2120      2196      60406 1289     |    1.1083 0.0708       245       6739 431      |
+variant A, w_db: phys. bkg T2                              |   13.8040 0.2127      4210      83935 1294     |    7.1573 0.1474      2359      43520 896      |
+variant B, w: SUM                                          |   25.1513 0.3464      5273     152932 2106     |    8.4057 0.1911      1935      51111 1162     |
+variant B, w: signal T1                                    |   10.6315 0.2269      2195      64645 1380     |    0.9856 0.0630       245       5993 383      |
+variant B, w: phys. bkg T2                                 |   14.5198 0.2554      3231      88288 1553     |    7.4200 0.1803      1693      45118 1096     |
+variant B, w_db: SUM                                       |   29.3018 0.3709      6242     178170 2255     |   11.3643 0.2283      2479      69101 1388     |
+variant B, w_db: signal T1                                 |    9.9344 0.2120      2196      60406 1289     |    1.1083 0.0708       245       6739 431      |
+variant B, w_db: phys. bkg T2                              |   19.3674 0.2996      4178     117763 1822     |   10.2560 0.2169      2236      62361 1319     |
+data bump window: N 153183, CB 15507, N - CB = 137676 +- 435 rows -> 22.6422 +- 0.0715 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.925 +- 0.012
+data peak window: N 77513, CB 7949, N - CB = 69564 +- 298 rows -> 11.4405 +- 0.0490 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.410 +- 0.029
+
+## selection "pre+OA>2": pre + OA > 2#circ
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    4.9305 0.1539      1026      29980 936      |    0.0240 0.0107         5        146 65       |
+signal: bump, conversion                                   |    2.5108 0.1110       512      15267 675      |    0.0147 0.0085         3         89 52       |
+signal: peak, conversion                                   |    0.0279 0.0106         7        170 64       |    0.5229 0.0457       131       3180 278      |
+phys. bkg: both pions primary (P7)                         |    4.6928 0.1036      2054      28534 630      |    2.5695 0.0731      1237      15624 444      |
+phys. bkg: pions mixed/secondary (P8)                      |    3.1247 0.1060       869      19000 644      |    1.5816 0.0737       460       9617 448      |
+phys. bkg: pi -> mu (P1)                                   |    1.3175 0.0694       361       8011 422      |    0.4613 0.0352       172       2805 214      |
+phys. bkg: misidentified pion (P0)                         |    0.3641 0.0402        82       2214 244      |    0.1835 0.0281        43       1116 171      |
+phys. bkg: pions of one omega (P3)                         |    0.2768 0.0352        62       1683 214      |    0.2809 0.0354        63       1708 215      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0380 0.0120        10        231 73       |    0.0115 0.0064         3         70 39       |
+phys. bkg: pions of one K0S (P6)                           |    0.0001 0.0001         2          1 0        |    0.0002 0.0001         3          1 1        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.5133 0.0489       110       3121 298      |    0.2246 0.0323        48       1366 197      |
+physical background, total (T2)                            |   10.3274 0.1814      3241      62795 1103     |    5.3132 0.1236      1849      32307 751      |
+signal, total (T1)                                         |    7.4692 0.1900      1545      45417 1156     |    0.5617 0.0477       139       3415 290      |
+SUM: signal + physical background (T1+T2)                  |   17.7966 0.2677      4419     108212 1628     |    5.8749 0.1324      1968      35722 805      |
+fake lepton (T3, not in the sum)                           |    1.7609 0.0861       418      10707 524      |    0.8622 0.0586       216       5243 356      |
+different sources (T4, not in the sum)                     |    0.4935 0.0477       107       3001 290      |    0.2368 0.0324        53       1440 197      |
+variant A, w_db: SUM                                       |   17.2936 0.2571      4523     105154 1564     |    5.9718 0.1347      1966      36311 819      |
+variant A, w_db: signal T1                                 |    6.9894 0.1778      1545      42499 1081     |    0.6288 0.0533       139       3824 324      |
+variant A, w_db: phys. bkg T2                              |   10.3043 0.1794      3301      62655 1091     |    5.3429 0.1237      1867      32488 752      |
+variant B, w: SUM                                          |   18.3445 0.2958      3847     111544 1798     |    6.0127 0.1613      1389      36560 981      |
+variant B, w: signal T1                                    |    7.4692 0.1900      1545      45417 1156     |    0.5617 0.0477       139       3415 290      |
+variant B, w: phys. bkg T2                                 |   10.8753 0.2207      2428      66127 1342     |    5.4510 0.1541      1251      33145 937      |
+variant B, w_db: SUM                                       |   21.9504 0.3216      4658     133469 1956     |    8.4690 0.1972      1845      51496 1199     |
+variant B, w_db: signal T1                                 |    6.9894 0.1778      1545      42499 1081     |    0.6288 0.0533       139       3824 324      |
+variant B, w_db: phys. bkg T2                              |   14.9610 0.2636      3222      90971 1603     |    7.8401 0.1898      1706      47672 1154     |
+data bump window: N 120839, CB 15205, N - CB = 105634 +- 392 rows -> 17.3725 +- 0.0645 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.976 +- 0.015
+data peak window: N 60935, CB 7793, N - CB = 53142 +- 267 rows -> 8.7397 +- 0.0440 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.488 +- 0.034
+
+## selection "pre+pions in vertex fit": pre + both pions in the vertex fit
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    5.6176 0.1643      1169      34158 999      |    0.0288 0.0118         6        175 72       |
+signal: bump, conversion                                   |    4.1487 0.1426       846      25226 867      |    0.0098 0.0069         2         60 42       |
+signal: peak, conversion                                   |    0.0479 0.0138        12        291 84       |    0.9021 0.0600       226       5486 365      |
+phys. bkg: both pions primary (P7)                         |    5.7957 0.1209      2297      35241 735      |    3.2221 0.0873      1361      19592 531      |
+phys. bkg: pions mixed/secondary (P8)                      |    2.6372 0.1011       681      16035 615      |    1.3573 0.0710       365       8253 432      |
+phys. bkg: pi -> mu (P1)                                   |    1.0141 0.0631       258       6166 384      |    0.3070 0.0301       104       1867 183      |
+phys. bkg: misidentified pion (P0)                         |    0.4751 0.0463       105       2889 282      |    0.1843 0.0285        42       1120 173      |
+phys. bkg: pions of one omega (P3)                         |    0.3353 0.0387        75       2039 235      |    0.3390 0.0389        76       2061 236      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0554 0.0150        14        337 91       |    0.0301 0.0111         7        183 67       |
+phys. bkg: pions of one K0S (P6)                           |    0.0002 0.0001         3          1 1        |    0.0001 0.0001         2          1 0        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.5278 0.0497       113       3209 302      |    0.2853 0.0365        61       1735 222      |
+physical background, total (T2)                            |   10.8407 0.1893      3278      65917 1151     |    5.7251 0.1322      1875      34812 804      |
+signal, total (T1)                                         |    9.8143 0.2180      2026      59676 1326     |    0.9408 0.0615       234       5720 374      |
+SUM: signal + physical background (T1+T2)                  |   20.6550 0.2931      4966     125593 1782     |    6.6659 0.1460      2086      40532 887      |
+fake lepton (T3, not in the sum)                           |    2.2282 0.0974       523      13549 592      |    1.0815 0.0657       271       6576 400      |
+different sources (T4, not in the sum)                     |    0.4157 0.0436        91       2527 265      |    0.1920 0.0294        43       1168 179      |
+variant A, w_db: SUM                                       |   19.9708 0.2806      5065     121432 1706     |    6.8076 0.1493      2080      41394 908      |
+variant A, w_db: signal T1                                 |    9.1699 0.2037      2027      55757 1238     |    1.0586 0.0692       234       6437 421      |
+variant A, w_db: phys. bkg T2                              |   10.8009 0.1872      3329      65675 1138     |    5.7490 0.1321      1894      34957 803      |
+variant B, w: SUM                                          |   21.1799 0.3176      4446     128784 1931     |    6.9588 0.1735      1610      42313 1055     |
+variant B, w: signal T1                                    |    9.8143 0.2180      2026      59676 1326     |    0.9408 0.0615       234       5720 374      |
+variant B, w: phys. bkg T2                                 |   11.3656 0.2255      2541      69109 1371     |    6.0180 0.1621      1379      36592 985      |
+variant B, w_db: SUM                                       |   24.5965 0.3392      5257     149559 2063     |    9.4506 0.2080      2063      57464 1265     |
+variant B, w_db: signal T1                                 |    9.1699 0.2037      2027      55757 1238     |    1.0586 0.0692       234       6437 421      |
+variant B, w_db: phys. bkg T2                              |   15.4267 0.2672      3334      93802 1625     |    8.3920 0.1961      1831      51027 1192     |
+data bump window: N 111212, CB 6237, N - CB = 104975 +- 355 rows -> 17.2642 +- 0.0584 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.836 +- 0.012
+data peak window: N 55947, CB 3279, N - CB = 52668 +- 246 rows -> 8.6618 +- 0.0405 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.299 +- 0.029
+
+## selection "slides": slides: pre + #alpha_{lab} < 50#circ, M_{#pi#pi} < 0.46, #alpha_{#eta} > 140#circ, OA > 2#circ
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    4.1087 0.1405       855      24983 854      |    0.0240 0.0107         5        146 65       |
+signal: bump, conversion                                   |    2.0646 0.1006       421      12554 612      |    0.0147 0.0085         3         89 52       |
+signal: peak, conversion                                   |    0.0240 0.0098         6        146 59       |    0.4271 0.0413       107       2597 251      |
+phys. bkg: both pions primary (P7)                         |    4.0137 0.0949      1789      24405 577      |    2.0638 0.0642      1035      12549 390      |
+phys. bkg: pions mixed/secondary (P8)                      |    2.5661 0.0959       716      15603 583      |    1.2000 0.0636       356       7296 387      |
+phys. bkg: pi -> mu (P1)                                   |    1.1251 0.0634       315       6841 386      |    0.3345 0.0287       136       2034 174      |
+phys. bkg: misidentified pion (P0)                         |    0.3087 0.0371        69       1877 225      |    0.1735 0.0274        40       1055 167      |
+phys. bkg: pions of one omega (P3)                         |    0.2276 0.0319        51       1384 194      |    0.2185 0.0312        49       1329 190      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0370 0.0119        10        225 73       |    0.0110 0.0064         3         67 39       |
+phys. bkg: pions of one K0S (P6)                           |    0.0001 0.0001         2          1 0        |    0.0001 0.0001         2          1 0        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.4573 0.0462        98       2781 281      |    0.1827 0.0292        39       1111 177      |
+physical background, total (T2)                            |    8.7357 0.1660      2769      53117 1009     |    4.1842 0.1081      1499      25442 657      |
+signal, total (T1)                                         |    6.1972 0.1731      1282      37682 1053     |    0.4659 0.0435       115       2833 265      |
+SUM: signal + physical background (T1+T2)                  |   14.9329 0.2438      3752      90799 1482     |    4.6500 0.1165      1593      28275 708      |
+fake lepton (T3, not in the sum)                           |    1.3973 0.0757       341       8496 460      |    0.6986 0.0526       177       4248 320      |
+different sources (T4, not in the sum)                     |    0.4209 0.0437        93       2559 266      |    0.2127 0.0308        48       1293 187      |
+variant A, w_db: SUM                                       |   14.5206 0.2343      3841      88292 1425     |    4.7303 0.1186      1591      28763 721      |
+variant A, w_db: signal T1                                 |    5.7996 0.1620      1282      35264 985      |    0.5202 0.0485       115       3163 295      |
+variant A, w_db: phys. bkg T2                              |    8.7210 0.1643      2818      53028 999      |    4.2100 0.1082      1514      25599 658      |
+variant B, w: SUM                                          |   15.3729 0.2698      3248      93475 1640     |    4.7918 0.1434      1117      29137 872      |
+variant B, w: signal T1                                    |    6.1972 0.1731      1282      37682 1053     |    0.4659 0.0435       115       2833 265      |
+variant B, w: phys. bkg T2                                 |    9.1757 0.2022      2059      55793 1230     |    4.3259 0.1366      1003      26304 831      |
+variant B, w_db: SUM                                       |   18.6208 0.2955      3972     113224 1797     |    6.9670 0.1787      1520      42363 1086     |
+variant B, w_db: signal T1                                 |    5.7996 0.1620      1282      35264 985      |    0.5202 0.0485       115       3163 295      |
+variant B, w_db: phys. bkg T2                              |   12.8212 0.2437      2768      77959 1482     |    6.4468 0.1720      1405      39200 1046     |
+data bump window: N 98115, CB 10947, N - CB = 87168 +- 348 rows -> 14.3357 +- 0.0572 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.960 +- 0.016
+data peak window: N 46001, CB 5627, N - CB = 40374 +- 232 rows -> 6.6398 +- 0.0381 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.428 +- 0.037
+
+## selection "peak nominal": peak nominal: pre + #alpha_{lab} < 55#circ, M_{#pi#pi} > 0.30
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    5.3293 0.1600      1109      32405 973      |    0.0192 0.0096         4        117 58       |
+signal: bump, conversion                                   |    3.8349 0.1371       782      23318 834      |    0.0098 0.0069         2         60 42       |
+signal: peak, conversion                                   |    0.0519 0.0144        13        316 88       |    0.8343 0.0577       209       5073 351      |
+phys. bkg: both pions primary (P7)                         |    5.3991 0.1171      2126      32829 712      |    2.9715 0.0840      1252      18068 511      |
+phys. bkg: pions mixed/secondary (P8)                      |    3.3583 0.1116       905      20420 679      |    1.6576 0.0764       471      10079 464      |
+phys. bkg: pi -> mu (P1)                                   |    1.5386 0.0765       404       9355 465      |    0.5390 0.0399       183       3277 242      |
+phys. bkg: misidentified pion (P0)                         |    0.4990 0.0468       114       3034 284      |    0.2274 0.0315        52       1383 191      |
+phys. bkg: pions of one omega (P3)                         |    0.2815 0.0355        63       1711 216      |    0.2810 0.0354        63       1709 215      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0659 0.0162        16        400 99       |    0.0295 0.0111         7        180 67       |
+phys. bkg: pions of one K0S (P6)                           |    0.0002 0.0001         3          1 1        |    0.0002 0.0001         3          1 1        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.5231 0.0494       112       3181 301      |    0.2906 0.0368        62       1767 224      |
+physical background, total (T2)                            |   11.6656 0.1973      3497      70933 1200     |    5.9968 0.1354      1961      36464 823      |
+signal, total (T1)                                         |    9.2161 0.2112      1903      56038 1284     |    0.8633 0.0589       215       5249 358      |
+SUM: signal + physical background (T1+T2)                  |   20.8817 0.2932      5072     126971 1783     |    6.8602 0.1477      2158      41713 898      |
+fake lepton (T3, not in the sum)                           |    2.3708 0.0999       564      14416 607      |    1.0978 0.0657       279       6675 399      |
+different sources (T4, not in the sum)                     |    0.4078 0.0430        90       2480 262      |    0.1941 0.0294        44       1180 179      |
+variant A, w_db: SUM                                       |   20.2485 0.2814      5178     123121 1711     |    6.9872 0.1505      2155      42486 915      |
+variant A, w_db: signal T1                                 |    8.6134 0.1974      1904      52374 1200     |    0.9726 0.0663       215       5914 403      |
+variant A, w_db: phys. bkg T2                              |   11.6351 0.1952      3555      70747 1187     |    6.0146 0.1351      1981      36572 822      |
+variant B, w: SUM                                          |   21.4988 0.3195      4528     130723 1943     |    7.1779 0.1762      1660      43645 1071     |
+variant B, w: signal T1                                    |    9.2161 0.2112      1903      56038 1284     |    0.8633 0.0589       215       5249 358      |
+variant B, w: phys. bkg T2                                 |   12.2827 0.2346      2742      74685 1426     |    6.3146 0.1660      1446      38396 1010     |
+variant B, w_db: SUM                                       |   25.0447 0.3420      5362     152284 2080     |    9.7447 0.2111      2130      59253 1284     |
+variant B, w_db: signal T1                                 |    8.6134 0.1974      1904      52374 1200     |    0.9726 0.0663       215       5914 403      |
+variant B, w_db: phys. bkg T2                              |   16.4313 0.2755      3558      99910 1675     |    8.7721 0.2004      1915      53339 1219     |
+data bump window: N 128715, CB 12277, N - CB = 116438 +- 395 rows -> 19.1494 +- 0.0650 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.917 +- 0.013
+data peak window: N 61800, CB 5996, N - CB = 55804 +- 265 rows -> 9.1775 +- 0.0436 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.338 +- 0.029
+
+## selection "bump nominal": bump nominal: pre + #alpha_{lab} < 40#circ, 0.30 < M_{#pi#pi} < 0.41
+component (mode A, w)                                      | bump [nb] +- err     N_eff  data rows +- err   | peak [nb] +- err     N_eff  data rows +- err  
+signal: bump, pi0 Dalitz                                   |    4.8247 0.1523      1004      29337 926      |    0.0192 0.0096         4        117 58       |
+signal: bump, conversion                                   |    3.4328 0.1297       700      20873 789      |    0.0098 0.0069         2         60 42       |
+signal: peak, conversion                                   |    0.0399 0.0126        10        243 77       |    0.4830 0.0439       121       2937 267      |
+phys. bkg: both pions primary (P7)                         |    4.4358 0.1055      1769      26972 641      |    1.8250 0.0657       771      11097 400      |
+phys. bkg: pions mixed/secondary (P8)                      |    2.7326 0.1006       738      16616 612      |    0.8592 0.0540       253       5224 328      |
+phys. bkg: pi -> mu (P1)                                   |    1.2964 0.0703       340       7883 427      |    0.2959 0.0288       105       1799 175      |
+phys. bkg: misidentified pion (P0)                         |    0.4434 0.0441       101       2696 268      |    0.1356 0.0243        31        825 148      |
+phys. bkg: pions of one omega (P3)                         |    0.1922 0.0293        43       1168 178      |    0.1561 0.0264        35        949 160      |
+phys. bkg: pions of one rho0 (P4)                          |    0.0653 0.0162        16        397 99       |    0.0150 0.0078         4         91 48       |
+phys. bkg: pions of one K0S (P6)                           |    0.0002 0.0001         3          1 1        |    0.0000 0.0000         0          0 0        |
+phys. bkg: pions of one eta (ee not of it) or phi (P2,P5)  |    0.4251 0.0446        91       2585 271      |    0.1878 0.0296        40       1142 180      |
+physical background, total (T2)                            |    9.5910 0.1786      2885      58318 1086     |    3.4746 0.1017      1168      21127 618      |
+signal, total (T1)                                         |    8.2974 0.2004      1714      50452 1219     |    0.5120 0.0455       127       3113 277      |
+SUM: signal + physical background (T1+T2)                  |   17.8884 0.2722      4320     108770 1655     |    3.9866 0.1114      1281      24241 677      |
+fake lepton (T3, not in the sum)                           |    1.9534 0.0903       467      11877 549      |    0.6287 0.0499       159       3823 303      |
+different sources (T4, not in the sum)                     |    0.3493 0.0399        77       2124 243      |    0.1503 0.0259        34        914 157      |
+variant A, w_db: SUM                                       |   17.3174 0.2608      4408     105299 1586     |    4.0632 0.1137      1276      24706 692      |
+variant A, w_db: signal T1                                 |    7.7539 0.1873      1714      47148 1139     |    0.5745 0.0510       127       3493 310      |
+variant A, w_db: phys. bkg T2                              |    9.5635 0.1766      2932      58151 1074     |    3.4887 0.1017      1178      21213 618      |
+variant B, w: SUM                                          |   18.3581 0.2951      3870     111626 1794     |    4.2270 0.1345       988      25702 818      |
+variant B, w: signal T1                                    |    8.2974 0.2004      1714      50452 1219     |    0.5120 0.0455       127       3113 277      |
+variant B, w: phys. bkg T2                                 |   10.0606 0.2119      2254      61174 1288     |    3.7149 0.1266       862      22589 770      |
+variant B, w_db: SUM                                       |   21.5206 0.3168      4614     130856 1926     |    6.1211 0.1674      1337      37219 1018     |
+variant B, w_db: signal T1                                 |    7.7539 0.1873      1714      47148 1139     |    0.5745 0.0510       127       3493 310      |
+variant B, w_db: phys. bkg T2                              |   13.7667 0.2521      2982      83708 1533     |    5.5465 0.1594      1210      33726 969      |
+data bump window: N 103922, CB 9402, N - CB = 94520 +- 352 rows -> 15.5447 +- 0.0579 nb (L_data 6080.5, unconfirmed); data / sim SUM = 0.869 +- 0.014
+data peak window: N 33240, CB 3278, N - CB = 29962 +- 193 rows -> 4.9276 +- 0.0318 nb (L_data 6080.5, unconfirmed); data / sim SUM = 1.236 +- 0.035

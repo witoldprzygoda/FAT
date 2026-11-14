@@ -1,0 +1,8 @@
+# check: dcmp::FillData (event-group variance) against ScanEngine (Poisson per bin), data, selection pre
+binning                       max|dN|     max|dCB|   max|dN-CB|    <V_N grp/N>   <V_CB grp/P>  <V_sig grp/P>
+M4 5 MeV, CB 10 MeV                 0            0            0         1.0053         1.0161         1.0055
+M4 2.5 MeV, CB 10 MeV               0            0            0         1.0036         1.0219         1.0040
+M(ee) 0-0.15, 2.5 MeV               0            0            0         1.2958         1.3439         1.2988
+OA 0-30 deg, 0.5 deg                0            0            0         1.2941         1.3251         1.2954
+M(pipi) 0.27-1.07                   0            0            0         1.0523         1.0916         1.0552
+# <V grp / Poisson> = summed group variance / summed Poisson variance over the bins (1 = no correlation)

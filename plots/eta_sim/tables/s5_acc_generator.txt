@@ -1,0 +1,46 @@
+# s5_acc_generator: the eta signals at generator level (s5_acc.C part 1). SIMULATION ONLY.
+# Already shown elsewhere (cited, not redone): generator M(ee), M(pipi) and decay angles of the direct decay against the
+#   target models V0-V2 (figs/rw_weights_generator, tables/rw_weights_generator.txt, rw_weights_model.txt); the V3-reweighted
+#   generator sample against T in M(ee), M(pipi) and both angles (figs/rw_weights_closure, tables/rw_weights_closure.txt);
+#   the bump weight wB(M(pipi)), <X^2>_Y check, conversion weight wC (figs/rw_weights_bump, tables/rw_weights_bump.txt).
+# Added here: absolute production per channel, produced M(ee) / M(pipi) spectra of all signal channels in one scale,
+#   M(ee) fractions relevant for OA and X17, and the generator-level direct decays under the X17 line.
+
+## 1. production scale
+generator sample (direct eta -> pi+pi-e+e-, 1000 of 100 000 files): N = 1181801 decays; sum of V3 weights 1181801.000000 (mean 1.000000)
+full production: N_direct = 100 x N = 1.1818e+08; N_eta = 2 N_direct = 2.3636e+08 (eta set: every eta forced, q = 1/2 into pi+pi-e+e- and X17 pi+pi-)
+relative statistical error of the scale 1/sqrt(N) = 9.20e-04 (+ the ASSUMPTION that the 1000 files are representative, UNVERIFIED)
+sigma(p p -> eta X) in SMASH = N_eta / L_sim = 1.0693 mb (L_sim = 221.05 nb^-1)
+PDG BR used: pi+pi-e+e- 2.680e-04, pi+pi-pi0 0.2292, pi0 -> e+e-gamma 0.01174, pi+pi-gamma 0.0422; X17 illustrative 1e-05
+
+channel                                      produced decays (10^10 events)    sigma_prod [nb]
+class 2 source: eta->pi+pi-pi0, pi0->e+e-gamma     6.3600e+05                     2877.1767
+class 3 source: eta->pi+pi-pi0 (all pi0)           5.4174e+07                   245074.6792
+class 4 source: eta->pi+pi-gamma                   9.9744e+06                    45122.8249
+class 5: eta->pi+pi-e+e-                           6.3345e+04                      286.5620
+class 6 source: X17 (BR 1e-5)                      2.3636e+03                       10.6926
+
+## 2. normalisation checks of the analytic densities (should be 1): <wB>_PS(KLOE) = 1.00013, <wC>_PS = 1.00000
+
+## 3. produced M(ee): fraction of decays above a threshold (generator = PLUTO sample unweighted; V3 = physical model;
+#   pi0 Dalitz = Kroll-Wada of the class-2 source)
+M(ee) >      direct gen    direct V3    pi0 Dalitz (KW)
+    2 MeV      0.5125       0.8682       0.8595
+    5 MeV      0.2015       0.6459       0.6222
+   10 MeV      0.0991       0.4775       0.4427
+   17 MeV      0.0565       0.3507       0.3081
+   20 MeV      0.0474       0.3125       0.2679
+   50 MeV      0.0155       0.1184       0.0702
+  100 MeV      0.0047       0.0240       0.0021
+mean M(pipi) of the produced spectra [GeV/c2]: direct gen 0.4030, direct V3 0.4007, bump PS 0.3465, bump KLOE 0.3623, conv PS 0.4014, conv wC 0.4057, X17 PS 0.3985
+
+## 4. generator-level direct decays in M(ee) windows around 17 MeV (V3) against X17 at BR = 1e-5 (10.6926 nb, all of it at 17.000 MeV)
+half width [MeV]   sigma_direct(|M(ee) - 17| < d) [nb]   (gen. unweighted)   ratio direct/X17(1e-5)
+    0.25                 2.0233                                0.5128                0.19
+    0.50                 4.0377                                1.0298                0.38
+    1.00                 7.9488                                2.0354                0.74
+    1.50                11.9617                                3.0734                1.12
+    2.00                15.8951                                4.1042                1.49
+    3.00                24.1880                                6.3314                2.26
+    4.00                32.3976                                8.6572                3.03
+    6.00                49.8383                               14.0759                4.66

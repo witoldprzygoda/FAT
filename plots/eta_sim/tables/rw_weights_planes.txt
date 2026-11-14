@@ -1,0 +1,15 @@
+# rw_weights_planes: check of the term in the angle phi between the e+e- and pi+pi- decay planes (variant V4 = V3 x R_phi)
+# full angular density of eta -> pi+pi- gamma* -> pi+pi- e+e- (one magnetic amplitude): sin^2 th_pi [1 - beta^2 sin^2 th_e sin^2 phi];
+# V3 = its phi average; R_phi = 1 + beta^2 sin^2 th_e cos 2phi / (2 - beta^2 sin^2 th_e); generator phi ASSUMED flat (no phi in the generator file),
+# so <R_phi> = 1 at generator level. True phi from the true momenta in scan_nt (rw_angles_eta.root, branch c2phi).
+# class-5 rows (direct decay), owned, w x V3 weight; <x>_V3 = sum w w3 x / sum w w3; ratio = sum w w4 / sum w w3 (V4 / V3 cross section)
+selection            window    |      rows |    <cos 2phi>_V3   <cos 2phi>_unw |      V4/V3 |   OA>2 eff V3 / V4
+pre                  all M4    |    571246 | -0.0020 +- 0.0017 -0.0034 +- 0.0009 |    0.99816 | 0.8113 / 0.8118
+pre                  peak win  |    438066 | -0.0019 +- 0.0019 -0.0037 +- 0.0011 |    0.99833 | 0.8095 / 0.8100
+pre+OA>2             all M4    |    350586 | -0.0012 +- 0.0021 -0.0035 +- 0.0012 |    0.99875 | 1.0000 / 1.0000
+pre+OA>2             peak win  |    265325 | -0.0012 +- 0.0023 -0.0047 +- 0.0014 |    0.99895 | 1.0000 / 1.0000
+E1 (slides)          all M4    |    301359 | +0.0001 +- 0.0022 -0.0029 +- 0.0013 |    0.99982 | 1.0000 / 1.0000
+E1 (slides)          peak win  |    228122 | +0.0002 +- 0.0025 -0.0040 +- 0.0015 |    1.00022 | 1.0000 / 1.0000
+E2 (slides w/o OA)   all M4    |    506476 | -0.0009 +- 0.0018 -0.0028 +- 0.0010 |    0.99908 | 0.8036 / 0.8042
+E2 (slides w/o OA)   peak win  |    389138 | -0.0008 +- 0.0021 -0.0031 +- 0.0011 |    0.99932 | 0.8017 / 0.8024
+# |V4/V3 - 1| is the size of the neglected plane term on the accepted rows; the OA > 2 efficiency of the direct decay moves by the same order

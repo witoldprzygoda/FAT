@@ -1,0 +1,40 @@
+# Review finding 6: template-fit variants (sim_templatefit.C machinery), 0.43-0.75, 2.5 MeV bins, mode A, w; PRELIMINARY
+# eta -> pi+pi-e+e- (direct) is in no template; L_data = 6080.5 nb^-1 UNCONFIRMED (alphas scale with 1/L_data). G at 0.5439, sigma 0.00674
+# rel. errors per 2.5 MeV point (median over the fit range): data sqrt(V_data)/|y|, background template sqrt(C_bkg)/T_bkg
+variant                                              mod    a_bump (a_eta)           a_peak   a_bkg (a_rest)              extra   chi2/ndf  tvShare   S implied (par, tpl)          E implied
+
+## pre, default T1+T2: data S(P_main) 4671 +- 367, E 1199 +- 71; median rel. error per point: data 0.0098, background template 0.0481
+pre, default T1+T2                                   M1     0.414 +- 0.027    2.353 +- 0.249    1.298 +- 0.006                       476/125     0.955    9496 +- 1185  +- 1796     1444 +- 68   
+pre, default T1+T2                                   M4     0.103 +- 0.036    0.523 +- 0.258    1.608 +- 0.020   a_VM 0.114+-0.071   159/124     0.961    1613 +- 1194  +- 1753      663 +- 90   
+pre, default T1+T2                                   M6     0.027 +- 0.039    0.537 +- 0.254    1.425 +- 0.010     b -0.178+-0.010   164/124     0.960    1038 +- 1188  +- 1734      583 +- 93   
+pre, default T1+T2                                   M7     0.031 +- 0.039    0.031 +- 0.039    1.424 +- 0.010  b -0.177+-0.010 A_G 4314+-1607   162/124     0.960    2164 +- 1334  +- 1716      583 +- 93   
+
+## pre, (a) ghost-flagged true pairs in the background: data S(P_main) 4671 +- 367, E 1199 +- 71; median rel. error per point: data 0.0098, background template 0.0451
+pre, (a) ghost-flagged true pairs in the background  M1     0.394 +- 0.026    2.387 +- 0.241    1.118 +- 0.005                       441/125     0.950    8443 +- 1151  +- 1736     1505 +- 64   
+pre, (a) ghost-flagged true pairs in the background  M4     0.103 +- 0.034    0.754 +- 0.242    1.361 +- 0.017   a_VM 0.177+-0.059   153/124     0.956    1292 +- 1127  +- 1647      816 +- 84   
+pre, (a) ghost-flagged true pairs in the background  M6     0.037 +- 0.037    0.763 +- 0.239    1.217 +- 0.008     b -0.139+-0.008   156/124     0.955     685 +- 1127  +- 1631      735 +- 87   
+pre, (a) ghost-flagged true pairs in the background  M7     0.041 +- 0.037    0.041 +- 0.037    1.216 +- 0.008  b -0.138+-0.008 A_G 5685+-1490   153/124     0.955    1914 +- 1248  +- 1595      733 +- 87   
+
+## pre, (b) signal without ghost rows: data S(P_main) 4671 +- 367, E 1199 +- 71; median rel. error per point: data 0.0098, background template 0.0481
+pre, (b) signal without ghost rows                   M1     0.466 +- 0.030    3.047 +- 0.334    1.298 +- 0.006                       474/125     0.956    9370 +- 1217  +- 1877     1476 +- 66   
+pre, (b) signal without ghost rows                   M4     0.114 +- 0.041    0.699 +- 0.332    1.608 +- 0.020   a_VM 0.114+-0.071   159/124     0.961    1661 +- 1171  +- 1759      667 +- 89   
+pre, (b) signal without ghost rows                   M6     0.030 +- 0.044    0.730 +- 0.327    1.425 +- 0.010     b -0.178+-0.010   163/124     0.960    1132 +- 1165  +- 1741      597 +- 91   
+pre, (b) signal without ghost rows                   M7     0.034 +- 0.044    0.034 +- 0.044    1.424 +- 0.010  b -0.177+-0.010 A_G 4333+-1611   162/124     0.960    2154 +- 1335  +- 1716      578 +- 90   
+
+## central vz, default: data S(P_main) 3460 +- 283, E 896 +- 55; median rel. error per point: data 0.0120, background template 0.0562
+central vz, default                                  M1     0.318 +- 0.026    2.072 +- 0.260    1.155 +- 0.006                       324/125     0.952    5625 +- 899   +- 1342      626 +- 49   
+central vz, default                                  M4     0.107 +- 0.034    0.746 +- 0.266    1.376 +- 0.020   a_VM 0.337+-0.068   167/124     0.955    1424 +- 895   +- 1288      177 +- 67   
+central vz, default                                  M6     0.067 +- 0.037    0.833 +- 0.264    1.242 +- 0.010     b -0.123+-0.011   172/124     0.956    1369 +- 900   +- 1283      181 +- 68   
+central vz, default                                  M7     0.070 +- 0.037    0.070 +- 0.037    1.242 +- 0.010  b -0.123+-0.010 A_G 4012+-1162   171/124     0.956    2015 +- 967   +- 1245      177 +- 67   
+
+## central vz, (a): data S(P_main) 3460 +- 283, E 896 +- 55; median rel. error per point: data 0.0120, background template 0.0528
+central vz, (a)                                      M1     0.302 +- 0.025    2.018 +- 0.250    0.996 +- 0.005                       296/125     0.947    4849 +- 863   +- 1284      637 +- 47   
+central vz, (a)                                      M4     0.110 +- 0.032    0.858 +- 0.251    1.166 +- 0.016   a_VM 0.364+-0.055   159/124     0.950    1152 +- 850   +- 1216      256 +- 62   
+central vz, (a)                                      M6     0.078 +- 0.035    0.933 +- 0.250    1.062 +- 0.008     b -0.094+-0.009   165/124     0.951    1057 +- 858   +- 1213      242 +- 64   
+central vz, (a)                                      M7     0.081 +- 0.035    0.081 +- 0.035    1.062 +- 0.008  b -0.094+-0.008 A_G 4366+-1089   164/124     0.950    1687 +- 911   +- 1163      237 +- 63   
+
+## edge vz, (a): data S(P_main) 551 +- 193, E 196 +- 38; median rel. error per point: data 0.0214, background template 0.1166
+edge vz, (a)                                         M1     0.777 +- 0.093    2.999 +- 0.649    1.756 +- 0.020                       294/125     0.962    2524 +- 694   +- 1036      717 +- 38   
+edge vz, (a)                                         M4     0.335 +- 0.117    1.162 +- 0.633    2.280 +- 0.064  a_VM -0.018+-0.196   164/124     0.968     382 +- 685   +- 1041      663 +- 44   
+edge vz, (a)                                         M6     0.017 +- 0.136    0.393 +- 0.652    2.017 +- 0.034     b -0.378+-0.034   129/124     0.968    -338 +- 695   +- 1054      588 +- 49   
+edge vz, (a)                                         M7     0.019 +- 0.136    0.019 +- 0.136    2.018 +- 0.034  b -0.379+-0.034 A_G 506+-953   129/124     0.968    -324 +- 792   +- 1051      593 +- 48   

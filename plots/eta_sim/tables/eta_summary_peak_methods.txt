@@ -1,0 +1,49 @@
+# eta_summary_peak_methods: the eta peak, data / simulation, by method (review finding 1: the ratio depends on the method)
+# simulation: std + lep + eta owned rows, mode A, w (PDG); peak = direct eta -> pi+pi-e+e- (generator M(ee) model not QED) + conversion
+# data: rows of scan_compact (vz > -160 mm, isBest >= 0, PT3, cor_ok); L_data = 6080.5 nb^-1 UNCONFIRMED: every ratio scales with 6080.5 / L_data
+# A  : data P_main (whole Gaussian 0.5439 / 5.4 MeV, pol2, 0.5225-0.61) / simulated peak content over ALL M4
+# Aw : data P_main x 0.943 (window share) / simulated peak inside the window 0.5336-0.5542 (sim M4 x 0.9952)
+# B  : data P_main / P_main on the simulated PEAK TEMPLATE alone (sim M4 x 0.9952)
+# C  : data P_main / P_main on the simulated TOTAL T1 + T2 (sim M4 x 0.9952); C(a): on variant (a)
+# D  : template fit M1 alpha_peak (0.40-0.75, no scale, T1 + T2), error x sqrt(chi2/ndf); range over 2 ranges x 2 scales x 2 ghost variants
+# E  : side bands: data / simulated background without the peak in 0.5225-0.5336 (left) and 0.5542-0.5650 (right), linear interpolation to
+#      the window; (data window - r x sim background) / sim peak in the window; range = left or right band ratio alone; E(a): variant (a)
+# errors: ratio +- stat +- model (fit-model spread: 48 variants, the same variant on data and simulation for B and C); 'tot' adds the
+#   absolute scale incl. L_data (20 %); ghost: (b) = against the simulated peak WITHOUT rows with a ghost-flagged lepton
+
+sel       data P_main [rows] (stat, model)    sim peak all M4   sim peak in window   P_main(peak tmpl)   P_main(T1+T2)   P_main((a))
+pre         4671 +- 367  +- 958   (21 %)     15874 +- 425      12324               12872                9685            8240
+pre+OA>2    3632 +- 328  +- 752   (21 %)      9368 +- 319       7061                7211                5144            4318
+E1          3187 +- 283  +- 673   (21 %)      7866 +- 288       5906                6010                4527            3985
+E2          4047 +- 320  +- 891   (22 %)     13924 +- 396      10842               11360                9117            7998
+
+sel       method data/sim +- stat +- model            tot      ghost var.
+pre       A       0.294 +- 0.024  +- 0.060            0.088   (b) 0.363
+pre       Aw      0.357 +- 0.030  +- 0.073            0.107   (b) 0.432
+pre       B       0.363 +- 0.030  +- 0.062            0.100   (b) 0.415
+pre       C       0.482 +- 0.073  +- 0.051            0.131   (a) 0.567
+pre       D       1.054 +- 0.246  (x sqrt(chi2/ndf), chi2/ndf 408/67)   0.324   range 0.780-1.078
+pre       E       0.815 +- 0.140    range 0.621-1.039 (bkg ratio left 1.264, right 1.355, window 1.310)   0.215   (a) 0.838; unscaled sim M4 0.849
+pre+OA>2  A       0.388 +- 0.037  +- 0.080            0.118   (b) 0.471
+pre+OA>2  Aw      0.485 +- 0.048  +- 0.100            0.148   (b) 0.575
+pre+OA>2  B       0.504 +- 0.049  +- 0.099            0.150   (b) 0.459
+pre+OA>2  C       0.706 +- 0.155  +- 0.108            0.236   (a) 0.841
+pre+OA>2  D       1.364 +- 0.338  (x sqrt(chi2/ndf), chi2/ndf 335/67)   0.435   range 0.987-1.364
+pre+OA>2  E       0.960 +- 0.215    range 0.559-1.444 (bkg ratio left 1.290, right 1.430, window 1.360)   0.289   (a) 1.031; unscaled sim M4 1.114
+E1        A       0.405 +- 0.039  +- 0.086            0.124   (b) 0.494
+E1        Aw      0.509 +- 0.050  +- 0.107            0.156   (b) 0.605
+E1        B       0.530 +- 0.052  +- 0.124            0.171   (b) 0.496
+E1        C       0.704 +- 0.153  +- 0.119            0.240   (a) 0.800
+E1        D       1.037 +- 0.271  (x sqrt(chi2/ndf), chi2/ndf 193/67)   0.341   range 0.773-1.041
+E1        E       0.839 +- 0.220    range 0.389-1.354 (bkg ratio left 1.242, right 1.406, window 1.324)   0.276   (a) 0.859; unscaled sim M4 1.116
+E2        A       0.291 +- 0.024  +- 0.064            0.090   (b) 0.359
+E2        Aw      0.352 +- 0.030  +- 0.077            0.109   (b) 0.427
+E2        B       0.356 +- 0.030  +- 0.076            0.108   (b) 0.410
+E2        C       0.444 +- 0.065  +- 0.045            0.119   (a) 0.506
+E2        D       0.832 +- 0.160  (x sqrt(chi2/ndf), chi2/ndf 169/67)   0.231   range 0.630-0.891
+E2        E       0.656 +- 0.139    range 0.458-0.877 (bkg ratio left 1.224, right 1.323, window 1.273)   0.191   (a) 0.666; unscaled sim M4 0.729
+
+# P_main on both sides (B, C, C(a)): 0.36-0.84; methods using the simulated background shape (D, E, E(a)): 0.66-1.36; all-M4 content (A): 0.29-0.41
+# reading: the data peak is not larger than the simulated one; by the data-study method (P_main) it is 0.36-0.84 of the simulation,
+#   methods that use the simulated background shape give 0.66-1.36; the peak normalisation is known only to a factor of about 2
+#   (a 10-15 % change of the background level under the peak moves data/sim of the peak by a factor 2-3: method E range)

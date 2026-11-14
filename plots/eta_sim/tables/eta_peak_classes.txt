@@ -1,0 +1,156 @@
+# eta_peak_classes: peak content per class of OA(e+e-) [deg] and M(ee) [GeV/c2] (reconstructed), simulation against data
+# simulation: expected data rows = sum w x L_data / L_sim (L_data = 6080.5 nb^-1, UNCONFIRMED), all M4, std + lep + eta owned rows, mode A, w (PDG)
+# data (this macro): P_main fit of N - CB per class (frozen 0.5439 / 5.4 MeV, pol2, 0.5225-0.61), same preset and class
+# data errors (review finding 4): total = stat (+) model; model = fit-model spread per class (pol 1-4, 4 ranges, width -+ 0.5 MeV, half range, p > 0.05)
+#   every fit below uses the TOTAL error; the stat-only fit (as before the review) is printed for comparison only
+# sim direct: generator M(ee) model not QED (review finding 2); 'dir KW' / 'fr KW' / KW fits: ILLUSTRATION ONLY (flat acceptance and fixed content assumed)
+# frac = class content / sum over the classes; share_dir = direct / (direct + conversion) in the class; R = data / sim total
+# 'given' = numbers quoted by the data study or today's summary (other selection where stated); X17 = BR 1e-5 illustration (rows), not in any sum
+# mixture fit: data_i = a conv_i + b dir_i (a, b = data/SMASH scale of each component); one-factor fit: data_i = a1 (conv_i + dir_i)
+
+## pre, OA5 (OA [deg])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<2       |      3253      3252    6506 +- 281   |     0.500 |  0.386  0.436  0.410 |   1039 +- 389    0.220+-0.073 | 0.160+-0.060 |                 -    nan |    19.4 |     1896  0.225 |   163 / 353  
+2-4      |      3504      3519    7024 +- 292   |     0.499 |  0.416  0.472  0.442 |   1707 +- 540    0.361+-0.088 | 0.243+-0.078 |                 -    nan |   130.4 |     2562  0.304 |   210 / 498  
+4-6      |       875       631    1506 +- 124   |     0.581 |  0.104  0.085  0.095 |    667 +- 251    0.141+-0.051 | 0.443+-0.170 |                 -    nan |   139.4 |     1108  0.132 |   131 / 214  
+6-10     |       372        49     421 +- 34    |     0.885 |  0.044  0.007  0.027 |    365 +- 194    0.077+-0.040 | 0.867+-0.466 |                 -    nan |   121.6 |     1013  0.120 |   109 / 160  
+>10      |       418         0     418 +- 2     |     1.000 |  0.050  0.000  0.026 |    949 +- 395    0.201+-0.074 | 2.272+-0.946 |                 -    nan |    22.5 |     1844  0.219 |   187 / 348  
+sum      |      8422      7452            15874 |     0.531 |                      |   4727 +- 836   (whole selection fit 4671 +- 367) | given sum 0 (-)
+mixture fit: a(conv) = -1.069 +- 0.497, b(direct) = 1.465 +- 0.472, rho -0.97, chi2/ndf 1.7/3 (p 0.626); one factor a1 = 0.221 +- 0.046, chi2/ndf 9.5/4 (p 0.049); direct fraction of the data peak 2.823 +- 0.862 (simulation 0.531)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.147 +- 0.283, b(direct) = 1.551 +- 0.264, chi2/ndf 5.7/3; one factor 0.215 +- 0.020, chi2/ndf 39.2/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.098 +- 0.132, b(direct KW) = 0.458 +- 0.134, rho -0.72, chi2/ndf 0.8/3 (p 0.856); one factor 0.277 +- 0.051, chi2/ndf 2.9/4 (p 0.583); direct fraction of the data peak 0.841 +- 0.211 (simulation 0.531)
+
+## pre, MEE5 (M(ee) [MeV/c2])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<8       |      4414      4369    8783 +- 326   |     0.503 |  0.524  0.586  0.553 |   1788 +- 566    0.380+-0.090 | 0.204+-0.065 |      1541 +- 194   0.357 |     9.2 |     2459  0.292 |   214 / 524  
+8-20     |      3309      3058    6368 +- 273   |     0.520 |  0.393  0.410  0.401 |   1600 +- 524    0.340+-0.088 | 0.251+-0.083 |      1450 +- 205   0.336 |   316.1 |     3123  0.371 |   215 / 477  
+20-50    |       449        24     473 +- 24    |     0.949 |  0.053  0.003  0.030 |    751 +- 284    0.160+-0.058 | 1.588+-0.606 |       688 +- 130   0.160 |   107.8 |     1747  0.207 |   137 / 249  
+50-135   |       193         0     193 +- 2     |     1.000 |  0.023  0.000  0.012 |    465 +- 202    0.099+-0.042 | 2.411+-1.046 |       550 +- 141   0.128 |     0.2 |     1012  0.120 |   139 / 146  
+>135     |        57         0      57 +- 1     |     1.000 |  0.007  0.000  0.004 |     99 +- 79     0.021+-0.017 | 1.722+-1.379 |        83 +- 68    0.019 |     0.0 |       81  0.010 |    64 / 47   
+sum      |      8422      7452            15874 |     0.531 |                      |   4703 +- 850   (whole selection fit 4671 +- 367) | given sum 4312 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.525 +- 0.558, b(direct) = 1.905 +- 0.520, rho -0.97, chi2/ndf 0.3/3 (p 0.958); one factor a1 = 0.239 +- 0.051, chi2/ndf 10.8/4 (p 0.028); direct fraction of the data peak 3.425 +- 1.003 (simulation 0.531)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.469 +- 0.318, b(direct) = 1.851 +- 0.291, chi2/ndf 0.7/3; one factor 0.230 +- 0.021, chi2/ndf 34.2/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.130 +- 0.137, b(direct KW) = 0.440 +- 0.121, rho -0.65, chi2/ndf 0.8/3 (p 0.846); one factor 0.297 +- 0.054, chi2/ndf 2.6/4 (p 0.635); direct fraction of the data peak 0.793 +- 0.205 (simulation 0.531)
+
+## pre, OA8t (OA [deg])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+0-1      |       833       752    1585 +- 135   |     0.525 |  0.099  0.101  0.100 |    241 +- 130    0.051+-0.027 | 0.152+-0.083 |       241 +- 78    0.051 |     1.5 |      454  0.054 |    78 / 104  
+1-2      |      2420      2500    4920 +- 246   |     0.492 |  0.287  0.336  0.310 |    798 +- 307    0.170+-0.059 | 0.162+-0.063 |       798 +- 143   0.170 |    17.9 |     1442  0.171 |   143 / 272  
+2-3      |      2237      2306    4543 +- 237   |     0.492 |  0.266  0.309  0.286 |    855 +- 341    0.182+-0.064 | 0.188+-0.076 |       855 +- 159   0.182 |    54.0 |     1511  0.179 |   159 / 302  
+3-4      |      1267      1214    2481 +- 172   |     0.511 |  0.150  0.163  0.156 |    851 +- 271    0.181+-0.053 | 0.343+-0.112 |       851 +- 137   0.181 |    76.4 |     1052  0.125 |   137 / 234  
+4-6      |       875       631    1506 +- 124   |     0.581 |  0.104  0.085  0.095 |    667 +- 251    0.142+-0.050 | 0.443+-0.170 |       667 +- 131   0.142 |   139.4 |     1108  0.132 |   131 / 214  
+6-10     |       372        49     421 +- 34    |     0.885 |  0.044  0.007  0.027 |    365 +- 194    0.078+-0.040 | 0.867+-0.466 |       365 +- 109   0.078 |   121.6 |     1013  0.120 |   109 / 160  
+10-20    |       217         0     217 +- 2     |     1.000 |  0.026  0.000  0.014 |    553 +- 188    0.118+-0.039 | 2.554+-0.866 |       553 +- 112   0.118 |    22.3 |     1044  0.124 |   112 / 150  
+>20      |       201         0     201 +- 2     |     1.000 |  0.024  0.000  0.013 |    374 +- 198    0.079+-0.040 | 1.858+-0.984 |       374 +- 149   0.080 |     0.2 |      800  0.095 |   149 / 130  
+sum      |      8422      7452            15874 |     0.531 |                      |   4704 +- 690   (whole selection fit 4671 +- 367) | given sum 4704 (assistant summary of today (vz > -160))
+mixture fit: a(conv) = -1.211 +- 0.434, b(direct) = 1.601 +- 0.411, rho -0.97, chi2/ndf 3.6/6 (p 0.736); one factor a1 = 0.215 +- 0.038, chi2/ndf 16.7/7 (p 0.020); direct fraction of the data peak 3.022 +- 0.768 (simulation 0.531)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.188 +- 0.276, b(direct) = 1.589 +- 0.258, chi2/ndf 8.2/6; one factor 0.212 +- 0.020, chi2/ndf 48.2/7
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.076 +- 0.108, b(direct KW) = 0.482 +- 0.111, rho -0.71, chi2/ndf 1.6/6 (p 0.949); one factor 0.278 +- 0.043, chi2/ndf 5.6/7 (p 0.589); direct fraction of the data peak 0.877 +- 0.171 (simulation 0.531)
+
+## pre, MEE5t (M(ee) [MeV/c2])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+0-10     |      5758      5801   11559 +- 375   |     0.498 |  0.684  0.779  0.728 |   2313 +- 641    0.492+-0.090 | 0.200+-0.056 |     2309 (no err)  0.492 |    22.8 |     3383  0.402 |   248 / 591  
+10-20    |      1965      1626    3592 +- 199   |     0.547 |  0.233  0.218  0.226 |   1070 +- 416    0.228+-0.077 | 0.298+-0.117 |      1070 +- 175   0.228 |   302.5 |     2199  0.261 |   175 / 377  
+20-50    |       449        24     473 +- 24    |     0.949 |  0.053  0.003  0.030 |    751 +- 284    0.160+-0.058 | 1.588+-0.606 |       751 +- 137   0.160 |   107.8 |     1747  0.207 |   137 / 249  
+50-135   |       193         0     193 +- 2     |     1.000 |  0.023  0.000  0.012 |    465 +- 202    0.099+-0.042 | 2.411+-1.046 |       465 +- 139   0.099 |     0.2 |     1012  0.120 |   139 / 146  
+135-270  |        57         0      57 +- 1     |     1.000 |  0.007  0.000  0.004 |     99 +- 80     0.021+-0.017 | 1.725+-1.388 |        99 +- 64    0.021 |     0.0 |       81  0.010 |    64 / 48   
+sum      |      8422      7452            15874 |     0.531 |                      |   4699 +- 843   (whole selection fit 4671 +- 367) | given sum 4694 (assistant summary of today (vz > -160))
+mixture fit: a(conv) = -1.454 +- 0.532, b(direct) = 1.842 +- 0.499, rho -0.97, chi2/ndf 0.5/3 (p 0.922); one factor a1 = 0.235 +- 0.050, chi2/ndf 11.2/4 (p 0.024); direct fraction of the data peak 3.317 +- 0.947 (simulation 0.531)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.422 +- 0.307, b(direct) = 1.808 +- 0.282, chi2/ndf 1.1/3; one factor 0.226 +- 0.021, chi2/ndf 36.3/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.129 +- 0.132, b(direct KW) = 0.441 +- 0.119, rho -0.64, chi2/ndf 0.7/3 (p 0.867); one factor 0.296 +- 0.054, chi2/ndf 2.6/4 (p 0.626); direct fraction of the data peak 0.795 +- 0.198 (simulation 0.531)
+
+## pre, OA4sp (OA [deg])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<2       |      3253      3252    6506 +- 281   |     0.500 |  0.386  0.436  0.410 |   1039 +- 389    0.220+-0.074 | 0.160+-0.060 |       944 +- 154   0.219 |    19.4 |     1896  0.225 |   163 / 353  
+2-6      |      4379      4151    8530 +- 318   |     0.513 |  0.520  0.557  0.537 |   2374 +- 669    0.503+-0.093 | 0.278+-0.079 |      2131 +- 230   0.493 |   269.8 |     3670  0.436 |   247 / 622  
+6-15     |       516        49     564 +- 34    |     0.914 |  0.061  0.007  0.036 |    751 +- 295    0.159+-0.060 | 1.331+-0.529 |       577 +- 130   0.134 |   142.6 |     1666  0.198 |   139 / 260  
+>15      |       274         0     274 +- 2     |     1.000 |  0.033  0.000  0.017 |    557 +- 302    0.118+-0.060 | 2.031+-1.103 |       667 +- 165   0.154 |     1.5 |     1191  0.141 |   165 / 253  
+sum      |      8422      7452            15874 |     0.531 |                      |   4721 +- 882   (whole selection fit 4671 +- 367) | given sum 4319 (scan_peak.md sec. 5 (nominal, NO vz cut))
+# model spread: fewer than two variants with p > 0.05 in: 6-15(p > 1e-3 used)
+mixture fit: a(conv) = -1.339 +- 0.579, b(direct) = 1.725 +- 0.550, rho -0.98, chi2/ndf 0.5/2 (p 0.768); one factor a1 = 0.217 +- 0.048, chi2/ndf 8.7/3 (p 0.033); direct fraction of the data peak 3.190 +- 0.975 (simulation 0.531)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.285 +- 0.299, b(direct) = 1.688 +- 0.277, chi2/ndf 1.4/2; one factor 0.222 +- 0.020, chi2/ndf 38.2/3
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.083 +- 0.139, b(direct KW) = 0.472 +- 0.144, rho -0.72, chi2/ndf 0.3/2 (p 0.853); one factor 0.275 +- 0.053, chi2/ndf 2.5/3 (p 0.478); direct fraction of the data peak 0.865 +- 0.222 (simulation 0.531)
+
+## pre+OA>2, MEE5 (M(ee) [MeV/c2])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<8       |      1572      1578    3149 +- 196   |     0.499 |  0.304  0.376  0.336 |    824 +- 278    0.225+-0.070 | 0.262+-0.090 |      1541 +- 194   0.357 |     3.6 |      878  0.135 |   146 / 237  
+8-20     |      2899      2597    5496 +- 251   |     0.527 |  0.561  0.618  0.587 |   1531 +- 520    0.417+-0.097 | 0.278+-0.095 |      1450 +- 205   0.336 |   302.6 |     2809  0.430 |   210 / 475  
+20-50    |       448        24     472 +- 24    |     0.949 |  0.087  0.006  0.050 |    749 +- 283    0.204+-0.071 | 1.586+-0.605 |       688 +- 130   0.160 |   107.6 |     1746  0.267 |   137 / 248  
+50-135   |       193         0     193 +- 2     |     1.000 |  0.037  0.000  0.021 |    465 +- 202    0.127+-0.053 | 2.411+-1.046 |       550 +- 141   0.128 |     0.2 |     1012  0.155 |   139 / 146  
+>135     |        57         0      57 +- 1     |     1.000 |  0.011  0.000  0.006 |     99 +- 79     0.027+-0.022 | 1.722+-1.379 |        83 +- 68    0.019 |     0.0 |       81  0.012 |    64 / 47   
+sum      |      5169      4199             9368 |     0.552 |                      |   3667 +- 689   (whole selection fit 3632 +- 328) | given sum 4312 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.416 +- 0.575, b(direct) = 1.864 +- 0.516, rho -0.95, chi2/ndf 0.5/3 (p 0.915); one factor a1 = 0.297 +- 0.065, chi2/ndf 10.0/4 (p 0.041); direct fraction of the data peak 2.611 +- 0.693 (simulation 0.552)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.390 +- 0.336, b(direct) = 1.826 +- 0.290, chi2/ndf 1.1/3; one factor 0.292 +- 0.031, chi2/ndf 30.6/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.210 +- 0.165, b(direct KW) = 0.434 +- 0.122, rho -0.59, chi2/ndf 1.0/3 (p 0.796); one factor 0.343 +- 0.064, chi2/ndf 1.8/4 (p 0.777); direct fraction of the data peak 0.763 +- 0.177 (simulation 0.609)
+
+## peak nominal, OA4sp (OA [deg])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<2       |      3113      2937    6050 +- 267   |     0.515 |  0.396  0.448  0.420 |    943 +- 301    0.216+-0.062 | 0.156+-0.050 |       944 +- 154   0.219 |    16.6 |     1820  0.230 |   149 / 262  
+2-6      |      4041      3592    7634 +- 295   |     0.529 |  0.514  0.548  0.530 |   2219 +- 511    0.507+-0.077 | 0.291+-0.068 |      2131 +- 230   0.493 |   242.0 |     3445  0.436 |   221 / 461  
+6-15     |       457        24     481 +- 24    |     0.950 |  0.058  0.004  0.033 |    607 +- 218    0.139+-0.047 | 1.262+-0.458 |       577 +- 130   0.134 |   114.0 |     1547  0.196 |   121 / 181  
+>15      |       250         0     250 +- 2     |     1.000 |  0.032  0.000  0.017 |    604 +- 230    0.138+-0.049 | 2.420+-0.920 |       667 +- 165   0.154 |     0.8 |     1088  0.138 |   146 / 177  
+sum      |      7861      6553            14414 |     0.545 |                      |   4373 +- 672   (whole selection fit 4330 +- 327) | given sum 4319 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.369 +- 0.500, b(direct) = 1.672 +- 0.445, rho -0.97, chi2/ndf 1.6/2 (p 0.456); one factor a1 = 0.217 +- 0.040, chi2/ndf 13.7/3 (p 0.003); direct fraction of the data peak 3.151 +- 0.847 (simulation 0.545)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.296 +- 0.299, b(direct) = 1.618 +- 0.260, chi2/ndf 3.7/2; one factor 0.224 +- 0.020, chi2/ndf 42.5/3
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.081 +- 0.119, b(direct KW) = 0.463 +- 0.115, rho -0.72, chi2/ndf 1.1/2 (p 0.582); one factor 0.278 +- 0.045, chi2/ndf 4.1/3 (p 0.252); direct fraction of the data peak 0.873 +- 0.184 (simulation 0.547)
+
+## peak nominal, MEE5 (M(ee) [MeV/c2])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<8       |      4081      3811    7892 +- 304   |     0.517 |  0.519  0.581  0.547 |   1588 +- 436    0.364+-0.078 | 0.201+-0.056 |      1541 +- 194   0.357 |     8.0 |     2286  0.289 |   188 / 393  
+8-20     |      3123      2743    5866 +- 258   |     0.532 |  0.397  0.419  0.407 |   1544 +- 349    0.354+-0.071 | 0.263+-0.061 |      1450 +- 205   0.336 |   272.2 |     2942  0.372 |   194 / 289  
+20-50    |       422         0     422 +- 2     |     1.000 |  0.054  0.000  0.029 |    647 +- 371    0.148+-0.075 | 1.532+-0.879 |       688 +- 130   0.160 |    92.9 |     1641  0.208 |   122 / 350  
+50-135   |       182         0     182 +- 2     |     1.000 |  0.023  0.000  0.013 |    502 +- 169    0.115+-0.039 | 2.755+-0.925 |       550 +- 141   0.128 |     0.1 |      955  0.121 |   125 / 113  
+>135     |        52         0      52 +- 1     |     1.000 |  0.007  0.000  0.004 |     84 +- 66     0.019+-0.015 | 1.604+-1.264 |        83 +- 68    0.019 |     0.0 |       77  0.010 |    57 / 33   
+sum      |      7861      6553            14414 |     0.545 |                      |   4365 +- 694   (whole selection fit 4330 +- 327) | given sum 4312 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.734 +- 0.634, b(direct) = 2.012 +- 0.563, rho -0.98, chi2/ndf 1.0/3 (p 0.790); one factor a1 = 0.239 +- 0.041, chi2/ndf 11.3/4 (p 0.023); direct fraction of the data peak 3.551 +- 0.997 (simulation 0.545)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.408 +- 0.299, b(direct) = 1.715 +- 0.258, chi2/ndf 2.7/3; one factor 0.232 +- 0.020, chi2/ndf 37.6/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.102 +- 0.135, b(direct KW) = 0.469 +- 0.128, rho -0.77, chi2/ndf 0.9/3 (p 0.818); one factor 0.291 +- 0.045, chi2/ndf 3.1/4 (p 0.539); direct fraction of the data peak 0.847 +- 0.200 (simulation 0.547)
+
+## peak nominal WITHOUT vz cut (data); simulation: peak nominal, OA4sp (OA [deg])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<2       |      3113      2937    6050 +- 267   |     0.515 |  0.396  0.448  0.420 |    944 +- 307    0.218+-0.065 | 0.156+-0.051 |       944 +- 154   0.219 |    16.6 |     1820  0.230 |   154 / 266  
+2-6      |      4041      3592    7634 +- 295   |     0.529 |  0.514  0.548  0.530 |   2131 +- 558    0.493+-0.083 | 0.279+-0.074 |      2131 +- 230   0.493 |   242.0 |     3445  0.436 |   230 / 508  
+6-15     |       457        24     481 +- 24    |     0.950 |  0.058  0.004  0.033 |    577 +- 205    0.134+-0.046 | 1.200+-0.430 |       577 +- 130   0.134 |   114.0 |     1547  0.196 |   130 / 158  
+>15      |       250         0     250 +- 2     |     1.000 |  0.032  0.000  0.017 |    667 +- 261    0.154+-0.056 | 2.674+-1.046 |       667 +- 165   0.154 |     0.8 |     1088  0.138 |   165 / 202  
+sum      |      7861      6553            14414 |     0.545 |                      |   4320 +- 718   (whole selection fit 4319 +- 348) | given sum 4319 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.294 +- 0.489, b(direct) = 1.589 +- 0.434, rho -0.97, chi2/ndf 1.9/2 (p 0.393); one factor a1 = 0.210 +- 0.042, chi2/ndf 12.9/3 (p 0.005); direct fraction of the data peak 3.116 +- 0.867 (simulation 0.545)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.275 +- 0.319, b(direct) = 1.588 +- 0.279, chi2/ndf 4.4/2; one factor 0.217 +- 0.020, chi2/ndf 36.0/3
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.083 +- 0.121, b(direct KW) = 0.445 +- 0.114, rho -0.69, chi2/ndf 1.2/2 (p 0.545); one factor 0.271 +- 0.047, chi2/ndf 3.9/3 (p 0.268); direct fraction of the data peak 0.866 +- 0.191 (simulation 0.547)
+
+## peak nominal WITHOUT vz cut (data); simulation: peak nominal, MEE5 (M(ee) [MeV/c2])
+class    |   sim dir  sim conv        sim total | share_dir | fr dir fr cnv fr tot |     data S (tot)     data frac |    R data/sim |             given g frac |     X17 |   dir KW  fr KW |  stat / model
+<8       |      4081      3811    7892 +- 304   |     0.517 |  0.519  0.581  0.547 |   1541 +- 426    0.357+-0.076 | 0.195+-0.054 |      1541 +- 194   0.357 |     8.0 |     2286  0.289 |   194 / 379  
+8-20     |      3123      2743    5866 +- 258   |     0.532 |  0.397  0.419  0.407 |   1450 +- 334    0.336+-0.068 | 0.247+-0.058 |      1450 +- 205   0.336 |   272.2 |     2942  0.372 |   205 / 264  
+20-50    |       422         0     422 +- 2     |     1.000 |  0.054  0.000  0.029 |    688 +- 309    0.160+-0.064 | 1.631+-0.732 |       688 +- 130   0.160 |    92.9 |     1641  0.208 |   130 / 280  
+50-135   |       182         0     182 +- 2     |     1.000 |  0.023  0.000  0.013 |    550 +- 222    0.128+-0.049 | 3.015+-1.218 |       550 +- 141   0.128 |     0.1 |      955  0.121 |   141 / 172  
+>135     |        52         0      52 +- 1     |     1.000 |  0.007  0.000  0.004 |     83 +- 78     0.019+-0.018 | 1.581+-1.493 |        83 +- 68    0.019 |     0.0 |       77  0.010 |    68 / 38   
+sum      |      7861      6553            14414 |     0.545 |                      |   4311 +- 666   (whole selection fit 4319 +- 348) | given sum 4312 (scan_peak.md sec. 5 (nominal, NO vz cut))
+mixture fit: a(conv) = -1.670 +- 0.643, b(direct) = 1.934 +- 0.572, rho -0.98, chi2/ndf 1.0/3 (p 0.797); one factor a1 = 0.228 +- 0.040, chi2/ndf 10.2/4 (p 0.037); direct fraction of the data peak 3.569 +- 1.035 (simulation 0.545)
+   -> a negative factor (total errors): the two simulated shapes do not combine physically into the data classes
+   stat-only errors (as before the review, for comparison): a(conv) = -1.535 +- 0.323, b(direct) = 1.811 +- 0.279, chi2/ndf 2.8/3; one factor 0.222 +- 0.021, chi2/ndf 36.6/4
+ILLUSTRATION ONLY (flat acceptance and fixed content assumed, not a result); mixture fit with the KW-reweighted direct decay: a(conv) = 0.086 +- 0.137, b(direct KW) = 0.460 +- 0.134, rho -0.80, chi2/ndf 1.0/3 (p 0.807); one factor 0.276 +- 0.044, chi2/ndf 3.1/4 (p 0.543); direct fraction of the data peak 0.866 +- 0.213 (simulation 0.547)
+
+# KW model check (pre, class 5): bins of the TRUE M(ee) [MeV], model fraction, accepted fraction, factor model/accepted; norm 1.0000; model Gamma(pipiee)/Gamma(pipigamma) = 6.500e-03 (PDG ratio 6.35e-3)
+#      1.02 - 1.52     model 0.0665  accepted 0.3484  factor 0.191
+#      1.52 - 2.27     model 0.0906  accepted 0.1828  factor 0.496
+#      2.27 - 3.37     model 0.0939  accepted 0.1229  factor 0.765
+#      3.37 - 5.02     model 0.0945  accepted 0.0927  factor 1.020
+#      5.02 - 7.47     model 0.0944  accepted 0.0723  factor 1.306
+#      7.47 - 11.13    model 0.0940  accepted 0.0551  factor 1.707
+#     11.13 - 16.57    model 0.0931  accepted 0.0390  factor 2.387
+#     16.57 - 24.66    model 0.0910  accepted 0.0276  factor 3.297
+#     24.66 - 36.71    model 0.0867  accepted 0.0189  factor 4.583
+#     36.71 - 54.66    model 0.0783  accepted 0.0134  factor 5.860
+#     54.66 - 81.37    model 0.0629  accepted 0.0097  factor 6.490
+#     81.37 - 121.14   model 0.0393  accepted 0.0081  factor 4.882
+#    121.14 - 180.35   model 0.0138  accepted 0.0067  factor 2.072
+#    180.35 - 268.50   model 0.0010  accepted 0.0026  factor 0.386

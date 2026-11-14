@@ -1,0 +1,72 @@
+# rw_compare_bump: the simulated eta bump (eta -> pi+pi-pi0, e+e- from the pi0: Dalitz decay D or photon conversion C) BEFORE and AFTER the
+#   Dalitz-plot weight (KLOE-2 2016, X^2 -> Xmax(Y)^2/3; variant 1 + aY of the X17 slides); HGeant eta -> 3 pi ASSUMED phase space
+# simulation: std + lep + eta owned rows, mode A, w (PDG) x physics weight; sigma = sum w / L_sim; data (N - CB) / L_data, L_data = 6080.5 nb^-1 UNCONFIRMED
+
+## 1. simulated bump cross section [nb]: M4 < 1.0 | bump window 0.455-0.5225; before -> KLOE (main) / 1 + aY
+sel   | Dalitz (M4<1)                  conversion (M4<1)              D+C (M4<1)                             | D+C bump window                       
+pre   |  7.924 ->  7.046 / 6.963         5.821 ->  5.190 / 5.114        13.745 +- 0.258 -> 12.235 / 12.077 (x0.890) | 10.580 +- 0.226 ->  9.902 / 9.837  (x0.936)
+E1    |  4.488 ->  3.928 / 3.876         2.300 ->  2.050 / 2.028         6.788 +- 0.181 ->  5.978 / 5.904  (x0.881) |  6.173 +- 0.173 ->  5.635 / 5.598  (x0.913)
+E2    |  5.642 ->  4.913 / 4.848         4.159 ->  3.621 / 3.565         9.800 +- 0.218 ->  8.534 / 8.413  (x0.871) |  8.961 +- 0.208 ->  8.065 / 7.994  (x0.900)
+E3    |  5.632 ->  4.897 / 4.831         4.154 ->  3.611 / 3.555         9.786 +- 0.218 ->  8.509 / 8.386  (x0.869) |  8.951 +- 0.208 ->  8.046 / 7.974  (x0.899)
+E3oa  |  4.479 ->  3.912 / 3.860         2.300 ->  2.050 / 2.028         6.779 +- 0.181 ->  5.962 / 5.888  (x0.880) |  6.168 +- 0.173 ->  5.626 / 5.589  (x0.912)
+E4    |  5.642 ->  4.913 / 4.848         4.159 ->  3.621 / 3.565         9.800 +- 0.218 ->  8.534 / 8.413  (x0.871) |  8.961 +- 0.208 ->  8.065 / 7.994  (x0.900)
+E4oa  |  4.488 ->  3.928 / 3.876         2.300 ->  2.050 / 2.028         6.788 +- 0.181 ->  5.978 / 5.904  (x0.881) |  6.173 +- 0.173 ->  5.635 / 5.598  (x0.913)
+
+## 2. data / simulation in the bump window and the jump at the bump edge (T1 + T2; (a) in brackets), before -> after
+# jump = data/sim in 0.5600-0.5950 divided by data/sim in 0.4875-0.5225 (the upper band is mostly multi-pion background)
+sel   | bump window bef                bump window aft                | band 0.49-0.52 bef -> aft      band 0.56-0.595 bef -> aft     | jump bef -> aft               
+pre   |  0.917 +- 0.012 (0.835)         0.943 +- 0.013 (0.858)        |  0.955 ->  0.986 +- 0.017        1.451 ->  1.448 +- 0.020       |  1.519 ->  1.468 +- 0.033 (1+aY 1.463)
+E1    |  0.953 +- 0.016 (0.884)         0.984 +- 0.017 (0.912)        |  0.971 ->  0.979 +- 0.021        1.424 ->  1.407 +- 0.026       |  1.466 ->  1.437 +- 0.041 (1+aY 1.436)
+E2    |  0.901 +- 0.013 (0.821)         0.941 +- 0.014 (0.855)        |  0.921 ->  0.939 +- 0.017        1.361 ->  1.351 +- 0.022       |  1.477 ->  1.438 +- 0.036 (1+aY 1.436)
+E3    |  0.895 +- 0.013 (0.816)         0.936 +- 0.014 (0.851)        |  0.913 ->  0.932 +- 0.017        1.330 ->  1.320 +- 0.024       |  1.457 ->  1.417 +- 0.037 (1+aY 1.414)
+E3oa  |  0.947 +- 0.016 (0.880)         0.979 +- 0.017 (0.908)        |  0.963 ->  0.971 +- 0.021        1.410 ->  1.392 +- 0.030       |  1.464 ->  1.433 +- 0.044 (1+aY 1.431)
+E4    |  0.901 +- 0.013 (0.821)         0.941 +- 0.014 (0.855)        |  0.922 ->  0.939 +- 0.017        1.357 ->  1.348 +- 0.021       |  1.473 ->  1.435 +- 0.035 (1+aY 1.433)
+E4oa  |  0.953 +- 0.016 (0.884)         0.984 +- 0.017 (0.912)        |  0.972 ->  0.979 +- 0.021        1.415 ->  1.399 +- 0.025       |  1.456 ->  1.429 +- 0.040 (1+aY 1.427)
+
+## 3. M(pipi) in the bump window (M4 0.455-0.5225): data N - CB (CB per 10 MeV M(pipi) bin) against the simulated T1 + T2
+# shape chi2: simulation scaled to the data integral (composition fixed); abs = data / sim (absolute, L_data unconfirmed);
+# fit: data = a_bump x bump + a_rest x (T1+T2 - bump), variance data + a^2 var(bump) + c^2 var(rest) (corrected after the review of 2026-11-12:
+#   the earlier variance used var(T1+T2) for the rest and counted the bump template twice)
+sel   sim     | frac M>0.34      mean       | chi2/ndf                           abs data/sim      
+E1    data    |  0.556 +- 0.002    0.3464   |
+E1    off     |  0.510              0.3431   |   69.4/18    bump D+C alone: frac 0.503 mean 0.3411 |  0.954 +- 0.016  | fit a_bump 0.453 +- 0.144, a_rest 1.302 +- 0.103 (rho -0.97), chi2/ndf 45.9/17
+E1    main    |  0.591              0.3490   |   83.9/18    bump D+C alone: frac 0.695 mean 0.3549 |  0.985 +- 0.017  | fit a_bump 0.398 +- 0.088, a_rest 1.361 +- 0.059 (rho -0.89), chi2/ndf 20.3/17
+E1    1+aY    |  0.600              0.3497   |  116.9/18    bump D+C alone: frac 0.718 mean 0.3567 |  0.988 +- 0.017  | fit a_bump 0.342 +- 0.082, a_rest 1.398 +- 0.055 (rho -0.87), chi2/ndf 20.7/17
+  per bin data/sim (before | after): 0.275: 0.56|1.24 0.285: 0.99|1.37 0.295: 0.79|1.10 0.305: 0.91|1.21 0.315: 0.88|1.11 0.325: 0.84|0.98 0.335: 0.86|0.94 0.345: 0.99|1.02 0.355: 1.01|0.97 0.365: 0.99|0.88 0.375: 0.96|0.81 0.385: 1.07|0.85 0.395: 1.18|0.90 0.405: 1.27|1.05 0.415: 1.15|1.01 0.425: 1.45|1.38 0.435: 1.84|1.83 0.445: 0.97|0.97 0.455: 0.85|0.86
+E2    data    |  0.546 +- 0.002    0.3456   |
+E2    off     |  0.496              0.3419   |  109.8/18    bump D+C alone: frac 0.491 mean 0.3400 |  0.902 +- 0.013  | fit a_bump 0.419 +- 0.117, a_rest 1.259 +- 0.089 (rho -0.97), chi2/ndf 68.9/17
+E2    main    |  0.580              0.3481   |  124.9/18    bump D+C alone: frac 0.687 mean 0.3541 |  0.942 +- 0.014  | fit a_bump 0.382 +- 0.069, a_rest 1.318 +- 0.049 (rho -0.89), chi2/ndf 30.9/17
+E2    1+aY    |  0.590              0.3488   |  178.3/18    bump D+C alone: frac 0.711 mean 0.3560 |  0.945 +- 0.014  | fit a_bump 0.326 +- 0.064, a_rest 1.358 +- 0.046 (rho -0.87), chi2/ndf 32.5/17
+  per bin data/sim (before | after): 0.275: 0.66|1.54 0.285: 0.88|1.31 0.295: 0.77|1.07 0.305: 0.85|1.17 0.315: 0.80|1.01 0.325: 0.79|0.93 0.335: 0.82|0.90 0.345: 0.95|0.98 0.355: 0.97|0.93 0.365: 0.91|0.81 0.375: 0.92|0.76 0.385: 1.02|0.81 0.395: 1.17|0.91 0.405: 1.18|0.98 0.415: 1.19|1.07 0.425: 1.35|1.26 0.435: 2.01|2.01 0.445: 1.06|1.06 0.455: 0.81|0.82
+pre   data    |  0.540 +- 0.002    0.3452   |
+pre   off     |  0.508              0.3429   |   79.5/19    bump D+C alone: frac 0.516 mean 0.3423 |  0.919 +- 0.012  | fit a_bump 0.581 +- 0.113, a_rest 1.174 +- 0.086 (rho -0.97), chi2/ndf 56.8/18
+pre   main    |  0.596              0.3497   |  217.2/19    bump D+C alone: frac 0.718 mean 0.3577 |  0.945 +- 0.013  | fit a_bump 0.278 +- 0.059, a_rest 1.418 +- 0.046 (rho -0.87), chi2/ndf 33.8/18
+pre   1+aY    |  0.606              0.3505   |  295.0/19    bump D+C alone: frac 0.742 mean 0.3596 |  0.947 +- 0.013  | fit a_bump 0.237 +- 0.055, a_rest 1.449 +- 0.043 (rho -0.85), chi2/ndf 34.9/18
+  per bin data/sim (before | after): 0.275: 0.78|1.51 0.285: 0.96|1.39 0.295: 0.84|1.15 0.305: 0.89|1.23 0.315: 0.85|1.07 0.325: 0.82|0.96 0.335: 0.85|0.94 0.345: 0.95|0.97 0.355: 0.97|0.93 0.365: 0.94|0.84 0.375: 0.91|0.76 0.385: 0.95|0.75 0.395: 1.07|0.80 0.405: 1.06|0.79 0.415: 1.17|1.01 0.425: 1.41|1.33 0.435: 1.90|1.89 0.445: 1.04|1.04 0.455: 0.68|0.68 0.465: 3.27|3.21
+
+## 4. M(pipi) > 0.34 efficiency of the bump (base pre, all M4; sim tagged = photon 0.119 <= M(ee gamma) < 0.173, emulated ECAL tag, UNVERIFIED)
+sample                     before             KLOE (main)        1 + aY             | data            
+bump D+C photon-tagged      0.444 +- 0.025     0.667 +- 0.024     0.700 +- 0.023    |  0.705 +- 0.017  (ECAL-tagged eta, data study, no vz cut)
+bump D+C all                0.473 +- 0.009     0.681 +- 0.008     0.708 +- 0.008   
+# pulls (tagged): before -8.6, KLOE -1.3, 1 + aY -0.2
+
+## 5. the other single cuts on the bump (tagged; pT4 and vertex at the bump start base), before -> KLOE / 1 + aY, data tagged
+OA > 2                      0.686 +- 0.024 ->  0.689 /  0.689 | data 0.754 +- 0.013
+OA < 4                      0.630 +- 0.025 ->  0.627 /  0.626 | data 0.641 +- 0.016
+M(pipi) > 0.34              0.444 +- 0.025 ->  0.667 /  0.700 | data 0.705 +- 0.017
+eta_rest > 160              0.299 +- 0.023 ->  0.253 /  0.247 | data -
+pT4 > 400                   0.887 +- 0.019 ->  0.889 /  0.888 | data 0.870 +- 0.012
+oa_lab < 50                 0.977 +- 0.008 ->  0.982 /  0.983 | data 0.992 +- 0.007
+both pions in vertex fit    0.945 +- 0.013 ->  0.950 /  0.951 | data 0.950 +- 0.013
+
+## 6. what the KLOE weight does and does not fix (review of 2026-11-12)
+# fixed: the M(pipi) > 0.34 efficiency of the photon-tagged bump (section 4).
+# not fixed: with the composition of the simulation fixed, the M(pipi) shape in the bump window gets WORSE (section 3), the data fraction above
+#   0.34 is overshot, and the weight opens a deficit of the simulation below the bump; the corrected bump plus background describe neither
+#   M(pipi) nor M4 unless the bump is scaled by a factor that depends on the observable (below). The bump problem is not shown to be
+#   normalisation only. Factors and ratios are absolute (L_data UNCONFIRMED) and come from poor fits: comparisons, not yields.
+sel   | Mpipi shape chi2 bef->aft Mpipi frac>0.34 d / s    | a_bump (Mpipi fit) chi2/ndf           | alpha_bump M1 bef alpha_bump M1 aft | data/sim below bump bef->aft
+E1    |   69.4 ->   83.9 / 18     0.556 / 0.510 -> 0.591  | 0.453 +- 0.144 -> 0.398 +- 0.088 | 45.9 -> 20.3 / 17  | 0.443 +- 0.066  0.487 +- 0.076  | 1.037 +- 0.061 -> 1.294 +- 0.076
+E2    |  109.8 ->  124.9 / 18     0.546 / 0.496 -> 0.580  | 0.419 +- 0.117 -> 0.382 +- 0.069 | 68.9 -> 30.9 / 17  | 0.426 +- 0.048  0.476 +- 0.054  | 0.960 +- 0.048 -> 1.185 +- 0.060
+pre   |   79.5 ->  217.2 / 19     0.540 / 0.508 -> 0.596  | 0.581 +- 0.113 -> 0.278 +- 0.059 | 56.8 -> 33.8 / 18  | 0.402 +- 0.064  0.442 +- 0.069  | 0.949 +- 0.022 -> 1.062 +- 0.025
+# alpha_bump M1: template fit 0.40-0.75 (errors x sqrt(chi2/ndf)); pre is the reference selection, not eta-enriched; below bump = M4 0.35-0.455

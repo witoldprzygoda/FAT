@@ -1,0 +1,269 @@
+# eta_engine_reference: simulated pi+pi-e+e- components (e+e- hypothesis) with the SMASH eta set
+# sets: std (owned, mode A) + lep (owned, mode A) + eta (owned: >= 1 track of a forced eta decay); weight w (PDG BR)
+# sigma = sum w / L_sim, L_sim = 221.05 nb^-1 for each set (the same 10^10 SMASH events); within the HADES acceptance
+#   after the selection, no efficiency correction; data rows = sum w * L_data / L_sim, L_data = 6080.5 nb^-1 (UNCONFIRMED)
+# errors: event-group variance V = sum_g (sum w of the group)^2 (sets independent); N_eff = (sum w)^2 / V
+# rows: rows with W > 0 (eta-set rows whose only forced decay is X17 have W = 0 and are not counted, except in the X17 line)
+# CAUTION (review 2026-11-12, finding 2): the eta-set eta -> pi+pi-e+e- has a NON-QED generator M(ee) (accepted density largest at
+#   threshold, close to 1/M^2; tables/eta_peak_mee_true.txt). Every 'peak direct' number below (yield, direct/conversion ratio, window
+#   contents) is labelled 'generator M(ee) model not QED' and is not for physics until the PLUTO model is checked or reweighted.
+# peak direct: W = 2 x BR(eta -> pi+pi-e+e-) = 2 x 2.68e-4 per row (q = 1/2); X17: W = 2 x 1e-5 per class-6 row,
+#   INFORMATION ONLY (illustrative BR of the order of the BESIII limit 1.5e-5), never in a sum
+# variant (a): T1 + T2 + ghost-flagged true one-source pairs (reconcile.md); fake lepton and different sources: information
+# vertex: vz > -160 mm in every preset; slides = pre + oa_lab < 50, M(pipi) < 0.46, oa_eta > 140, OA > 2;
+#   old code = pre + oa_lab < 50, M(pipi) < 0.42, oa_eta > 140
+
+## selection "pre", all M4
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1649      1751.66      1649.0      7.924 +- 0.195           48184 +- 1.19e+03 
+bump, conversion (C3)                          1187      1286.73      1187.0      5.821 +- 0.169           35395 +- 1.03e+03 
+peak, conversion (C4)                           307      270.893       307.0      1.225 +- 0.0699         7451.6 +- 425      
+peak, direct (C5, M(ee) not QED)             571246      306.188    571246.0      1.385 +- 0.00183        8422.4 +- 11.1     
+peak total (C4 + C5)                         571553      577.081      1392.3      2.611 +- 0.07            15874 +- 425      
+X17, BR 1e-5 (C6; illustration)              787659      15.7532    787653.0    0.07127 +- 8.03e-05       433.33 +- 0.488    
+signal sum T1 (C2-C5)                        574389      3615.47      3740.4      16.36 +- 0.267           99452 +- 1.63e+03 
+phys. background, std (T2)                    86834      83998.7     72154.2        380 +- 1.41       2.3106e+06 +- 8.6e+03  
+phys. background, lep (T2)                  6154438      67174.9   5285124.1      303.9 +- 0.132      1.8478e+06 +- 804      
+phys. background, eta (T2)                   626105      335.519    500372.1      1.518 +- 0.00215        9229.2 +- 13       
+  of which eta four-class 7                  518937      278.083    432053.4      1.258 +- 0.00191        7649.3 +- 11.6     
+phys. background, all sets                  6867377       151509    232711.2      685.4 +- 1.42       4.1676e+06 +- 8.64e+03 
+T1+T2 full simulated spectrum               7441766       155125    230848.1      701.8 +- 1.46       4.2671e+06 +- 8.88e+03 
+T1+T2, std + lep only (first study)         6244415       154483    228943.2      698.9 +- 1.46       4.2494e+06 +- 8.88e+03 
+variant (a): T1+T2+ghost true pairs         8039370       180287    254841.3      815.6 +- 1.62       4.9592e+06 +- 9.82e+03 
+info: fake lepton (T3), all sets             703560      27654.7     29696.8      125.1 +- 0.726      7.6071e+05 +- 4.41e+03 
+info: different sources (T4)                 409775      2765.75      2493.8      12.51 +- 0.251           76079 +- 1.52e+03 
+# shares of T1+T2: peak direct 0.0020, peak conversion 0.0017, bump 0.0196, phys. bkg eta set 0.0022; direct / conversion 1.130
+
+## selection "pre", bump window 0.455-0.5225
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1277       1356.5      1277.0      6.137 +- 0.172           37314 +- 1.04e+03 
+bump, conversion (C3)                           906       982.12       906.0      4.443 +- 0.148           27016 +- 898      
+peak, conversion (C4)                            13      11.4711        13.0    0.05189 +- 0.0144         315.54 +- 87.5     
+peak, direct (C5, M(ee) not QED)              21327      11.4313     21327.0    0.05171 +- 0.000354       314.44 +- 2.15     
+peak total (C4 + C5)                          21340      22.9023        51.8     0.1036 +- 0.0144         629.98 +- 87.5     
+X17, BR 1e-5 (C6; illustration)               33667      0.67334     33661.0   0.003046 +- 1.66e-05       18.522 +- 0.101    
+signal sum T1 (C2-C5)                         23523      2361.53      2216.8      10.68 +- 0.227           64959 +- 1.38e+03 
+phys. background, std (T2)                     2129       2140.3      2034.6      9.682 +- 0.215           58874 +- 1.31e+03 
+phys. background, lep (T2)                    85983      920.765     81253.9      4.165 +- 0.0146          25328 +- 88.9     
+phys. background, eta (T2)                    63709      34.1433     59469.4     0.1545 +- 0.000633       939.19 +- 3.85     
+  of which eta four-class 7                   48355      25.9137     45297.5     0.1172 +- 0.000551       712.82 +- 3.35     
+phys. background, all sets                   151821       3095.2      4235.5         14 +- 0.215           85141 +- 1.31e+03 
+T1+T2 full simulated spectrum                175344      5456.73      6033.3      24.69 +- 0.318       1.501e+05 +- 1.93e+03 
+T1+T2, std + lep only (first study)           90308      5411.16      5933.0      24.48 +- 0.318      1.4885e+05 +- 1.93e+03 
+variant (a): T1+T2+ghost true pairs          194403       5992.1      6584.1      27.11 +- 0.334      1.6483e+05 +- 2.03e+03 
+info: fake lepton (T3), all sets              22864      637.413       682.5      2.884 +- 0.11            17534 +- 671      
+info: different sources (T4)                   7363      109.547       107.8     0.4956 +- 0.0477         3013.3 +- 290      
+# shares of T1+T2: peak direct 0.0021, peak conversion 0.0021, bump 0.4286, phys. bkg eta set 0.0063; direct / conversion 0.997
+
+## selection "pre", peak window 0.5336-0.5542
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                             6      6.37355         6.0    0.02883 +- 0.0118         175.32 +- 71.6     
+bump, conversion (C3)                             3      3.25205         3.0    0.01471 +- 0.00849        89.455 +- 51.6     
+peak, conversion (C4)                           236      208.244       236.0     0.9421 +- 0.0613         5728.2 +- 373      
+peak, direct (C5, M(ee) not QED)             438066      234.803    438066.0      1.062 +- 0.0016         6458.8 +- 9.76     
+peak total (C4 + C5)                         438302      443.047      1067.5      2.004 +- 0.0613          12187 +- 373      
+X17, BR 1e-5 (C6; illustration)              616131      12.3226    616131.0    0.05575 +- 7.1e-05        338.96 +- 0.432    
+signal sum T1 (C2-C5)                        438311      452.673      1055.3      2.048 +- 0.063           12452 +- 383      
+phys. background, std (T2)                     1041      1035.17      1014.5      4.683 +- 0.147           28475 +- 894      
+phys. background, lep (T2)                    50482      540.234     48116.2      2.444 +- 0.0111          14860 +- 67.7     
+phys. background, eta (T2)                    39700      21.2759     38546.2    0.09625 +- 0.00049        585.24 +- 2.98     
+  of which eta four-class 7                   23084      12.3698     22410.0    0.05596 +- 0.000374       340.26 +- 2.27     
+phys. background, all sets                    91223      1596.68      2399.8      7.223 +- 0.147           43921 +- 897      
+T1+T2 full simulated spectrum                529534      2049.36      3338.4      9.271 +- 0.16            56372 +- 976      
+T1+T2, std + lep only (first study)           51768      1793.28      2556.5      8.113 +- 0.16            49328 +- 976      
+variant (a): T1+T2+ghost true pairs          540601      2301.17      3595.0      10.41 +- 0.174           63299 +- 1.06e+03 
+info: fake lepton (T3), all sets              19067       301.51       353.7      1.364 +- 0.0725         8293.7 +- 441      
+info: different sources (T4)                   5747      52.8232        54.3      0.239 +- 0.0324           1453 +- 197      
+# shares of T1+T2: peak direct 0.1146, peak conversion 0.1016, bump 0.0047, phys. bkg eta set 0.0104; direct / conversion 1.128
+
+## selection "pre+OA>2", all M4
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1340      1423.43      1340.0      6.439 +- 0.176           39155 +- 1.07e+03 
+bump, conversion (C3)                           675      731.712       675.0       3.31 +- 0.127           20127 +- 775      
+peak, conversion (C4)                           173      152.653       173.0     0.6906 +- 0.0525         4199.1 +- 319      
+peak, direct (C5, M(ee) not QED)             350586      187.914    350586.0     0.8501 +- 0.00144          5169 +- 8.73     
+peak total (C4 + C5)                         350759      340.567       860.4      1.541 +- 0.0525         9368.1 +- 319      
+X17, BR 1e-5 (C6; illustration)              752400       15.048    752396.0    0.06808 +- 7.85e-05       413.93 +- 0.477    
+signal sum T1 (C2-C5)                        352774      2495.71      2552.6      11.29 +- 0.223           68650 +- 1.36e+03 
+phys. background, std (T2)                    52441      50084.2     42586.8      226.6 +- 1.1        1.3777e+06 +- 6.68e+03 
+phys. background, lep (T2)                  4856692      52472.5   4127533.2      237.4 +- 0.117      1.4434e+06 +- 710      
+phys. background, eta (T2)                   396875      212.664    314754.9     0.9621 +- 0.00171        5849.8 +- 10.4     
+  of which eta four-class 7                  329067      176.325    271721.8     0.7977 +- 0.00153        4850.2 +- 9.3      
+phys. background, all sets                  5306008       102769    177300.1      464.9 +- 1.1        2.8269e+06 +- 6.71e+03 
+T1+T2 full simulated spectrum               5658782       105265    174385.4      476.2 +- 1.14       2.8956e+06 +- 6.93e+03 
+T1+T2, std + lep only (first study)         4911321       104864    173061.5      474.4 +- 1.14       2.8845e+06 +- 6.93e+03 
+variant (a): T1+T2+ghost true pairs         5966725       118157    184602.6      534.5 +- 1.24       3.2502e+06 +- 7.56e+03 
+info: fake lepton (T3), all sets             398394      14794.3     15633.7      66.93 +- 0.535      4.0695e+05 +- 3.25e+03 
+info: different sources (T4)                 409531      2755.44      2485.0      12.47 +- 0.25            75795 +- 1.52e+03 
+# shares of T1+T2: peak direct 0.0018, peak conversion 0.0015, bump 0.0205, phys. bkg eta set 0.0020; direct / conversion 1.231
+
+## selection "pre+OA>2", bump window 0.455-0.5225
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1026      1089.88      1026.0       4.93 +- 0.154           29980 +- 936      
+bump, conversion (C3)                           512      555.017       512.0      2.511 +- 0.111           15267 +- 675      
+peak, conversion (C4)                             7      6.17672         7.0    0.02794 +- 0.0106         169.91 +- 64.2     
+peak, direct (C5, M(ee) not QED)              13471      7.22046     13471.0    0.03266 +- 0.000281       198.62 +- 1.71     
+peak total (C4 + C5)                          13478      13.3972        32.9    0.06061 +- 0.0106         368.52 +- 64.2     
+X17, BR 1e-5 (C6; illustration)               31087      0.62174     31083.0   0.002813 +- 1.6e-05        17.102 +- 0.097    
+signal sum T1 (C2-C5)                         15016      1658.29      1558.2      7.502 +- 0.19            45615 +- 1.16e+03 
+phys. background, std (T2)                     1505      1511.48      1428.6      6.838 +- 0.181           41577 +- 1.1e+03  
+phys. background, lep (T2)                    72030      771.383     68063.9       3.49 +- 0.0134          21219 +- 81.3     
+phys. background, eta (T2)                    42578      22.8179     39564.7     0.1032 +- 0.000519       627.66 +- 3.16     
+  of which eta four-class 7                   32572      17.4548     30379.4    0.07896 +- 0.000453       480.14 +- 2.75     
+phys. background, all sets                   116113      2305.68      3306.3      10.43 +- 0.181           63423 +- 1.1e+03  
+T1+T2 full simulated spectrum                131129      3963.97      4486.4      17.93 +- 0.268      1.0904e+05 +- 1.63e+03 
+T1+T2, std + lep only (first study)           75080      3933.93      4418.7       17.8 +- 0.268      1.0821e+05 +- 1.63e+03 
+variant (a): T1+T2+ghost true pairs          142134      4276.16      4822.6      19.34 +- 0.279      1.1763e+05 +- 1.69e+03 
+info: fake lepton (T3), all sets              14126      393.889       427.9      1.782 +- 0.0861          10835 +- 524      
+info: different sources (T4)                   7348       109.54       107.8     0.4955 +- 0.0477         3013.2 +- 290      
+# shares of T1+T2: peak direct 0.0018, peak conversion 0.0016, bump 0.4150, phys. bkg eta set 0.0058; direct / conversion 1.169
+
+## selection "pre+OA>2", peak window 0.5336-0.5542
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                             5      5.31129         5.0    0.02403 +- 0.0107          146.1 +- 65.3     
+bump, conversion (C3)                             3      3.25205         3.0    0.01471 +- 0.00849        89.455 +- 51.6     
+peak, conversion (C4)                           131      115.593       131.0     0.5229 +- 0.0457         3179.7 +- 278      
+peak, direct (C5, M(ee) not QED)             265325      142.214    265325.0     0.6434 +- 0.00125        3911.9 +- 7.59     
+peak total (C4 + C5)                         265456      257.807       651.1      1.166 +- 0.0457         7091.6 +- 278      
+X17, BR 1e-5 (C6; illustration)              589307      11.7861    589307.0    0.05332 +- 6.95e-05       324.21 +- 0.422    
+signal sum T1 (C2-C5)                        265464       266.37       637.8      1.205 +- 0.0477         7327.1 +- 290      
+phys. background, std (T2)                      732      726.072       711.5      3.285 +- 0.123           19972 +- 749      
+phys. background, lep (T2)                    41944      448.418     39978.0      2.029 +- 0.0101          12335 +- 61.7     
+phys. background, eta (T2)                    25910      13.8857     25131.9    0.06282 +- 0.000396       381.96 +- 2.41     
+  of which eta four-class 7                   15530      8.32209     15060.5    0.03765 +- 0.000307       228.92 +- 1.87     
+phys. background, all sets                    68586      1188.38      1893.1      5.376 +- 0.124           32689 +- 751      
+T1+T2 full simulated spectrum                334050      1454.75      2468.7      6.581 +- 0.132           40016 +- 805      
+T1+T2, std + lep only (first study)           42815      1298.65      1967.5      5.875 +- 0.132           35722 +- 805      
+variant (a): T1+T2+ghost true pairs          340245      1608.74      2615.9      7.278 +- 0.142           44252 +- 865      
+info: fake lepton (T3), all sets              12164       195.42       227.5     0.8841 +- 0.0586         5375.5 +- 356      
+info: different sources (T4)                   5738      52.7059        54.1     0.2384 +- 0.0324         1449.8 +- 197      
+# shares of T1+T2: peak direct 0.0978, peak conversion 0.0795, bump 0.0059, phys. bkg eta set 0.0095; direct / conversion 1.230
+
+## selection "slides", all M4
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                           934       992.15       934.0      4.488 +- 0.147           27291 +- 893      
+bump, conversion (C3)                           469      508.404       469.0        2.3 +- 0.106           13985 +- 646      
+peak, conversion (C4)                           141      124.417       141.0     0.5628 +- 0.0474         3422.4 +- 288      
+peak, direct (C5, M(ee) not QED)             301359      161.528    301359.0     0.7307 +- 0.00133        4443.2 +- 8.09     
+peak total (C4 + C5)                         301500      285.945       744.2      1.294 +- 0.0474         7865.6 +- 288      
+X17, BR 1e-5 (C6; illustration)              651045      13.0209    651043.0     0.0589 +- 7.3e-05        358.17 +- 0.444    
+signal sum T1 (C2-C5)                        302903       1786.5      1861.1      8.082 +- 0.187           49142 +- 1.14e+03 
+phys. background, std (T2)                     8027      7810.67      7249.5      35.33 +- 0.415      2.1485e+05 +- 2.52e+03 
+phys. background, lep (T2)                   504323      5339.26    458616.1      24.15 +- 0.0357     1.4687e+05 +- 217      
+phys. background, eta (T2)                   127923      68.5486    111978.2     0.3101 +- 0.000927       1885.6 +- 5.63     
+  of which eta four-class 7                   96361      51.6328     85559.3     0.2336 +- 0.000799       1420.3 +- 4.86     
+phys. background, all sets                   640273      13218.5     20610.9       59.8 +- 0.417      3.6361e+05 +- 2.53e+03 
+T1+T2 full simulated spectrum                943176        15005     21363.5      67.88 +- 0.464      4.1275e+05 +- 2.82e+03 
+T1+T2, std + lep only (first study)          513894      14774.9     20713.7      66.84 +- 0.464      4.0642e+05 +- 2.82e+03 
+variant (a): T1+T2+ghost true pairs          990826      16756.3     23141.5       75.8 +- 0.498      4.6092e+05 +- 3.03e+03 
+info: fake lepton (T3), all sets              65353      2036.86      2241.1      9.214 +- 0.195           56029 +- 1.18e+03 
+info: different sources (T4)                  63471      493.124       465.8      2.231 +- 0.103           13565 +- 628      
+# shares of T1+T2: peak direct 0.0108, peak conversion 0.0083, bump 0.1000, phys. bkg eta set 0.0046; direct / conversion 1.298
+
+## selection "slides", bump window 0.455-0.5225
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                           855      908.231       855.0      4.109 +- 0.141           24983 +- 854      
+bump, conversion (C3)                           421      456.371       421.0      2.065 +- 0.101           12554 +- 612      
+peak, conversion (C4)                             6      5.29433         6.0    0.02395 +- 0.00978        145.63 +- 59.5     
+peak, direct (C5, M(ee) not QED)              12292      6.58851     12292.0    0.02981 +- 0.000269       181.23 +- 1.63     
+peak total (C4 + C5)                          12298      11.8828        30.2    0.05376 +- 0.00978        326.87 +- 59.5     
+X17, BR 1e-5 (C6; illustration)               28186      0.56372     28184.0    0.00255 +- 1.52e-05       15.506 +- 0.0924   
+signal sum T1 (C2-C5)                         13574      1376.49      1294.1      6.227 +- 0.173           37863 +- 1.05e+03 
+phys. background, std (T2)                     1263      1266.92      1198.7      5.731 +- 0.166           34850 +- 1.01e+03 
+phys. background, lep (T2)                    62228        664.1     58915.9      3.004 +- 0.0124          18268 +- 75.3     
+phys. background, eta (T2)                    36186      19.3926     34020.3    0.08773 +- 0.000476       533.44 +- 2.89     
+  of which eta four-class 7                   27276       14.617     25727.6    0.06613 +- 0.000412       402.07 +- 2.51     
+phys. background, all sets                    99677      1950.41      2825.2      8.823 +- 0.166           53651 +- 1.01e+03 
+T1+T2 full simulated spectrum                113251       3326.9      3811.4      15.05 +- 0.244           91514 +- 1.48e+03 
+T1+T2, std + lep only (first study)           64773      3300.92      3752.1      14.93 +- 0.244           90799 +- 1.48e+03 
+variant (a): T1+T2+ghost true pairs          122522      3583.62      4095.7      16.21 +- 0.253           98576 +- 1.54e+03 
+info: fake lepton (T3), all sets              11601      312.675       349.6      1.415 +- 0.0757         8600.9 +- 460      
+info: different sources (T4)                   5630      93.3972        93.3     0.4225 +- 0.0437         2569.1 +- 266      
+# shares of T1+T2: peak direct 0.0020, peak conversion 0.0016, bump 0.4102, phys. bkg eta set 0.0058; direct / conversion 1.244
+
+## selection "slides", peak window 0.5336-0.5542
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                             5      5.31129         5.0    0.02403 +- 0.0107          146.1 +- 65.3     
+bump, conversion (C3)                             3      3.25205         3.0    0.01471 +- 0.00849        89.455 +- 51.6     
+peak, conversion (C4)                           107      94.4156       107.0     0.4271 +- 0.0413         2597.1 +- 251      
+peak, direct (C5, M(ee) not QED)             228122      122.273    228122.0     0.5531 +- 0.00116        3363.4 +- 7.04     
+peak total (C4 + C5)                         228229      216.689       563.2     0.9803 +- 0.0413         5960.5 +- 251      
+X17, BR 1e-5 (C6; illustration)              511896      10.2379    511896.0    0.04631 +- 6.47e-05       281.62 +- 0.394    
+signal sum T1 (C2-C5)                        228237      225.252       548.3      1.019 +- 0.0435         6196.1 +- 265      
+phys. background, std (T2)                      564      558.295       549.9      2.526 +- 0.108           15357 +- 655      
+phys. background, lep (T2)                    34506      366.615     32892.8      1.659 +- 0.00914         10085 +- 55.6     
+phys. background, eta (T2)                    20562      11.0199     20151.2    0.04985 +- 0.000351       303.13 +- 2.14     
+  of which eta four-class 7                   11706      6.27317     11475.5    0.02838 +- 0.000265       172.56 +- 1.61     
+phys. background, all sets                    55632       935.93      1534.4      4.234 +- 0.108           25745 +- 657      
+T1+T2 full simulated spectrum                283869      1161.18      2032.4      5.253 +- 0.117           31941 +- 709      
+T1+T2, std + lep only (first study)           35185      1027.89      1592.7       4.65 +- 0.117           28275 +- 708      
+variant (a): T1+T2+ghost true pairs          288788      1287.94      2145.2      5.826 +- 0.126           35428 +- 765      
+info: fake lepton (T3), all sets               9047      157.927       184.8     0.7144 +- 0.0526         4344.1 +- 320      
+info: different sources (T4)                   4941      47.3384        48.4     0.2142 +- 0.0308         1302.2 +- 187      
+# shares of T1+T2: peak direct 0.1053, peak conversion 0.0813, bump 0.0074, phys. bkg eta set 0.0095; direct / conversion 1.295
+
+## selection "old code", all M4
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1172      1244.97      1172.0      5.632 +- 0.165           34246 +- 1e+03    
+bump, conversion (C3)                           847      918.163       847.0      4.154 +- 0.143           25256 +- 868      
+peak, conversion (C4)                           218      192.361       218.0     0.8702 +- 0.0589         5291.3 +- 358      
+peak, direct (C5, M(ee) not QED)             411516      220.573    411516.0     0.9978 +- 0.00156        6067.4 +- 9.46     
+peak total (C4 + C5)                         411734      412.933      1003.9      1.868 +- 0.059           11359 +- 358      
+X17, BR 1e-5 (C6; illustration)              595472      11.9094    595468.0    0.05388 +- 6.98e-05        327.6 +- 0.425    
+signal sum T1 (C2-C5)                        413753      2576.06      2667.6      11.65 +- 0.226           70861 +- 1.37e+03 
+phys. background, std (T2)                    10000      9819.25      9203.0      44.42 +- 0.463       2.701e+05 +- 2.82e+03 
+phys. background, lep (T2)                   510037      5361.04    466645.2      24.25 +- 0.0355     1.4747e+05 +- 216      
+phys. background, eta (T2)                   166592      89.2763    147891.8     0.4039 +- 0.00105        2455.8 +- 6.39     
+  of which eta four-class 7                  122998      65.9114    110490.8     0.2982 +- 0.000897         1813 +- 5.45     
+phys. background, all sets                   686629      15269.6     22124.8      69.08 +- 0.464      4.2003e+05 +- 2.82e+03 
+T1+T2 full simulated spectrum               1100382      17845.6     23719.9      80.73 +- 0.524      4.9089e+05 +- 3.19e+03 
+T1+T2, std + lep only (first study)          522274      17535.8     22903.7      79.33 +- 0.524      4.8236e+05 +- 3.19e+03 
+variant (a): T1+T2+ghost true pairs         1174759      20488.6     26531.5      92.69 +- 0.569      5.6359e+05 +- 3.46e+03 
+info: fake lepton (T3), all sets              91411         2917      3245.5       13.2 +- 0.232           80239 +- 1.41e+03 
+info: different sources (T4)                  54166      398.864       387.8      1.804 +- 0.0916          10972 +- 557      
+# shares of T1+T2: peak direct 0.0124, peak conversion 0.0108, bump 0.1212, phys. bkg eta set 0.0050; direct / conversion 1.147
+
+## selection "old code", bump window 0.455-0.5225
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                          1078      1145.11      1078.0       5.18 +- 0.158           31499 +- 959      
+bump, conversion (C3)                           769       833.61       769.0      3.771 +- 0.136           22930 +- 827      
+peak, conversion (C4)                            12      10.5887        12.0     0.0479 +- 0.0138         291.27 +- 84.1     
+peak, direct (C5, M(ee) not QED)              18638      9.98997     18638.0    0.04519 +- 0.000331        274.8 +- 2.01     
+peak total (C4 + C5)                          18650      20.5786        45.3    0.09309 +- 0.0138         566.06 +- 84.1     
+X17, BR 1e-5 (C6; illustration)               29596      0.59192     29592.0   0.002678 +- 1.56e-05       16.282 +- 0.0947   
+signal sum T1 (C2-C5)                         20497       1999.3      1877.2      9.045 +- 0.209           54996 +- 1.27e+03 
+phys. background, std (T2)                     1785      1792.53      1705.1      8.109 +- 0.196           49308 +- 1.19e+03 
+phys. background, lep (T2)                    73665      785.192     69723.9      3.552 +- 0.0135          21599 +- 81.8     
+phys. background, eta (T2)                    54341       29.123     51240.0     0.1317 +- 0.000582        801.1 +- 3.54     
+  of which eta four-class 7                   40773      21.8507     38572.0    0.09885 +- 0.000503       601.05 +- 3.06     
+phys. background, all sets                   129791      2606.85      3589.3      11.79 +- 0.197           71708 +- 1.2e+03  
+T1+T2 full simulated spectrum                150288      4606.15      5125.7      20.84 +- 0.291       1.267e+05 +- 1.77e+03 
+T1+T2, std + lep only (first study)           77309      4567.04      5039.0      20.66 +- 0.291      1.2563e+05 +- 1.77e+03 
+variant (a): T1+T2+ghost true pairs          166414      5052.03      5593.1      22.85 +- 0.306      1.3897e+05 +- 1.86e+03 
+info: fake lepton (T3), all sets              18908      516.476       566.6      2.336 +- 0.0982          14207 +- 597      
+info: different sources (T4)                   5595      93.2641        93.1     0.4219 +- 0.0437         2565.4 +- 266      
+# shares of T1+T2: peak direct 0.0022, peak conversion 0.0023, bump 0.4296, phys. bkg eta set 0.0063; direct / conversion 0.943
+
+## selection "old code", peak window 0.5336-0.5542
+component                                      rows        sum w       N_eff             sigma [nb]       data rows (6080.5)
+bump, pi0 Dalitz (C2)                             6      6.37355         6.0    0.02883 +- 0.0118         175.32 +- 71.6     
+bump, conversion (C3)                             3      3.25205         3.0    0.01471 +- 0.00849        89.455 +- 51.6     
+peak, conversion (C4)                           163      143.829       163.0     0.6507 +- 0.051          3956.4 +- 310      
+peak, direct (C5, M(ee) not QED)             314828      168.748    314828.0     0.7634 +- 0.00136        4641.8 +- 8.27     
+peak total (C4 + C5)                         314991      312.577       769.3      1.414 +- 0.051          8598.2 +- 310      
+X17, BR 1e-5 (C6; illustration)              467743      9.35486    467743.0    0.04232 +- 6.19e-05       257.33 +- 0.376    
+signal sum T1 (C2-C5)                        315000      322.203       756.1      1.458 +- 0.053          8862.9 +- 322      
+phys. background, std (T2)                      729      724.083       712.6      3.276 +- 0.123           19918 +- 746      
+phys. background, lep (T2)                    37524      396.228     35692.1      1.792 +- 0.00949         10899 +- 57.7     
+phys. background, eta (T2)                    28000      15.0062     27425.9    0.06789 +- 0.00041        412.78 +- 2.49     
+  of which eta four-class 7                   15421      8.26394     15086.3    0.03738 +- 0.000304       227.32 +- 1.85     
+phys. background, all sets                    66253      1135.32      1741.4      5.136 +- 0.123           31230 +- 748      
+T1+T2 full simulated spectrum                381253      1457.52      2416.7      6.594 +- 0.134           40093 +- 816      
+T1+T2, std + lep only (first study)           38425      1273.77      1846.0      5.762 +- 0.134           35038 +- 815      
+variant (a): T1+T2+ghost true pairs          389057         1637      2593.4      7.406 +- 0.145           45029 +- 884      
+info: fake lepton (T3), all sets              11942       212.05       248.6     0.9593 +- 0.0608         5832.9 +- 370      
+info: different sources (T4)                   4656      43.2601        44.3     0.1957 +- 0.0294           1190 +- 179      
+# shares of T1+T2: peak direct 0.1158, peak conversion 0.0987, bump 0.0066, phys. bkg eta set 0.0103; direct / conversion 1.173
+
+# checks: 'pre', all M4, eta owned rows (W > 0 or not) must equal tables/eta_validate.txt (727.319 sum w);
+#   T1+T2 std + lep only must equal tables/engine_reference.txt (698.9 nb in 'pre')

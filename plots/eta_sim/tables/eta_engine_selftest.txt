@@ -1,0 +1,51 @@
+1. backward compatibility: only std_us + lep_us loaded, default SimOpt (sets = 7)
+  default: rows 7197753, sum w 184817.68, V 134713.01 ; sets = 3: rows 7197753, sum w 184817.68, V 134713.01 ; label 'std + lep, mode A, w (PDG)'
+  [PASS] default sets = 7 equals sets = 3 when no eta tree is loaded
+  [PASS] std + lep owned rows and sum w of the first study
+  [PASS] OptLabel without eta trees
+  [PASS] SimData::sets
+2. eta trees against tables/eta_validate.txt
+  eta_us loaded (owned A or B, all vz) 3188536 (reference 3188536)
+  [PASS] eta_us owned rows loaded
+  'pre' owned: rows 3180398, sum w 727.31931, N_eff 941441.5 (reference 3180398, 727.31931)
+  [PASS] eta 'pre' owned rows and sum w
+  [PASS] eta set owns the same rows in modes A and B
+  [PASS] set column == 3 in eta_us
+3. eta set per four-particle class and template ('pre', owned)
+  class 0: rows     83833 (ref     83833), sum w 24.74864 (ref 24.74864)
+  class 1: rows    248968 (ref    248968), sum w 56.441693 (ref 56.441693)
+  class 5: rows    571246 (ref    571246), sum w 306.18786 (ref 306.18786)
+  class 6: rows    787659 (ref    787659), sum w 0 (ref 0)
+  class 7: rows   1452463 (ref   1452463), sum w 330.75262 (ref 330.75262)
+  class 8: rows     36229 (ref     36229), sum w 9.1884959 (ref 9.1884959)
+  [PASS] rows and sum w per four-particle class
+  T1: rows   1358905 (ref   1358905), sum w 306.18786 (ref 306.18786)
+  T2: rows   1622996 (ref   1622996), sum w 335.51909 (ref 335.51909)
+  T3: rows    165069 (ref    165069), sum w 77.640705 (ref 77.640705)
+  T4: rows     33428 (ref     33428), sum w 7.9716526 (ref 7.9716526)
+  [PASS] rows and sum w per template
+  peak direct: sum w / rows = 0.000536 (2 x 2.68e-4 = 5.36e-4)
+  [PASS] peak-direct weight per row = 2 BR
+4. default sum = std + lep + eta
+  all 185545.0002 = std 112013.6851 + lep 72803.9958 + eta 727.319305 = 185545.0002 ; V 134713.57 = 134713.57 ; label 'std + lep + eta, mode A, w (PDG)'
+  [PASS] sum and variance of the three sets
+  [PASS] OptLabel with the eta trees
+5. X17 illustration
+  CompX17(1e-5): rows 787659, sum w 15.75318 (2e-5 x rows = 15.75318); CompX17(1.5e-5) 23.62977 ; class-6 stored sum w 0
+  [PASS] X17 weight 2 BR per class-6 row, linear in BR
+  [PASS] stored X17 weights are 0 (BR(X17) = 0 in the production)
+  [PASS] CompSim never contains an X17 signal row
+6. peak total = conversion + direct
+  conv 270.89332 (V 239.033) + direct 306.18786 (V 0.164117) = 577.08118 ; total 577.08118 (V 239.197)
+  [PASS] peak total sums and variances
+7. binned spectra of the eta components (M4 0.3-1.1, 5 MeV)
+  peak, eta -> pi+pi-e+e-                  bins 306.18786, S 306.18786, all rows 306.18786 (SumMany 306.18786), TH1D integral 306.18786
+  X17 signal, BR = 1e-05 (illustration)    bins 15.75318, S 15.75318, all rows 15.75318 (SumMany 15.75318), TH1D integral 15.75318
+  physical background (eta set)            bins 321.02085, S 321.02085, all rows 335.51909 (SumMany 335.51909), TH1D integral 321.02085
+  [PASS] bin sums, totals and TH1D content
+8. efficiency of OA > 2 with the weight override (X17) and for the direct peak
+  X17 signal, BR = 1e-05 (illustration)    eps 0.95524 +- 0.00023 ; sums 0.95524
+  peak, eta -> pi+pi-e+e-                  eps 0.61372 +- 0.00064 ; sums 0.61372
+  [PASS] efficiency equals the ratio of sums
+
+eta self-test: 19 PASS, 0 FAIL, 40.7 s

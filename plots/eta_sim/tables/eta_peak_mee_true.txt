@@ -1,0 +1,69 @@
+# eta_peak_mee_true: TRUE M(ee) of the accepted simulated direct decay (class 5, pre, eta set) against a QED reference shape
+# reference: Kroll-Wada factor x pi pi gamma* rate (P-wave pions, k^3), no form factor; integrated 6.500e-03 x Gamma(pi pi gamma) (PDG ratio 6.35e-3)
+# 'accepted' = fraction of the accepted rows (generator x acceptance); a ratio accepted/model far from a smooth function of order 1
+# points to the generator's M(ee) distribution (acceptance assumed to vary slowly; UNVERIFIED: no generator-level rows available)
+true M(ee) [MeV]          model   accepted accepted/model
+    1.02 - 1.52          0.0665     0.3484          5.238
+    1.52 - 2.27          0.0906     0.1828          2.017
+    2.27 - 3.37          0.0939     0.1229          1.308
+    3.37 - 5.02          0.0945     0.0927          0.981
+    5.02 - 7.47          0.0944     0.0723          0.766
+    7.47 - 11.13         0.0940     0.0551          0.586
+   11.13 - 16.57         0.0931     0.0390          0.419
+   16.57 - 24.66         0.0910     0.0276          0.303
+   24.66 - 36.71         0.0867     0.0189          0.218
+   36.71 - 54.66         0.0783     0.0134          0.171
+   54.66 - 81.37         0.0629     0.0097          0.154
+   81.37 - 121.14        0.0393     0.0081          0.205
+  121.14 - 180.35        0.0138     0.0067          0.483
+  180.35 - 268.50        0.0010     0.0026          2.593
+# fraction above about 20 MeV: model 0.282, accepted 0.059
+
+## review findings 2/3: accepted direct decay (class 5, pre) in fine bins of the TRUE M(ee)
+# density = accepted fraction per MeV; QED/KW density (generator level, no acceptance) for comparison; OA>2 = share of the bin passing OA > 2
+true M(ee) [MeV]         acc frac     acc /MeV     QED /MeV OA>2 share     rows
+   1.022 - 1.175           0.1533       1.0028       0.1045      0.525    87585
+   1.175 - 1.351           0.1156       0.6577       0.1457      0.538    66037
+   1.351 - 1.553           0.0913       0.4520       0.1450      0.545    52170
+   1.553 - 1.785           0.0725       0.3120       0.1339      0.540    41401
+   1.785 - 2.052           0.0608       0.2276       0.1200      0.540    34727
+   2.052 - 2.359           0.0523       0.1703       0.1060      0.545    29864
+   2.359 - 2.712           0.0461       0.1305       0.0930      0.548    26306
+   2.712 - 3.118           0.0411       0.1014       0.0813      0.550    23491
+   3.118 - 3.584           0.0370       0.0792       0.0709      0.556    21111
+   3.584 - 4.120           0.0341       0.0636       0.0617      0.564    19490
+   4.120 - 4.737           0.0304       0.0493       0.0537      0.577    17355
+   4.737 - 5.445           0.0285       0.0402       0.0467      0.600    16279
+   5.445 - 6.260           0.0260       0.0319       0.0406      0.619    14854
+   6.260 - 7.196           0.0241       0.0257       0.0353      0.645    13744
+   7.196 - 8.273           0.0219       0.0203       0.0306      0.698    12497
+   8.273 - 9.511           0.0198       0.0160       0.0266      0.746    11325
+   9.511 - 10.934          0.0174       0.0122       0.0231      0.801     9922
+  10.934 - 12.569          0.0155       0.0095       0.0200      0.854     8865
+  12.569 - 14.450          0.0136       0.0072       0.0173      0.900     7759
+  14.450 - 16.611          0.0122       0.0056       0.0150      0.937     6945
+  16.611 - 19.097          0.0110       0.0044       0.0129      0.968     6275
+  19.097 - 21.953          0.0093       0.0033       0.0112      0.984     5335
+  21.953 - 25.238          0.0083       0.0025       0.0096      0.992     4729
+  25.238 - 29.013          0.0072       0.0019       0.0082      0.998     4100
+  29.013 - 33.354          0.0065       0.0015       0.0070      0.999     3738
+  33.354 - 38.344          0.0057       0.0011       0.0059      0.999     3235
+  38.344 - 44.080          0.0050       0.0009       0.0049      1.000     2876
+  44.080 - 50.675          0.0043       0.0006       0.0041      1.000     2446
+  50.675 - 58.256          0.0042       0.0005       0.0033      1.000     2373
+  58.256 - 66.971          0.0035       0.0004       0.0027      1.000     2000
+  66.971 - 76.990          0.0032       0.0003       0.0021      1.000     1842
+  76.990 - 88.508          0.0030       0.0003       0.0016      1.000     1718
+  88.508 - 101.749         0.0028       0.0002       0.0011      1.000     1626
+ 101.749 - 116.971         0.0027       0.0002       0.0008      1.000     1525
+ 116.971 - 134.470         0.0026       0.0001       0.0005      1.000     1461
+ 134.470 - 154.587         0.0025       0.0001       0.0003      1.000     1404
+ 154.587 - 177.713         0.0021       0.0001       0.0001      1.000     1211
+ 177.713 - 204.300         0.0017       0.0001       0.0000      1.000      960
+ 204.300 - 234.864         0.0010       0.0000       0.0000      1.000      553
+ 234.864 - 270.000         0.0002       0.0000       0.0000      1.000      111
+# largest accepted density per MeV in bin 0 (1.022-1.175 MeV): the FIRST bin above threshold -> not QED (QED density -> 0 at 2 m_e); acceptance cannot create this
+# power-law slope of the accepted density dN/dM between 1.5 and 10 MeV: -1.73 (1/M^2 law: -2; QED: about -1 well above threshold)
+# accepted rows per generated forced decay, X17 (M(ee) = 17 MeV) / direct pi+pi-e+e- (generator M(ee)): all loaded rows 789870 / 572651 = 1.379; pre 787659 / 571246 = 1.379
+#   -> a QED-shaped direct decay (more pairs at 10-100 MeV, larger OA) would probably be accepted MORE often than the generator one
+#      (UNVERIFIED): the KW variant's 'fixed content' assumption is arbitrary; it is an illustration of shapes only

@@ -1,0 +1,34 @@
+# SIDE NOTE, NOT A RESULT: the simulation has no combinatorial background, so background levels of data and simulation are not compared
+# (user rule). No conclusion is drawn from the ratios below. About 90 % of T3 are ghost-flagged true pairs (tables/review_ghost.txt).
+# What the CB subtraction of the data removes, against the simulated information classes (not part of the simulated spectrum)
+# T3 fake lepton = misidentified lepton, ghost track in a lepton slot, or the same particle in both lepton slots;
+# T4 different sources = true leptons from two different decays/conversions (L7-L9). Selection pre, mode A, w (PDG)
+# data CB = 2 sqrt(N++ N--) in 10 MeV M4 bins, no k; sigma [nb] with L_data = 6080.5 nb^-1 (UNCONFIRMED), L_sim = 221.05 nb^-1
+# columns: data CB, data N - CB [nb]; sim T1+T2, T3 (split: same particle / ghost / misidentified), T4 [nb] (N_eff); ratios to the data CB
+
+## M4 0.56-0.80
+OA class     data CB [nb]  data N-CB  sim T1+T2     sim T3 (N_eff)     same    ghost    misid   sim T4 (N_eff)   T3/CB   T4/CB    (T3+T4)/CB
+OA < 2     0.4634 +- 0.011       77.55      66.66      17.7 (  4097)   0.7746    16.83   0.0885  0.01864 (     4)   38.19   0.040  38.23 +- 1.11
+2-4        0.7715 +- 0.016         113      79.91     18.65 (  4270)    1.392    17.22  0.03743  0.06152 (    13)   24.18   0.080  24.26 +- 0.62
+4-6        0.5704 +- 0.014       39.36      27.99     2.824 (   609)   0.4378    2.352   0.0337  0.09347 (    17)    4.95   0.164   5.11 +- 0.24
+6-10       0.8432 +- 0.017       27.09      21.98    0.4934 (   137)  0.01824   0.4641   0.0111   0.1622 (    38)    0.59   0.192   0.78 +- 0.06
+> 10         20.8 +- 0.072       35.66      33.82     1.826 (   437) 5.311e-05    1.808  0.01782    4.586 (   953)    0.09   0.221   0.31 +- 0.01
+all         23.77 +- 0.078       292.4      230.4     41.49 (  9473)    2.622    38.68   0.1886    4.921 (  1021)    1.75   0.207   1.95 +- 0.02
+
+## M4 0.30-0.45
+OA class     data CB [nb]  data N-CB  sim T1+T2     sim T3 (N_eff)     same    ghost    misid   sim T4 (N_eff)   T3/CB   T4/CB    (T3+T4)/CB
+OA < 2    0.01306 +- 0.0025      1.468      1.675    0.3952 (    91)   0.0544   0.3407 0.0001064        0 (     0)   30.27   0.000  30.27 +- 6.65
+2-4       0.03167 +- 0.0039      2.581      2.459    0.4208 (   102)  0.06703    0.349 0.004806 0.0005196 (     1)   13.29   0.016  13.30 +- 2.10
+4-6       0.03588 +- 0.0036      1.035       1.02   0.06886 (    17)  0.01062  0.05822 3.121e-05 0.004651 (     1)    1.92   0.130   2.05 +- 0.52
+6-10      0.04927 +- 0.0044      0.691     0.6389   0.01831 (     5) 0.0002124   0.0181        0 0.0005877 (     1)    0.37   0.012   0.38 +- 0.17
+> 10       0.5584 +- 0.011       0.788     0.9657   0.05427 (    14)        0  0.05427        0  0.08133 (    18)    0.10   0.146   0.24 +- 0.04
+all        0.7159 +- 0.014       6.536      6.759    0.9574 (   224)   0.1323   0.8202 0.004943  0.08709 (    19)    1.34   0.122   1.46 +- 0.10
+
+## M4 0.30-1.10
+OA class     data CB [nb]  data N-CB  sim T1+T2     sim T3 (N_eff)     same    ghost    misid   sim T4 (N_eff)   T3/CB   T4/CB    (T3+T4)/CB
+OA < 2     0.9779 +- 0.017       170.8      180.2     46.62 ( 11109)    1.788    44.58   0.2603  0.04648 (     9)   47.68   0.048  47.72 +- 0.93
+2-4         1.485 +- 0.023         233        200     45.15 ( 10495)    2.992    41.98   0.1711   0.1759 (    38)   30.40   0.118  30.52 +- 0.55
+4-6         1.103 +- 0.021       78.94      68.29         6 (  1278)   0.8763    5.075  0.04858   0.1826 (    37)    5.44   0.166   5.60 +- 0.19
+6-10        1.689 +- 0.024       55.35      53.54     1.028 (   285)  0.03405   0.9733  0.02037   0.4421 (    87)    0.61   0.262   0.87 +- 0.05
+> 10        39.41 +- 0.1         70.75      77.69     3.862 (   927) 5.311e-05    3.793  0.06912    10.11 (  2016)    0.10   0.257   0.35 +- 0.01
+all         45.25 +- 0.11        608.2      579.8     102.7 ( 23856)     5.69     96.4   0.5695    10.96 (  2180)    2.27   0.242   2.51 +- 0.02

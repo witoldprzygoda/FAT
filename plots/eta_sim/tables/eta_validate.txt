@@ -1,0 +1,92 @@
+# eta_validate: SMASH eta set (sim_set = 3), scan_nt of the three FAT outputs
+# recomputation: src/sim_truth.h EvaluateRow(kEta, tracks, q1, q2, Opt{pdg, BR(eta->pi+pi-ee) 2.68e-4, BR(X17) 0})
+# 'pre' = isBest >= 0, z > -500, PT3 bit, vz > -160, cor_ok == 1; owned = sim_own_A (== sim_own_B in the eta set)
+
+[eta pippimepem] 3366025 rows (sim_set == 3: 3366025), 2731582 event groups, isBest==1 rows 2731582, groups without exactly one isBest==1 row 0, cor_ok != 1 rows 0, NaN w 0
+  vz > -160: 3357676 rows; owned (own_A) 3188536 (all vz), own_A and own_B 3188536; owned with vz > -160 3180398, sum w 727.31931, sum w_db 727.448
+  'pre': 3357676 rows, sum w of owned rows 727.31931
+  ownership against the codes: owned without a forced-eta track 0; not owned with a forced-eta track 0; not owned with w == 0 0 (of 177489 not owned)
+  owned, vz > -160, per four-particle class: rows, sum w
+    class 0:      83833  24.74864
+    class 1:     248968  56.441693
+    class 5:     571246  306.18786
+    class 6:     787659  0
+    class 7:    1452463  330.75262
+    class 8:      36229  9.1884959
+  owned, vz > -160, per template: rows, sum w
+    T1:    1358905  306.18786
+    T2:    1622996  335.51909
+    T3:     165069  77.640705
+    T4:      33428  7.9716526
+  owned, vz > -160, per (class, template): rows, sum w
+    class 0 T2:      51455  10.832031
+    class 0 T3:      31647  13.752973
+    class 0 T4:        731  0.16363634
+    class 1 T2:     227422  46.603625
+    class 1 T3:      18973  9.2350945
+    class 1 T4:       2573  0.6029731
+    class 5 T1:     571246  306.18786
+    class 6 T1:     787659  0
+    class 7 T2:    1344119  278.08343
+    class 7 T3:     108344  52.669185
+    class 8 T3:       6105  1.9834527
+    class 8 T4:      30124  7.2050432
+  recomputation mismatches (cls lcls pcls tmpl flags ownA ownB w w_db m4 mee mpipi): 0 0 0 0 0 0 0 0 0 0 0 0 ; max rel |w - stored| 3.6e-08
+  X17: owned class-6 rows 789870, of them with W(BR 1e-5) != 2e-5: 0 ; owned rows (vz > -160) outside class 6 whose W changes with BR(X17) = 1e-5: 1035391, sum of the change 20.6913
+  18.4 s
+
+[eta pippimepep] 13881 rows (sim_set == 3: 13881), 12233 event groups, isBest==1 rows 12233, groups without exactly one isBest==1 row 0, cor_ok != 1 rows 0, NaN w 0
+  vz > -160: 13856 rows; owned (own_A) 13084 (all vz), own_A and own_B 13084; owned with vz > -160 13061, sum w 2.9574936, sum w_db 2.9817752
+  'pre': 13856 rows, sum w of owned rows 2.9574936
+  ownership against the codes: owned without a forced-eta track 0; not owned with a forced-eta track 0; not owned with w == 0 0 (of 797 not owned)
+  owned, vz > -160, per four-particle class: rows, sum w
+    class 0:       2992  0.4044306
+    class 1:        877  0.21843492
+    class 5:         36  0.019296
+    class 6:         13  0
+    class 7:         64  0.023048
+    class 8:       9079  2.2922841
+  owned, vz > -160, per template: rows, sum w
+    T3:       4547  0.93465319
+    T4:       8514  2.0228404
+  owned, vz > -160, per (class, template): rows, sum w
+    class 0 T3:       2762  0.35561351
+    class 0 T4:        230  0.04881709
+    class 1 T3:        145  0.044787304
+    class 1 T4:        732  0.17364762
+    class 5 T3:         36  0.019296
+    class 6 T3:         13  0
+    class 7 T3:         64  0.023048
+    class 8 T3:       1527  0.49190837
+    class 8 T4:       7552  1.8003757
+  recomputation mismatches (cls lcls pcls tmpl flags ownA ownB w w_db m4 mee mpipi): 0 0 0 0 0 0 0 0 0 0 0 0 ; max rel |w - stored| 3.6e-08
+  X17: owned class-6 rows 13, of them with W(BR 1e-5) != 2e-5: 0 ; owned rows (vz > -160) outside class 6 whose W changes with BR(X17) = 1e-5: 7460, sum of the change 0.146429
+  0.1 s
+
+[eta pippimemem] 53628 rows (sim_set == 3: 53628), 45375 event groups, isBest==1 rows 45375, groups without exactly one isBest==1 row 0, cor_ok != 1 rows 0, NaN w 0
+  vz > -160: 53510 rows; owned (own_A) 50005 (all vz), own_A and own_B 50005; owned with vz > -160 49892, sum w 12.951831, sum w_db 13.028045
+  'pre': 53510 rows, sum w of owned rows 12.951831
+  ownership against the codes: owned without a forced-eta track 0; not owned with a forced-eta track 0; not owned with w == 0 0 (of 3623 not owned)
+  owned, vz > -160, per four-particle class: rows, sum w
+    class 0:       4118  0.97307413
+    class 1:       3802  0.96522029
+    class 5:        128  0.068608001
+    class 6:         24  0
+    class 7:        185  0.069680001
+    class 8:      41635  10.875249
+  owned, vz > -160, per template: rows, sum w
+    T3:      11499  3.5636529
+    T4:      38393  9.3881782
+  owned, vz > -160, per (class, template): rows, sum w
+    class 0 T3:       2948  0.69212108
+    class 0 T4:       1170  0.28095305
+    class 1 T3:        639  0.22257684
+    class 1 T4:       3163  0.74264345
+    class 5 T3:        128  0.068608001
+    class 6 T3:         24  0
+    class 7 T3:        185  0.069680001
+    class 8 T3:       7575  2.5106669
+    class 8 T4:      34060  8.3645817
+  recomputation mismatches (cls lcls pcls tmpl flags ownA ownB w w_db m4 mee mpipi): 0 0 0 0 0 0 0 0 0 0 0 0 ; max rel |w - stored| 3.6e-08
+  X17: owned class-6 rows 24, of them with W(BR 1e-5) != 2e-5: 0 ; owned rows (vz > -160) outside class 6 whose W changes with BR(X17) = 1e-5: 25461, sum of the change 0.501276
+  0.3 s

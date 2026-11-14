@@ -1,0 +1,187 @@
+# rw_compare_peak: the eta peak BEFORE (no physics weights) and AFTER (main weights: direct V3 = V2 x decay angles, bump KLOE, conversion F_V)
+#   - sim_rw_compare.C; V2 (no decay angles, the main variant before the review of 2026-11-12) is listed where it matters
+# READ FIRST: scale-free results (class shares, section 0; efficiencies, section 4) are the results; absolute contents and data/sim
+#   ratios (sections 1-3) scale with 6080.5 / L_data (UNCONFIRMED) and the peak ratio is method-dependent (A-E differ by a factor of about 3.7)
+# simulation: std + lep + eta owned rows (mode A), w (PDG) x physics weight; direct = eta -> pi+pi-e+e- (class 5, eta set), conversion = eta -> pi+pi-gamma
+#   (class 4, std); expected data rows = sum w x L_data / L_sim, L_data = 6080.5 nb^-1 UNCONFIRMED (every data/sim scales with 6080.5 / L_data)
+# data: P_main of N - CB (Gaussian frozen 0.5439 / 5.4 MeV, pol2, 0.5225-0.61) per selection and per class; errors stat (+) fit-model spread
+#   (48 variants of the data study); selections: pre = isBest >= 0, PT3, vz > -160, cor_ok; E1 = slides; E2 = E1 without OA > 2
+
+## 0. scale-free: share of the peak at high M(ee) and high OA (data P_main per class, stat (+) model, classes uncorrelated)
+# the one-factor class fits have little power (data errors 30-40 % per class; before the weights p = 0.05 / 0.03 in pre already);
+# these shares are the clearest test: the generator M(ee) of the direct decay put almost nothing at M(ee) > 20 MeV
+selection     share        | data            | sim bef  sim V2   sim V3   | pull bef / V2 / V3    
+pre           OA > 6 deg   | 0.278 +- 0.079  |    0.053    0.239    0.222 |  -2.8 /  -0.5 /  -0.7
+pre           M(ee) > 20   | 0.280 +- 0.071  |    0.046    0.235    0.219 |  -3.3 /  -0.6 /  -0.8
+pre+OA>2      OA > 6 deg   | 0.356 +- 0.096  |    0.090    0.337    0.318 |  -2.8 /  -0.2 /  -0.4
+pre+OA>2      M(ee) > 20   | 0.358 +- 0.085  |    0.077    0.332    0.315 |  -3.3 /  -0.3 /  -0.5
+E1 (slides)   OA > 6 deg   | 0.345 +- 0.082  |    0.087    0.338    0.320 |  -3.2 /  -0.1 /  -0.3
+E1 (slides)   M(ee) > 20   | 0.359 +- 0.095  |    0.085    0.347    0.330 |  -2.9 /  -0.1 /  -0.3
+peak nominal  OA > 6 deg   | 0.279 +- 0.072  |    0.051    0.232    0.216 |  -3.2 /  -0.7 /  -0.9
+peak nominal  M(ee) > 20   | 0.282 +- 0.077  |    0.046    0.234    0.219 |  -3.1 /  -0.6 /  -0.8
+E2            OA > 6 deg   | 0.273 +- 0.070  |    0.049    0.234    0.218 |  -3.2 /  -0.6 /  -0.8
+E2            M(ee) > 20   | 0.284 +- 0.080  |    0.048    0.241    0.225 |  -3.0 /  -0.5 /  -0.7
+# pulls with the data error only (simulation statistical errors are below 0.01)
+
+## 1. composition [nb] (all M4 | peak window 0.5336-0.5542), before -> after
+selection     | direct all M4 (window)             | conversion all M4 (window)         | total all M4 (window)          | direct share     
+pre           | 1.3852 -> 1.4168 (1.0622 -> 1.0996) | 1.2255 -> 1.2420 (0.9421 -> 0.9928) |  2.611 ->  2.659 (2.004 -> 2.092) | 0.531 -> 0.533
+pre+OA>2      | 0.8501 -> 1.1495 (0.6434 -> 0.8901) | 0.6906 -> 0.7043 (0.5229 -> 0.5613) |  1.541 ->  1.854 (1.166 -> 1.451) | 0.552 -> 0.620
+E1 (slides)   | 0.7307 -> 1.0294 (0.5531 -> 0.7998) | 0.5628 -> 0.5927 (0.4271 -> 0.4717) |  1.294 ->  1.622 (0.980 -> 1.272) | 0.565 -> 0.635
+peak nominal  | 1.2928 -> 1.3311 (0.9898 -> 1.0322) | 1.0778 -> 1.1734 (0.8343 -> 0.9369) |  2.371 ->  2.505 (1.824 -> 1.969) | 0.545 -> 0.531
+E2            | 1.2281 -> 1.2810 (0.9436 -> 0.9976) | 1.0618 -> 1.1011 (0.8223 -> 0.8828) |  2.290 ->  2.382 (1.766 -> 1.880) | 0.536 -> 0.538
+# errors (event groups, after): pre direct 0.0034 conv 0.0756 total 0.0757 nb; pre+OA>2 direct 0.0033 conv 0.0571 total 0.0572 nb; E1 direct 0.0032 conv 0.0529 total 0.0530 nb; peak nom. direct 0.0033 conv 0.0741 total 0.0741 nb; E2 direct 0.0033 conv 0.0717 total 0.0718 nb; 
+
+## 2. peak content: data P_main against the simulated peak over all M4 (method A), expected data rows
+# NOT a physics result: scales with 6080.5 / L_data (UNCONFIRMED) and depends on the method (A-E differ by a factor of about 3.7 after the weights,
+#   rw_compare_enriched.txt section 4)
+selection     data P_main (stat, model)       sim total before        sim total after    data/sim before     data/sim after
+pre              4671 +-  367 +- 958        15874 +- 425         16167 +- 460       0.294 +- 0.065     0.289 +- 0.064 
+pre+OA>2         3632 +-  328 +- 752         9368 +- 319         11272 +- 348       0.388 +- 0.089     0.322 +- 0.073 
+E1 (slides)      3187 +-  283 +- 673         7866 +- 288          9863 +- 322       0.405 +- 0.094     0.323 +- 0.075 
+peak nominal     4330 +-  327 +- 981        14414 +- 399         15229 +- 451       0.300 +- 0.072     0.284 +- 0.068 
+E2               4047 +-  320 +- 891        13924 +- 396         14484 +- 437       0.291 +- 0.068     0.279 +- 0.066 
+# errors of data/sim: stat (+) model of the data and simulation statistics; NOT the absolute scale (about 20 %, L_data unconfirmed)
+
+## 3. peak content per class (rows at L_data): data against direct / conversion / total, before -> after; fits
+# one factor: data_i = a1 x (sim total_i); two factors: data_i = a x conv_i + b x direct_i (sep::MixFit; sim errors in the variance)
+
+### pre, OA5 classes (OA [deg])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<2       |    1039 +- 389     0.220+-0.073 |     3253     3252     6506 |     1625     3269     4895 |  0.160 +- 0.060   0.212 +- 0.081  | 0.220+-0.073  0.410  0.303
+2-4      |    1707 +- 540     0.361+-0.088 |     3504     3519     7024 |     2341     3613     5953 |  0.243 +- 0.078   0.287 +- 0.092  | 0.361+-0.088  0.442  0.368
+4-6      |     667 +- 251     0.141+-0.051 |      875      631     1506 |     1125      605     1730 |  0.443 +- 0.170   0.385 +- 0.148  | 0.141+-0.051  0.095  0.107
+6-10     |     365 +- 194     0.077+-0.040 |      372       49      421 |     1124       65     1189 |  0.867 +- 0.466   0.307 +- 0.163  | 0.077+-0.040  0.027  0.074
+>10      |     949 +- 395     0.201+-0.074 |      418        0      418 |     2400        0     2400 |  2.272 +- 0.946   0.395 +- 0.165  | 0.201+-0.074  0.026  0.148
+  before one factor a1 = 0.221 +- 0.046, chi2/ndf 9.5/4 (p 0.049) | two factors: conv -1.069 +- 0.497, direct +1.465 +- 0.472 (rho -0.97), chi2/ndf 1.7/3; direct share of the sim peak 0.531, implied in data 2.82 +- 0.86
+  after  one factor a1 = 0.282 +- 0.051, chi2/ndf 1.7/4 (p 0.784) | two factors: conv +0.173 +- 0.116, direct +0.386 +- 0.113 (rho -0.62), chi2/ndf 0.7/3; direct share of the sim peak 0.533, implied in data 0.72 +- 0.18
+
+### pre, MEE5 classes (M(ee) [GeV/c2])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<8       |    1788 +- 566     0.380+-0.090 |     4414     4369     8783 |     2084     4565     6649 |  0.204 +- 0.065   0.269 +- 0.086  | 0.380+-0.090  0.553  0.411
+8-20     |    1600 +- 524     0.340+-0.088 |     3309     3058     6368 |     2989     2983     5972 |  0.251 +- 0.083   0.268 +- 0.089  | 0.340+-0.088  0.401  0.369
+20-50    |     751 +- 284     0.160+-0.058 |      449       24      473 |     1984        4     1988 |  1.588 +- 0.606   0.378 +- 0.143  | 0.160+-0.058  0.030  0.123
+50-135   |     465 +- 202     0.099+-0.042 |      193        0      193 |     1405        0     1405 |  2.411 +- 1.046   0.331 +- 0.144  | 0.099+-0.042  0.012  0.087
+>135     |      99 +- 79      0.021+-0.017 |       57        0       57 |      153        0      153 |  1.722 +- 1.379   0.648 +- 0.519  | 0.021+-0.017  0.004  0.009
+  before one factor a1 = 0.239 +- 0.051, chi2/ndf 10.8/4 (p 0.028) | two factors: conv -1.525 +- 0.558, direct +1.905 +- 0.520 (rho -0.97), chi2/ndf 0.3/3; direct share of the sim peak 0.531, implied in data 3.43 +- 1.00
+  after  one factor a1 = 0.296 +- 0.053, chi2/ndf 1.0/4 (p 0.903) | two factors: conv +0.211 +- 0.119, direct +0.359 +- 0.097 (rho -0.52), chi2/ndf 0.4/3; direct share of the sim peak 0.533, implied in data 0.66 +- 0.17
+
+### pre+OA>2, OA5 classes (OA [deg])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<2       |       0 +- 4       0.000+-0.001 |        0        0        0 |        0        0        0 |   -nan +- nan      -nan +- nan    | 0.000+-0.001  0.000  0.000
+2-4      |    1709 +- 540     0.463+-0.101 |     3504     3519     7024 |     2341     3613     5953 |  0.243 +- 0.078   0.287 +- 0.092  | 0.463+-0.101  0.750  0.528
+4-6      |     667 +- 251     0.181+-0.065 |      875      631     1506 |     1125      605     1730 |  0.443 +- 0.170   0.385 +- 0.148  | 0.181+-0.065  0.161  0.153
+6-10     |     365 +- 194     0.099+-0.051 |      372       49      421 |     1124       65     1189 |  0.867 +- 0.466   0.307 +- 0.163  | 0.099+-0.051  0.045  0.105
+>10      |     949 +- 395     0.257+-0.091 |      418        0      418 |     2400        0     2400 |  2.272 +- 0.946   0.395 +- 0.165  | 0.257+-0.091  0.045  0.213
+  before one factor a1 = 0.303 +- 0.070, chi2/ndf 7.1/3 (p 0.068) | two factors: conv -0.928 +- 0.524, direct +1.418 +- 0.472 (rho -0.95), chi2/ndf 1.2/2; direct share of the sim peak 0.552, implied in data 2.14 +- 0.65
+  after  one factor a1 = 0.326 +- 0.065, chi2/ndf 0.5/3 (p 0.912) | two factors: conv +0.250 +- 0.171, direct +0.372 +- 0.116 (rho -0.56), chi2/ndf 0.3/2; direct share of the sim peak 0.620, implied in data 0.71 +- 0.18
+
+### pre+OA>2, MEE5 classes (M(ee) [GeV/c2])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<8       |     824 +- 278     0.225+-0.070 |     1572     1578     3149 |      743     1723     2466 |  0.262 +- 0.090   0.334 +- 0.117  | 0.225+-0.070  0.336  0.219
+8-20     |    1531 +- 520     0.417+-0.097 |     2899     2597     5496 |     2705     2556     5261 |  0.278 +- 0.095   0.291 +- 0.100  | 0.417+-0.097  0.587  0.467
+20-50    |     749 +- 283     0.204+-0.071 |      448       24      472 |     1984        4     1988 |  1.586 +- 0.605   0.377 +- 0.143  | 0.204+-0.071  0.050  0.176
+50-135   |     465 +- 202     0.127+-0.053 |      193        0      193 |     1405        0     1405 |  2.411 +- 1.046   0.331 +- 0.144  | 0.127+-0.053  0.021  0.125
+>135     |      99 +- 79      0.027+-0.022 |       57        0       57 |      153        0      153 |  1.722 +- 1.379   0.648 +- 0.519  | 0.027+-0.022  0.006  0.014
+  before one factor a1 = 0.297 +- 0.065, chi2/ndf 10.0/4 (p 0.041) | two factors: conv -1.416 +- 0.575, direct +1.864 +- 0.516 (rho -0.95), chi2/ndf 0.5/3; direct share of the sim peak 0.552, implied in data 2.61 +- 0.69
+  after  one factor a1 = 0.330 +- 0.060, chi2/ndf 0.6/4 (p 0.959) | two factors: conv +0.284 +- 0.145, direct +0.356 +- 0.097 (rho -0.45), chi2/ndf 0.5/3; direct share of the sim peak 0.620, implied in data 0.67 +- 0.15
+
+### E1 (slides), OA5 classes (OA [deg])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<2       |       0 +- 4       0.000+-0.001 |        0        0        0 |        0        0        0 |   -nan +- nan      -nan +- nan    | 0.000+-0.001  0.000  0.000
+2-4      |    1487 +- 397     0.459+-0.086 |     3083     2985     6069 |     2136     3161     5298 |  0.245 +- 0.066   0.281 +- 0.077  | 0.459+-0.086  0.772  0.537
+4-6      |     636 +- 192     0.196+-0.057 |      699      413     1112 |      997      409     1406 |  0.572 +- 0.180   0.453 +- 0.141  | 0.196+-0.057  0.141  0.143
+6-10     |     255 +- 170     0.079+-0.050 |      298       24      323 |     1000       34     1034 |  0.792 +- 0.531   0.247 +- 0.165  | 0.079+-0.050  0.041  0.105
+>10      |     865 +- 285     0.267+-0.075 |      363        0      363 |     2126        0     2126 |  2.383 +- 0.787   0.407 +- 0.134  | 0.267+-0.075  0.046  0.216
+  before one factor a1 = 0.307 +- 0.062, chi2/ndf 11.0/3 (p 0.012) | two factors: conv -1.052 +- 0.492, direct +1.502 +- 0.426 (rho -0.95), chi2/ndf 2.2/2; direct share of the sim peak 0.565, implied in data 2.17 +- 0.55
+  after  one factor a1 = 0.328 +- 0.057, chi2/ndf 1.8/3 (p 0.623) | two factors: conv +0.239 +- 0.147, direct +0.381 +- 0.100 (rho -0.55), chi2/ndf 1.4/2; direct share of the sim peak 0.635, implied in data 0.73 +- 0.15
+
+### E1 (slides), MEE5 classes (M(ee) [GeV/c2])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<8       |     665 +- 217     0.206+-0.066 |     1206     1141     2347 |      582     1324     1907 |  0.283 +- 0.095   0.349 +- 0.119  | 0.206+-0.066  0.298  0.193
+8-20     |    1403 +- 467     0.435+-0.101 |     2597     2257     4854 |     2427     2275     4702 |  0.289 +- 0.097   0.298 +- 0.101  | 0.435+-0.101  0.617  0.477
+20-50    |     622 +- 347     0.193+-0.093 |      406       24      431 |     1800        4     1804 |  1.444 +- 0.810   0.345 +- 0.192  | 0.193+-0.093  0.055  0.183
+50-135   |     445 +- 147     0.138+-0.048 |      179        0      179 |     1302        0     1302 |  2.494 +- 0.823   0.342 +- 0.113  | 0.138+-0.048  0.023  0.132
+>135     |      89 +- 71      0.028+-0.022 |       56        0       56 |      148        0      148 |  1.604 +- 1.278   0.606 +- 0.482  | 0.028+-0.022  0.007  0.015
+  before one factor a1 = 0.313 +- 0.067, chi2/ndf 10.2/4 (p 0.038) | two factors: conv -1.592 +- 0.642, direct +1.979 +- 0.549 (rho -0.95), chi2/ndf 0.8/3; direct share of the sim peak 0.565, implied in data 2.63 +- 0.70
+  after  one factor a1 = 0.333 +- 0.060, chi2/ndf 0.5/4 (p 0.977) | two factors: conv +0.309 +- 0.147, direct +0.345 +- 0.093 (rho -0.44), chi2/ndf 0.4/3; direct share of the sim peak 0.635, implied in data 0.66 +- 0.14
+
+### peak nominal, OA5 classes (OA [deg])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<2       |     943 +- 301     0.215+-0.061 |     3113     2937     6050 |     1564     3160     4724 |  0.156 +- 0.050   0.200 +- 0.065  | 0.215+-0.061  0.420  0.310
+2-4      |    1638 +- 419     0.373+-0.074 |     3270     3034     6304 |     2222     3384     5606 |  0.260 +- 0.067   0.292 +- 0.077  | 0.373+-0.074  0.437  0.368
+4-6      |     586 +- 169     0.133+-0.039 |      771      558     1329 |     1049      557     1606 |  0.441 +- 0.133   0.365 +- 0.109  | 0.133+-0.039  0.092  0.105
+6-10     |     300 +- 191     0.068+-0.042 |      327       24      351 |     1052       34     1085 |  0.852 +- 0.547   0.276 +- 0.176  | 0.068+-0.042  0.024  0.071
+>10      |     927 +- 333     0.211+-0.066 |      379        0      379 |     2207        0     2207 |  2.443 +- 0.877   0.420 +- 0.151  | 0.211+-0.066  0.026  0.145
+  before one factor a1 = 0.223 +- 0.039, chi2/ndf 12.6/4 (p 0.013) | two factors: conv -1.248 +- 0.540, direct +1.566 +- 0.483 (rho -0.98), chi2/ndf 2.7/3; direct share of the sim peak 0.545, implied in data 2.98 +- 0.86
+  after  one factor a1 = 0.275 +- 0.042, chi2/ndf 3.0/4 (p 0.563) | two factors: conv +0.153 +- 0.100, direct +0.402 +- 0.104 (rho -0.67), chi2/ndf 1.3/3; direct share of the sim peak 0.531, implied in data 0.75 +- 0.16
+
+### peak nominal, MEE5 classes (M(ee) [GeV/c2])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<8       |    1588 +- 436     0.364+-0.078 |     4081     3811     7892 |     1943     4257     6200 |  0.201 +- 0.056   0.256 +- 0.072  | 0.364+-0.078  0.547  0.407
+8-20     |    1544 +- 349     0.354+-0.071 |     3123     2743     5866 |     2823     2878     5701 |  0.263 +- 0.061   0.271 +- 0.063  | 0.354+-0.071  0.407  0.374
+20-50    |     647 +- 371     0.148+-0.075 |      422        0      422 |     1869        0     1869 |  1.532 +- 0.879   0.346 +- 0.198  | 0.148+-0.075  0.029  0.123
+50-135   |     502 +- 169     0.115+-0.039 |      182        0      182 |     1319        0     1319 |  2.755 +- 0.925   0.381 +- 0.128  | 0.115+-0.039  0.013  0.087
+>135     |      84 +- 66      0.019+-0.015 |       52        0       52 |      139        0      139 |  1.604 +- 1.264   0.601 +- 0.473  | 0.019+-0.015  0.004  0.009
+  before one factor a1 = 0.239 +- 0.041, chi2/ndf 11.3/4 (p 0.023) | two factors: conv -1.734 +- 0.634, direct +2.012 +- 0.563 (rho -0.98), chi2/ndf 1.0/3; direct share of the sim peak 0.545, implied in data 3.55 +- 1.00
+  after  one factor a1 = 0.284 +- 0.043, chi2/ndf 1.3/4 (p 0.860) | two factors: conv +0.188 +- 0.104, direct +0.374 +- 0.099 (rho -0.65), chi2/ndf 0.3/3; direct share of the sim peak 0.531, implied in data 0.69 +- 0.16
+
+### E2, OA5 classes (OA [deg])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<2       |     863 +- 339     0.210+-0.071 |     3024     3034     6058 |     1530     3091     4621 |  0.142 +- 0.056   0.187 +- 0.074  | 0.210+-0.071  0.435  0.319
+2-4      |    1487 +- 397     0.362+-0.076 |     3083     2985     6069 |     2136     3161     5298 |  0.245 +- 0.066   0.281 +- 0.077  | 0.362+-0.076  0.436  0.366
+4-6      |     636 +- 192     0.155+-0.046 |      699      413     1112 |      997      409     1406 |  0.572 +- 0.180   0.453 +- 0.141  | 0.155+-0.046  0.080  0.097
+6-10     |     255 +- 170     0.062+-0.040 |      298       24      323 |     1000       34     1034 |  0.792 +- 0.531   0.247 +- 0.165  | 0.062+-0.040  0.023  0.071
+>10      |     865 +- 285     0.211+-0.062 |      363        0      363 |     2126        0     2126 |  2.383 +- 0.787   0.407 +- 0.134  | 0.211+-0.062  0.026  0.147
+  before one factor a1 = 0.218 +- 0.042, chi2/ndf 14.8/4 (p 0.005) | two factors: conv -1.197 +- 0.455, direct +1.560 +- 0.422 (rho -0.97), chi2/ndf 2.7/3; direct share of the sim peak 0.536, implied in data 2.97 +- 0.79
+  after  one factor a1 = 0.277 +- 0.045, chi2/ndf 4.0/4 (p 0.405) | two factors: conv +0.147 +- 0.103, direct +0.398 +- 0.098 (rho -0.60), chi2/ndf 2.1/3; direct share of the sim peak 0.538, implied in data 0.76 +- 0.16
+
+### E2, MEE5 classes (M(ee) [GeV/c2])
+class    |  data (stat+model)     frac data |  dir bef conv bef  tot bef |  dir aft conv aft  tot aft | data/sim bef    data/sim aft    | frac: data       bef    aft
+<8       |    1454 +- 408     0.356+-0.083 |     3821     3714     7534 |     1829     3988     5817 |  0.193 +- 0.055   0.250 +- 0.072  | 0.356+-0.083  0.541  0.402
+8-20     |    1471 +- 467     0.360+-0.088 |     3006     2718     5724 |     2710     2703     5413 |  0.257 +- 0.082   0.272 +- 0.087  | 0.360+-0.088  0.411  0.374
+20-50    |     625 +- 348     0.153+-0.076 |      407       24      431 |     1800        4     1805 |  1.448 +- 0.810   0.346 +- 0.193  | 0.153+-0.076  0.031  0.125
+50-135   |     445 +- 147     0.109+-0.037 |      179        0      179 |     1302        0     1302 |  2.494 +- 0.823   0.342 +- 0.113  | 0.109+-0.037  0.013  0.090
+>135     |      89 +- 71      0.022+-0.017 |       56        0       56 |      148        0      148 |  1.604 +- 1.278   0.606 +- 0.482  | 0.022+-0.017  0.004  0.010
+  before one factor a1 = 0.225 +- 0.045, chi2/ndf 11.6/4 (p 0.021) | two factors: conv -1.674 +- 0.595, direct +2.006 +- 0.547 (rho -0.97), chi2/ndf 0.6/3; direct share of the sim peak 0.536, implied in data 3.59 +- 1.03
+  after  one factor a1 = 0.283 +- 0.048, chi2/ndf 1.1/4 (p 0.901) | two factors: conv +0.200 +- 0.105, direct +0.352 +- 0.093 (rho -0.53), chi2/ndf 0.3/3; direct share of the sim peak 0.538, implied in data 0.67 +- 0.15
+
+## 4. single-cut efficiencies, base pre, all M4 (simulation: event-group errors; data peak: pass/fail P_main fits, stat (+) model)
+# bump: D+C all M4 and photon-tagged (0.119 <= M(ee gamma) < 0.173, emulates the ECAL tag, UNVERIFIED); pT4 and vertex: bump at the bump start base
+#   (pre without vz + oa_lab < 40 + 0.30 < M(pipi) < 0.41), as the data study; data bump = ECAL-tagged eta of the data study (tables/cuts_compare_data.txt)
+# total V2 = the peak total with the direct decay in V2 (no decay angles; the main variant before the review)
+cut                        | direct bef -> aft             conversion bef -> aft         total bef -> aft              total V2      | data peak       | pull bef pull V2  pull aft | bump tagged bef / KLOE / 1+aY      | data tagged    
+OA > 2                     | 0.614+-0.001 -> 0.811+-0.001 0.564+-0.028 -> 0.567+-0.030 0.590+-0.013 -> 0.697+-0.015 0.708+-0.013 | 0.778 +- 0.033 |   -5.3     -2.0     -2.3   | 0.686+-0.024 / 0.689 / 0.689       | 0.754 +- 0.013
+OA < 4                     | 0.802+-0.001 -> 0.460+-0.001 0.909+-0.016 -> 0.911+-0.017 0.852+-0.008 -> 0.671+-0.011 0.651+-0.010 | 0.586 +- 0.056 |   +4.7     +1.1     +1.5   | 0.630+-0.025 / 0.627 / 0.626       | 0.641 +- 0.016
+M(pipi) > 0.34             | 0.823+-0.001 -> 0.804+-0.001 0.681+-0.027 -> 0.829+-0.019 0.756+-0.013 -> 0.816+-0.009 0.816+-0.008 | 0.845 +- 0.050 |   -1.7     -0.6     -0.6   | 0.444+-0.025 / 0.667 / 0.700       | 0.705 +- 0.017
+eta_rest > 160             | 0.992+-0.000 -> 0.990+-0.000 0.993+-0.005 -> 0.993+-0.005 0.993+-0.002 -> 0.992+-0.002 0.992+-0.002 | 0.918 +- 0.049 |   +1.5     +1.5     +1.5   | 0.299+-0.023 / 0.253 / 0.247       |   nan +-   nan
+pT4 > 400                  | 0.785+-0.001 -> 0.800+-0.001 0.811+-0.022 -> 0.808+-0.024 0.797+-0.010 -> 0.804+-0.011 0.801+-0.010 | 0.690 +- 0.064 |   +1.7     +1.7     +1.8   | 0.887+-0.019 / 0.889 / 0.888       | 0.870 +- 0.012
+oa_lab < 50                | 0.915+-0.000 -> 0.927+-0.001 0.886+-0.018 -> 0.908+-0.017 0.901+-0.009 -> 0.918+-0.008 0.917+-0.007 | 0.920 +- 0.035 |   -0.5     -0.1     -0.1   | 0.977+-0.008 / 0.982 / 0.983       | 0.992 +- 0.007
+both pions in vertex fit   | 0.921+-0.000 -> 0.923+-0.001 0.935+-0.014 -> 0.938+-0.014 0.927+-0.007 -> 0.930+-0.007 0.929+-0.006 | 0.940 +- 0.041 |   -0.3     -0.3     -0.2   | 0.945+-0.013 / 0.950 / 0.951       | 0.950 +- 0.013
+# pulls = (sim total - data) / sqrt(err_sim^2 + err_data^2); data peak of M(pipi) cuts and MM4 are sculpted (data study); eta_rest > 160 data:
+#   fail-sample fits have p < 0.05 in all variants (review)
+# bump all D+C: OA > 2 0.709 -> 0.713 (1+aY 0.714); OA < 4 0.643 -> 0.641 (1+aY 0.640); M(pipi) > 0.34 0.473 -> 0.681 (1+aY 0.708); eta_rest > 160 0.417 -> 0.363 (1+aY 0.357); pT4 > 400 0.886 -> 0.886 (1+aY 0.886); oa_lab < 50 0.955 -> 0.974 (1+aY 0.977); both pions in vertex fit 0.930 -> 0.930 (1+aY 0.930); 
+
+## 5. position and width of the simulated peak: Gaussian +-2 sigma iterated, 1 MeV bins, reconstructed corrected M4; data FitPeakFree (same selection)
+selection     sample      | mean before [GeV/c2]       sigma before [MeV]     | mean after [GeV/c2]        sigma after [MeV]      | trunc. mean bef/aft  trunc rms bef/aft [MeV]
+pre           direct      |    0.54619 +- 0.00001       6.75 +- 0.01     |    0.54631 +- 0.00002       6.49 +- 0.02     |  0.54609 /  0.54622   5.55 /  5.46
+pre           conversion  |    0.54598 +- 0.00045       5.70 +- 0.42     |    0.54659 +- 0.00044       5.57 +- 0.37     |  0.54594 /  0.54632   5.49 /  5.39
+pre           total       |    0.54602 +- 0.00019       6.32 +- 0.18     |    0.54629 +- 0.00019       6.00 +- 0.16     |  0.54603 /  0.54625   5.51 /  5.46
+pre           data        |    0.54296 +- 0.00046       5.15 +- 0.55     | (data, statistical errors; fit-choice spread in tables/eta_peak_position.txt)
+pre+OA>2      direct      |    0.54610 +- 0.00001       6.97 +- 0.01     |    0.54632 +- 0.00002       6.51 +- 0.02     |  0.54604 /  0.54623   5.60 /  5.46
+pre+OA>2      conversion  |    0.54613 +- 0.00073       6.48 +- 0.75     |    0.54664 +- 0.00070       6.22 +- 0.70     |  0.54615 /  0.54663   5.67 /  5.37
+pre+OA>2      total       |    0.54579 +- 0.00028       6.14 +- 0.18     |    0.54612 +- 0.00022       5.93 +- 0.14     |  0.54610 /  0.54633   5.66 /  5.51
+pre+OA>2      data        |    0.54273 +- 0.00054       5.30 +- 0.64     | (data, statistical errors; fit-choice spread in tables/eta_peak_position.txt)
+E1 (slides)   direct      |    0.54595 +- 0.00002       6.98 +- 0.02     |    0.54622 +- 0.00002       6.49 +- 0.03     |  0.54586 /  0.54611   5.62 /  5.46
+E1 (slides)   conversion  |    0.54616 +- 0.00086       7.31 +- 0.89     |    0.54647 +- 0.00084       6.38 +- 0.79     |  0.54624 /  0.54668   5.68 /  5.35
+E1 (slides)   total       |    0.54548 +- 0.00031       6.30 +- 0.19     |    0.54591 +- 0.00024       6.06 +- 0.15     |  0.54601 /  0.54622   5.71 /  5.56
+E1 (slides)   data        |    0.54365 +- 0.00052       5.12 +- 0.62     | (data, statistical errors; fit-choice spread in tables/eta_peak_position.txt)
+peak nominal  direct      |    0.54618 +- 0.00001       6.76 +- 0.01     |    0.54630 +- 0.00002       6.50 +- 0.02     |  0.54607 /  0.54621   5.56 /  5.46
+peak nominal  conversion  |    0.54642 +- 0.00044       5.61 +- 0.40     |    0.54670 +- 0.00045       5.54 +- 0.38     |  0.54613 /  0.54648   5.46 /  5.38
+peak nominal  total       |    0.54622 +- 0.00020       6.22 +- 0.19     |    0.54634 +- 0.00019       6.00 +- 0.16     |  0.54612 /  0.54628   5.51 /  5.47
+peak nominal  data        |    0.54358 +- 0.00045       5.16 +- 0.53     | (data, statistical errors; fit-choice spread in tables/eta_peak_position.txt)
+E2            direct      |    0.54607 +- 0.00001       6.74 +- 0.01     |    0.54622 +- 0.00002       6.48 +- 0.02     |  0.54594 /  0.54611   5.56 /  5.46
+E2            conversion  |    0.54597 +- 0.00050       6.13 +- 0.49     |    0.54657 +- 0.00047       5.66 +- 0.39     |  0.54598 /  0.54634   5.45 /  5.39
+E2            total       |    0.54597 +- 0.00021       6.39 +- 0.19     |    0.54623 +- 0.00020       6.05 +- 0.17     |  0.54595 /  0.54620   5.53 /  5.47
+E2            data        |    0.54362 +- 0.00046       5.02 +- 0.52     | (data, statistical errors; fit-choice spread in tables/eta_peak_position.txt)
+# K0S scale sim/data 1.0048 +- 0.0007: a simulated position of 0.5459 corresponds to 0.5433 in data units

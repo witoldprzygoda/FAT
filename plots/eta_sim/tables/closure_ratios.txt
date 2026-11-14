@@ -1,0 +1,35 @@
+# closure_ratios: lep/std of the rows the lepton set provides in mode A (std + lep FAT outputs, every row)
+# selection pre = isBest>=0, PT3, vz>-160, cor_ok; pre+OA>2 adds oa > 2 deg. Weights: sim_w (PDG BR) on both sides,
+#   conversions of Dalitz photons: std = every photon of a primary pi0 (eta) x BR_D(PDG)/N_gamma(HGeant) = 0.005905 (0.008029),
+#   lep = Dalitz-photon conversion x BR_D(PDG) (0.01174, 0.0069). Expected ratio 1 everywhere.
+# pions from the common SMASH final state: no e+- and no rho0/omega/phi/eta product or forced-decay product in a pion slot
+# sigma = sum w / 221.05 nb^-1; errors: event-group variance, std and lep independent (shared SMASH events neglected)
+
+group                                        pair   sel       std rows     std sigma [nb]  std Neff  lep rows     lep sigma [nb]  lep Neff            lep/std   lep/std no ghost
+pi0 Dalitz pair                              e+e-   pre          78747       349.1 +- 1.3     71432   5854442       310.9 +- 0.1   5301049   0.8907 +- 0.0034   0.8897 +- 0.0035
+pi0 Dalitz pair                              e+e-   pre+OA>2     59227       262.6 +- 1.1     53693   4442791       236.0 +- 0.1   4015602   0.8987 +- 0.0039   0.8983 +- 0.0040
+eta Dalitz pair                              e+e-   pre          35238      18.21 +- 0.10     31000    512670      16.00 +- 0.02    452905   0.8789 +- 0.0052   0.8785 +- 0.0053
+eta Dalitz pair                              e+e-   pre+OA>2     28597      14.78 +- 0.09     25096    417972      13.05 +- 0.02    368816   0.8830 +- 0.0058   0.8816 +- 0.0058
+two Dalitz decays                            e+e-   pre             61   0.1921 +- 0.0295        42    372173   0.2256 +- 0.0004    324190   1.1746 +- 0.1807   1.1867 +- 0.1896
+two Dalitz decays                            e+e-   pre+OA>2        61   0.1921 +- 0.0295        42    371979   0.2255 +- 0.0004    324017   1.1740 +- 0.1806   1.1862 +- 0.1895
+two Dalitz decays                            e+e+   pre             17 0.05082 +- 0.01571        10    117666 0.07110 +- 0.00022    105904   1.3990 +- 0.4325   1.9117 +- 0.6608
+two Dalitz decays                            e+e+   pre+OA>2        17 0.05082 +- 0.01571        10    117624 0.07108 +- 0.00022    105865   1.3985 +- 0.4324   1.9111 +- 0.6606
+two Dalitz decays                            e-e-   pre             54   0.1885 +- 0.0308        38    303862   0.1848 +- 0.0004    274082   0.9803 +- 0.1600   1.0493 +- 0.1810
+two Dalitz decays                            e-e-   pre+OA>2        54   0.1885 +- 0.0308        38    303521   0.1846 +- 0.0004    273764   0.9792 +- 0.1598   1.0483 +- 0.1808
+conv. pi0 Dalitz photon                      e+e-   pre          55287     1.477 +- 0.007     50252     26258     1.395 +- 0.009     23915   0.9442 +- 0.0074   0.9455 +- 0.0085
+conv. pi0 Dalitz photon                      e+e-   pre+OA>2     27468   0.7338 +- 0.0047     24799     13232   0.7028 +- 0.0064     12027   0.9577 +- 0.0106   0.9659 +- 0.0122
+conv. eta Dalitz photon                      e+e-   pre           1889 0.06862 +- 0.00169      1641      2306 0.07198 +- 0.00160      2034   1.0490 +- 0.0348   1.0181 +- 0.0385
+conv. eta Dalitz photon                      e+e-   pre+OA>2       877 0.03186 +- 0.00116       759      1057 0.03299 +- 0.00109       918   1.0357 +- 0.0508   1.0226 +- 0.0574
+all rows (std dropped / lep owned, mode A)   e+e-   pre         114701       369.9 +- 1.3     79049   7082339       329.4 +- 0.1   5723161   0.8904 +- 0.0032   0.8899 +- 0.0033
+all rows (std dropped / lep owned, mode A)   e+e-   pre+OA>2     88369       279.3 +- 1.1     59863   5551242       250.9 +- 0.1   4359143   0.8983 +- 0.0037   0.8983 +- 0.0038
+all rows (std dropped / lep owned, mode A)   e+e+   pre             77   0.2602 +- 0.0385        46    159543   0.2849 +- 0.0035      6596   1.0952 +- 0.1628   1.1105 +- 0.1851
+all rows (std dropped / lep owned, mode A)   e+e+   pre+OA>2        67   0.2315 +- 0.0359        42    158787   0.2504 +- 0.0032      6087   1.0817 +- 0.1682   1.1053 +- 0.1885
+all rows (std dropped / lep owned, mode A)   e-e-   pre            178   0.6384 +- 0.0579       121    328641   0.6077 +- 0.0053     12911   0.9520 +- 0.0868   1.0572 +- 0.1158
+all rows (std dropped / lep owned, mode A)   e-e-   pre+OA>2       168   0.6097 +- 0.0569       115    327520   0.5685 +- 0.0051     12336   0.9324 +- 0.0874   1.0387 +- 0.1138
+two Dalitz decays                            ls     pre             71   0.2394 +- 0.0345        48    421528   0.2559 +- 0.0004    379985   1.0692 +- 0.1543
+two Dalitz decays                            ls     pre+OA>2        71   0.2394 +- 0.0345        48    421145   0.2557 +- 0.0004    379628   1.0683 +- 0.1542
+
+# audit values (audit_closure.md, PAT trees, PT3 + z>-500, no vz>-160 and no OA cut; sim_weights_spec.md closure table):
+#   pi0 Dalitz, common pions, PDG 0.894 +- 0.003 | eta Dalitz 0.931 +- 0.005 | two Dalitz e+e- 1.19 +- 0.18 (spec 1.04 +- 0.11),
+#   like-sign 1.09 +- 0.14 (spec e+e+ 0.94 +- 0.16, e-e- 1.00 +- 0.12) | conv. pi0 photon 0.952 +- 0.009 | conv. eta photon 1.06 +- 0.03
+#   mode A overall (rows lep provides / rows std drops): e+e- 0.896 +- 0.004, e+e+ 1.10 +- 0.14, e-e- 0.96 +- 0.08

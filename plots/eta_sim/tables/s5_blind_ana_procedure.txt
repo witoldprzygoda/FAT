@@ -1,0 +1,99 @@
+# s5_blind_ana_procedure.txt -- FROZEN extraction procedure of the blind analysis (label blind_ana)
+# written 2026-11-13 BEFORE any yield, BR or limit was computed on the pseudo-data and before any summary statistic was looked at.
+# Development used ONLY the half-A templates (plots/eta_sim/s5_blind_ana_dev.C, s5_blind_ana_xdev.C; logs in
+# /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/scan/s5_blind_ana_build/{dev,xdev}.log) and one look at the M(ee) SIDE BAND
+# 26.5-60 MeV/c2 of the first three X17 toys (the X17 signal window was not looked at). No file in blind/sealed/ is read, ever.
+# Inputs: blind/pseudo/eta_toys.root, blind/pseudo/x17_toys.root, blind/templates/templates.root (half A),
+#         tables/s5_opt_eta_frozen.txt, tables/s5_opt_x17_frozen.txt. Simulation only, no CB.
+#
+# ===================================================================== common
+# selections on top of pre (already applied in the pseudo-data), float comparisons exactly as in the README:
+#   PEAK   : dz_pi < 40.f && mm4 < 2.85f
+#   DIRECT : dz_pi < 40.f
+#   BUMP   : (none)
+#   X17SEL : pivtx == 1 && mee*1000.f >= 13.0 && mee*1000.f < 26.5
+# windows: PEAK 0.5333 <= M4 < 0.5587, BUMP 0.4576 <= M4 < 0.5255 (GeV/c2); targets:
+#   PEAK yield   = rows of classes 4+5 in the PEAK window; BUMP yield = rows of classes 2+3 in the BUMP window;
+#   DIRECT yield = rows of class 5 in the PEAK window (class 4 = background); every yield for the selection it is quoted for.
+# templates: half A x 0.5 (= L_toy = 110.525 nb^-1); atoms direct5, conv4, bump2, bump3, Geta, Gpi0D, Gconv, Gvec, Goth;
+#   peak45 = direct5+conv4, bump23 = bump2+bump3, bkgT2 = Geta+Gpi0D+Gconv+Gvec+Goth.
+# binning: M4 in 2 MeV/c2 bins on the template grid (0.300 + 0.002 k); a fit range [a, b) means bin centres in [a, b).
+# fitting: binned Poisson maximum likelihood (iteratively reweighted least squares with variance = model, identical to the ML
+#   solution of a linear model); template fits add the template variance (Barlow-Beeston-lite, V_i = mu_i + sum_k a_k^2 sigma_ki^2).
+#   All fits are linear in their free parameters (shapes frozen). Double precision.
+# errors of every yield:
+#   stat   = event-group (sandwich) error: Y = sum_i w_i n_i is linear in the bin counts at the converged weights,
+#            Var = sum_events (sum over the rows of the event of w_bin(row))^2 (rows of one event in one toy correlated);
+#   fit    = Poisson error of the fit (no event correlation), reported for comparison;
+#   tmpl   = half-A template MC statistics: RMS over 50 replicas of the atoms (each 1 MeV bin Gaussian-fluctuated by its
+#            event-group error, seed 4242), every template-dependent quantity (template fits, calibration factors) recomputed;
+#   parent = expected effect of the MC statistics of the PARENT sample (half B, shared by all toys) on the estimator:
+#            sqrt(sum_i w_i^2 V_i), V_i = half-A variance of the non-target components x 0.25 (half B assumed as noisy as half A);
+#            this is a COMMON offset of all toys, not seen in the toy-to-toy spread.
+#   total quoted = sqrt(stat^2 + tmpl^2).
+#
+# ===================================================================== eta toys, PEAK yield
+# M1  Gaussian peak + smooth background (as the data's P_main/P_pois): Gaussian, position 0.5460 GeV/c2 and width 6.7 MeV/c2
+#     FROZEN (the simulated peak quoted for this study), bin-integrated, + pol2; range [0.526, 0.614) (= data range 0.5225-0.6100
+#     x 1.0057 on the 2 MeV grid). Outputs: S (whole Gaussian), S_win^G = S x 0.94257 (Gaussian inside the window), and the
+#     PRIMARY S_win = S x c_M1, c_M1 = T_peak45(window) / R, R = sum_i w_i T_peak45,i (response of this toy's S-estimator to the
+#     half-A peak45 template). Model spread (as the data): pol order 1-4 x ranges [0.522,0.594) [0.518,0.614) [0.512,0.624)
+#     [0.508,0.654) x width 6.2/6.7/7.2 MeV, fits with Pearson p > 0.05 kept, half range of S_win^G; reported, not added.
+# M2  template fit: range [0.400, 0.700), components peak45, bump23, bkgT2 (half A x 0.5), three free normalisations,
+#     Poisson ML + template variance. PEAK = a_peak x T_peak45(window) (exact reg_ sums), BUMP = a_bump x T_bump23(window).
+#     M2b: the same with bkgT2 split into G_eta and (G_pi0D+G_conv+G_vec+G_oth), four free normalisations.
+# M3  side bands, linear interpolation: N_win [0.5333,0.5587), N_L [0.5255,0.5333), N_U [0.5587,0.5665) (7.8 MeV/c2 each, exact
+#     row counts); B_lin = (N_L+N_U)/2 x 25.4/7.8; S_raw = (N_win - B_lin)/(1 - lambda), lambda = signal leakage into the side
+#     bands from the half-A peak45 template. PRIMARY M3 = S_raw (as specified: linear interpolation). M3c (calibrated) =
+#     S_raw - dB/(1-lambda), dB = interpolation bias of the non-peak background predicted by a pol2 fit of the half-A
+#     (bump23 + bkgT2) template in [0.526, 0.566) (1 MeV bins).
+#
+# ===================================================================== eta toys, BUMP yield
+# B1  parametric fit (analog of M1): bifurcated Gaussian bump with shape FROZEN from a fit of the half-A bump23 template of the
+#     same selection (mean, sigma_L, sigma_R: PEAK 0.4971/0.0314/0.0128, DIRECT 0.4983/0.0319/0.0123, BUMP 0.4982/0.0317/0.0122,
+#     X17SEL 0.5010/0.0409/0.0135) + eta Gaussian (frozen as M1) + pol2; range [0.400, 0.620). PRIMARY B1 = A_bump x c_B1,
+#     c_B1 = T_bump23(window)/R(bump23); raw = A_bump x (bifurcated Gaussian fraction in the window).
+# B2  = the bump yield of the template fit M2 (and M2b).
+# B3  kinematic-edge step (analog of the data's E_step, here in M4 alone, no M(pi+pi-) slices): pol2 + eta Gaussian (frozen)
+#     + h x 0.5 erfc((M4 - e)/(sqrt2 s)), e and s FROZEN from the half-A bump23 template (PEAK 0.5072/0.0108, DIRECT 0.5090/
+#     0.0101, BUMP 0.5090/0.0100, X17SEL 0.5060/0.0120); range [0.470, 0.566). Yield = h x T_bump23(window)/R_h(bump23).
+# B4  side band with background-shape extrapolation (M3 analog for the bump): Y = N_win - N_SB x T_bkgT2(win)/T_bkgT2(SB)
+#     - T_peak45(bump window), SB = [0.5665, 0.7000), exact row counts, ratios from half-A templates.
+#
+# ===================================================================== eta toys, DIRECT yield (class 5 alone)
+# M2d M4 template fit as M2 with peak45 split into direct5 (free) and conv4 (normalisation constrained 1 +- relative half-A
+#     error of conv4 in the PEAK window of that selection); DIRECT = a_dir x T_direct5(window).  (M4 cannot separate 4 and 5:
+#     the constraint carries the information.)
+# D5  M(ee) split: rows with pivtx == 1 (pre + both pions in the vertex fit, the base of the m4mee_X17 templates), M4 on the
+#     2.5 MeV grid 0.483 + 0.0025 k, split M(ee) < 10 MeV/c2 and >= 10 MeV/c2; in each part the M1 model (Gaussian frozen + pol2,
+#     range [0.5255, 0.6080)) gives S_lo, S_hi; responses of the two S-estimators to the half-A m4mee_X17 templates of direct5
+#     and conv4 (normalised to their rows in the PEAK window of the DIRECT selection) form a 2x2 matrix, solved for D (class 5)
+#     and C (class 4). Quoted for the DIRECT selection only.
+#
+# ===================================================================== X17 toys
+# X1 (PRIMARY) binned Poisson ML fit of toy_<id>_mee in the frozen window 13.0 <= M(ee) < 26.5 MeV/c2 (bins 27-53):
+#     mu_i = BR x X_i + a_D x D_i + a_O x O_i, X = mee_X17_x17perBR x 27.5074 (line at 17 MeV/c2, width from the template:
+#     Gaussian fit mean 17.2, sigma 4.0 MeV/c2), D = mee_X17_direct5 x 27.5074, O = smooth description of (otherX17 + conv4)
+#     x 27.5074: A exp(-m/t1) + B exp(-m/t2) fitted to the half-A template on 8-60 MeV/c2, bin-averaged. a_D, a_O, BR free
+#     (BR may be negative). sigma_stat from the inverse Hessian (Poisson). Over-dispersion: the half-A templates and the M(ee)
+#     side bands of the toys show single-bin spikes (heavy MC rows; side band 26.5-60 MeV/c2 of three toys: Pearson
+#     chi2/ndf about 22 for a smooth curve), common to all toys. Scale S = max(1, chi2_Pearson/ndf) of the window fit (ndf 24),
+#     sigma_tot = sigma_stat x sqrt(S). BR estimate = BR-hat +- sigma_tot (sigma_stat also stored).
+#     UL90 (PRIMARY): asymptotic CLs (Cowan, Cranmer, Gross, Vitells 2011) with the one-sided profile-likelihood statistic
+#     q~_mu; for this linear model with Gaussian estimator: CLs(mu) = Phi((BRhat - mu)/sigma) / Phi(BRhat/sigma) = 0.10, with
+#     sigma = sigma_tot. Also stored: CLs with sigma_stat, and the one-sided profile-likelihood limit without CLs
+#     (q~_mu = 1.6424) with sigma_tot.
+# X2  as X1 with O = the RAW half-A (otherX17 + conv4) template, template variance added (Barlow-Beeston-lite).
+# X3  as X1 on the wider range 8.0 <= M(ee) < 40.0 MeV/c2 (bins 17-80).
+# Expected numbers (half-A Asimov, before the toys): X1 sigma_stat 9.1e-6 (a_D, a_O free); parent MC noise of 'other' projected
+#     on BR-hat about 5e-5 (replicas), i.e. the X17 toys are expected to be limited by the frozen MC pattern of half B.
+#
+# ===================================================================== POST-FREEZE ADDITIONS (declared; written 2026-11-13 after the X1 summary)
+# Reason (no truth used): X1 gave BR-hat < 0 in every toy (mean -6.3e-5, sigma_stat 0.9e-5) with an unphysical direct-decay
+# normalisation a_D = 5.9 +- 0.3 and a_O = 0.29: in the 13.5 MeV/c2 wide window the three shapes (X17 line, direct5, smooth
+# other) are nearly degenerate and the fit is steered by the frozen half-B MC pattern. The frozen X1 numbers stay the primary
+# record. Two variants were defined BEFORE their results were looked at:
+# X4  as X1 with a_D Gaussian-constrained to 1 +- 0.10 (the direct-decay normalisation would come from the measured M4 peak).
+# X5  counting in the window (bins 27-53): BR = (N_win - B)/X_win, B = half-A mee_X17_sumT12 x 27.5074 in the window,
+#     sigma_stat = sqrt(N_win)/X_win, sigma_B = half-A template error/X_win, sigma_tot = sqrt(stat^2 + B^2); UL90 asymptotic CLs
+#     with sigma_tot.

@@ -1,0 +1,14 @@
+# selection "pre" (e+e-): data (N - CB) / L_data against the simulation (signal + physical background)
+# data: L_data = 6080.5 nb^-1 (UNCONFIRMED), CB = 2 sqrt(N++ N--) in 10 MeV bins, no k factor
+# sim: std + lep owned rows (mode A), w (PDG), L_sim = 221.05 nb^-1; eta -> pi+pi-e+e- (direct) missing in sim
+# the peak-window ratio equals the background-shape trend around it (gap 0.5225-0.5336: 1.29, 0.554-0.58: 1.46, review finding 4);
+# it does NOT measure the missing eta -> pi+pi-e+e-. Absolute ratios depend on the vz slice and the ghost treatment (tables/review_regions.txt)
+region               M4 [GeV/c2]          N         CB    data sigma [nb]     sim sigma [nb]       data / sim
+below the bump    0.3000-0.4550       50593       4995     7.499 +- 0.041      7.857 +- 0.18     0.954 +- 0.022
+bump window       0.4550-0.5225      153183      15507     22.64 +- 0.071      24.48 +- 0.32     0.925 +- 0.012
+peak window       0.5336-0.5542       77513       7949     11.44 +- 0.049      8.113 +- 0.16     1.410 +- 0.029
+above the peak    0.5800-0.7000      886804      73133     133.8 +- 0.18       98.48 +- 0.57     1.359 +- 0.008
+high mass         0.7000-1.1000     2657579     157966     411.1 +- 0.3        425.5 +- 1.1      0.966 +- 0.003
+all 0.30-1.10     0.3000-1.1000     3973367     275162     608.2 +- 0.39       579.8 +- 1.4      1.049 +- 0.003
+# sim peak (conversion, pre): weighted mean M4 in 0.52-0.58 = 0.54549 GeV/c2, rms 0.00822 (294 rows); mean m4/m4_true = 0.99328
+# data peak (data study): 0.5439 GeV/c2, sigma 5.4 MeV; m_eta = 0.547862

@@ -1,0 +1,58 @@
+# cuts_summary.txt -- plots/eta_sim/sim_cuts.C
+# simulation: std + lep owned rows, mode A, w (PDG) unless stated; sigma = sum w / L_sim, L_sim = 221.05 nb^-1
+# data: (N - CB) / L_data, L_data = 6080.5 nb^-1 (UNCONFIRMED), CB = 2 sqrt(N++ N--) in 10 MeV bins, no k factor
+# eta -> pi+pi-e+e- (direct) is NOT in the simulation (eta set missing)
+#
+SIMULATED PEAK (peak conversion, pre, chi2 Gaussian fit, 2.5 MeV bins, iterated range mean +- 2 sigma)
+  mean   0.54602 +- 0.00048 GeV/c2   (data 0.5439; difference +2.12 +- 0.48 MeV)
+  sigma  0.00674 +- 0.00048 GeV/c2   (data 0.0054)
+  chi2/ndf 8.1/8
+WINDOWS
+  sim peak window  0.53322 - 0.55883 (mean +- 1.9 sigma, the rule of the data window)
+  data peak window 0.53364 - 0.55416 (variant)
+  bump window      0.4550 - 0.5225 (data)
+  R window         0.60 - 0.80
+
+CROSS-CHECK against the engine (simeng::Efficiency / SumMany on the full rows)
+  peak conv, OA > 2:        engine 0.56352 +- 0.02831   this macro 0.56352 +- 0.02831
+  T2 bump window, lab < 50: engine 0.92624 +- 0.00405   this macro 0.92624 +- 0.00405
+  bump Dalitz, pions vtx:   engine 0.91813 +- 0.00675   this macro 0.91813 +- 0.00675
+  T1+T2 in 0.60-0.80, sum w: engine 46524.8575 (V 34239.7184)   this macro 46524.8575 (V 34239.7184)
+  peak conv, sum w:          engine 270.8933 (V 239.0332)   this macro 270.8933 (V 239.0332)
+  T2 bump, OA > 2, mode B w_db: engine 0.77249 +- 0.00647   this macro 0.77249 +- 0.00647
+
+REFERENCE "pre" (mode A, w): sigma [nb] +- stat, rows, N_eff
+  bump pi0 Dalitz (all M4)                      7.9243 +-  0.1951  rows     1649  N_eff    1649.0
+  bump conversion (all M4)                      5.8210 +-  0.1690  rows     1187  N_eff    1187.0
+  bump D+C (all M4)                            13.7453 +-  0.2581  rows     2836  N_eff    2835.7
+  peak conversion (all M4)                      1.2255 +-  0.0699  rows      307  N_eff     307.0
+  bump D+C, photon-tagged (all M4)              1.8758 +-  0.0954  rows      387  N_eff     387.0
+  S_bump: bump D+C in bump window              10.5796 +-  0.2264  rows     2183  N_eff    2182.8
+  S_peak: peak conv. in sim peak window         1.0059 +-  0.0634  rows      252  N_eff     252.0
+  peak conv. in data peak window                0.9421 +-  0.0613  rows      236  N_eff     236.0
+  B_bump: phys. bkg in bump window             13.8478 +-  0.2152  rows    88112  N_eff    4142.6
+  B_peak: phys. bkg in sim peak window          9.0058 +-  0.1656  rows    65844  N_eff    2957.4
+  phys. bkg in data peak window                 7.1269 +-  0.1474  rows    51523  N_eff    2336.3
+  T1+T2 in bump window                         24.4793 +-  0.3178  rows    90308  N_eff    5933.0
+  T1+T2 in sim peak window                     10.0601 +-  0.1782  rows    66106  N_eff    3187.4
+  T1+T2 in data peak window                     8.1125 +-  0.1604  rows    51768  N_eff    2556.5
+  T1+T2 in 0.60-0.80                          210.4721 +-  0.8371  rows  1479061  N_eff   63217.9
+  fake lepton in bump window                    2.8483 +-  0.1104  rows     8302  N_eff     665.9
+  fake lepton in sim peak window                1.6974 +-  0.0818  rows     6151  N_eff     430.6
+  diff. sources in bump window                  0.4935 +-  0.0477  rows     6511  N_eff     106.9
+  diff. sources in sim peak window              0.2868 +-  0.0356  rows     6447  N_eff      65.0
+  peak conv. in bump window                     0.0519 +-  0.0144  rows       13  N_eff      13.0
+  bump D+C in sim peak window                   0.0484 +-  0.0153  rows       10  N_eff      10.0
+
+R = data (N - CB) / simulation (T1 + T2) in 0.60 - 0.80 GeV/c2 at L_data = 6080.5 nb^-1 (UNCONFIRMED)
+  pre : data 263.276 +- 0.225 nb (N 1725650, CB 124799), sim 210.472 +- 0.837 nb, R = 1.2509 +- 0.0051
+  pre0: data 277.051 +- 0.236 nb (N 1859678, CB 175072), sim 210.812 +- 0.838 nb, R = 1.3142 +- 0.0053
+  peak (sim window) : S = 1.0059 +- 0.0634 nb, B = 9.0058 +- 0.1656 nb, S/B = 0.1117, F = 24.79 (counts at L_data); with R: S/B = 0.0893, F = 22.39
+  bump              : S = 10.5796 +- 0.2264 nb, B = 13.8478 +- 0.2152 nb, S/B = 0.7640, F = 166.92 (counts at L_data); with R: S/B = 0.6108, F = 156.18
+  peak (data window): S = 0.9421 +- 0.0613 nb, B = 7.1269 +- 0.1474 nb, S/B = 0.1322, F = 25.86 (counts at L_data); with R: S/B = 0.1057, F = 23.40
+
+ETA -> PI+ PI- PI0 DALITZ-PLOT WEIGHT (variant for the bump classes; the simulated decay looks like phase space)
+  W = 1 + a y + b y^2 + f y^3, a = -1.095, b = 0.145, f = 0.141 (KLOE-2 2016, from memory, UNVERIFIED), x terms dropped,
+  y = 3 T_pi0/Q - 1 from mpipi_true; normalised to the phase-space average <W>_PS = 1.0221 (TGenPhaseSpace, 4e5 decays)
+  pre: bump D+C (all M4) 13.7453 -> 12.2025 nb (x 0.8878); S_bump 10.5796 -> 9.8822 nb; tagged 1.8758 -> 1.5866 nb
+  bump pi0 Dalitz 7.9243 -> 7.0254 nb, bump conversion 5.8210 -> 5.1772 nb; F(bump) 166.92 -> 158.19

@@ -1,0 +1,158 @@
+# /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/output_lep_pippimepem.root scan_nt set 2, vz > -160 of the FAT output: 7432170 of 7441490 rows
+# columns: N, sum W (PDG), sum W^2, N_eff=(sum W)^2/sum W^2, sum W (database / note weights)
+
+## ownership
+dropped                                                                    349831        40684        37838      43743.5        40798
+mode B owned                                                               219598        24.76      0.02281      26877.1            0
+owned                                                                     7082339        72804       836.55    6336038.5        73754
+owned rows: event-group variance sum_g (sum W)^2 = 926.135, N_eff(group) = 5723161.1
+
+## ownership x lepton-pair class
+dropped | L0 misid                                                           2097        579.7       564.06        595.8       580.92
+dropped | L1 same pi0 Dalitz                                               121871       5988.7       4545.6       7890.0       6111.3
+dropped | L2 same eta Dalitz                                                29489       203.02       1.4008      29423.6       176.54
+dropped | L3 same conversion                                                33480        32304        32291      32316.2        32304
+dropped | L4 rho0/omega/phi->ee                                               569     0.036377   3.4547e-06        383.0      0.03488
+dropped | L5 omega->pi0ee                                                    3325       5.0535    0.0077812       3282.0       3.8722
+dropped | L6 2nd-decay pi0 Dalitz                                             800     0.014464    2.615e-07        800.0     0.011309
+dropped | L7 two Dalitz (DD)                                                51229       31.521       23.979         41.4       32.716
+dropped | L8 Dalitz+conversion (DC)                                         91355       1092.2       93.183      12801.6       1105.8
+dropped | L9 other different                                                15616       479.84       318.72        722.4       482.62
+owned   | L0 misid                                                          28366       303.26       3.5125      26182.2       308.07
+owned   | L1 same pi0 Dalitz                                              5901155        68801       807.66    5860888.4        70208
+owned   | L2 same eta Dalitz                                               515076       3540.6       24.429     513156.5       3078.8
+owned   | L3 same conversion                                                   10     0.095507     0.001105          8.3     0.097065
+owned   | L4 rho0/omega/phi->ee                                            175244       9.8648   0.00072285     134625.1       9.4144
+owned   | L5 omega->pi0ee                                                   14322       14.361     0.021977       9384.3       11.005
+owned   | L6 2nd-decay pi0 Dalitz                                            7267      0.13126   2.3731e-06       7260.2      0.10263
+owned   | L7 two Dalitz (DD)                                               436186       81.162      0.30369      21690.8       83.979
+owned   | L8 Dalitz+conversion (DC)                                          3779       42.361      0.49261       3642.7       43.084
+owned   | L9 other different                                                  934       10.815      0.12659        923.9       11.024
+
+## ownership x four-particle class
+dropped | CB-like                                                           88962       1360.8       373.89       4952.9       1375.7
+dropped | fake misid                                                       217150       3447.7         1766       6730.7       3453.6
+dropped | fake pi->mu                                                       10755       2995.3       2900.6       3093.2       3004.2
+dropped | multi-pion                                                        32964        32880        32798      32962.5        32964
+owned   | CB-like                                                          352925       114.57      0.81071      16190.4       117.78
+owned   | fake misid                                                       303052       2185.6       25.156     189893.4       2219.2
+owned   | fake pi->mu                                                      552200       5736.7       65.905     499349.4       5810.9
+owned   | multi-pion                                                      5874162        64767       744.68    5632997.5        65606
+
+## rows the lepton set provides (std: dropped, lep: owned), by lepton pair + pions
+ALL provided by lep                                                       7082339        72804       836.55    6336038.5        73754
+L0 misid + K0S                                                                368       4.1115      0.04824        350.4       4.1956
+L0 misid + both primary                                                     19986       219.57       2.5424      18963.0          223
+L0 misid + fake pions                                                        3667       35.422      0.41068       3055.2       36.013
+L0 misid + mixed/secondary                                                   4345       44.155      0.51123       3813.6       44.858
+L1 same pi0 Dalitz + K0S                                                    43403       509.55       5.9821      43403.0       519.97
+L1 same pi0 Dalitz + both primary                                         4517205        53032        622.6    4517205.0        54116
+L1 same pi0 Dalitz + fake pions                                            658141       7248.3       85.031     617874.7       7396.6
+L1 same pi0 Dalitz + mixed/secondary                                       682406       8011.4       94.054     682406.0       8175.2
+L2 same eta Dalitz + both primary                                          403339         2783       19.203     403339.0         2420
+L2 same eta Dalitz + fake pions                                             52418       348.28       2.4021      50498.5       302.86
+L2 same eta Dalitz + mixed/secondary                                        59319        409.3       2.8242      59319.0       355.91
+L3 same conversion + fake pions                                                10     0.095507     0.001105          8.3     0.097065
+L4 rho0/omega/phi->ee + K0S                                                    25      0.00118   5.5696e-08         25.0      0.00112
+L4 rho0/omega/phi->ee + both primary                                       110994       5.2654   0.00025244     109826.7       4.9985
+L4 rho0/omega/phi->ee + fake pions                                          18280      0.99969   7.2576e-05      13770.2      0.95393
+L4 rho0/omega/phi->ee + mixed/secondary                                     45945       3.5985   0.00039778      32553.4       3.4609
+L5 omega->pi0ee + both primary                                                149      0.22946   0.00035337        149.0      0.17582
+L5 omega->pi0ee + fake pions                                                 5969       1.4973    0.0021667       1034.7       1.1487
+L5 omega->pi0ee + mixed/secondary                                            8204       12.634     0.019457       8204.0       9.6807
+L6 2nd-decay pi0 Dalitz + both primary                                         51   0.00092206    1.667e-08         51.0   0.00072096
+L6 2nd-decay pi0 Dalitz + fake pions                                         4094     0.073893   1.3359e-06       4087.2     0.057777
+L6 2nd-decay pi0 Dalitz + mixed/secondary                                    3122     0.056445   1.0205e-06       3122.0     0.044134
+L7 two Dalitz (DD) + K0S                                                     5234       4.5292      0.04443        461.7       4.7164
+L7 two Dalitz (DD) + both primary                                          221193       34.741      0.06395      18873.0       35.968
+L7 two Dalitz (DD) + fake pions                                             87381       13.366     0.037636       4746.5       13.794
+L7 two Dalitz (DD) + mixed/secondary                                       122378       28.527      0.15768       5161.0       29.499
+L8 Dalitz+conversion (DC) + K0S                                               522       6.1283     0.071946        522.0       6.2536
+L8 Dalitz+conversion (DC) + both primary                                      745       8.4241     0.097557        727.4       8.5546
+L8 Dalitz+conversion (DC) + fake pions                                        498       5.3104     0.061777        456.5       5.4025
+L8 Dalitz+conversion (DC) + mixed/secondary                                  2014       22.498      0.26134       1936.8       22.873
+L9 other different + K0S                                                       68      0.79832    0.0093723         68.0      0.81464
+L9 other different + both primary                                             111       1.2652     0.014753        108.5        1.288
+L9 other different + fake pions                                                95       1.0939     0.012775         93.7       1.1142
+L9 other different + mixed/secondary                                          660       7.6571     0.089693        653.7       7.8076
+
+## diagnostics
+FC lepton slot g1 17 proc 10                                                     7
+FC lepton slot g1 17 proc 11                                                     1
+FC lepton slot g1 17 proc 31                                                     3
+FC lepton slot g1 17 proc 6                                                      13294
+FC lepton slot g1 17 proc 7                                                      389
+FC lepton slot g1 17051 proc 10                                                  635
+FC lepton slot g1 17051 proc 31                                                  1
+FC lepton slot g1 17051 proc 6                                                   330
+FC lepton slot g1 17051 proc 7                                                   41
+FC lepton slot g1 41 proc 10                                                     324
+FC lepton slot g1 41 proc 6                                                      206
+FC lepton slot g1 41 proc 7                                                      13
+FC lepton slot g1 52 proc 10                                                     98
+FC lepton slot g1 52 proc 6                                                      26
+FC lepton slot g1 52 proc 7                                                      5
+FC lepton slot g1 52051 proc 10                                                  86
+FC lepton slot g1 52051 proc 6                                                   44
+FC lepton slot g1 52051 proc 7                                                   4
+FC lepton slot g1 55 proc 10                                                     8
+FC lepton slot g1 55 proc 6                                                      1
+FC lepton slot g1 7 proc 0                                                       2
+FC lepton slot g1 7 proc 10                                                      68
+FC lepton slot g1 7 proc 31                                                      25
+FC lepton slot g1 7 proc 6                                                       136275
+FC lepton slot g1 7 proc 7                                                       7385
+FC lepton slot g1 7 proc 9                                                       4
+FC lepton slot g1 7051 proc 10                                                   5886
+FC lepton slot g1 7051 proc 11                                                   6
+FC lepton slot g1 7051 proc 31                                                   1
+FC lepton slot g1 7051 proc 6                                                    3125
+FC lepton slot g1 7051 proc 7                                                    457
+FC lepton slot g1 7051 proc 9                                                    34
+FC pion slot g1 17 proc 10                                                       17
+FC pion slot g1 17 proc 31                                                       13
+FC pion slot g1 17 proc 6                                                        34685
+FC pion slot g1 17 proc 7                                                        2090
+FC pion slot g1 17 proc 9                                                        13
+FC pion slot g1 17051 proc 10                                                    29
+FC pion slot g1 17051 proc 6                                                     18
+FC pion slot g1 17051 proc 7                                                     1
+FC pion slot g1 41 proc 10                                                       135
+FC pion slot g1 41 proc 6                                                        17
+FC pion slot g1 52 proc 10                                                       66
+FC pion slot g1 52 proc 6                                                        6
+FC pion slot g1 52 proc 7                                                        1
+FC pion slot g1 52051 proc 10                                                    43
+FC pion slot g1 52051 proc 6                                                     34
+FC pion slot g1 52051 proc 7                                                     6
+FC pion slot g1 55 proc 10                                                       6
+FC pion slot g1 55 proc 6                                                        1
+FC pion slot g1 7 proc 0                                                         7
+FC pion slot g1 7 proc 10                                                        81
+FC pion slot g1 7 proc 11                                                        1
+FC pion slot g1 7 proc 31                                                        73
+FC pion slot g1 7 proc 6                                                         157465
+FC pion slot g1 7 proc 7                                                         12488
+FC pion slot g1 7 proc 9                                                         42
+FC pion slot g1 7051 proc 10                                                     232
+FC pion slot g1 7051 proc 6                                                      316
+FC pion slot g1 7051 proc 7                                                      45
+FC pion slot g1 7051 proc 9                                                      1
+FD lepton slot g0 175101 g1 17051                                                1137976
+FD lepton slot g0 410203 g1 41                                                   325620
+FD lepton slot g0 520203 g1 52                                                   30379
+FD lepton slot g0 525107 g1 52051                                                56730
+FD lepton slot g0 525107 g1 7051                                                 37378
+FD lepton slot g0 550203 g1 55                                                   1007
+FD lepton slot g0 75101 g1 7051                                                  13079197
+FD pion slot g0 175101 g1 17051                                                  6411
+FD pion slot g0 410203 g1 41                                                     957
+FD pion slot g0 520203 g1 52                                                     150
+FD pion slot g0 525107 g1 52051                                                  9712
+FD pion slot g0 525107 g1 7051                                                   7685
+FD pion slot g0 550203 g1 55                                                     8
+FD pion slot g0 75101 g1 7051                                                    86209
+flag: 2nd-decay lepton with omega lepton in row                                  29934
+omega counter 1 with 2nd-decay counter 2                                         29483
+omega counter 1 with 2nd-decay counter 3                                         36
+omega counter 2 with 2nd-decay counter 3                                         532

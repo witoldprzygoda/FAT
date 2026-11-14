@@ -1,0 +1,243 @@
+# eta_summary_checks: numbers recomputed by sim_eta_summary.C against the tables of the study macros
+# 'this' = this macro, 'table' = the study table; OK when |diff| is below the printing precision of the table
+MM4 cut of tables/eta_enriched_mm4.txt: 2.85
+attach std: 193403 cached rows for 193403 loaded rows, pat_entry mismatches 0
+attach lep: 5560144 cached rows for 5560144 loaded rows, pat_entry mismatches 0
+attach eta: 3108759 cached rows for 3108759 loaded rows, pat_entry mismatches 0
+reduced copy (template 1, classes 2-6): 1365676 rows
+bump classes 2+3, owned sum w per set: std 3051.18, lep 0, eta 0
+
+## figures a, b: E1 / E2 against tables/eta_enriched_regions.txt and eta_enriched_purity.txt
+  E1 below bump 0.35-0.455: data N-CB [nb]                       this       1.2034  table       1.2034  diff  +2.19e-05  OK
+  E1 below bump 0.35-0.455: sim T1+T2 [nb]                       this       1.1607  table       1.1607  diff  +2.79e-05  OK
+  E1 below bump 0.35-0.455: data/sim                             this       1.0368  table       1.0368  diff  -1.79e-05  OK
+  E1 below bump 0.35-0.455: data/sim (a)                         this      0.96024  table       0.9602  diff  +4.22e-05  OK
+  E1 bump window 0.455-0.5225: data N-CB [nb]                    this       14.336  table       14.336  diff  -4.01e-06  OK
+  E1 bump window 0.455-0.5225: sim T1+T2 [nb]                    this        15.05  table        15.05  diff   +3.5e-05  OK
+  E1 bump window 0.455-0.5225: data/sim                          this      0.95251  table       0.9525  diff  +1.04e-05  OK
+  E1 bump window 0.455-0.5225: data/sim (a)                      this      0.88428  table       0.8843  diff  -2.45e-05  OK
+  E1 gap 0.5225-0.5336: data N-CB [nb]                           this       3.0445  table       3.0445  diff  -1.83e-05  OK
+  E1 gap 0.5225-0.5336: sim T1+T2 [nb]                           this       2.5223  table       2.5223  diff  -4.24e-05  OK
+  E1 gap 0.5225-0.5336: data/sim                                 this        1.207  table        1.207  diff  +4.63e-05  OK
+  E1 gap 0.5225-0.5336: data/sim (a)                             this       1.0811  table       1.0811  diff  -5.15e-06  OK
+  E1 peak window 0.5336-0.5542: data N-CB [nb]                   this       6.6398  table       6.6398  diff  +3.55e-05  OK
+  E1 peak window 0.5336-0.5542: sim T1+T2 [nb]                   this        5.253  table        5.253  diff  +2.99e-05  OK
+  E1 peak window 0.5336-0.5542: data/sim                         this        1.264  table        1.264  diff  +1.08e-06  OK
+  E1 peak window 0.5336-0.5542: data/sim (a)                     this       1.1396  table       1.1396  diff  -5.62e-07  OK
+  E1 0.5542-0.56: data N-CB [nb]                                 this       1.8916  table       1.8916  diff  -6.36e-06  OK
+  E1 0.5542-0.56: sim T1+T2 [nb]                                 this       1.3911  table       1.3911  diff  +2.27e-05  OK
+  E1 0.5542-0.56: data/sim                                       this       1.3598  table       1.3598  diff  -3.96e-05  OK
+  E1 0.5542-0.56: data/sim (a)                                   this       1.2154  table       1.2154  diff  +3.37e-05  OK
+  E1 0.56-0.70: data N-CB [nb]                                   this        44.35  table        44.35  diff  -3.07e-05  OK
+  E1 0.56-0.70: sim T1+T2 [nb]                                   this       32.598  table       32.598  diff  -3.15e-05  OK
+  E1 0.56-0.70: data/sim                                         this       1.3605  table       1.3605  diff  -3.41e-06  OK
+  E1 0.56-0.70: data/sim (a)                                     this       1.2017  table       1.2017  diff  -3.87e-05  OK
+  E1 0.70-1.00: data N-CB [nb]                                   this       11.806  table       11.806  diff  +2.65e-06  OK
+  E1 0.70-1.00: sim T1+T2 [nb]                                   this       9.8674  table       9.8674  diff  -1.41e-05  OK
+  E1 0.70-1.00: data/sim                                         this       1.1964  table       1.1964  diff  +1.64e-05  OK
+  E1 0.70-1.00: data/sim (a)                                     this       1.0549  table       1.0549  diff  +3.12e-06  OK
+  E1 all 0.35-1.00: data N-CB [nb]                               this       83.271  table        83.27  diff  +6.34e-07  OK
+  E1 all 0.35-1.00: sim T1+T2 [nb]                               this       67.843  table       67.843  diff  +2.76e-05  OK
+  E1 all 0.35-1.00: data/sim                                     this       1.2274  table       1.2274  diff  -5.89e-06  OK
+  E1 all 0.35-1.00: data/sim (a)                                 this       1.0991  table       1.0991  diff  +3.21e-06  OK
+  E1 purity M4 < 1.0                                             this      0.30782  table       0.3078  diff  +2.49e-05  OK
+  E1 purity M4 < 1.0 (a)                                         this      0.29419  table       0.2942  diff  -5.56e-06  OK
+  E1 composition M4 < 1.0: bump Dalitz [nb]                      this       4.4883  table       4.4883  diff  +4.94e-05  OK
+  E1 composition M4 < 1.0: bump conv. [nb]                       this          2.3  table          2.3  diff  -4.83e-05  OK
+  E1 composition M4 < 1.0: peak conv. [nb]                       this      0.56284  table       0.5628  diff  +4.46e-05  OK
+  E1 composition M4 < 1.0: peak direct [nb]                      this      0.73073  table       0.7307  diff  +3.25e-05  OK
+  E1 composition M4 < 1.0: bkg eta-rel. [nb]                     this       12.802  table       12.802  diff  -1.15e-05  OK
+  E1 composition M4 < 1.0: bkg multi-pion [nb]                   this       46.959  table       46.959  diff  -3.93e-05  OK
+  E2 below bump 0.35-0.455: data N-CB [nb]                       this       1.5852  table       1.5852  diff  -1.05e-05  OK
+  E2 below bump 0.35-0.455: sim T1+T2 [nb]                       this       1.6518  table       1.6518  diff  +1.25e-05  OK
+  E2 below bump 0.35-0.455: data/sim                             this      0.95967  table       0.9597  diff  -3.33e-05  OK
+  E2 below bump 0.35-0.455: data/sim (a)                         this      0.86317  table       0.8632  diff  -2.96e-05  OK
+  E2 bump window 0.455-0.5225: data N-CB [nb]                    this       18.998  table       18.997  diff  +7.67e-06  OK
+  E2 bump window 0.455-0.5225: sim T1+T2 [nb]                    this       21.088  table       21.088  diff  +1.05e-05  OK
+  E2 bump window 0.455-0.5225: data/sim                          this      0.90087  table       0.9009  diff  -3.23e-05  OK
+  E2 bump window 0.455-0.5225: data/sim (a)                      this      0.82083  table       0.8208  diff  +3.08e-05  OK
+  E2 gap 0.5225-0.5336: data N-CB [nb]                           this       4.0636  table       4.0636  diff  -4.16e-05  OK
+  E2 gap 0.5225-0.5336: sim T1+T2 [nb]                           this       3.4034  table       3.4034  diff  +3.57e-05  OK
+  E2 gap 0.5225-0.5336: data/sim                                 this        1.194  table        1.194  diff  -4.22e-05  OK
+  E2 gap 0.5225-0.5336: data/sim (a)                             this       1.0334  table       1.0334  diff  -3.55e-05  OK
+  E2 peak window 0.5336-0.5542: data N-CB [nb]                   this       8.9142  table       8.9142  diff  -2.69e-05  OK
+  E2 peak window 0.5336-0.5542: sim T1+T2 [nb]                   this       7.7209  table       7.7209  diff  +2.58e-05  OK
+  E2 peak window 0.5336-0.5542: data/sim                         this       1.1545  table       1.1545  diff  +4.72e-05  OK
+  E2 peak window 0.5336-0.5542: data/sim (a)                     this        1.027  table        1.027  diff  +1.11e-05  OK
+  E2 0.5542-0.56: data N-CB [nb]                                 this       2.5545  table       2.5545  diff  +1.01e-06  OK
+  E2 0.5542-0.56: sim T1+T2 [nb]                                 this       1.9497  table       1.9497  diff  +1.95e-05  OK
+  E2 0.5542-0.56: data/sim                                       this       1.3102  table       1.3102  diff   -1.1e-05  OK
+  E2 0.5542-0.56: data/sim (a)                                   this       1.1403  table       1.1403  diff  -4.52e-05  OK
+  E2 0.56-0.70: data N-CB [nb]                                   this       63.431  table       63.431  diff   +3.2e-05  OK
+  E2 0.56-0.70: sim T1+T2 [nb]                                   this       49.075  table       49.075  diff     -2e-05  OK
+  E2 0.56-0.70: data/sim                                         this       1.2925  table       1.2925  diff  +2.02e-05  OK
+  E2 0.56-0.70: data/sim (a)                                     this       1.1031  table       1.1031  diff  -2.35e-05  OK
+  E2 0.70-1.00: data N-CB [nb]                                   this       19.936  table       19.936  diff  -2.12e-05  OK
+  E2 0.70-1.00: sim T1+T2 [nb]                                   this       17.735  table       17.735  diff  +1.61e-05  OK
+  E2 0.70-1.00: data/sim                                         this       1.1241  table       1.1241  diff  +1.89e-05  OK
+  E2 0.70-1.00: data/sim (a)                                     this      0.94432  table       0.9443  diff  +1.93e-05  OK
+  E2 all 0.35-1.00: data N-CB [nb]                               this       119.48  table       119.48  diff  +4.06e-05  OK
+  E2 all 0.35-1.00: sim T1+T2 [nb]                               this       102.62  table       102.62  diff  +5.29e-09  OK
+  E2 all 0.35-1.00: data/sim                                     this       1.1643  table       1.1643  diff  -3.31e-05  OK
+  E2 all 0.35-1.00: data/sim (a)                                 this       1.0087  table       1.0087  diff  +2.58e-05  OK
+  E2 purity M4 < 1.0                                             this      0.29716  table       0.2972  diff  -3.99e-05  OK
+  E2 purity M4 < 1.0 (a)                                         this      0.28101  table        0.281  diff  +1.38e-05  OK
+  E2 composition M4 < 1.0: bump Dalitz [nb]                      this       5.6417  table       5.6417  diff  -2.74e-05  OK
+  E2 composition M4 < 1.0: bump conv. [nb]                       this       4.1585  table       4.1585  diff  +4.81e-05  OK
+  E2 composition M4 < 1.0: peak conv. [nb]                       this       1.0618  table       1.0618  diff  +2.03e-05  OK
+  E2 composition M4 < 1.0: peak direct [nb]                      this       1.2281  table       1.2281  diff  -1.65e-06  OK
+  E2 composition M4 < 1.0: bkg eta-rel. [nb]                     this       18.406  table       18.406  diff  +4.58e-05  OK
+  E2 composition M4 < 1.0: bkg multi-pion [nb]                   this       72.128  table       72.128  diff  +1.48e-05  OK
+  E1 peak window: peak total [nb] (eta_engine_reference, slides) this      0.98027  table       0.9803  diff  -2.87e-05  OK
+  E1 peak window: T1+T2 [nb] (eta_engine_reference, slides)      this        5.253  table        5.253  diff  +2.99e-05  OK
+
+## figure c: M1 fits (0.40-0.75, no scale) and data P_main of E1 / E2 recomputed against tables/eta_enriched_fit.txt
+  E1 M1 T12 a_bump                                               this      0.44343  table        0.443  diff  +0.000425  OK
+  E1 M1 T12 a_peak                                               this       1.0367  table        1.037  diff  -0.000335  OK
+  E1 M1 T12 a_bkg                                                this       1.3274  table        1.327  diff  +0.000435  OK
+  E1 M1 T12 chi2                                                 this       192.78  table        192.8  diff    -0.0164  OK
+  E1 M1 (a) a_bump                                               this      0.44035  table         0.44  diff  +0.000348  OK
+  E1 M1 (a) a_peak                                               this       1.0412  table        1.041  diff  +0.000217  OK
+  E1 M1 (a) a_bkg                                                this        1.173  table        1.173  diff  -1.37e-05  OK
+  E1 M1 (a) chi2                                                 this       188.89  table        188.9  diff    -0.0105  OK
+  E1 data P_main [rows]                                          this       3187.4  table         3187  diff     +0.378  OK
+  E2 M1 T12 a_bump                                               this       0.4257  table        0.426  diff  -0.000297  OK
+  E2 M1 T12 a_peak                                               this      0.83224  table        0.832  diff  +0.000244  OK
+  E2 M1 T12 a_bkg                                                this       1.2622  table        1.262  diff  +0.000154  OK
+  E2 M1 T12 chi2                                                 this       168.67  table        168.7  diff    -0.0348  OK
+  E2 M1 (a) a_bump                                               this      0.42329  table        0.423  diff  +0.000288  OK
+  E2 M1 (a) a_peak                                               this      0.89122  table        0.891  diff  +0.000218  OK
+  E2 M1 (a) a_bkg                                                this       1.0758  table        1.076  diff  -0.000199  OK
+  E2 M1 (a) chi2                                                 this       172.13  table        172.1  diff    +0.0257  OK
+  E2 data P_main [rows]                                          this       4046.9  table         4047  diff     -0.123  OK
+
+## figure d: peak classes (pre) against tables/eta_peak_classes.txt
+  pre OA5 <2: sim total [rows]                                   this       6505.8  table         6506  diff      -0.19  OK
+  pre OA5 <2: data S [rows]                                      this         1039  table         1039  diff    -0.0194  OK
+  pre OA5 2-4: sim total [rows]                                  this       7023.7  table         7024  diff     -0.313  OK
+  pre OA5 2-4: data S [rows]                                     this       1707.2  table         1707  diff     +0.229  OK
+  pre OA5 4-6: sim total [rows]                                  this       1505.8  table         1506  diff     -0.165  OK
+  pre OA5 4-6: data S [rows]                                     this       666.71  table          667  diff     -0.294  OK
+  pre OA5 6-10: sim total [rows]                                 this       421.02  table          421  diff    +0.0205  OK
+  pre OA5 6-10: data S [rows]                                    this       365.17  table          365  diff     +0.168  OK
+  pre OA5 >10: sim total [rows]                                  this       417.62  table          418  diff     -0.378  OK
+  pre OA5 >10: data S [rows]                                     this       948.99  table          949  diff    -0.0116  OK
+  pre OA5: one-factor a1                                         this       0.2215  table        0.221  diff    +0.0005  OK
+  pre OA5: mixture a(conv)                                       this      -1.0691  table       -1.069  diff   -0.00011  OK
+  pre OA5: KW mixture b(direct) (illustration)                   this      0.45807  table        0.458  diff  +7.13e-05  OK
+  pre MEE5 <8: sim total [rows]                                  this       8783.3  table         8783  diff     +0.283  OK
+  pre MEE5 <8: data S [rows]                                     this       1788.1  table         1788  diff     +0.117  OK
+  pre MEE5 8-20: sim total [rows]                                this       6367.5  table         6368  diff     -0.488  OK
+  pre MEE5 8-20: data S [rows]                                   this       1600.3  table         1600  diff     +0.288  OK
+  pre MEE5 20-50: sim total [rows]                               this       472.95  table          473  diff     -0.055  OK
+  pre MEE5 20-50: data S [rows]                                  this       751.04  table          751  diff    +0.0384  OK
+  pre MEE5 50-135: sim total [rows]                              this       192.84  table          193  diff     -0.164  OK
+  pre MEE5 50-135: data S [rows]                                 this       464.91  table          465  diff    -0.0884  OK
+  pre MEE5 >135: sim total [rows]                                this       57.398  table           57  diff     +0.398  OK
+  pre MEE5 >135: data S [rows]                                   this       98.823  table           99  diff     -0.177  OK
+  pre MEE5: one-factor a1                                        this       0.2388  table        0.239  diff  -0.000202  OK
+  pre MEE5: mixture a(conv)                                      this      -1.5248  table       -1.525  diff  +0.000236  OK
+  pre MEE5: KW mixture b(direct) (illustration)                  this      0.43995  table         0.44  diff  -4.51e-05  OK
+
+## figure e: efficiencies against tables/eta_peak_eff.txt (peak, base pre) and tables/cuts_compare_data.txt (bump; sim at pre, or at the bump start for pT4 / vertex)
+  OA > 2: sim direct                                             this      0.61372  table        0.614  diff  -0.000278  OK
+  OA > 2: sim conversion                                         this      0.56352  table        0.564  diff  -0.000482  OK
+  OA > 2: sim total                                              this      0.59015  table         0.59  diff  +0.000155  OK
+  OA > 2: sim total, QED direct                                  this      0.67568  table        0.676  diff  -0.000317  OK
+  OA > 2: data peak (pass/fail fits, pre)                        this      0.77784  table        0.778  diff  -0.000159  OK
+  OA > 2: sim bump tagged                                        this      0.68608  table        0.686  diff  +7.72e-05  OK
+  OA > 2: sim bump all                                           this       0.7093  table        0.709  diff  +0.000302  OK
+  OA > 2: sim S_bump                                             this      0.70336  table        0.703  diff   +0.00036  OK
+  OA < 4: sim direct                                             this      0.80233  table        0.802  diff   +0.00033  OK
+  OA < 4: sim conversion                                         this      0.90879  table        0.909  diff  -0.000205  OK
+  OA < 4: sim total                                              this      0.85231  table        0.852  diff  +0.000307  OK
+  OA < 4: sim total, QED direct                                  this      0.70744  table        0.707  diff   +0.00044  OK
+  OA < 4: data peak (pass/fail fits, pre)                        this      0.58635  table        0.586  diff  +0.000348  OK
+  OA < 4: sim bump tagged                                        this      0.63009  table         0.63  diff  +9.27e-05  OK
+  OA < 4: sim bump all                                           this      0.64319  table        0.643  diff  +0.000193  OK
+  OA < 4: sim S_bump                                             this      0.64619  table        0.646  diff  +0.000194  OK
+  oa_lab < 50: sim direct                                        this      0.91471  table        0.915  diff  -0.000285  OK
+  oa_lab < 50: sim conversion                                    this      0.88599  table        0.886  diff  -6.51e-06  OK
+  oa_lab < 50: sim total                                         this      0.90123  table        0.901  diff  +0.000232  OK
+  oa_lab < 50: sim total, QED direct                             this      0.90568  table        0.906  diff  -0.000325  OK
+  oa_lab < 50: data peak (pass/fail fits, pre)                   this       0.9201  table         0.92  diff  +9.79e-05  OK
+  oa_lab < 50: sim bump tagged                                   this      0.97673  table        0.977  diff  -0.000267  OK
+  oa_lab < 50: sim bump all                                      this      0.95458  table        0.955  diff  -0.000422  OK
+  oa_lab < 50: sim S_bump                                        this      0.94603  table        0.946  diff  +2.94e-05  OK
+  M(pipi) > 0.34: sim direct                                     this      0.82276  table        0.823  diff  -0.000241  OK
+  M(pipi) > 0.34: sim conversion                                 this      0.68078  table        0.681  diff  -0.000218  OK
+  M(pipi) > 0.34: sim total                                      this      0.75611  table        0.756  diff  +0.000112  OK
+  M(pipi) > 0.34: sim total, QED direct                          this      0.75212  table        0.752  diff  +0.000117  OK
+  M(pipi) > 0.34: data peak (pass/fail fits, pre)                this      0.84456  table        0.845  diff  -0.000441  OK
+  M(pipi) > 0.34: sim bump tagged                                this      0.44442  table        0.444  diff  +0.000421  OK
+  M(pipi) > 0.34: sim bump all                                   this      0.47321  table        0.473  diff  +0.000211  OK
+  M(pipi) > 0.34: sim S_bump                                     this      0.51635  table        0.516  diff  +0.000348  OK
+  M(pipi) < 0.40: sim direct                                     this      0.65608  table        0.656  diff  +7.81e-05  OK
+  M(pipi) < 0.40: sim conversion                                 this      0.70033  table          0.7  diff  +0.000326  OK
+  M(pipi) < 0.40: sim total                                      this      0.67685  table        0.677  diff  -0.000151  OK
+  M(pipi) < 0.40: sim total, QED direct                          this       0.6866  table        0.687  diff  -0.000396  OK
+  M(pipi) < 0.40: data peak (pass/fail fits, pre)                this      0.68093  table        0.681  diff  -7.43e-05  OK
+  M(pipi) < 0.40: sim bump tagged                                this      0.98458  table        0.985  diff  -0.000424  OK
+  M(pipi) < 0.40: sim bump all                                   this      0.97497  table        0.975  diff  -3.01e-05  OK
+  M(pipi) < 0.40: sim S_bump                                     this      0.97022  table         0.97  diff  +0.000224  OK
+  M(pipi) < 0.46: sim direct                                     this      0.97286  table        0.973  diff  -0.000141  OK
+  M(pipi) < 0.46: sim conversion                                 this      0.98371  table        0.984  diff  -0.000287  OK
+  M(pipi) < 0.46: sim total                                      this      0.97795  table        0.978  diff  -4.56e-05  OK
+  M(pipi) < 0.46: sim total, QED direct                          this      0.98001  table         0.98  diff  +1.21e-05  OK
+  M(pipi) < 0.46: data peak (pass/fail fits, pre)                this      0.95392  table        0.954  diff  -8.21e-05  OK
+  M(pipi) < 0.46: sim bump tagged                                this            1  table: no value
+  M(pipi) < 0.46: sim bump all                                   this            1  table            1  diff         +0  OK
+  M(pipi) < 0.46: sim S_bump                                     this            1  table: no value
+  eta_rest > 140: sim direct                                     this      0.99889  table        0.999  diff  -0.000106  OK
+  eta_rest > 140: sim conversion                                 this      0.99674  table        0.997  diff  -0.000257  OK
+  eta_rest > 140: sim total                                      this      0.99788  table        0.998  diff  -0.000116  OK
+  eta_rest > 140: sim total, QED direct                          this      0.99782  table        0.998  diff  -0.000182  OK
+  eta_rest > 140: data peak (pass/fail fits, pre)                this      0.99893  table        0.999  diff  -6.58e-05  OK
+  eta_rest > 140: sim bump tagged                                this      0.67688  table        0.677  diff  -0.000121  OK
+  eta_rest > 140: sim bump all                                   this      0.75841  table        0.758  diff   +0.00041  OK
+  eta_rest > 140: sim S_bump                                     this      0.90099  table: no value
+  eta_rest > 160: sim direct                                     this      0.99225  table        0.992  diff  +0.000249  OK
+  eta_rest > 160: sim conversion                                 this      0.99349  table        0.993  diff  +0.000485  OK
+  eta_rest > 160: sim total                                      this      0.99283  table        0.993  diff  -0.000171  OK
+  eta_rest > 160: sim total, QED direct                          this      0.99227  table        0.992  diff  +0.000267  OK
+  eta_rest > 160: data peak (pass/fail fits, pre)                this      0.91834  table        0.918  diff  +0.000344  OK
+  eta_rest > 160: sim bump tagged                                this      0.29938  table: no value
+  eta_rest > 160: sim bump all                                   this       0.4167  table: no value
+  eta_rest > 160: sim S_bump                                     this       0.5066  table: no value
+  MM4 < 2.80: sim direct                                         this      0.90525  table        0.905  diff  +0.000251  OK
+  MM4 < 2.80: sim conversion                                     this      0.91531  table        0.915  diff  +0.000309  OK
+  MM4 < 2.80: sim total                                          this      0.90997  table         0.91  diff  -2.74e-05  OK
+  MM4 < 2.80: sim total, QED direct                              this      0.91177  table        0.912  diff  -0.000234  OK
+  MM4 < 2.80: data peak (pass/fail fits, pre)                    this      0.95188  table        0.952  diff  -0.000122  OK
+  MM4 < 2.80: sim bump tagged                                    this      0.86824  table        0.868  diff  +0.000242  OK
+  MM4 < 2.80: sim bump all                                       this      0.87915  table        0.879  diff  +0.000152  OK
+  MM4 < 2.80: sim S_bump                                         this      0.88052  table        0.881  diff  -0.000483  OK
+  pT4 > 400 MeV/c: sim direct                                    this      0.78546  table        0.785  diff  +0.000464  OK
+  pT4 > 400 MeV/c: sim conversion                                this      0.81107  table        0.811  diff  +7.49e-05  OK
+  pT4 > 400 MeV/c: sim total                                     this      0.79749  table        0.797  diff  +0.000486  OK
+  pT4 > 400 MeV/c: sim total, QED direct                         this      0.80269  table        0.803  diff  -0.000314  OK
+  pT4 > 400 MeV/c: data peak (pass/fail fits, pre)               this      0.68992  table         0.69  diff  -8.02e-05  OK
+  pT4 > 400 MeV/c: sim bump tagged                               this      0.88679  table        0.887  diff  -0.000215  OK
+  pT4 > 400 MeV/c: sim bump all                                  this      0.88606  table        0.886  diff  +6.08e-05  OK
+  both pions in vertex fit: sim direct                           this      0.92092  table        0.921  diff   -7.8e-05  OK
+  both pions in vertex fit: sim conversion                       this      0.93485  table        0.935  diff  -0.000147  OK
+  both pions in vertex fit: sim total                            this      0.92746  table        0.927  diff  +0.000462  OK
+  both pions in vertex fit: sim total, QED direct                this      0.92792  table        0.928  diff  -7.76e-05  OK
+  both pions in vertex fit: data peak (pass/fail fits, pre)      this      0.93956  table         0.94  diff  -0.000441  OK
+  both pions in vertex fit: sim bump tagged                      this      0.94544  table        0.945  diff  +0.000439  OK
+  both pions in vertex fit: sim bump all                         this      0.92981  table         0.93  diff  -0.000188  OK
+
+## figure f: peak methods against tables/eta_peak_composition.txt (method A) and tables/eta_enriched_fit.txt (methods B, C, D)
+  pre: method A data/sim (eta_peak_composition)                  this      0.29423  table        0.294  diff  +0.000229  OK
+  E1: data P_main [rows]                                         this       3187.4  table         3187  diff     +0.378  OK
+  E1: P_main on the peak template [rows]                         this       6009.6  table         6010  diff     -0.391  OK
+  E1: P_main on T1+T2 [rows]                                     this       4526.7  table         4527  diff     -0.325  OK
+  E1: P_main on (a) [rows]                                       this       3985.2  table         3985  diff     +0.185  OK
+  E1: M1 alpha_peak                                              this       1.0367  table        1.037  diff  -0.000335  OK
+  E2: data P_main [rows]                                         this       4046.9  table         4047  diff     -0.123  OK
+  E2: P_main on the peak template [rows]                         this        11360  table        11360  diff     -0.153  OK
+  E2: P_main on T1+T2 [rows]                                     this       9116.7  table         9117  diff     -0.274  OK
+  E2: P_main on (a) [rows]                                       this       7998.2  table         7998  diff     +0.181  OK
+  E2: M1 alpha_peak                                              this      0.83224  table        0.832  diff  +0.000244  OK
+
+worst relative difference over all checks: 6.99e-03; checks outside the tolerance: 0

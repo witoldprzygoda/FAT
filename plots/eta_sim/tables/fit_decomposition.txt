@@ -1,0 +1,95 @@
+## pre, mode A, w, alpha = 1 (SMASH, L_data = 6080.5 unconfirmed): S(P_main) of T1+T2 = 2780 (data 4671 +- 367), E = 2887 (data 1199 +- 71); rows in bump window 148847, peak window 53539 (data N - CB: 137676, 69476)
+component (removed from T1+T2)           rows 0.3-1.1      N_eff  bump window  peak window         dS         dE
+bump, pi0 Dalitz                                48184       1649        37314          234       -641       1530
+bump, conversion                                35395       1187        27016           89       -368       1068
+peak, conversion                                 7452        307          316         5825       4657        -13
+T2 L1 same pi0 Dalitz                         1991892     185081        48351        26844       -402         87
+T2 L3 same conversion                         1350142      42992        32635        18471       -489        188
+T2 L4 rho0/omega/phi -> ee                         59      39653            0            0          0          0
+T2 L5 omega -> pi0 ee                             279       5802            6            3          0         -0
+T2 L6 second-decay pi0 Dalitz                       3       5281            0            0          0          0
+-- T2 by pion-pair class --
+T2 P0 misidentified                            101157       4194         3296         1593        268        -47
+T2 P1 pi -> mu                                 290328      16586        11328         4209       -652        130
+T2 P2 same eta                                  43480       1530         3891         2221        -85         44
+T2 P3 same omega                               272041      10016         2229         2388       -341         50
+T2 P4 same rho0                                 80868       3050          400          183       -140         10
+T2 P5 same phi                                   1955         72            0            0          1         -0
+T2 P6 same K0S                                  41347       2203            1            1         -5          0
+T2 P7 both primary                            2094328     155888        38689        23200        124         12
+T2 P8 mixed/secondary                          508651      24378        24367        13596        -83         75
+-- T2 by set --
+T2 std-set rows                               1981490      61939        58874        31125      -1033        300
+T2 lep-set rows                               1452665    4186140        25328        16265        138        -36
+
+## pre+OA>2, mode A, w, alpha = 1 (SMASH, L_data = 6080.5 unconfirmed): S(P_main) of T1+T2 = 1026 (data 3632 +- 328), E = 1749 (data 898 +- 64); rows in bump window 108212, peak window 38879 (data N - CB: 105634, 53129)
+component (removed from T1+T2)           rows 0.3-1.1      N_eff  bump window  peak window         dS         dE
+bump, pi0 Dalitz                                39155       1340        29980          205       -579       1087
+bump, conversion                                20127        675        15267           89       -176        583
+peak, conversion                                 4199        173          170         3252       2220         -7
+T2 L1 same pi0 Dalitz                         1582515     144863        40454        22454       -416         27
+T2 L3 same conversion                          706379      22332        19651        11132        -25         29
+T2 L4 rho0/omega/phi -> ee                         59      39653            0            0          0          0
+T2 L5 omega -> pi0 ee                             228       4772            5            2         -0         -0
+T2 L6 second-decay pi0 Dalitz                       2       4065            0            0          0          0
+-- T2 by pion-pair class --
+T2 P0 misidentified                             70805       3044         2214         1256        396        -10
+T2 P1 pi -> mu                                 199885      12717         8011         3032       -529         28
+T2 P2 same eta                                  30381       1071         3121         1535        -35         39
+T2 P3 same omega                               191018       7046         1683         1872       -324         58
+T2 P4 same rho0                                 56523       2149          231           70       -206         14
+T2 P5 same phi                                   1218         45            0            0          1          0
+T2 P6 same K0S                                  30678       1716            1            1        -12          0
+T2 P7 both primary                            1427270     129652        28534        17041       -219        -98
+T2 P8 mixed/secondary                          358116      18475        19000        10525        470         23
+-- T2 by set --
+T2 std-set rows                               1216725      37690        41577        21817       -543         67
+T2 lep-set rows                               1149169    3312871        21219        13515        106        -16
+
+## slides, mode A, w, alpha = 1 (SMASH, L_data = 6080.5 unconfirmed): S(P_main) of T1+T2 = 316 (data 3187 +- 283), E = 1696 (data 918 +- 57); rows in bump window 90799, peak window 30714 (data N - CB: 87168, 40395)
+component (removed from T1+T2)           rows 0.3-1.1      N_eff  bump window  peak window         dS         dE
+bump, pi0 Dalitz                                27291        934        24983          205       -471       1068
+bump, conversion                                13985        469        12554           89       -153        567
+peak, conversion                                 3422        141          146         2646       1798          6
+T2 L1 same pi0 Dalitz                          236861      16711        34150        17872       -549         25
+T2 L3 same conversion                          103720       3528        16556         8370       -296          9
+T2 L4 rho0/omega/phi -> ee                          1        468            0            0          0          0
+T2 L5 omega -> pi0 ee                              44        965            4            2         -0         -0
+T2 L6 second-decay pi0 Dalitz                       0        540            0            0         -0          0
+-- T2 by pion-pair class --
+T2 P0 misidentified                             10922        421         1877         1167        379        -29
+T2 P1 pi -> mu                                  36159       2016         6841         2212       -761          1
+T2 P2 same eta                                  11763        415         2781         1224        117          7
+T2 P3 same omega                                43227       1595         1384         1437       -334         62
+T2 P4 same rho0                                  2642        106          225           67       -206         18
+T2 P5 same phi                                     54          2            0            0          0         -0
+T2 P6 same K0S                                     98          4            1            1         -1          0
+T2 P7 both primary                             179781      15502        24405        13686       -286        -83
+T2 P8 mixed/secondary                           77024       3893        15603         7980        224         55
+-- T2 by set --
+T2 std-set rows                                214823       7249        34850        16725       -868         42
+T2 lep-set rows                                146847     458549        18268        11049         11        -17
+
+## peak nominal, mode A, w, alpha = 1 (SMASH, L_data = 6080.5 unconfirmed): S(P_main) of T1+T2 = 2695 (data 4330 +- 327), E = 2782 (data 1169 +- 68); rows in bump window 126971, peak window 45221 (data N - CB: 116438, 55742)
+component (removed from T1+T2)           rows 0.3-1.1      N_eff  bump window  peak window         dS         dE
+bump, pi0 Dalitz                                41259       1412        32405          175       -491       1483
+bump, conversion                                29580        992        23318           60       -262       1053
+peak, conversion                                 6553        270          316         5146       4158         -1
+T2 L1 same pi0 Dalitz                         1275448     114401        40956        22358       -372         36
+T2 L3 same conversion                          888549      29023        27245        15711       -317        188
+T2 L4 rho0/omega/phi -> ee                         51      34675            0            0         -0          0
+T2 L5 omega -> pi0 ee                             175       3823            5            3          0         -0
+T2 L6 second-decay pi0 Dalitz                       2       3132            0            0          0          0
+-- T2 by pion-pair class --
+T2 P0 misidentified                             82276       3379         3034         1578        303        -56
+T2 P1 pi -> mu                                 186969      10560         9355         3532       -670        134
+T2 P2 same eta                                  24210        852         3181         1966        143         23
+T2 P3 same omega                               198998       7327         1711         1872       -393         51
+T2 P4 same rho0                                 55457       2087          400          180       -155         10
+T2 P5 same phi                                   1332         49            0            0          1         -0
+T2 P6 same K0S                                  31022       1645            1            1         -8          0
+T2 P7 both primary                            1333739      98199        32829        19681        205        -10
+T2 P8 mixed/secondary                          315245      15139        20420        11031       -145         68
+-- T2 by set --
+T2 std-set rows                               1327422      42812        49623        26283       -774        259
+T2 lep-set rows                                901825    2667695        21309        13557         73        -48

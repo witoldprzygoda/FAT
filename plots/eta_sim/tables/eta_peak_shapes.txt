@@ -1,0 +1,33 @@
+# eta_peak_shapes: distributions of the simulated eta peak components, selection pre (isBest >= 0, PT3, vz > -160), all M4
+# std + lep + eta owned rows, mode A, w (PDG); X17 = BR(eta -> pi+pi- X17, X17 -> e+e-) = 1e-5, ILLUSTRATION only, not in any sum
+# per variable: weighted mean, median, 10 % and 90 % quantiles (corrected momenta, reconstructed quantities)
+
+variable component          mean     median        q10        q90
+mpipi    direct           0.3817     0.3816     0.3258     0.4369
+mpipi    conversion       0.3698     0.3668     0.3061     0.4365
+mpipi    X17 1e-5         0.3642     0.3616     0.3028     0.4289
+mee      direct           0.0118     0.0077     0.0035     0.0177
+mee      conversion       0.0077     0.0072     0.0037     0.0124
+mee      X17 1e-5         0.0172     0.0171     0.0116     0.0228
+oa       direct           3.8241     2.3844     1.0051     5.7615
+oa       conversion       2.3596     2.1665     0.9644     3.8447
+oa       X17 1e-5         5.3247     4.8762     2.5274     8.7036
+p_pipi   direct           0.8036     0.7448     0.4012     1.2885
+p_pipi   conversion       0.8241     0.7626     0.3939     1.3555
+p_pipi   X17 1e-5         0.7919     0.7297     0.3930     1.2789
+p_ee     direct           0.4186     0.3793     0.2361     0.6535
+p_ee     conversion       0.4347     0.3968     0.2295     0.6922
+p_ee     X17 1e-5         0.4626     0.4174     0.2464     0.7409
+oa_lab   direct          28.3929    26.4517    10.8079    48.1831
+oa_lab   conversion      30.4866    28.7221    13.5305    51.1745
+oa_lab   X17 1e-5        29.9666    27.8116    11.6230    50.7703
+
+# fraction of each component (pre, all M4) passing: OA > 2, M(ee) > 20 MeV, M(pipi) > 0.30, M(pipi) < 0.46, oa_lab < 50, oa_eta > 140
+OA > 2            direct 0.614+-0.001  conversion 0.564+-0.028  X17 1e-5 0.955+-0.000
+M(ee) > 20 MeV    direct 0.083+-0.000  conversion 0.003+-0.003  X17 1e-5 0.249+-0.000
+M(pipi) > 0.30    direct 0.984+-0.000  conversion 0.932+-0.014  X17 1e-5 0.916+-0.000
+M(pipi) < 0.46    direct 0.973+-0.000  conversion 0.984+-0.007  X17 1e-5 0.978+-0.000
+oa_lab < 50       direct 0.915+-0.000  conversion 0.886+-0.018  X17 1e-5 0.893+-0.000
+oa_eta > 140      direct 0.999+-0.000  conversion 0.997+-0.003  X17 1e-5 0.999+-0.000
+
+# absolute (pre, all M4): direct 1.3852 nb, conversion 1.2255 nb, X17 (BR 1e-5) 0.07127 nb = 433 expected data rows (L_data 6080.5 nb^-1 UNCONFIRMED); X17/direct per unit BR = 1.379

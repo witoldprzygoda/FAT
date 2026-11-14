@@ -1,0 +1,59 @@
+# rw_weights_model: target model T of eta -> pi+pi-e+e- (formulas and sources in plots/eta_sim/sim_eta_physics.h)
+# T(q, M) = KW(q) x p*^3 lambda^{3/2}(m_eta^2, M^2, q^2) x |F_V(M^2)|^2 x |F_VMD(q^2)|^2 [x angular factors]
+#  KW(q) = (2 alpha/(3 pi q)) (1 + 2 m_e^2/q^2) sqrt(1 - 4 m_e^2/q^2)                 Kroll-Wada, Phys. Rev. 98 (1955) 1355
+#  p*^3 lambda^{3/2}: P-wave pi pi gamma* rate per dM(pipi) (|A|^2 ~ p*^2 lambda sin^2 th_pi, phase space ~ lambda^{1/2} p* dM^2 / M)
+#      = (beta_pi^3 M^3 / 8) lambda^{3/2}; q -> 0: p*^3 (2 m_eta k)^3, the eta -> pi+pi-gamma rate (Stollenwerk et al., PLB 707 (2012) 184)
+#  F_V: Guerrero-Pich, PLB 412 (1997) 382, hep-ph/9707347 (pi + K loops, f_pi = 92.4 MeV); variant Gounaris-Sakurai, PRL 21 (1968) 244
+#       m_rho = 0.7753 GeV, Gamma_rho = 0.1491 GeV (as in the X17 slides)
+#  F_VMD = m_V^2 / (m_V^2 - q^2 - i m_V Gamma(q^2)), m_V = m_rho; Gamma(q^2) = 0 below 4 m_pi^2 (whole q range)
+#  angles (V3): e+ (1 + cos^2 + 4 m_e^2/q^2 sin^2) [transverse gamma*], pi+ sin^2 [P wave]: the phi-average of the full density
+#      sin^2 th_pi (1 - beta^2 sin^2 th_e sin^2 phi) of the same amplitude; the phi term (V4) is checked in rw_weights_planes.txt (below 0.5 %)
+#  V0 = KW x P-wave phase space; V1 = V0 x |F_V|^2; V2 = V1 x |F_VMD|^2; V3 = V2 x angular factors (MAIN since the review of 2026-11-12)
+#  the M(ee) and M(pipi) marginals of V3 equal those of V2 (the angular factors are normalised at each q): rows 'V2' below hold for V3
+# m_eta = 0.548 GeV (PLUTO value of the generator), m_e = 0.00051100, m_pi = 0.13957039 GeV, alpha = 1/137.036
+
+## validation 1: Gamma(pi+pi-e+e-) / Gamma(pi+pi-gamma) = int dq KW int dM R(q,M) / int dM R(0,M), same F_V in both (PDG: 2.68e-4 / 4.22e-2 = 6.351e-03 +- 2.87e-04)
+  V0 (no form factors)          6.4341e-03   (ratio to PDG 1.013)
+  V1 (F_V Guerrero-Pich)        6.3072e-03   (0.993)
+  V2 = V3 (F_V GP + F_VMD, main) 6.3308e-03  (0.997)   -> BR(eta -> pi+pi-e+e-) = 6.331e-03 x BR(pi+pi-gamma) 4.22e-2 = 2.672e-04
+  V1 (F_V Gounaris-Sakurai)     6.3143e-03   (0.994)
+  V2 (F_V GS + F_VMD)           6.3381e-03   (0.998)
+  (the weights keep the generated number of decays, i.e. BR = 2.68e-4 of the production; this ratio only validates the model)
+
+## |F_V(M^2)|^2 and |F_VMD(q^2)|^2
+  M [GeV]   |F_V|^2 GP   |F_V|^2 GS   GS/GP      q [GeV]  |F_VMD|^2
+  0.280      1.4036       1.3503     0.9620     0.000    1.0000
+  0.313      1.5492       1.4789     0.9546     0.030    1.0030
+  0.346      1.7285       1.6372     0.9472     0.060    1.0121
+  0.379      1.9527       1.8351     0.9398     0.090    1.0275
+  0.412      2.2379       2.0867     0.9324     0.120    1.0497
+  0.445      2.6079       2.4129     0.9252     0.150    1.0793
+  0.478      3.0994       2.8458     0.9182     0.180    1.1172
+  0.511      3.7703       3.4361     0.9114     0.210    1.1646
+  0.544      4.7173       4.2681     0.9048     0.240    1.2232
+
+## validation 2: M(ee) shape against the QED reference of tables/eta_peak_mee_true.txt (model column; KW x P-wave pi pi gamma*, its M(pipi)
+#  weight p*^3/M per dM instead of p*^3, no form factors): fractions per log bin of the true M(ee)
+  M(ee) [MeV]          ref.model   V0       V0/ref   V1       V2       V2/ref    generator
+     1.02 - 1.52        0.0665    0.0674   1.014    0.0688   0.0685   1.031     0.3203
+     1.52 - 2.27        0.0906    0.0913   1.008    0.0931   0.0928   1.024     0.2289
+     2.27 - 3.37        0.0939    0.0949   1.011    0.0968   0.0964   1.027     0.1498
+     3.37 - 5.02        0.0945    0.0954   1.010    0.0973   0.0969   1.026     0.1004
+     5.02 - 7.47        0.0944    0.0953   1.010    0.0971   0.0968   1.025     0.0670
+     7.47 - 11.13       0.0940    0.0949   1.009    0.0965   0.0962   1.023     0.0450
+    11.13 - 16.57       0.0931    0.0938   1.008    0.0952   0.0949   1.019     0.0306
+    16.57 - 24.66       0.0910    0.0915   1.006    0.0923   0.0921   1.012     0.0205
+    24.66 - 36.71       0.0867    0.0868   1.001    0.0865   0.0865   0.997     0.0142
+    36.71 - 54.66       0.0783    0.0775   0.990    0.0756   0.0758   0.969     0.0097
+    54.66 - 81.37       0.0629    0.0611   0.971    0.0574   0.0580   0.922     0.0065
+    81.37 - 121.14      0.0393    0.0369   0.940    0.0327   0.0336   0.856     0.0042
+   121.14 - 180.35      0.0138    0.0123   0.889    0.0100   0.0107   0.773     0.0023
+   180.35 - 268.50      0.0010    0.0008   0.838    0.0006   0.0007   0.704     0.0006
+  fraction above 20 MeV: V0 0.3232, V1 0.3109, V2 0.3133, generator 0.0474 (QED reference quoted: 0.28)
+  fraction 1.02-1.52 MeV: V2 0.0683, generator 0.3196
+
+## generator-level normalisation (mean weight over the 1181801 generated decays before renormalisation; T and G each normalised to 1)
+  F_V GP:  w5 V0 1.00035  w5 V1 0.99978  w5 V2 0.99978  w5 V3 1.00003  wee V0 0.99918  wee V1 0.99924  wee V2 0.99922  wpp V0 1.00006  wpp V1 1.00002  wpp V2 1.00002
+  F_V GS:  w5 V0 1.00035  w5 V1 0.99981  w5 V2 0.99981  w5 V3 1.00007  wee V0 0.99918  wee V1 0.99923  wee V2 0.99922  wpp V0 1.00006  wpp V1 1.00002  wpp V2 1.00002
+  -> the weights are divided by these means, so the generator-level mean is exactly 1 (number of decays and BR unchanged)
+  T normalisations ZT: V0 7.22961e-09, V1 GP 1.53712e-08, V2 GP 1.54286e-08, V1 GS 1.43718e-08, V2 GS 1.44258e-08; KW bin average in the threshold bin 0.8688 /GeV

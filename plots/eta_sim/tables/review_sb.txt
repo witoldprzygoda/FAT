@@ -1,0 +1,10 @@
+# Review finding 1: simulated S/B in the data windows for the three ghost treatments; mode A, w (PDG), sigma [nb]
+# S bump = signal classes 2+3 (bump window), S peak = class 4 (peak window 0.5336-0.5542); B = T2 (default, (b)) or T2 + ghost-flagged true pairs ((a))
+vz slice  window      S (T1, all)   S (b) no ghost           B = T2            B (a) |      S/B as used S/B (b) no ghosts S/B (a) ghosts both
+pre       bump     10.58 +- 0.23     9.409 +- 0.21     13.85 +- 0.22     16.24 +- 0.24   |   0.764 +- 0.020    0.679 +- 0.019    0.651 +- 0.017 
+pre       peak    0.9421 +- 0.061   0.7385 +- 0.054    7.127 +- 0.15     8.248 +- 0.16   |   0.132 +- 0.009    0.104 +- 0.008    0.114 +- 0.008 
+central   bump     8.017 +- 0.2      7.158 +- 0.19     9.986 +- 0.18     11.66 +- 0.2    |   0.803 +- 0.025    0.717 +- 0.023    0.687 +- 0.021 
+central   peak    0.6786 +- 0.052   0.5389 +- 0.046    5.085 +- 0.12     5.932 +- 0.14   |   0.133 +- 0.011    0.106 +- 0.009    0.114 +- 0.009 
+edge      bump     1.642 +- 0.089    1.447 +- 0.084    1.968 +- 0.08      2.28 +- 0.088  |   0.834 +- 0.057    0.735 +- 0.052    0.720 +- 0.048 
+edge      peak    0.1956 +- 0.028   0.1477 +- 0.024    1.053 +- 0.057     1.19 +- 0.062  |   0.186 +- 0.028    0.140 +- 0.024    0.164 +- 0.025 
+# (S/B errors neglect the S-B correlation; S and B are different rows, so it is small)

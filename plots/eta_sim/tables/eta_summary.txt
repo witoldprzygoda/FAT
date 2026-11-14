@@ -1,0 +1,218 @@
+# eta_summary: headline numbers of the eta-set step (sim_eta_summary.C): SMASH std + lep + eta against data in eta-enriched selections, M4 < 1 GeV/c2
+# simulation: std (owned, mode A) + lep (owned, mode A) + eta (owned), w (PDG); sigma = sum w / L_sim, L_sim = 221.05 nb^-1 per set; T1 + T2; no CB
+#   variant (a): T1 + T2 + ghost-flagged true pairs (sim_ghostvar.h); X17 for BR = 1e-5 is information only, never in a sum
+# data: (N - CB) / L_data, CB = 2 sqrt(N++ N--) in 10 MeV bins; L_data = 6080.5 nb^-1 UNCONFIRMED (every absolute ratio and alpha scales with 6080.5 / L_data)
+# selections: pre = isBest >= 0, PT3, vz > -160 mm, corrected momenta; E1 (slides) = pre + oa_lab < 50, eta_rest > 140, M(pipi) < 0.46, OA > 2; E2 = E1 without OA > 2
+# errors: statistical (event groups for the simulation, Poisson + CB propagation for data) unless stated; data PEAK contents and peak
+#   efficiencies also carry the fit-model spread of the data study (48 variants: pol 1-4, 4 ranges, width -+ 0.5 MeV); std-lep covariance neglected
+# the simulated direct decay eta -> pi+pi-e+e- has a NON-QED generator M(ee) (accepted density largest at threshold, close to 1/M^2,
+#   tables/eta_peak_mee_true.txt): every simulated direct-decay number is labelled 'generator M(ee) model not QED' and is not for physics
+# [table] = read from a study table (source given), everything else recomputed by this macro; cross-checks in tables/eta_summary_checks.txt
+# revised after the adversarial review of 2026-11-12 (six findings): see section 0
+
+## 0. Headline statements (corrected after the review)
+1. eta PEAK: the data peak is not larger than the simulated one. By the data-study method (P_main on data and simulation) it is 0.36-0.84
+   of the simulation; methods that use the simulated background shape (template fit, side bands) give 0.66-1.36. The peak normalisation is
+   known only to a factor of about 2 (section 6). WITHDRAWN: 'about 3.3 times larger' (method A, all-M4 content: 0.29-0.41) and 'about 2 times'.
+2. The simulated direct decay eta -> pi+pi-e+e- has a non-QED generator M(ee) (largest at threshold, close to 1/M^2): its yield, the
+   direct/conversion ratio, the class shapes and the OA efficiencies are not for physics. To report to the producers (PLUTO database_decays_eta.dat).
+3. The QED-reshaped direct decay is an ILLUSTRATION of shapes only (flat acceptance and fixed content assumed); no fit result of it is quoted.
+4. Qualitatively the data peak has far more content at OA > 10 deg and M(ee) > 20 MeV than either simulated component (section 4; data errors
+   now include the fit-model spread, so the chi2 values are smaller than before).
+5. eta BUMP: the simulated bump is too large relative to the simulated background at the bump edge; the fit factor lies between about 0.13
+   and 0.51 depending on model, range, mass scale and ghost variant (poor fits, not a yield). The eta-related background gets 0.55-2.29 (mostly > 1)
+   in the same fits, which contradicts a bump made too large by the same etas: never combine bump and peak factors into an eta production factor.
+6. Above the eta structures the spectrum is dominated by multi-pion background (sim share E1/E2: 81/81 % in 0.56-0.70, 88/90 % in 0.70-1.00), which
+   SMASH does not describe. Its level there is 0.87-1.36 times SMASH (E1, E2; T1+T2 or variant (a); vz > -160 or the central slice
+   -140 < vz < -100 mm), with L_data unconfirmed. No selection reaches eta dominance outside the bump window (sim purity E1/E2: bump window
+   0.62/0.63, peak window 0.42/0.44, 0.56-0.70 0.19/0.19). data/sim close to 1 below the bump is a coincidence of components, not a validation.
+
+## 1. Simulated cross sections in E1 and E2 [nb] (M4 < 1.0 / bump window 0.455-0.5225 / peak window 0.5336-0.5542)
+component                          | E1: M4 < 1.0      bump window      peak window     | E2: M4 < 1.0      bump window      peak window    
+bump: pi0 Dalitz                   |   4.488 +- 0.147    4.109 +- 0.141    0.024 +- 0.011  |   5.642 +- 0.165    5.185 +- 0.158    0.029 +- 0.012  |
+bump: conversion                   |   2.300 +- 0.106    2.065 +- 0.101    0.015 +- 0.008  |   4.159 +- 0.143    3.776 +- 0.136    0.015 +- 0.008  |
+peak: conversion (pi+pi-gamma)     |   0.563 +- 0.047    0.024 +- 0.010    0.427 +- 0.041  |   1.062 +- 0.065    0.048 +- 0.014    0.822 +- 0.057  |
+peak: direct (gen. M(ee) not QED)  |   0.731 +- 0.001    0.030 +- 0.000    0.553 +- 0.001  |   1.228 +- 0.002    0.048 +- 0.000    0.944 +- 0.002  |
+peak: total                        |   1.294 +- 0.047    0.054 +- 0.010    0.980 +- 0.041  |   2.290 +- 0.065    0.096 +- 0.014    1.766 +- 0.057  |
+phys. bkg, eta-related             |  12.802 +- 0.218    3.154 +- 0.115    1.166 +- 0.065  |  18.406 +- 0.267    4.208 +- 0.133    1.624 +- 0.078  |
+phys. bkg, multi-pion              |  46.959 +- 0.355    5.670 +- 0.120    3.068 +- 0.086  |  72.128 +- 0.465    7.823 +- 0.148    4.287 +- 0.107  |
+simulation T1 + T2                 |  67.843 +- 0.464   15.050 +- 0.244    5.253 +- 0.117  | 102.624 +- 0.591   21.088 +- 0.292    7.721 +- 0.145  |
+variant (a)                        |  75.762 +- 0.498   16.212 +- 0.253    5.826 +- 0.126  | 118.448 +- 0.644   23.144 +- 0.307    8.680 +- 0.158  |
+X17, BR 1e-5 (information)         |  0.0589            0.0026            0.0463          |  0.0621            0.0028            0.0487          |
+purity p p eta (X), sim            |   0.308 +- 0.003    0.623 +- 0.007    0.416 +- 0.011  |   0.297 +- 0.003    0.629 +- 0.006    0.445 +- 0.009  |
+# purity = (signal classes 2-5 + physical-background rows with a track from an eta) / (T1 + T2)
+# expected data rows of the simulated peak total in the peak window (x L_data / L_sim): E1 5961 +- 251, E2 10737 +- 348
+
+## 2. Data (N - CB) against the simulation per M4 region (absolute; nb)
+sel  region                             data N-CB [nb]       sim T1+T2 [nb]         sim (a) [nb]           data/sim       data/sim (a)
+E1   below bump 0.35-0.455            1.203 +- 0.016       1.161 +- 0.066       1.253 +- 0.069     1.037 +- 0.061     0.960 +- 0.054  
+E1   bump window 0.455-0.5225        14.336 +- 0.057      15.050 +- 0.244      16.212 +- 0.253     0.953 +- 0.016     0.884 +- 0.014  
+E1   gap 0.5225-0.5336                3.044 +- 0.026       2.522 +- 0.087       2.816 +- 0.094     1.207 +- 0.043     1.081 +- 0.037  
+E1   peak window 0.5336-0.5542        6.640 +- 0.038       5.253 +- 0.117       5.826 +- 0.126     1.264 +- 0.029     1.140 +- 0.025  
+E1   0.5542-0.56                      1.892 +- 0.020       1.391 +- 0.060       1.556 +- 0.065     1.360 +- 0.061     1.215 +- 0.053  
+E1   0.56-0.70                       44.350 +- 0.101      32.598 +- 0.300      36.907 +- 0.328     1.360 +- 0.013     1.202 +- 0.011  
+E1   0.70-1.00                       11.806 +- 0.049       9.867 +- 0.158      11.191 +- 0.173     1.196 +- 0.020     1.055 +- 0.017  
+E1   all 0.35-1.00                   83.271 +- 0.143      67.843 +- 0.464      75.762 +- 0.498     1.227 +- 0.009     1.099 +- 0.007  
+E2   below bump 0.35-0.455            1.585 +- 0.018       1.652 +- 0.080       1.836 +- 0.085     0.960 +- 0.048     0.863 +- 0.041  
+E2   bump window 0.455-0.5225        18.998 +- 0.064      21.088 +- 0.292      23.144 +- 0.307     0.901 +- 0.013     0.821 +- 0.011  
+E2   gap 0.5225-0.5336                4.064 +- 0.029       3.403 +- 0.103       3.932 +- 0.113     1.194 +- 0.037     1.033 +- 0.030  
+E2   peak window 0.5336-0.5542        8.914 +- 0.043       7.721 +- 0.145       8.680 +- 0.158     1.155 +- 0.022     1.027 +- 0.019  
+E2   0.5542-0.56                      2.555 +- 0.022       1.950 +- 0.074       2.240 +- 0.081     1.310 +- 0.051     1.140 +- 0.042  
+E2   0.56-0.70                       63.431 +- 0.117      49.075 +- 0.387      57.503 +- 0.429     1.293 +- 0.010     1.103 +- 0.008  
+E2   0.70-1.00                       19.936 +- 0.062      17.735 +- 0.227      21.112 +- 0.253     1.124 +- 0.015     0.944 +- 0.012  
+E2   all 0.35-1.00                  119.482 +- 0.166     102.624 +- 0.591     118.448 +- 0.644     1.164 +- 0.007     1.009 +- 0.006  
+
+# the same ratios in the central target slice -140 < vz < -100 mm (data and simulation), T1+T2 | variant (a); and the simulated shares
+sel  region                           data/sim central  (a) central |     purity multi-pion
+E1   below bump 0.35-0.455            0.834 +- 0.058           0.757 |      0.601      0.399
+E1   bump window 0.455-0.5225         0.809 +- 0.016           0.749 |      0.623      0.377
+E1   gap 0.5225-0.5336                1.029 +- 0.043           0.924 |      0.392      0.608
+E1   peak window 0.5336-0.5542        1.120 +- 0.030           1.005 |      0.416      0.584
+E1   0.5542-0.56                      1.237 +- 0.065           1.097 |      0.293      0.707
+E1   0.56-0.70                        1.224 +- 0.013           1.077 |      0.186      0.814
+E1   0.70-1.00                        1.104 +- 0.021           0.974 |      0.118      0.882
+E1   all 0.35-1.00                    1.093 +- 0.009           0.976 |      0.308      0.692
+E2   below bump 0.35-0.455            0.768 +- 0.045           0.680 |      0.576      0.424
+E2   bump window 0.455-0.5225         0.770 +- 0.013           0.703 |      0.629      0.371
+E2   gap 0.5225-0.5336                1.034 +- 0.037           0.899 |      0.381      0.619
+E2   peak window 0.5336-0.5542        1.033 +- 0.023           0.911 |      0.445      0.555
+E2   0.5542-0.56                      1.179 +- 0.054           1.024 |      0.314      0.686
+E2   0.56-0.70                        1.170 +- 0.011           0.997 |      0.185      0.815
+E2   0.70-1.00                        1.038 +- 0.016           0.870 |      0.105      0.895
+E2   all 0.35-1.00                    1.044 +- 0.007           0.903 |      0.297      0.703
+# reading (review finding 6): 0.56-0.70 and 0.70-1.00 are multi-pion background, which SMASH does not describe; their ratios are listed,
+#   not used as a validation; the ratios move with the ghost treatment, the vertex slice and L_data (unconfirmed). Below the bump the ratio
+#   near 1 is a coincidence of a too large simulated bump tail and a too small eta-related background, not a check of the eta yield.
+
+## 3. Fit factors alpha (template fits of data N - CB, M4 0.40-0.75 or 0.43-0.70; [table] tables/eta_enriched_fit.txt; E1/E2 M1 recomputed)
+# alpha = 1: SMASH at L_data = 6080.5 nb^-1 (UNCONFIRMED). M1 = bump, peak (direct + conversion, SMASH ratio), physical background.
+# POOR FITS (review finding 5): errors below are scaled by sqrt(chi2/ndf); the model spread (next lines) is far larger; the factors are
+#   comparisons of shapes, NOT yields; P_main data/sim: see section 6 for all methods
+sel    | M1 a_bump                  M1 a_peak                  M1 a_bkg                   chi2/ndf     p         | M1 (a) a_bkg               P_main data/sim (5.4 MeV) 
+E1     |    0.443 +- 0.066             1.037 +- 0.271             1.327 +- 0.019           192.8/67    4.1e-14   |    1.173 +- 0.015             0.704 +- 0.153         
+E2     |    0.426 +- 0.048             0.832 +- 0.160             1.262 +- 0.014           168.7/67    9.9e-11   |    1.076 +- 0.011             0.444 +- 0.065         
+E3     |    0.477 +- 0.046             1.006 +- 0.176             1.218 +- 0.015           154.8/67    6.6e-09   |    1.038 +- 0.013             0.484 +- 0.077         
+E3oa   |    0.493 +- 0.065             1.346 +- 0.316             1.286 +- 0.022           187.7/67    2.2e-13   |    1.134 +- 0.018             0.810 +- 0.204         
+E4     |    0.464 +- 0.055             0.926 +- 0.177             1.231 +- 0.013           222.5/67    1.4e-18   |    1.048 +- 0.011             0.456 +- 0.065         
+E4oa   |    0.493 +- 0.069             1.170 +- 0.278             1.289 +- 0.016           223.9/67    8.8e-19   |    1.137 +- 0.014             0.696 +- 0.145         
+E1mm   |    0.435 +- 0.063             0.926 +- 0.255             1.327 +- 0.018           176.3/67    9e-12     |    1.173 +- 0.014             0.631 +- 0.130         
+E2mm   |    0.415 +- 0.046             0.757 +- 0.154             1.261 +- 0.014           159.0/67    1.9e-09   |    1.075 +- 0.011             0.416 +- 0.059         
+E1v    |    0.430 +- 0.052             0.870 +- 0.212             1.242 +- 0.016           149.2/67    3.4e-08   |    1.098 +- 0.015             0.691 +- 0.147         
+E2v    |    0.396 +- 0.046             0.659 +- 0.154             1.192 +- 0.015           191.2/67    7e-14     |    1.015 +- 0.010             0.407 +- 0.055         
+range of M1 a_bump over 10 selections x 2 ranges x 2 scales x 2 ghost variants: 0.302 - 0.493
+range of M1 a_peak over 10 selections x 2 ranges x 2 scales x 2 ghost variants: 0.492 - 1.375
+range of M1 a_bkg over 10 selections x 2 ranges x 2 scales x 2 ghost variants: 1.015 - 1.357
+range of M3 a_bump over 10 selections x 2 ranges x 2 scales x 2 ghost variants: 0.127 - 0.507
+range of M3 a_peak over 10 selections x 2 ranges x 2 scales x 2 ghost variants: 0.385 - 1.313
+range of M1 chi2/ndf: 0.94 - 3.36; fit probability in 0.40-0.75: 6.1e-19 - 6.7e-03
+reading: the simulated bump is too large relative to the simulated background at the bump edge; the fit factor lies between about 0.13 and 0.51
+  depending on model (M1, M3), fit range, mass scale and ghost variant (poor fits, not a yield; the earlier word 'stable' is withdrawn).
+  M3 gives the eta-related background mostly > 1 (range below) while the bump (same etas) < 1: contradictory; never combine bump and peak
+  factors into an eta factor. The P_main data/sim below carries statistical errors only; with the fit-model spread: section 6.
+range of M3 a_bkgEta: 0.546 - 2.295
+range of M3 a_bkgMP: 0.847 - 1.527
+range of the P_main peak ratio data/sim (5.4 MeV, sim M4 x 0.9952): 0.407 - 0.810; without OA cut (E2, E3, E4, E2mm, E2v) and with OA > 2 (E1, E3oa, E4oa, E1mm, E1v) differ:
+  E1    data P_main  3187 +- 283   sim  4527 +- 901    data/sim 0.704 +- 0.153  (a) 0.800 +- 0.206
+  E2    data P_main  4047 +- 320   sim  9117 +- 1120   data/sim 0.444 +- 0.065  (a) 0.506 +- 0.086
+  E3    data P_main  3633 +- 296   sim  7511 +- 1034   data/sim 0.484 +- 0.077  (a) 0.548 +- 0.102
+  E3oa  data P_main  2830 +- 261   sim  3492 +- 818    data/sim 0.810 +- 0.204  (a) 0.942 +- 0.288
+  E4    data P_main  4314 +- 325   sim  9465 +- 1139   data/sim 0.456 +- 0.065  (a) 0.518 +- 0.086
+  E4oa  data P_main  3380 +- 288   sim  4855 +- 920    data/sim 0.696 +- 0.145  (a) 0.797 +- 0.197
+  E1mm  data P_main  2965 +- 268   sim  4696 +- 865    data/sim 0.631 +- 0.130  (a) 0.684 +- 0.159
+  E2mm  data P_main  3843 +- 304   sim  9236 +- 1079   data/sim 0.416 +- 0.059  (a) 0.461 +- 0.074
+  E1v   data P_main  2892 +- 236   sim  4184 +- 821    data/sim 0.691 +- 0.147  (a) 0.759 +- 0.186
+  E2v   data P_main  3701 +- 271   sim  9083 +- 1028   data/sim 0.407 +- 0.055  (a) 0.446 +- 0.068
+
+## 4. Peak content per class (P_main fits of data N - CB per class; simulation in expected data rows; all M4)
+
+# pre, OA [deg] classes
+class          sim direct   sim conversion        sim total    QED dir             data |       frac data    frac sim tot    frac sim dir    frac QED dir
+<2          3253 +- 7         3252 +- 281       6506 +- 281          1896    1039 +- 389    |  0.220 +- 0.073           0.410           0.386           0.225
+2-4         3504 +- 7         3519 +- 292       7024 +- 292          2562    1707 +- 540    |  0.361 +- 0.088           0.442           0.416           0.304
+4-6          875 +- 4          631 +- 124       1506 +- 124          1108     667 +- 251    |  0.141 +- 0.051           0.095           0.104           0.132
+6-10         372 +- 2           49 +- 34         421 +- 34           1013     365 +- 194    |  0.077 +- 0.040           0.027           0.044           0.120
+>10          418 +- 2            0 +- 0          418 +- 2            1844     949 +- 395    |  0.201 +- 0.074           0.026           0.050           0.219
+sum                                          15874 +- 425                  4727 +- 836      (data P_main without classes: 4671 +- 1026); data/sim 0.298 +- 0.053
+data errors: stat (+) model; model / stat per class: <2 353/163 2-4 498/210 4-6 214/131 6-10 160/109 >10 348/187
+one factor on the simulated total: 0.221 +- 0.046, chi2/ndf 9.5/4 (p 0.049); stat-only errors (before the review): chi2/ndf 39.2/4
+free conversion / direct factors: -1.069 +- 0.497 / 1.465 +- 0.472, chi2/ndf 1.7/3  (negative conversion factor: unphysical); stat-only: -1.147 +- 0.283 / 1.551 +- 0.264
+(QED-reshaped direct decay: illustration of shapes only, column 'QED dir'; no fit result quoted)
+
+# pre, M(ee) [MeV/c2] classes
+class          sim direct   sim conversion        sim total    QED dir             data |       frac data    frac sim tot    frac sim dir    frac QED dir
+<8          4414 +- 8         4369 +- 326       8783 +- 326          2459    1788 +- 566    |  0.380 +- 0.090           0.553           0.524           0.292
+8-20        3309 +- 7         3058 +- 272       6368 +- 273          3123    1600 +- 524    |  0.340 +- 0.088           0.401           0.393           0.371
+20-50        449 +- 3           24 +- 24         473 +- 24           1747     751 +- 284    |  0.160 +- 0.058           0.030           0.053           0.207
+50-135       193 +- 2            0 +- 0          193 +- 2            1012     465 +- 202    |  0.099 +- 0.042           0.012           0.023           0.120
+>135          57 +- 1            0 +- 0           57 +- 1              81      99 +- 79     |  0.021 +- 0.017           0.004           0.007           0.010
+sum                                          15874 +- 425                  4703 +- 850      (data P_main without classes: 4671 +- 1026); data/sim 0.296 +- 0.054
+data errors: stat (+) model; model / stat per class: <8 524/214 8-20 477/215 20-50 249/137 50-135 146/139 >135 47/64
+one factor on the simulated total: 0.239 +- 0.051, chi2/ndf 10.8/4 (p 0.028); stat-only errors (before the review): chi2/ndf 34.2/4
+free conversion / direct factors: -1.525 +- 0.558 / 1.905 +- 0.520, chi2/ndf 0.3/3  (negative conversion factor: unphysical); stat-only: -1.469 +- 0.318 / 1.851 +- 0.291
+(QED-reshaped direct decay: illustration of shapes only, column 'QED dir'; no fit result quoted)
+
+# E2, OA [deg] classes
+class          sim direct   sim conversion        sim total    QED dir             data |       frac data    frac sim tot    frac sim dir    frac QED dir
+<2          3024 +- 7         3034 +- 271       6058 +- 271          1781     863 +- 339    |  0.210 +- 0.071           0.435           0.405           0.235
+2-4         3083 +- 7         2985 +- 269       6069 +- 269          2323    1487 +- 397    |  0.362 +- 0.076           0.436           0.413           0.307
+4-6          699 +- 3          413 +- 100       1112 +- 100           966     636 +- 192    |  0.155 +- 0.046           0.080           0.094           0.128
+6-10         298 +- 2           24 +- 24         323 +- 24            890     255 +- 170    |  0.062 +- 0.040           0.023           0.040           0.118
+>10          363 +- 2            0 +- 0          363 +- 2            1610     865 +- 285    |  0.211 +- 0.062           0.026           0.049           0.213
+sum                                          13924 +- 396                  4107 +- 648      (data P_main without classes: 4047 +- 947); data/sim 0.295 +- 0.047
+data errors: stat (+) model; model / stat per class: <2 305/149 2-4 352/185 4-6 157/110 6-10 144/91 >10 236/160
+one factor on the simulated total: 0.218 +- 0.042, chi2/ndf 14.8/4 (p 0.005); stat-only errors (before the review): chi2/ndf 49.3/4
+free conversion / direct factors: -1.197 +- 0.455 / 1.560 +- 0.422, chi2/ndf 2.7/3  (negative conversion factor: unphysical); stat-only: -1.158 +- 0.272 / 1.524 +- 0.248
+(QED-reshaped direct decay: illustration of shapes only, column 'QED dir'; no fit result quoted)
+
+# E2, M(ee) [MeV/c2] classes
+class          sim direct   sim conversion        sim total    QED dir             data |       frac data    frac sim tot    frac sim dir    frac QED dir
+<8          3821 +- 8         3714 +- 300       7534 +- 300          2153    1454 +- 408    |  0.356 +- 0.083           0.541           0.512           0.284
+8-20        3006 +- 7         2718 +- 257       5724 +- 257          2825    1471 +- 467    |  0.360 +- 0.088           0.411           0.402           0.373
+20-50        407 +- 2           24 +- 24         431 +- 24           1577     625 +- 348    |  0.153 +- 0.076           0.031           0.055           0.208
+50-135       179 +- 2            0 +- 0          179 +- 2             935     445 +- 147    |  0.109 +- 0.037           0.013           0.024           0.124
+>135          56 +- 1            0 +- 0           56 +- 1              79      89 +- 71     |  0.022 +- 0.017           0.004           0.007           0.010
+sum                                          13924 +- 396                  4084 +- 729      (data P_main without classes: 4047 +- 947); data/sim 0.293 +- 0.053
+data errors: stat (+) model; model / stat per class: <8 365/181 8-20 426/192 20-50 327/119 50-135 81/122 >135 38/60
+one factor on the simulated total: 0.225 +- 0.045, chi2/ndf 11.6/4 (p 0.021); stat-only errors (before the review): chi2/ndf 34.5/4
+free conversion / direct factors: -1.674 +- 0.595 / 2.006 +- 0.547, chi2/ndf 0.6/3  (negative conversion factor: unphysical); stat-only: -1.416 +- 0.315 / 1.762 +- 0.282
+(QED-reshaped direct decay: illustration of shapes only, column 'QED dir'; no fit result quoted)
+
+## 5. Efficiency of single cuts (simulation: base pre, all M4; data peak: pass/fail P_main fits at base pre; data bump [table] cuts_compare_data.txt)
+# bump data base: no vz cut (1D scans); pT4 and vertex: bump start base (pre without vz cut + oa_lab < 40 + 0.30 < M(pipi) < 0.41), sim at the same base
+# (s) = data peak value biased by sculpting (data study); data peak errors = stat (+) model (per-variant efficiency, half range)
+# sim direct: generator M(ee) model not QED; 'total QED' = ILLUSTRATION only (flat acceptance and fixed content assumed), not a result
+cut                        |    sim direct     sim conv.     sim total     total QED     data peak |      sim bump    sim tagged    sim S_bump   data tagged     data edge
+OA > 2                     |  0.614+-0.001  0.564+-0.028  0.590+-0.013  0.676+-0.014  0.778+-0.033 |  0.709+-0.009  0.686+-0.024  0.703+-0.010  0.754+-0.013  0.760+-0.024
+OA < 4                     |  0.802+-0.001  0.909+-0.016  0.852+-0.008  0.707+-0.009  0.586+-0.056 |  0.643+-0.009  0.630+-0.025  0.646+-0.010  0.641+-0.016  0.664+-0.032
+oa_lab < 50                |  0.915+-0.000  0.886+-0.018  0.901+-0.009  0.906+-0.009  0.920+-0.035 |  0.955+-0.004  0.977+-0.008  0.946+-0.005  0.992+-0.007  0.952+-0.022
+M(pipi) > 0.34             |  0.823+-0.001  0.681+-0.027  0.756+-0.013  0.752+-0.013  0.845+-0.050 |  0.473+-0.009  0.444+-0.025  0.516+-0.011  0.705+-0.017  0.714+-0.031
+M(pipi) < 0.40 (s)         |  0.656+-0.001  0.700+-0.026  0.677+-0.012  0.687+-0.012  0.681+-0.042 |  0.975+-0.003  0.985+-0.006  0.970+-0.004  0.973+-0.006       -      
+M(pipi) < 0.46 (s)         |  0.973+-0.000  0.984+-0.007  0.978+-0.003  0.980+-0.003  0.954+-0.021 |  1.000+-0.000  1.000+-0.000  1.000+-0.000       -             -      
+eta_rest > 140             |  0.999+-0.000  0.997+-0.003  0.998+-0.002  0.998+-0.002  0.999+-0.001 |  0.758+-0.008  0.677+-0.024  0.901+-0.006  0.736+-0.015       -      
+eta_rest > 160             |  0.992+-0.000  0.993+-0.005  0.993+-0.002  0.992+-0.002  0.918+-0.049 |  0.417+-0.009  0.299+-0.023  0.507+-0.011       -             -      
+MM4 < 2.80 (s)             |  0.905+-0.000  0.915+-0.016  0.910+-0.007  0.912+-0.007  0.952+-0.061 |  0.879+-0.006  0.868+-0.017  0.881+-0.007  0.852+-0.014  0.879+-0.028
+pT4 > 400 MeV/c            |  0.785+-0.001  0.811+-0.022  0.797+-0.010  0.803+-0.010  0.690+-0.064 |  0.886+-0.007  0.887+-0.019       -        0.870+-0.012       -      
+both pions in vertex fit   |  0.921+-0.000  0.935+-0.014  0.927+-0.007  0.928+-0.007  0.940+-0.041 |  0.930+-0.005  0.945+-0.013       -        0.950+-0.013       -      
+# M(pipi) < 0.40: data edge-step value has zero error in cuts_compare_data.txt (degenerate fit): not used
+
+## 6. eta peak, data / simulation by method (review finding 1; tables/eta_summary_peak_methods.txt, figure f)
+# A all-M4 content; Aw window content; B P_main on data and on the sim peak template; C P_main on data and on the sim total (C(a): variant (a));
+# D template fit M1 alpha_peak (error x sqrt(chi2/ndf); range over ranges, scales, ghost variants); E side bands (range: left / right band alone)
+# errors: +- stat +- model; 'tot' adds the absolute scale incl. L_data (20 %); ghost: (b) = sim peak without ghost-lepton rows, (a) = variant (a)
+sel       | A                          | Aw                         | B                          | C                          | D [range]                | E [range]               
+pre       |  0.29 +- 0.02 +- 0.06 (0.36) |  0.36 +- 0.03 +- 0.07 (0.43) |  0.36 +- 0.03 +- 0.06 (0.42) |  0.48 +- 0.07 +- 0.05 (0.57) | 1.05 +- 0.25 [0.78-1.08] | 0.81 +- 0.14 [0.62-1.04]
+pre+OA>2  |  0.39 +- 0.04 +- 0.08 (0.47) |  0.48 +- 0.05 +- 0.10 (0.58) |  0.50 +- 0.05 +- 0.10 (0.46) |  0.71 +- 0.15 +- 0.11 (0.84) | 1.36 +- 0.34 [0.99-1.36] | 0.96 +- 0.22 [0.56-1.44]
+E1        |  0.41 +- 0.04 +- 0.09 (0.49) |  0.51 +- 0.05 +- 0.11 (0.60) |  0.53 +- 0.05 +- 0.12 (0.50) |  0.70 +- 0.15 +- 0.12 (0.80) | 1.04 +- 0.27 [0.77-1.04] | 0.84 +- 0.22 [0.39-1.35]
+E2        |  0.29 +- 0.02 +- 0.06 (0.36) |  0.35 +- 0.03 +- 0.08 (0.43) |  0.36 +- 0.03 +- 0.08 (0.41) |  0.44 +- 0.06 +- 0.05 (0.51) | 0.83 +- 0.16 [0.63-0.89] | 0.66 +- 0.14 [0.46-0.88]
+# in brackets after A, Aw, B: ghost variant (b); after C: variant (a). Data P_main [rows] (stat, model):  pre 4671 +- 367 +- 958  pre+OA>2 3632 +- 328 +- 752  E1 3187 +- 283 +- 673  E2 4047 +- 320 +- 891
+
+## UNVERIFIED / caveats
+- L_data = 6080.5 nb^-1 (producers' note): every absolute ratio and alpha scales with 6080.5 / L_data; absolute scale known to about 15-20 %.
+- The eta-set generator M(ee) model of eta -> pi+pi-e+e- (non-QED on accepted rows; the PLUTO model and generator-level rows are needed).
+- The QED (Kroll-Wada) reshaping assumes an acceptance flat in the true M(ee) and a fixed content; both arbitrary (illustration only).
+- The eta-related / multi-pion split uses geninfo and two generations of parent ids (sim_eta_enriched.C).
+- The K0S mass scale (sim/data 1.0048) is transferred from M(pipi) to M4 in the scaled fits and in P_main.
+- Template fits neglect bin-to-bin template correlations; chi2/ndf of M1 is 1.48-3.36 in 0.40-0.75 and 0.94-1.91 in 0.43-0.70: the fitted
+  templates do not describe the data shape, the alphas are a comparison, not measured scale factors.
+- Data bump efficiencies come from the data study (tagged eta, edge step) at a base without the vz cut.
+- Ghost-flagged true pairs: which treatment rule 1 means is for the user to confirm (variant (a) shown everywhere).

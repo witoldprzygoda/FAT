@@ -1,0 +1,29 @@
+# eta_closure: does the eta set cover the same 10^10 SMASH events as the standard set? (e+e- hypothesis, 'pre')
+# 'pre' = isBest >= 0, z > -500, PT3 bit, vz > -160, cor_ok == 1. Errors: event groups; the two sets are treated as
+# independent (their GEANT simulations are separate; the shared SMASH events make the true error smaller)
+# eta-related track: geninfo 1717 (SMASH eta and descendants), 550117 (phi -> gamma eta), parent or grandparent
+#   GEANT id 17, or a forced eta code (1702030848, 17700808)
+# std rows after pre: 230115, with an eta-related track 53829 (23.39 %)
+# eta-set natural rows (no forced-eta track) after pre: 177278; with another eta-related track 0 (of them 1717 / parent 17: 0)
+
+## (i) natural rows: eta set (no forced-eta track, no eta-related track) / std (no eta-related track)
+M4 region              rows std   rows eta       ratio rows      sum w std      sum w eta      ratio sum w
+M4 < 0.30                     0          0  0.0000 +- 0.0000              0              0  0.0000 +- 0.0000
+0.30-0.455                  909        907  0.9978 +- 0.0474        898.482        896.121  0.9974 +- 0.0474
+bump 0.455-0.5225          2607       2648  1.0157 +- 0.0284        2576.93        2617.45  1.0157 +- 0.0284
+peak 0.5336-0.5542         1491       1519  1.0188 +- 0.0374        1473.52         1501.6  1.0191 +- 0.0374
+0.56-0.70                 25528      25778  1.0098 +- 0.0093        25229.7        25475.3  1.0097 +- 0.0093
+0.70-1.00                 88526      88849  1.0036 +- 0.0050        87492.3        87811.3  1.0036 +- 0.0050
+M4 > 1.00                 56073      56415  1.0061 +- 0.0061        55406.3        55749.1  1.0062 +- 0.0061
+all                      176286     177278  1.0056 +- 0.0036         174216         175200  1.0056 +- 0.0036
+# identical rows: 0 of the 177278 eta-set natural rows have the same (event, M4, vz) floats as a std natural row (176286 keys)
+
+## (ii) eta production: rows with both pions from one eta, divided by the probability of a pi+pi- decay of that eta
+#   std: pion class 2 / (BR_HGeant(eta -> pi+pi-pi0) + BR_HGeant(eta -> pi+pi-gamma)) = / (0.2114 + 0.0478)
+#   eta: pion class 9 / 1 (every eta forced into pi+pi-e+e- or X17 pi+pi-, both with a pi+pi- pair)
+#   'all' = every lepton pair; 'other leptons' = the lepton pair is not from the same eta (std: four-class not 2-4,
+#   eta: four-class not 5-6), i.e. the pions of the eta combined with leptons from elsewhere;
+#   'unrelated leptons' = neither lepton track is eta-related (no lepton of this or any other eta)
+all                std rows     5211 (/0.2593 =    20099.5)   eta rows  1400942   ratio eta/std 69.7004 +- 0.9751
+other leptons      std rows     2068 (/0.2593 =     7976.5)   eta rows    42037   ratio eta/std 5.2701 +- 0.1205
+unrelated leptons  std rows     1866 (/0.2593 =     7197.4)   eta rows     9029   ratio eta/std 1.2545 +- 0.0321

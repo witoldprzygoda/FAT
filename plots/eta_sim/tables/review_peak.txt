@@ -1,0 +1,44 @@
+# Review finding 8: Gaussian fits of the simulated peak-conversion class (eta -> pi+pi-gamma, photon converted), pre, mode A, w (PDG)
+# weighted histogram (event-group errors), chi2 fit with the bin errors (empty bins skipped), range mean +- n sigma iterated 6 times
+# data peak (all decays incl. eta -> pi+pi-e+e-, data study, other selection: no vz cut): 0.5439 GeV/c2, sigma 5.4 MeV
+rows       bin      range           mean [GeV/c2]          sigma [MeV]     chi2/ndf
+all        0.5 MeV  +-1.5     0.54764 +- 0.00063      5.33 +- 0.91      23.0/25  
+all        0.5 MeV  +-2.0     0.54600 +- 0.00054      6.28 +- 0.56      42.4/46  
+all        0.5 MeV  +-2.5     0.54550 +- 0.00058      7.86 +- 0.67      58.4/67  
+all        0.5 MeV  +-3.0     0.54542 +- 0.00059      8.14 +- 0.73      61.8/72  
+all        1.0 MeV  +-1.5     0.54599 +- 0.00058      5.93 +- 0.71      13.6/15  
+all        1.0 MeV  +-2.0     0.54597 +- 0.00045      5.93 +- 0.43      19.1/21  
+all        1.0 MeV  +-2.5     0.54594 +- 0.00041      5.97 +- 0.35      28.7/27  
+all        1.0 MeV  +-3.0     0.54587 +- 0.00042      6.32 +- 0.40      42.4/34  
+all        2.0 MeV  +-1.5     0.54593 +- 0.00055      6.24 +- 0.67       7.2/7   
+all        2.0 MeV  +-2.0     0.54607 +- 0.00046      6.21 +- 0.47       7.5/9   
+all        2.0 MeV  +-2.5     0.54612 +- 0.00045      7.09 +- 0.48      19.0/15  
+all        2.0 MeV  +-3.0     0.54606 +- 0.00046      7.37 +- 0.51      22.0/18  
+no ghost   0.5 MeV  +-1.5     0.54605 +- 0.00070      6.56 +- 0.78      37.5/40  
+no ghost   0.5 MeV  +-2.0     0.54605 +- 0.00068      7.40 +- 0.75      42.9/52  
+no ghost   0.5 MeV  +-2.5     0.54590 +- 0.00075      8.66 +- 0.91      49.5/66  
+no ghost   0.5 MeV  +-3.0     0.54587 +- 0.00075      8.79 +- 0.95      51.0/68  
+no ghost   1.0 MeV  +-1.5     0.54604 +- 0.00075      6.97 +- 1.02      15.1/17  
+no ghost   1.0 MeV  +-2.0     0.54642 +- 0.00054      6.16 +- 0.52      21.7/21  
+no ghost   1.0 MeV  +-2.5     0.54640 +- 0.00049      6.33 +- 0.44      31.3/28  
+no ghost   1.0 MeV  +-3.0     0.54635 +- 0.00050      6.68 +- 0.50      38.1/35  
+no ghost   2.0 MeV  +-1.5     0.54617 +- 0.00074      7.00 +- 1.01       6.9/7   
+no ghost   2.0 MeV  +-2.0     0.54653 +- 0.00055      6.85 +- 0.53       8.2/11  
+no ghost   2.0 MeV  +-2.5     0.54659 +- 0.00054      7.45 +- 0.53      12.3/15  
+no ghost   2.0 MeV  +-3.0     0.54653 +- 0.00055      7.64 +- 0.55      14.3/17  
+
+all rows: position median 0.54598, range 0.54542-0.54764, rms over fit choices 0.00052, median stat error 0.00050 GeV/c2
+all rows: width median 6.26, range 5.33-8.14, rms over fit choices 0.82, median stat error 0.54 MeV
+
+no-ghost rows: position median 0.54626, range 0.54587-0.54659, rms over fit choices 0.00025, median stat error 0.00061 GeV/c2
+no-ghost rows: width median 6.99, range 6.16-8.79, rms over fit choices 0.80, median stat error 0.65 MeV
+
+(1 and 2 MeV bins only)
+all rows: position median 0.54598, range 0.54587-0.54612, rms over fit choices 0.00008, median stat error 0.00046 GeV/c2
+all rows: width median 6.22, range 5.93-7.37, rms over fit choices 0.51, median stat error 0.47 MeV
+
+(1 and 2 MeV bins only)
+no-ghost rows: position median 0.54641, range 0.54604-0.54659, rms over fit choices 0.00018, median stat error 0.00055 GeV/c2
+no-ghost rows: width median 6.91, range 6.16-7.64, rms over fit choices 0.47, median stat error 0.53 MeV
+# quote: position = median (stat = median error) (fit = rms over binning and range); width likewise. Width minus data 5.4 MeV is not significant
+# when stat and fit-choice errors are combined. M(pi+pi-) scale from K0S (spectra_eta.txt): sim 1.0018 +- 0.0005, data 0.9970 +- 0.0004 -> sim/data 1.0048 +- 0.0007

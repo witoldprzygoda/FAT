@@ -1,0 +1,18 @@
+sim groups std_us: rows 230469, groups 213044, groups without exactly one isBest==1 row: 0, rows where a new (event, vz) key and a new grp disagree: 0
+sim groups lep_us: rows 7441490, groups 6856223, groups without exactly one isBest==1 row: 0, rows where a new (event, vz) key and a new grp disagree: 0
+data study reproduction (no vz cut, data loaded in 0.30-1.10): S = 4657 +- 390 +- 1233 (reported 4657 +- 390 +- 1233), E = 1241 +- 76 (reported 1241 +- 76)
+Gaussian of the peak-conversion template (pre, mode A, w; +-2 sigma iterated fit): mean 0.54602 +- 0.00048, sigma 0.00674 +- 0.00048 GeV/c2, chi2/ndf 8.1/8; share within +-2 sigma 0.847; data peak 0.5439, 5.4 MeV.
+  -> G of the fit at 0.5439 (data), sigma 0.00674; option A_w_sc scales the simulated M4 by 0.99521 (K0S M(pipi) scale data/sim; not this peak offset, review finding 8)
+template sums and diagonal group variances against simeng::FillMany (pre, options A_w, B_w, A_wdb, 4 templates, 320 bins): largest relative difference 2.22e-16
+data pre: sum of group variances of N / sum of N in 0.40-0.85 = 1.0032 (Poisson would be 1)
+data pre+OA>2: sum of group variances of N / sum of N in 0.40-0.85 = 1.0034 (Poisson would be 1)
+data slides: sum of group variances of N / sum of N in 0.40-0.85 = 1.0024 (Poisson would be 1)
+data peak nominal: sum of group variances of N / sum of N in 0.40-0.85 = 1.0024 (Poisson would be 1)
+bump template pre (A, w): pi0 Dalitz share 0.577, conversion share 0.423 (fixed in the fit)
+bump template pre+OA>2 (A, w): pi0 Dalitz share 0.660, conversion share 0.340 (fixed in the fit)
+bump template slides (A, w): pi0 Dalitz share 0.661, conversion share 0.339 (fixed in the fit)
+bump template peak nominal (A, w): pi0 Dalitz share 0.582, conversion share 0.418 (fixed in the fit)
+data pre: S(P_main) = 4671 +- 367 +- 958 (model spread), E = 1199 +- 71; h per slice 330 380 355 134
+data pre+OA>2: S(P_main) = 3632 +- 328 +- 752 (model spread), E = 898 +- 64; h per slice 258 293 261 86
+data slides: S(P_main) = 3187 +- 283 +- 673 (model spread), E = 918 +- 57; h per slice 231 352 331 3 (E not valid: eta-rest cut, data study)
+data peak nominal: S(P_main) = 4330 +- 327 +- 981 (model spread), E = 1169 +- 68; h per slice 314 396 330 129

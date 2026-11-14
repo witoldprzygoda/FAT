@@ -1,0 +1,72 @@
+# templates of the fit, e+e-, std + lep owned rows, in expected data rows (sum w * L_data / L_sim, L_data = 6080.5 nb^-1 UNCONFIRMED, L_sim = 221.05)
+# N_eff = (sum w)^2 / V, V from event groups (rows of one event in different bins included in the range sums)
+# eta -> pi+pi-e+e- (direct decay) is NOT in any template (eta set missing). A_w_sc: simulated M4 x 0.99521 (K0S M(pipi) scale data/sim)
+preset        option  template       rows   rows(data)      N_eff |    0.43-0.75         +-    N_eff
+pre           A_w     bump           2836      83578.2     2835.7 |      77472.2     1511.0   2628.7
+pre           A_w     peak            307       7451.6      307.0 |       7451.6      425.3    307.0
+pre           A_w     bkgVM         13691     352908.7    13065.0 |     226887.6     2479.2   8375.1
+pre           A_w     bkgRest     4834301    3081246.1   184744.1 |    1001475.7     4371.9  52474.3
+pre           B_w     bump           2836      83578.2     2835.7 |      77472.2     1511.0   2628.7
+pre           B_w     peak            307       7451.6      307.0 |       7451.6      425.3    307.0
+pre           B_w     bkgVM         13691     352908.7    13065.0 |     226887.6     2479.2   8375.1
+pre           B_w     bkgRest      209028    3265390.5   109915.5 |    1051106.1     5559.2  35749.9
+pre           A_wdb   bump           2836      78010.8     2836.0 |      72316.8     1410.4   2629.0
+pre           A_wdb   peak            307       8444.8      307.0 |       8444.8      482.0    307.0
+pre           A_wdb   bkgVM         13691     376603.1    13687.0 |     235022.8     2542.6   8544.0
+pre           A_wdb   bkgRest     4834301    3142664.6   187346.9 |    1013605.4     4396.9  53143.3
+pre           A_w_sc  bump           2836      83578.2     2835.7 |      76881.2     1505.2   2608.7
+pre           A_w_sc  peak            307       7451.6      307.0 |       7451.6      425.3    307.0
+pre           A_w_sc  bkgVM         13691     352908.7    13065.0 |     233503.7     2515.2   8618.9
+pre           A_w_sc  bkgRest     4834301    3081246.1   184744.1 |    1022525.7     4415.0  53639.4
+pre+OA>2      A_w     bump           2015      59282.2     2014.8 |      54865.6     1270.5   1864.8
+pre+OA>2      A_w     peak            173       4199.1      173.0 |       4199.1      319.3    173.0
+pre+OA>2      A_w     bkgVM          9726     247541.1     9193.5 |     161168.6     2087.2   5962.7
+pre+OA>2      A_w     bkgRest     3830498    2118352.9   145103.9 |     724053.0     3567.6  41189.7
+pre+OA>2      B_w     bump           2015      59282.2     2014.8 |      54865.6     1270.5   1864.8
+pre+OA>2      B_w     peak            173       4199.1      173.0 |       4199.1      319.3    173.0
+pre+OA>2      B_w     bkgVM          9726     247541.1     9193.5 |     161168.6     2087.2   5962.7
+pre+OA>2      B_w     bkgRest      163980    2251382.3    76218.4 |     760484.7     4718.1  25980.8
+pre+OA>2      A_wdb   bump           2015      55427.3     2015.0 |      51301.2     1187.9   1865.0
+pre+OA>2      A_wdb   peak            173       4758.8      173.0 |       4758.8      361.8    173.0
+pre+OA>2      A_wdb   bkgVM          9726     267536.5     9724.0 |     167987.4     2149.6   6107.0
+pre+OA>2      A_wdb   bkgRest     3830498    2168398.9   146670.7 |     734742.7     3598.5  41690.2
+pre+OA>2      A_w_sc  bump           2015      59282.2     2014.8 |      54481.6     1266.0   1851.8
+pre+OA>2      A_w_sc  peak            173       4199.1      173.0 |       4199.1      319.3    173.0
+pre+OA>2      A_w_sc  bkgVM          9726     247541.1     9193.5 |     165463.2     2114.8   6121.3
+pre+OA>2      A_w_sc  bkgRest     3830498    2118352.9   145103.9 |     738516.4     3599.6  42093.1
+slides        A_w     bump           1403      41276.3     1402.9 |      41188.6     1100.9   1399.9
+slides        A_w     peak            141       3422.4      141.0 |       3422.4      288.2    141.0
+slides        A_w     bkgVM          1764      45869.3     1700.6 |      43359.5     1081.5   1607.3
+slides        A_w     bkgRest      510498     315801.1    19752.6 |     298362.1     2205.8  18295.9
+slides        B_w     bump           1403      41276.3     1402.9 |      41188.6     1100.9   1399.9
+slides        B_w     peak            141       3422.4      141.0 |       3422.4      288.2    141.0
+slides        B_w     bkgVM          1764      45869.3     1700.6 |      43359.5     1081.5   1607.3
+slides        B_w     bkgRest       20987     329548.6    12109.1 |     311436.0     2912.3  11435.4
+slides        A_wdb   bump           1403      38592.8     1403.0 |      38510.3     1029.2   1400.0
+slides        A_wdb   peak            141       3878.5      141.0 |       3878.5      326.6    141.0
+slides        A_wdb   bkgVM          1764      48523.0     1764.0 |      45827.2     1122.8   1666.0
+slides        A_wdb   bkgRest      510498     319040.6    19914.0 |     301187.0     2217.1  18455.2
+slides        A_w_sc  bump           1403      41276.3     1402.9 |      41099.2     1099.7   1396.9
+slides        A_w_sc  peak            141       3422.4      141.0 |       3422.4      288.2    141.0
+slides        A_w_sc  bkgVM          1764      45869.3     1700.6 |      43712.1     1085.9   1620.3
+slides        A_w_sc  bkgRest      510498     315801.1    19752.6 |     299571.8     2209.4  18384.9
+peak nominal  A_w     bump           2404      70838.4     2403.8 |      66623.5     1401.2   2260.8
+peak nominal  A_w     peak            270       6553.5      270.0 |       6553.5      398.8    270.0
+peak nominal  A_w     bkgVM          9825     254454.9     9412.7 |     171779.9     2157.0   6342.0
+peak nominal  A_w     bkgRest     3031836    1974792.9   118547.2 |     739327.0     3729.3  39302.8
+peak nominal  B_w     bump           2404      70838.4     2403.8 |      66623.5     1401.2   2260.8
+peak nominal  B_w     peak            270       6553.5      270.0 |       6553.5      398.8    270.0
+peak nominal  B_w     bkgVM          9825     254454.9     9412.7 |     171779.9     2157.0   6342.0
+peak nominal  B_w     bkgRest      144517    2077016.9    71912.1 |     774860.6     4719.7  26953.5
+peak nominal  A_wdb   bump           2404      66127.7     2404.0 |      62194.1     1308.0   2261.0
+peak nominal  A_wdb   peak            270       7427.0      270.0 |       7427.0      452.0    270.0
+peak nominal  A_wdb   bkgVM          9825     270259.7     9821.0 |     178275.1     2214.5   6481.0
+peak nominal  A_wdb   bkgRest     3031836    2012941.0   120139.1 |     746985.5     3746.4  39755.1
+peak nominal  A_w_sc  bump           2404      70838.4     2403.8 |      66121.4     1395.9   2243.8
+peak nominal  A_w_sc  peak            270       6553.5      270.0 |       6553.5      398.8    270.0
+peak nominal  A_w_sc  bkgVM          9825     254454.9     9412.7 |     176522.7     2186.7   6516.8
+peak nominal  A_w_sc  bkgRest     3031836    1974792.9   118547.2 |     752811.0     3761.5  40054.0
+# pre (A, w): share of the peak template in the M(pipi) slices 0.30-0.34/0.34-0.37/0.37-0.39/0.39-0.40: 0.251 0.212 0.091 0.078
+# pre+OA>2 (A, w): share of the peak template in the M(pipi) slices 0.30-0.34/0.34-0.37/0.37-0.39/0.39-0.40: 0.260 0.173 0.069 0.081
+# slides (A, w): share of the peak template in the M(pipi) slices 0.30-0.34/0.34-0.37/0.37-0.39/0.39-0.40: 0.234 0.177 0.064 0.078
+# peak nominal (A, w): share of the peak template in the M(pipi) slices 0.30-0.34/0.34-0.37/0.37-0.39/0.39-0.40: 0.256 0.226 0.096 0.085

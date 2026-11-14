@@ -1,0 +1,13 @@
+# eta_enriched_checks: inputs, cache alignment and consistency checks of sim_eta_enriched.C
+cache /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/scan/eta_enriched_etarel.root present (built by an earlier run of this macro)
+attach std: 193403 cached rows for 193403 loaded rows, pat_entry mismatches 0
+attach lep: 5560144 cached rows for 5560144 loaded rows, pat_entry mismatches 0
+attach eta: 3108759 cached rows for 3108759 loaded rows, pat_entry mismatches 0
+E1 vs preset slides, E3 vs preset old code: data rows differing 0 / 0 (selected 647842 / 662876); sim rows differing 0
+set std: physical background (T2, pre, M4 < 1.1): sum w 72034.9, eta-related share 0.1289
+set lep: physical background (T2, pre, M4 < 1.1): sum w 52810.1, eta-related share 0.0573
+set eta: physical background (T2, pre, M4 < 1.1): sum w 321.021, eta-related share 1.0000
+closure: max relative difference (sum of the six components - T1+T2) over the selections: 3.35e-14
+reference (tables/eta_engine_reference.txt, slides, peak window): peak total 0.980 +- 0.041 nb, T1+T2 5.25 +- 0.12 nb
+this macro E1, peak window: peak total 0.9803 +- 0.0413 nb (conv. + direct, variances added), T1+T2 5.2530 +- 0.1165 nb
+MM4 cut used for E1mm, E2mm: 2.85 GeV/c2

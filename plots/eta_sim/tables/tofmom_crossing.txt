@@ -1,0 +1,99 @@
+# DATA /hdd3/przygoda/HADES/files/exp/gen4/lep_034.root, PipPimEpEm_ID, sel: eVertReco_z > -160, trigbit == 8192, all rows (isBest >= 0)
+# change: tof_mom one segment -> two segments (HTimeCut of the simulation), tof_new/beta_new recomputed with HTimeCut::calcTof
+# loss  = inside now, outside after the change; gain = mirror estimate of the tracks entering from outside
+#         (= tracks inside within the shift of the opposite edge; the outside tracks are not in the _ID file)
+# POLY  = data PID polygons pp45_pid_cuts_exp_betanew_v1.root (pions 3sig, leptons 5sig) at the data p
+# NSIG  = |beta_new - beta(p) - mu(p)| < k sigma(p) with the measured mu, sigma (k = 3 pions, 5 leptons)
+# RECENT= the same after removing the mean shift of the p bin (polygons refitted after a reprocessing)
+# fractions in % of the particles (rows); binomial errors (tracks repeat in several rows: underestimated)
+
+pip        N=   75748 | POLY loss 0.363+-0.022 gain 0.066+-0.009 net -0.297 | NSIG loss 0.351 gain 0.180 net -0.172 | POLY RECENT loss 0.046 gain 0.005 net -0.041 | NSIG RECENT loss 0.073 gain 0.015 net -0.058
+pim        N=   75748 | POLY loss 0.275+-0.019 gain 0.096+-0.011 net -0.178 | NSIG loss 0.292 gain 0.117 net -0.174 | POLY RECENT loss 0.049 gain 0.016 net -0.033 | NSIG RECENT loss 0.061 gain 0.016 net -0.045
+ep         N=   75748 | POLY loss 0.000+-0.000 gain 0.000+-0.000 net +0.000 | NSIG loss 0.000 gain 0.000 net +0.000 | POLY RECENT loss 0.000 gain 0.000 net +0.000 | NSIG RECENT loss 0.000 gain 0.000 net +0.000
+em         N=   75748 | POLY loss 0.009+-0.003 gain 0.037+-0.007 net +0.028 | NSIG loss 0.037 gain 0.099 net +0.062 | POLY RECENT loss 0.007 gain 0.036 net +0.029 | NSIG RECENT loss 0.026 gain 0.096 net +0.070
+rows       N=   75748 | POLY loss 0.644+-0.029 gain 0.199+-0.016 net -0.445 | NSIG loss 0.675 gain 0.393 net -0.281 | POLY RECENT loss 0.100 gain 0.057 net -0.044 | NSIG RECENT loss 0.160 gain 0.127 net -0.033
+rows best  N=   64569 | POLY loss 0.576+-0.030 gain 0.167+-0.016 net -0.409 | NSIG loss 0.595 gain 0.339 net -0.256 | POLY RECENT loss 0.091 gain 0.048 net -0.043 | NSIG RECENT loss 0.138 gain 0.110 net -0.028
+
+# loss / gain per p bin (POLY and POLY RECENT), % of the particles of the bin
+## pip
+   60-   90 N=    213 loss 37.089 gain 0.469 | RECENT loss 3.756 gain 0.469
+   90-  120 N=   1053 loss 5.128 gain 0.665 | RECENT loss 0.380 gain 0.000
+  120-  150 N=   2163 loss 2.127 gain 1.017 | RECENT loss 0.277 gain 0.092
+  150-  180 N=   3058 loss 1.210 gain 0.065 | RECENT loss 0.131 gain 0.033
+  180-  220 N=   4846 loss 0.722 gain 0.103 | RECENT loss 0.186 gain 0.000
+  220-  260 N=   5405 loss 0.241 gain 0.056 | RECENT loss 0.037 gain 0.000
+  260-  300 N=   5390 loss 0.093 gain 0.074 | RECENT loss 0.000 gain 0.000
+  300-  350 N=   6400 loss 0.016 gain 0.016 | RECENT loss 0.016 gain 0.000
+  350-  400 N=   6147 loss 0.016 gain 0.016 | RECENT loss 0.000 gain 0.000
+  400-  500 N=  10279 loss 0.010 gain 0.029 | RECENT loss 0.010 gain 0.000
+  500-  600 N=   7829 loss 0.000 gain 0.013 | RECENT loss 0.000 gain 0.000
+  600-  800 N=  10037 loss 0.020 gain 0.000 | RECENT loss 0.000 gain 0.000
+  800- 1000 N=   5173 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1000- 1300 N=   3409 loss 0.029 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1300- 1700 N=   1343 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1700- 2500 N=   3003 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+## pim
+   60-   90 N=    204 loss 9.314 gain 7.353 | RECENT loss 1.961 gain 0.980
+   90-  120 N=   1336 loss 4.416 gain 1.946 | RECENT loss 0.973 gain 0.225
+  120-  150 N=   2257 loss 2.082 gain 0.487 | RECENT loss 0.354 gain 0.177
+  150-  180 N=   3254 loss 1.383 gain 0.184 | RECENT loss 0.154 gain 0.031
+  180-  220 N=   5152 loss 0.233 gain 0.116 | RECENT loss 0.078 gain 0.000
+  220-  260 N=   5430 loss 0.203 gain 0.055 | RECENT loss 0.037 gain 0.000
+  260-  300 N=   5387 loss 0.093 gain 0.019 | RECENT loss 0.000 gain 0.000
+  300-  350 N=   6701 loss 0.090 gain 0.015 | RECENT loss 0.015 gain 0.000
+  350-  400 N=   6258 loss 0.032 gain 0.016 | RECENT loss 0.000 gain 0.000
+  400-  500 N=  10682 loss 0.000 gain 0.009 | RECENT loss 0.000 gain 0.000
+  500-  600 N=   8149 loss 0.012 gain 0.000 | RECENT loss 0.000 gain 0.000
+  600-  800 N=  10210 loss 0.010 gain 0.020 | RECENT loss 0.000 gain 0.020
+  800- 1000 N=   5372 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1000- 1300 N=   3568 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1300- 1700 N=   1451 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1700- 2500 N=    337 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+## ep
+    0-   60 N=    931 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+   60-  100 N=   7182 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  100-  150 N=  12365 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  150-  200 N=  12048 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  200-  250 N=  10097 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  250-  300 N=   7658 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  300-  400 N=  10320 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  400-  500 N=   5972 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  500-  700 N=   5751 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+  700- 1000 N=   2617 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+ 1000- 1900 N=    807 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+## em
+    0-   60 N=      1 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+   60-  100 N=  11305 loss 0.000 gain 0.018 | RECENT loss 0.000 gain 0.018
+  100-  150 N=  23113 loss 0.004 gain 0.009 | RECENT loss 0.000 gain 0.009
+  150-  200 N=  14494 loss 0.000 gain 0.021 | RECENT loss 0.000 gain 0.021
+  200-  250 N=   9009 loss 0.022 gain 0.011 | RECENT loss 0.022 gain 0.011
+  250-  300 N=   5719 loss 0.035 gain 0.052 | RECENT loss 0.017 gain 0.052
+  300-  400 N=   6294 loss 0.016 gain 0.111 | RECENT loss 0.016 gain 0.111
+  400-  500 N=   2836 loss 0.035 gain 0.176 | RECENT loss 0.035 gain 0.141
+  500-  700 N=   2171 loss 0.000 gain 0.184 | RECENT loss 0.000 gain 0.184
+  700- 1000 N=    686 loss 0.000 gain 0.146 | RECENT loss 0.000 gain 0.146
+ 1000- 1900 N=    120 loss 0.000 gain 0.000 | RECENT loss 0.000 gain 0.000
+
+# isBest (HTimeCut alpha = 0: lowest hyp_best_chi2_red among the PipPimEpEm rows of an event), all rows of the file
+events 113804, with >= 2 rows 19237 (sel 9951); stored isBest==1 is the stored chi2 minimum in 113804 events (100.000 %)
+best row changes with the two-segment chi2: 1147 of 19237 multi-row events (5.96 %); sel 626 of 9951 (6.29 %)
+mean hyp_best_chi2_red one segment 0.6661, two segments 0.6324
+
+# rows (sel) by M4 region (M4 from p_corr), % of N; POLY = data polygons kept, RECENT = mean shift removed;
+# isBest==1: rows that are best with the one-segment chi2 (stored) and with the two-segment chi2 (PID unchanged)
+# region       range         | N(isBest>=0) | POLY loss gain net (+-) | RECENT loss gain net (+-) | N(isBest==1) old new change%
+below bump  0.3000-0.4550 |     923 | 0.867 0.217 -0.650 (0.343) | 0.000 0.000 +0.000 (0.000) |    727    728 +0.14
+bump        0.4550-0.5225 |    2770 | 1.011 0.505 -0.505 (0.234) | 0.253 0.144 -0.108 (0.120) |   2229   2224 -0.22
+peak        0.5336-0.5542 |    1347 | 1.336 0.297 -1.039 (0.348) | 0.148 0.074 -0.074 (0.129) |   1085   1082 -0.28
+above peak  0.5800-0.7000 |   15213 | 0.973 0.309 -0.664 (0.092) | 0.138 0.072 -0.066 (0.037) |  12588  12597 +0.07
+high mass   0.7000-1.1000 |   44850 | 0.508 0.161 -0.348 (0.039) | 0.080 0.056 -0.025 (0.017) |  38924  38940 +0.04
+all         0.3000-1.1000 |   67659 | 0.693 0.214 -0.479 (0.037) | 0.108 0.061 -0.047 (0.016) |  57592  57607 +0.03
+
+SIM mean hyp_best_chi2_red: one segment 0.2867, two segments (stored) 0.2946
+
+# SIM /hdd3/przygoda/HADES/files/sim/ppee_std_all.root (unweighted rows; sel vz > -160, trigbit & 8192, isBest >= 0): change two -> one segment on the sim polygons v6
+pip  N=  230115 loss 0.053 gain 0.332 net +0.279 %
+pim  N=  230115 loss 0.098 gain 0.313 net +0.215 %
+ep   N=  230115 loss 0.000 gain 0.000 net +0.000 %
+em   N=  230115 loss 0.000 gain 0.045 net +0.045 %
+rows N=  230115 loss 0.149 gain 0.674 net +0.524 %

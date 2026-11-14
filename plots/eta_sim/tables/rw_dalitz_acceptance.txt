@@ -1,0 +1,16 @@
+# rw_dalitz_acceptance: accepted / QED shape per bin of the TRUE M(ee), normalised to 1 in 3.37-5.02 MeV (sim_rw_dalitz_acc.C)
+# rows of the compact files (FAT selection + vz > -160 mm), unweighted; QED: Kroll-Wada for the Dalitz decays, the reference column of
+#   eta_peak_mee_true.txt for eta -> pi+pi-e+e-. Dalitz generators are QED, so their column is the relative acceptance alone.
+true M(ee) [MeV]  | pi0 Dalitz std (HGeant)        | pi0 Dalitz lep (PLUTO)         | eta Dalitz lep (PLUTO)         | eta->pipiee eta set (PLUTO)    
+  1.02 -   1.52   |   1.034  (rows     6351)        |   1.133  (rows   373482)        |   1.062  (rows    22061)        |   5.325  (rows   198713)        
+  1.52 -   2.27   |   0.886  (rows     7492)        |   0.919  (rows   417456)        |   0.905  (rows    25908)        |   2.069  (rows   105165)        
+  2.27 -   3.37   |   0.884  (rows     7630)        |   0.896  (rows   415808)        |   0.887  (rows    25953)        |   1.322  (rows    69671)        
+  3.37 -   5.02   |   1.000  (rows     8753)        |   1.000  (rows   470154)        |   1.000  (rows    29694)        |   1.000  (rows    53026)        
+  5.02 -   7.47   |   1.164  (rows    10143)        |   1.172  (rows   548549)        |   1.176  (rows    34856)        |   0.779  (rows    41260)        
+  7.47 -  11.13   |   1.335  (rows    11577)        |   1.343  (rows   625660)        |   1.369  (rows    40720)        |   0.597  (rows    31513)        
+ 11.13 -  16.57   |   1.416  (rows    12050)        |   1.459  (rows   666758)        |   1.448  (rows    42941)        |   0.426  (rows    22257)        
+ 16.57 -  24.66   |   1.496  (rows    12235)        |   1.524  (rows   669603)        |   1.497  (rows    44244)        |   0.309  (rows    15756)        
+ 24.66 -  36.71   |   1.532  (rows    11498)        |   1.589  (rows   640717)        |   1.500  (rows    44148)        |   0.222  (rows    10809)        
+ 36.71 -  54.66   |   1.617  (rows     9933)        |   1.749  (rows   577278)        |   1.477  (rows    42978)        |   0.174  (rows     7635)        
+# Dalitz pairs: smooth, 0.88-1.75 over 1-55 MeV, close to 1 at threshold (acceptance rises mildly with M(ee), larger OA)
+# eta -> pi+pi-e+e-: 5.3 at threshold, 0.17 at 37-55 MeV: opposite to the acceptance trend -> the generator shape is the cause

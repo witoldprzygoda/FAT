@@ -1,0 +1,69 @@
+# eta structures in the simulation (std set only: the signal classes exist only there), std + lep owned rows, mode A, w (PDG)
+# fits: weighted least squares, variance of a bin = q * model (q = V/S of the class, event-group variance), iterated; no Poisson likelihood
+# data values from the data study (reports engine.md, scan_bump.md), NOT recomputed: peak 0.5439 +- 0.00049, sigma 5.4 +- 0.6 MeV, scale 0.9928 +- 0.0009, M(pipi) scale 0.9970
+
+A. Peak conversion class (eta -> pi+pi-gamma, photon converted): Gaussian core fit (range mu -+ 2 sigma, iterated), 1 MeV bins
+   selection                sample                   rows    N_eff | mu [GeV/c2]          sigma [MeV]      chi2/ndf        mu/m_eta | mean, rms in 0.50-0.59
+   pre                      reco, all                 302      302 | 0.54605 +- 0.00044    6.22 +- 0.40    20.7/23       0.9967 +- 0.0008 | 0.54489, 9.80 MeV | Gauss area 1.044 +- 0.067 nb = 6349 +- 408 rows; 0.50-0.59: 1.206 nb = 7330 rows
+   pre                      reco, no ghost lepton     236      236 | 0.54651 +- 0.00055    7.06 +- 0.53    28.3/26       0.9975 +- 0.0010 | 0.54533, 9.72 MeV | Gauss area 0.869 +- 0.062 nb = 5284 +- 375 rows; 0.50-0.59: 0.942 nb = 5728 rows
+   pre+OA>2                 reco, all                 169      169 | 0.54598 +- 0.00073    7.67 +- 0.77    24.3/27       0.9966 +- 0.0013 | 0.54517, 9.64 MeV | Gauss area 0.622 +- 0.053 nb = 3783 +- 325 rows; 0.50-0.59: 0.675 nb = 4102 rows
+   pre+OA>2                 reco, no ghost lepton     131      131 | 0.54680 +- 0.00089    8.61 +- 0.94    28.3/31       0.9981 +- 0.0016 | 0.54569, 9.21 MeV | Gauss area 0.524 +- 0.049 nb = 3189 +- 297 rows; 0.50-0.59: 0.523 nb = 3180 rows
+   pre+pions in vertex fit  reco, all                 283      283 | 0.54603 +- 0.00049    6.38 +- 0.51    24.8/21       0.9967 +- 0.0009 | 0.54468, 9.77 MeV | Gauss area 1.006 +- 0.069 nb = 6119 +- 419 rows; 0.50-0.59: 1.130 nb = 6869 rows
+   pre+pions in vertex fit  reco, no ghost lepton     223      223 | 0.54602 +- 0.00053    6.42 +- 0.49    27.1/23       0.9966 +- 0.0010 | 0.54499, 9.64 MeV | Gauss area 0.797 +- 0.059 nb = 4844 +- 360 rows; 0.50-0.59: 0.890 nb = 5413 rows
+   slides                   reco, all                 138      138 | 0.54671 +- 0.00090    8.69 +- 1.02    26.1/30       0.9979 +- 0.0016 | 0.54538, 9.98 MeV | Gauss area 0.538 +- 0.051 nb = 3271 +- 308 rows; 0.50-0.59: 0.551 nb = 3350 rows
+   slides                   reco, no ghost lepton     105      105 | 0.54750 +- 0.00095    8.31 +- 0.96    26.8/30       0.9993 +- 0.0017 | 0.54604, 9.44 MeV | Gauss area 0.415 +- 0.043 nb = 2522 +- 262 rows; 0.50-0.59: 0.419 nb = 2549 rows
+   peak nominal             reco, all                 265      265 | 0.54608 +- 0.00049    6.29 +- 0.47    14.9/22       0.9968 +- 0.0009 | 0.54499, 9.94 MeV | Gauss area 0.930 +- 0.065 nb = 5656 +- 392 rows; 0.50-0.59: 1.058 nb = 6432 rows
+   peak nominal             reco, no ghost lepton     211      211 | 0.54686 +- 0.00059    7.04 +- 0.59    26.8/25       0.9982 +- 0.0011 | 0.54554, 9.91 MeV | Gauss area 0.779 +- 0.059 nb = 4736 +- 359 rows; 0.50-0.59: 0.842 nb = 5121 rows
+   bump nominal             reco, all                 156      156 | 0.54541 +- 0.00060    6.09 +- 0.59    10.9/22       0.9955 +- 0.0011 | 0.54441, 10.24 MeV | Gauss area 0.536 +- 0.048 nb = 3262 +- 295 rows; 0.50-0.59: 0.623 nb = 3786 rows
+   bump nominal             reco, no ghost lepton     119      119 | 0.54611 +- 0.00080    7.11 +- 0.86    20.0/25       0.9968 +- 0.0015 | 0.54513, 10.49 MeV | Gauss area 0.432 +- 0.044 nb = 2629 +- 270 rows; 0.50-0.59: 0.475 nb = 2888 rows
+   pre                      TRUE M4                   307          | TRUE M4: weighted median 0.54746, mean 0.54747; share within 1 MeV of m_eta = 0.997 (a Gaussian core is < 0.1 MeV wide)
+   pre                      reco / true               292      292 | per-row m4/m4_true, Gaussian core: 0.99737 +- 0.00083, sigma 0.01152 +- 0.00080, chi2/ndf 47.6/43
+   fit-range variation (pre, reco, all):  +-1.5 sigma: 0.54590 / 6.67 MeV; +-2.0 sigma: 0.54605 / 6.22 MeV; +-2.5 sigma: 0.54574 / 7.92 MeV; +-3.0 sigma: 0.54555 / 8.06 MeV;
+   mass scale reco/true (pre): fitted mu_reco / median true = 0.99743 +- 0.00080; mu_reco / m_eta = 0.99669 +- 0.00080; per-row core 0.99737 +- 0.00083; data: 0.9928 +- 0.0009
+   sim - data: position +2.15 +- 0.66 MeV, width +0.82 +- 0.72 MeV
+
+B. Resolution (pre): Gaussian core of reco - true (range -+2 sigma, iterated) and weighted rms in -+50 MeV (M4) / -+20 MeV (M(pipi))
+   class                        | M4: core mean     core sigma           mean       rms | M(pipi): core mean core sigma           mean       rms | <m4/true> <mpp/true>
+   bump, pi0 Dalitz             |   -1.16 +- 0.16   5.34 +- 0.15      -2.30      8.55 |   -0.00 +- 0.08   2.61 +- 0.09      +0.12      3.63 |   0.99519   1.00069   [MeV]
+   bump, conversion             |   -0.81 +- 0.20   5.61 +- 0.21      -1.50      8.28 |   -0.28 +- 0.08   2.37 +- 0.09      -0.12      3.68 |   0.99650   0.99987   [MeV]
+   peak, conversion             |   -1.46 +- 0.45   6.29 +- 0.44      -2.57      9.79 |   +0.24 +- 0.18   2.53 +- 0.18      +0.26      3.93 |   0.99328   1.00078   [MeV]
+   bump (Dalitz + conversion)   |   -1.02 +- 0.13   5.45 +- 0.12      -1.96      8.45 |   -0.10 +- 0.06   2.55 +- 0.06      +0.02      3.65 |   0.99574   1.00034   [MeV]
+   peak conversion, no ghost lepton |   -0.84 +- 0.56   7.08 +- 0.57      -2.13      9.71 |   +0.28 +- 0.22   2.61 +- 0.25      +0.25      4.21 |   0.99477   1.00072   [MeV]
+
+   M(pipi) scale of the simulation: signal rows <mpipi/mpipi_true> = 1.00038; K0S pions (pre, dz_pipi > 20, doca_pipi < 10, any template, N_eff 717):
+   Gaussian 0.49850 +- 0.00027, sigma 5.99 MeV -> scale 1.00180 +- 0.00054 (<mpipi/true> 1.00169); data (K0S): 0.9970 +- 0.0004
+
+C. Falling edge of the bump per M(pipi) slice (pre). Model: A (1 + B (m - e_c)/0.04) x step, the step averaged over the slice as in the data
+   study (scan_bump.C): 0.5 erfc((m - k M4max(M(pipi)/s_pipi)) / (sqrt2 s)), M4max^2 = m_eta^2 - m_eta (E0 - p0), k and s free.
+   reco: measured M4 in slices of measured M(pipi), s_pipi = 1.00038 (simulation), 2 MeV bins, range k0 e_c - 40 .. + 25 MeV (k0 = 0.9967);
+   true: m4_true in slices of mpipi_true, s_pipi = 1, 1 MeV bins, range e_c - 30 .. + 12 MeV. Edge = k M4max(slice centre / s_pipi).
+   A and A B solved linearly; k, s on a grid (coarse, then fine); errors: delta chi2 = 1 of the profile; a NEGATIVE error means the interval reaches the grid edge.
+   predictions at the slice centre c: true M4max(c); data scales 0.9928 M4max(c/0.9970); sim scales 0.99669 M4max(c/1.00038)
+   M(pipi)    class                          |    N_eff | reco edge (s free) k                         s [MeV]     | reco edge (s=5.4)  | true edge          k_true   s [MeV]   |  pr.true  pr.data   pr.sim | data fitted edge  
+   0.30-0.34  bump (Dalitz + conversion)     |      805 | 0.5197 +- 0.0014  0.9985 +- 0.0027     6.85 +- 0.94 | 0.5214 +- 0.0009 | 0.5200 +- 0.0005  0.9992    2.03    |   0.5204   0.5166   0.5187 | 0.5158 -0.0016 +0.0014   (chi2/ndf reco 28.6/28, true 50.0/38)
+   0.30-0.34  bump, pi0 Dalitz               |      488 | 0.5190 +- 0.0022  0.9973 +- 0.0043     7.84 +- 1.23 |         -          | 0.5210 +- 0.0007  1.0010    2.67    |   0.5204   0.5166   0.5187 | -   (chi2/ndf reco 26.3/28, true 45.0/38)
+   0.30-0.34  bump, conversion               |      317 | 0.5202 +- 0.0020  0.9995 +- 0.0039     5.98 +- 1.38 |         -          | 0.5190 +- 0.0003  0.9972    0.10    |   0.5204   0.5166   0.5187 | -   (chi2/ndf reco 17.8/28, true 22.8/38)
+   0.34-0.37  bump (Dalitz + conversion)     |      635 | 0.5102 +- 0.0036  0.9901 +- 0.0070    10.80 +- 1.49 | 0.5207 +- 0.0016 | 0.5153 +- 0.0007  1.0002    3.10    |   0.5152   0.5113   0.5136 | 0.5116 -0.0013 +0.0011   (chi2/ndf reco 22.8/28, true 53.0/38)
+   0.34-0.37  bump, pi0 Dalitz               |      380 | 0.5098 +- 0.0041  0.9895 +- 0.0080    11.19 +- 1.87 |         -          | 0.5162 +- 0.0008  1.0018    3.40    |   0.5152   0.5113   0.5136 | -   (chi2/ndf reco 25.8/28, true 41.6/38)
+   0.34-0.37  bump, conversion               |      255 | 0.5106 +- 0.0055  0.9909 +- -0.0106    10.00 +- 3.33 |         -          | 0.5153 +- 0.0005  1.0002    0.10    |   0.5152   0.5113   0.5136 | -   (chi2/ndf reco 20.9/28, true 49.5/38)
+   0.37-0.39  bump (Dalitz + conversion)     |      366 | 0.5032 +- 0.0030  0.9887 +- 0.0058    10.00 +- 1.64 | 0.5093 +- 0.0013 | 0.5087 +- 0.0012  0.9996    3.44    |   0.5089   0.5048   0.5073 | 0.5048 -0.0010 +0.0011   (chi2/ndf reco 21.3/28, true 36.4/38)
+   0.37-0.39  bump, pi0 Dalitz               |      201 | 0.5042 +- 0.0047  0.9907 +- 0.0093    10.39 +- 2.42 |         -          | 0.5118 +- 0.0013  1.0058    2.60    |   0.5089   0.5048   0.5073 | -   (chi2/ndf reco 24.6/28, true 47.8/38)
+   0.37-0.39  bump, conversion               |      165 | 0.5029 +- 0.0039  0.9881 +- 0.0076     8.83 +- 2.06 |         -          | 0.5063 +- 0.0010  0.9950    1.85    |   0.5089   0.5048   0.5073 | -   (chi2/ndf reco 16.3/28, true 22.6/38)
+   0.39-0.41  bump (Dalitz + conversion)     |      167 | 0.5063 +- 0.0026  1.0139 +- 0.0052     5.00 +- 2.52 | 0.5060 +- 0.0016 | 0.5011 +- 0.0014  1.0036    3.01    |   0.4993   0.4948   0.4977 | no data fit   (chi2/ndf reco 29.6/28, true 34.6/38)
+   0.39-0.41  bump, pi0 Dalitz               |       97 | 0.5035 +- 0.0038  1.0083 +- 0.0076     7.17 +- 3.25 |         -          | 0.5022 +- 0.0025  1.0058    3.88    |   0.4993   0.4948   0.4977 | -   (chi2/ndf reco 23.3/28, true 35.3/38)
+   0.39-0.41  bump, conversion               |       70 | 0.5084 +- 0.0022  1.0181 +- 0.0044     1.50 +- -1.12 |         -          | 0.4995 +- 0.0016  1.0004    0.10    |   0.4993   0.4948   0.4977 | -   (chi2/ndf reco 24.0/28, true 26.6/38)
+   0.39-0.40  bump (Dalitz + conversion)     |      110 | 0.5092 +- 0.0027  1.0133 +- 0.0054     4.78 +- -2.73 | 0.5088 +- 0.0018 | 0.5037 +- 0.0008  1.0024    0.10    |   0.5025   0.4982   0.5009 | 0.5004 -0.0024 +0.0020   (chi2/ndf reco 20.4/28, true 31.0/38)
+   0.39-0.40  bump, pi0 Dalitz               |       63 | 0.4999 +- 0.0060  0.9947 +- -0.0120    11.60 +- 4.55 |         -          | 0.5044 +- 0.0021  1.0038    3.20    |   0.5025   0.4982   0.5009 | -   (chi2/ndf reco 22.8/28, true 34.1/38)
+   0.39-0.40  bump, conversion               |       47 | 0.5099 +- 0.0016  1.0147 +- 0.0031     1.50 +- -0.78 |         -          | 0.5019 +- 0.0014  0.9990    0.10    |   0.5025   0.4982   0.5009 | -   (chi2/ndf reco 13.4/28, true 22.9/38)
+   weighted mean edge factor k (reco, bump both classes): slices 1-3: 0.99602 +- 0.00231; slices 1-4 (0.39-0.41): 0.99897 +- 0.00211; sim peak scale 0.99669 +- 0.00080
+   weighted mean k of the TRUE spectra (slices 1-4): 0.99976 +- 0.00068 (1 = the formula holds)
+   data (scan_bump.md, no cut): factors 0.9912, 0.9932, 0.9927, 0.9972 (0.39-0.40), weighted mean 0.9930 +- 0.0013; data peak scale 0.9928 +- 0.0009
+
+D. Row-by-row aligned edge (all bump rows, 0.30 <= M(pipi) < 0.41): u = M4 / M4max(M(pipi)/1.00038) (reco), u = m4_true / M4max(mpipi_true) (true);
+   step at u = k, smearing s in u; same model and grid as C (slope over 0.04 in u)
+   class                          |    N_eff | reco k                 s (u units)        chi2/ndf   | true k                 s (u units)        chi2/ndf  
+   bump (Dalitz + conversion)     |     1767 | 0.99629 +- 0.00260      0.0169 +- 0.0011    66.7/69  | 1.00020 +- 0.00010      0.0005 +- -0.0000  331.0/66 
+   bump, pi0 Dalitz               |     1046 | 0.99469 +- 0.00410      0.0184 +- 0.0019    52.0/69  | 1.00160 +- 0.00020      0.0021 +- -0.0000  223.1/66 
+   bump, conversion               |      721 | 0.99849 +- 0.00360      0.0143 +- 0.0020    91.0/69  | 0.99920 +- 0.00010      0.0003 +- -0.0003   42.0/66 
+   bump both, reco, s fixed to 5.4 MeV (0.0105 in u, the data choice): k = 1.00609 +- 0.00140, chi2/ndf 107.9/70
+   compare: sim peak scale 0.99669 +- 0.00080; data edge factor 0.9930 +- 0.0013 and data peak scale 0.9928 +- 0.0009 (data use s_pipi = 0.9970)

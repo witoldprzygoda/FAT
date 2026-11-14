@@ -1,0 +1,47 @@
+# closure_ghost: signal rows (template 1) with a ghost track in a lepton slot (sim_flags bit 10) against clean rows
+# e+e-, std set (the lepton set has no signal rows), sigma = sum w / 221.05 nb^-1, event-group errors
+# windows: bump 0.455-0.5225, peak 0.5336-0.5542 GeV/c2
+
+## selection pre
+class                  rows         n     sigma all [nb]     sigma bump win     sigma peak win   ghost%
+C2 bump, pi0 Dalitz    all       1649     7.924 +- 0.195     6.137 +- 0.172 0.02883 +- 0.01177    100.0
+C2 bump, pi0 Dalitz    clean     1564     7.516 +- 0.190     5.834 +- 0.167 0.02883 +- 0.01177     94.8
+C2 bump, pi0 Dalitz    ghost       85   0.4085 +- 0.0443   0.3027 +- 0.0381                  0      5.2
+C3 bump, conversion    all       1187     5.821 +- 0.169     4.443 +- 0.148 0.01471 +- 0.00849    100.0
+C3 bump, conversion    clean      945     4.634 +- 0.151     3.575 +- 0.132                  0     79.6
+C3 bump, conversion    ghost      242     1.187 +- 0.076   0.8680 +- 0.0652 0.01471 +- 0.00849     20.4
+C4 peak, conversion    all        307     1.225 +- 0.070 0.05189 +- 0.01439   0.9421 +- 0.0613    100.0
+C4 peak, conversion    clean      239   0.9540 +- 0.0617 0.03593 +- 0.01198   0.7385 +- 0.0543     77.9
+C4 peak, conversion    ghost       68   0.2714 +- 0.0329 0.01597 +- 0.00798   0.2036 +- 0.0285     22.1
+
+C4 peak, conversion                   Gauss mean [GeV/c2]   Gauss sigma [MeV/c2]       median   hw68 [MeV]   chi2/ndf
+all                                    0.54607 +- 0.00046           6.21 +- 0.47      0.54570         7.60    7.5/9
+clean                                  0.54653 +- 0.00055           6.85 +- 0.53      0.54588         7.94    8.2/11
+ghost                                  0.54556 +- 0.00094           5.38 +- 0.98      0.54510         8.62    4.0/7
+
+M4 - M4_true (all signal classes)      mean [MeV]      rms [MeV]   |d|>10 MeV %           rows
+clean                                       -1.81           7.84           16.0           2748
+ghost                                       -2.33           9.77           25.9            395
+# (mean and rms inside |d| < 40 MeV)
+
+## selection pre+OA>2
+class                  rows         n     sigma all [nb]     sigma bump win     sigma peak win   ghost%
+C2 bump, pi0 Dalitz    all       1340     6.439 +- 0.176     4.930 +- 0.154 0.02403 +- 0.01075    100.0
+C2 bump, pi0 Dalitz    clean     1292     6.209 +- 0.173     4.772 +- 0.151 0.02403 +- 0.01075     96.4
+C2 bump, pi0 Dalitz    ghost       48   0.2307 +- 0.0333   0.1586 +- 0.0276                  0      3.6
+C3 bump, conversion    all        675     3.310 +- 0.127     2.511 +- 0.111 0.01471 +- 0.00849    100.0
+C3 bump, conversion    clean      557     2.731 +- 0.116     2.079 +- 0.101                  0     82.5
+C3 bump, conversion    ghost      118   0.5787 +- 0.0533   0.4315 +- 0.0460 0.01471 +- 0.00849     17.5
+C4 peak, conversion    all        173   0.6906 +- 0.0525 0.02794 +- 0.01056   0.5229 +- 0.0457    100.0
+C4 peak, conversion    clean      134   0.5349 +- 0.0462 0.01996 +- 0.00893   0.4112 +- 0.0405     77.5
+C4 peak, conversion    ghost       39   0.1557 +- 0.0249 7.98e-03 +- 5.65e-03   0.1118 +- 0.0211     22.5
+
+C4 peak, conversion                   Gauss mean [GeV/c2]   Gauss sigma [MeV/c2]       median   hw68 [MeV]   chi2/ndf
+all                                    0.54611 +- 0.00072           7.02 +- 0.76      0.54643         8.07   10.9/11
+clean                                  0.54706 +- 0.00087           7.82 +- 1.04      0.54688         8.29   11.7/12
+ghost                                  0.54538 +- 0.00375          11.91 +- 5.43      0.54341         9.46    6.6/11
+
+M4 - M4_true (all signal classes)      mean [MeV]      rms [MeV]   |d|>10 MeV %           rows
+clean                                       -1.74           7.92           16.8           1983
+ghost                                       -1.91          11.43           34.1            205
+# (mean and rms inside |d| < 40 MeV)

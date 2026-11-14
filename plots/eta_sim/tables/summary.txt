@@ -1,0 +1,90 @@
+# summary.txt -- headline numbers of the simulation study pi+ pi- e+ e-, p+p 4.53 GeV (feb22), 2026-11-12
+# Simulation: SMASH std + lep, rows owned in mode A, weight w (PDG BR), sigma = sum w / L_sim (221.05 nb^-1), cross section within the
+#   HADES acceptance after the selection (no efficiency correction), event-group errors, double precision. Only signal (T1) + physical
+#   background (T2) form the simulated spectrum; fake lepton (T3) and different sources (T4) are information only.
+# Data: (N - CB) / L_data, CB = 2 sqrt(N++ N--) in 10 MeV M4 bins without k. L_data = 6080.5 nb^-1 is UNCONFIRMED: every data cross
+#   section, every data/sim ratio and R scale with 1/L_data. eta -> pi+pi-e+e- (direct decay) is MISSING in every simulated number.
+# "pre" = isBest >= 0, PT3, vz > -160 mm, z > -500 mm, corrected momenta. Windows: bump 0.4550-0.5225, peak 0.5336-0.5542 GeV/c2.
+# Source: R = recomputed by sim_summary.C (summary_recomputed.txt); V = sim_review.C (review_*.txt); other names = quoted from that study's table.
+# REVIEW (2026-11-12): (a) = T1 + T2 + ghost-flagged true e+e- pairs (91 % of the 'fake lepton' class, not removed by the data CB; treatment to be
+#   confirmed by the user); (b) = T1 without ghost rows + T2. central = -140 < vz < -100 mm, edge = -160 < vz < -140 mm.
+#   The absolute scale (R) is NOT determined better than 15-20 %: see section 3 and review_R_variants.txt.
+
+## 1. Simulated cross sections, "pre" (whole M4 range)          sigma [nb]          N_eff     source
+signal T1 (all three channels)                                 15.17 +- 0.27        3 129     R
+  bump, eta -> pi+pi-pi0, pi0 Dalitz                            8.05 +- 0.20        1 649     R
+  bump, eta -> pi+pi-pi0, converted photon                      5.93 +- 0.17        1 187     R
+  peak, eta -> pi+pi-gamma, converted photon                    1.18 +- 0.07          307     R
+physical background T2                                        683.8  +- 1.4       231 613     R
+simulated spectrum T1 + T2 (mode A/w; A/w_db 714.8, B/w 734.7)  698.9  +- 1.5       228 661     R (variants: engine_reference)
+fake lepton T3 / different sources T4 (information only)       124.8 +- 0.7 / 12.46 +- 0.25   29 518 / 2 473   R
+
+## 2. Windows, "pre"                                  bump window [nb]      peak window [nb]      source
+signal of the window (bump D+C / peak conversion)     10.82 +- 0.23         0.907 +- 0.059       R
+physical background T2                                13.88 +- 0.22         7.13  +- 0.15        R
+simulation T1 + T2                                    24.70 +- 0.32         8.09  +- 0.16        R
+data N - CB                                           22.64 +- 0.07        11.44  +- 0.05        R
+data / simulation                                      0.917 +- 0.012       1.415 +- 0.029       R (peak: background trend, see below)
+data / simulation, (a) / central vz / central (a)     0.836/0.778/0.713    1.243/1.257/1.096    V
+simulated S/B: default / (b) no ghosts / (a) ghosts    0.775/0.689/0.661    0.127/0.100/0.110    V review_sb (+-0.02 / +-0.009)
+# the peak-window ratio equals the background trend around it (gap 1.293, 0.554-0.58 1.460) and does NOT measure the missing direct decay.
+
+## 3. Data (N - CB) / simulation, absolute and after R    pre: absolute    pre: after R     pre+OA>2: absolute   source
+below the bump 0.30-0.45                                0.959 +- 0.024   0.766 +- 0.019   0.990 +- 0.029       R
+gap bump-peak 0.525-0.530                               1.264 +- 0.056   1.010 +- 0.045   1.259 +- 0.063       R
+above the peak 0.56-0.70                                1.367 +- 0.008   1.093 +- 0.006   1.413 +- 0.009       R
+0.70-0.90                                               1.128 +- 0.004   0.902 +- 0.003   1.167 +- 0.005       R
+high mass 0.90-1.10                                     0.769 +- 0.003   0.614 +- 0.002   0.799 +- 0.003       R
+whole range 0.30-1.10                                   1.049 +- 0.003   0.838 +- 0.002   1.095 +- 0.003       R
+R = data/sim in 0.60-0.80, default: pre 1.251 +- 0.005 (mode B 1.203, w_db 1.222); pre+OA>2 1.293 +- 0.006   R
+R, variant (a): pre 1.079 +- 0.004 (mode B 1.040); central vz 1.120 (T12) / 0.966 (a); edge vz 1.851 / 1.628;
+   no vz cut 1.315 / 1.133; window 0.56-0.62 1.448 / 1.238, 0.65-0.85 1.198 / 1.033                           V review_R_variants
+R spread over windows x (pre, central vz) x ghost x mode: 0.93 - 1.45 -> absolute scale not better than 15-20 %   V
+R: pre + pions in vertex fit 1.183 +- 0.005, slides 1.299 +- 0.012                                             datacomp_R
+shape after R, central vz with (a): below bump 0.733, bump 0.737, peak 1.134, 0.56-0.70 1.075, 0.90-1.10 0.604   V review_regions
+   (the same shape in every vz slice and ghost variant: the M4 shape mismatch is robust)
+template fit, single background factor (M1): chi2/ndf 473/125; with a linear tilt (M6): 164/124, beta = -0.177 +- 0.010 per 0.1 GeV/c2   R
+
+## 4. Data / simulation per OA(e+e-) class, "pre", absolute   OA<2           2-4            4-6            6-10           >10      source
+M4 0.56-0.80                                         1.164+-0.009   1.415+-0.010   1.407+-0.015   1.233+-0.014   1.055+-0.009   R
+bump window                                          0.782+-0.021   1.002+-0.023   1.080+-0.040   0.989+-0.041   0.795+-0.026   R
+M4 0.30-0.45                                         0.869+-0.045   1.040+-0.045   1.007+-0.064   1.073+-0.088   0.810+-0.053   R
+M4 0.56-0.80, variant (a)                            0.930+-0.007   1.165+-0.008   1.299+-0.014   1.210+-0.013   1.040+-0.009   V
+M4 0.56-0.80, variant (a), central vz                0.846+-0.007   1.043+-0.008   1.098+-0.013   1.028+-0.013   0.971+-0.010   V
+# the pattern depends on the ghost treatment, the mode (A/B) and the vz slice: the small-OA question is OPEN (review_oa_classes)
+
+## 5. eta structures                                  simulation              data                    source
+peak conversion: Gaussian mean [GeV/c2]                0.5460 +- 0.0005 +- 0.0002  0.5439 (all decays)  V review_peak (data: other selection)
+peak conversion: Gaussian sigma [MeV/c2]               6.2 +- 0.5 +- 0.8       5.4 (not significant)  V review_peak (fit choice = 2nd error)
+M(pi+pi-) scale from the K0S peak                      1.0018 +- 0.0005        0.9970 +- 0.0004       spectra_eta
+bump edge formula on true momenta, k                   0.9998 +- 0.0007        -                      spectra_eta
+data peak content S (P_main, "pre", rows)              SMASH conversion alone 4 480    4671 +- 367 +- 958    R (sim: fit_contents)
+edge-step sum E ("pre", rows)                          SMASH alone 2 645       1199 +- 71             R (sim: fit_contents)
+
+## 6. Cut efficiencies, simulation against data (same cut, same base)   data             simulation       source
+eta peak, OA > 2 deg                                   0.779 +- 0.033   0.564 +- 0.028   R / cuts_compare_data
+eta peak, OA < 6 deg                                   0.723 +- 0.041   0.993 +- 0.005   R / cuts_compare_data
+tagged eta (bump), M(pi+pi-) > 0.34                    0.705 +- 0.017   0.444 +- 0.025 (Dalitz-plot weight 0.669 +- 0.024)   R / cuts
+tagged eta (bump), OA > 2 deg                          0.754 +- 0.013   0.686 +- 0.024   R / cuts_compare_data
+tagged eta (bump), both pions in the vertex fit        0.950 +- 0.013   0.945 +- 0.013   R / cuts_compare_data
+background M4 0.60-0.80, alpha_lab < 50 deg            0.571 (approx.)  0.621 +- 0.002   R
+background M4 0.60-0.80, pT4 > 300 MeV/c               0.584 (approx.)  0.657 +- 0.002   R
+background M4 0.60-0.80, all four tracks in vertex     0.639 (approx.)  0.738 +- 0.002   R
+background M4 0.60-0.80, OA > 2 deg                    0.732 (approx.)  0.708 +- 0.002   R
+
+## 7. Template fit of data N - CB, "pre", 0.43-0.75, PRELIMINARY   alpha_bump       alpha_peak      alpha_bkg        chi2/ndf   source
+M1 (three templates)                                   0.403 +- 0.026   2.43 +- 0.26    1.299 +- 0.006   473/125    R
+M6 (background tilt beta = -0.177 +- 0.010)            0.02 +- 0.04     0.55 +- 0.27    1.425 +- 0.010   164/124    R
+M1 / M6 with (a)                                       0.38 / 0.03      2.47 / 0.79     1.118 / 1.216    438 / 156  V review_fit_variants
+M1 / M6, central vz with (a)                           0.29 / 0.07      2.09 / 0.97     0.996 / 1.062    295 / 166  V
+# template errors ~4.8 % per 2.5 MeV point against ~1.0 % for data: chi2/ndf ~1.3 = consistent within the template statistics;
+# alpha_bump = 0.02 - 0.45 x SMASH depending on the model (edge vz excluded): not measured
+alpha_bump from the edge-step sum E                    about 0.35 (pre), 0.50 (pre+OA>2), 0.37 (peak nominal)            fit_contents
+
+## 8. Weights, partition, reconstruction checks                                        value                      source
+lep/std closure, pi0 Dalitz pairs (expected 1)                                        0.894 +- 0.003             closure_ratios
+lep/std closure, eta Dalitz pairs                                                     0.931 +- 0.006             closure_ratios
+mode B / mode A, physical background, whole M4 (difference = the closure deficit)     1.052 +- 0.002             closure_partition
+ghost-lepton rows in the signal (rows)                                                395 of 3 143 (12.6 %)      closure_ghost
+tof_mom 1 vs 2 segments: net change of selected data rows, polygons refitted          -0.044 +- 0.02 %           tofmom_crossing
+event groups without exactly one isBest == 1 row (std_us 213 044, lep_us 6 856 223)  0                          R

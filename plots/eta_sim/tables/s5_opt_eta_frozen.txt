@@ -1,0 +1,79 @@
+# s5_opt_eta_frozen.txt -- frozen eta-selection cuts from the simulation-truth optimisation (plots/eta_sim/s5_opt_eta.C, 2026-11-12)
+# SIMULATION ONLY (no CB, physics weights V3 main); FOM = S/sqrt(S+B) at L_data = 6080.5 nb^-1 (UNCONFIRMED, scale only)
+# base: pre = isBest >= 0, vz > -500, PT3 bit, vz > -160 mm, corrected momenta, cor_ok == 1
+# cuts: *_min means value > cut, *_max means value < cut; none = not applied; flags 0 = off, 1 = on
+#   pions_in_vertex_fit = 1: pip_isUsedVertex == 1 && pim_isUsedVertex == 1
+#   dz_pi_max = 40: max(|pip_z - vz|, |pim_z - vz|) < 40 mm; units: deg, GeV/c2, MeV/c
+# rule: fewest active cuts on the 5% plateau of the full sample and of both halves, highest worst-neighbour FOM
+# NOTE (2026-11-13, review M4): dz_pi needs the pion track z (pip_z, pim_z). The data compact rows (ScanEngine.h, scan::Row) do not
+#   have them, so PEAK and DIRECT cannot yet be applied to data. Data-ready alternative on the plateau: pre + both pions in the
+#   vertex fit (F/F_best = 0.954 PEAK, 0.962 DIRECT, 0.980 BUMP).
+# NOTE (review M5): differences with the correlated event-group error, F(frozen) - F(pre): PEAK +2.67 +- 0.44, DIRECT +1.12 +- 0.10;
+#   F(frozen) - F(pre + pions in vertex fit): PEAK +1.19 +- 0.48, DIRECT +0.58 +- 0.09, BUMP -1.11 +- 0.88. The numbers below are
+#   full-sample (half A + half B) values: do not give them to the analyst of a blind test (review H1).
+
+[windows]
+peak_m4_min = 0.5333
+peak_m4_max = 0.5587
+bump_m4_min = 0.4576
+bump_m4_max = 0.5255
+
+[PEAK]
+target = classes 4+5 in the peak window 0.5333-0.5587
+oa_min = none
+alpha_lab_max = none
+mpipi_min = none
+mpipi_max = none
+alpha_eta_min = none
+pions_in_vertex_fit = 0
+dz_pi_max = 40
+mm4_max = 2.85
+pt4_min = none
+fom = 54.793 +- 1.630
+fom_over_best = 0.975
+purity = 0.2345 +- 0.0069
+efficiency = 0.9310 +- 0.0072
+best_point = Mpp>0.32, Mpp<0.48, eta>160, dz<40, MM4<2.85 (fom 56.176 +- 1.743, purity 0.2619)
+optimisation_bias_frozen_rule = +0.68 +- 0.09 % (best cell +2.71 +- 0.11 %; 100 random split halves)
+# alternative, not frozen (highest purity on the same plateau, <= 3 cuts): Mpp>0.32, dz<40, MM4<2.7; fom 54.590 (0.972 of best), purity 0.3134, efficiency 0.6914
+justification = 2 active cuts, the fewest on the 5% plateau (full sample 0.975, half A 0.978, half B 0.968 of their best); every one-step change of a threshold keeps >= 0.968 of the best FOM
+
+[DIRECT]
+target = class 5 in the peak window 0.5333-0.5587 (class 4 = background)
+oa_min = none
+alpha_lab_max = none
+mpipi_min = none
+mpipi_max = none
+alpha_eta_min = none
+pions_in_vertex_fit = 0
+dz_pi_max = 40
+mm4_max = none
+pt4_min = none
+fom = 28.950 +- 0.260
+fom_over_best = 0.982
+purity = 0.1186 +- 0.0021
+efficiency = 0.9625 +- 0.0005
+best_point = Mpp>0.3, Mpp<0.53, eta>150, dz<40, MM4<2.85 (fom 29.495 +- 0.281, purity 0.1301)
+optimisation_bias_frozen_rule = +0.06 +- 0.01 % (best cell +0.75 +- 0.05 %; 100 random split halves)
+# alternative, not frozen (highest purity on the same plateau, <= 3 cuts): lab<40, dz<40, MM4<2.7; fom 28.292 (0.959 of best), purity 0.1663, efficiency 0.6556
+justification = 1 active cut, the fewest on the 5% plateau (full sample 0.982, half A 0.979, half B 0.982 of their best); every one-step change of a threshold keeps >= 0.982 of the best FOM
+
+[BUMP]
+target = classes 2+3 in the bump window 0.4576-0.5255
+oa_min = none
+alpha_lab_max = none
+mpipi_min = none
+mpipi_max = none
+alpha_eta_min = none
+pions_in_vertex_fit = 0
+dz_pi_max = none
+mm4_max = none
+pt4_min = none
+fom = 152.704 +- 2.998
+fom_over_best = 0.973
+purity = 0.3958 +- 0.0067
+efficiency = 1.0000 +- 0.0000
+best_point = lab<70, Mpp>0.3, Mpp<0.41, dz<40 (fom 157.002 +- 3.154, purity 0.4667)
+optimisation_bias_frozen_rule = +0.08 +- 0.01 % (best cell +1.10 +- 0.07 %; 100 random split halves)
+# alternative, not frozen (highest purity on the same plateau, <= 3 cuts): lab<40, Mpp>0.32, dz<40; fom 150.484 (0.958 of best), purity 0.4963, efficiency 0.7746
+justification = 0 active cuts, the fewest on the 5% plateau (full sample 0.973, half A 0.975, half B 0.966 of their best); every one-step change of a threshold keeps >= 0.973 of the best FOM

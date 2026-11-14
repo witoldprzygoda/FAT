@@ -1,0 +1,28 @@
+# eta_peak_composition: the simulated eta peak (direct eta -> pi+pi-e+e- + conversion eta -> pi+pi-gamma) per selection
+# simulation: std + lep + eta owned rows, mode A, w (PDG); sigma = sum w / L_sim (221.05 nb^-1), within the acceptance, no efficiency correction
+# expected data rows = sum w x L_data / L_sim, L_data = 6080.5 nb^-1 (UNCONFIRMED). Errors: event groups. All M4 unless stated.
+# data: P_main fit of N - CB (Gaussian frozen 0.5439 / 5.4 MeV = whole Gaussian, pol2, 0.5225-0.61), same preset (vz > -160)
+# dir KW: ILLUSTRATION ONLY - direct decay reweighted to the QED (Kroll-Wada) M(ee) shape with flat acceptance in the true M(ee) and fixed content in 'pre'
+#   ASSUMED (both arbitrary; the OA > 2 pass share rises from 0.52 to 1.00 with the true M(ee), eta_peak_mee_true.txt): not a result
+# CAUTION (review finding 2): the simulated direct decay has a NON-QED generator M(ee) (accepted density largest at threshold, close to 1/M^2):
+#   every simulated direct-decay number (yield, f_dir, class shapes, OA efficiencies) is labelled 'generator M(ee) model not QED' and is not for physics
+# CAUTION (review finding 1): data/sim here = METHOD A only (data P_main, whole Gaussian, against the simulated content over ALL M4, 23 % of it
+#   outside the window); the peak ratio depends on the method (0.3 to about 1): see tables/eta_summary_peak_methods.txt; not a headline number
+# data S: +- stat +- model (fit-model spread of the data study: pol 1-4, 4 ranges, width -+ 0.5 MeV, half range over fits with p > 0.05)
+# data/sim: +- stat +- model; NOT included: absolute scale incl. L_data (about +-20 %, reconcile.md) and the ghost treatment (column ghost;
+#   'data/sim (b)' = against the simulated peak WITHOUT rows with a ghost-flagged lepton)
+# f_dir = direct / (direct + conversion). ghost: share of rows with a ghost-flagged lepton track (kept in the signal by the template rule)
+
+selection         sig dir [nb]    sig conv [nb]     sig tot [nb]         f_dir sig tot win [nb]    exp. rows tot     data S +-st +-mod    data S/L [nb]   data/sim +-st +-mod   data/sim (b)  ghost dir/conv   X17 1e-5 [nb]  dir KW [nb]
+pre            1.3852 +- 0.0018  1.2255 +- 0.0699  2.6106 +- 0.0700 0.531+-0.014  2.0043 +- 0.0613   15874 +- 425    4671 +- 367  +- 958    0.7681 +- 0.0603 0.294+-0.024+-0.060 0.363+-0.030  0.160 / 0.221  0.07127       1.3852
+pre+OA>2       0.8501 +- 0.0014  0.6906 +- 0.0525  1.5407 +- 0.0525 0.552+-0.019  1.1663 +- 0.0457    9368 +- 319    3632 +- 328  +- 752    0.5974 +- 0.0540 0.388+-0.037+-0.080 0.471+-0.046  0.138 / 0.225  0.06808       1.0734
+slides         0.7307 +- 0.0013  0.5628 +- 0.0474  1.2936 +- 0.0474 0.565+-0.021  0.9803 +- 0.0413    7866 +- 288    3187 +- 283  +- 673    0.5242 +- 0.0466 0.405+-0.039+-0.086 0.494+-0.048  0.139 / 0.234  0.05890       0.9519
+old code       0.9978 +- 0.0016  0.8702 +- 0.0589  1.8681 +- 0.0590 0.534+-0.017  1.4141 +- 0.0510   11359 +- 358    3633 +- 296  +- 671    0.5974 +- 0.0486 0.320+-0.028+-0.059 0.402+-0.035  0.162 / 0.252  0.05388       1.0306
+peak nominal   1.2928 +- 0.0018  1.0778 +- 0.0656  2.3705 +- 0.0656 0.545+-0.015  1.8241 +- 0.0577   14414 +- 399    4330 +- 327  +- 981    0.7121 +- 0.0538 0.300+-0.024+-0.068 0.367+-0.030  0.161 / 0.207  0.06139       1.2993
+
+# f_dir in the peak window 0.5336-0.5542:  pre 0.530+-0.016  pre+OA>2 0.552+-0.022  slides 0.564+-0.024  old code 0.540+-0.019  peak nominal 0.543+-0.017
+# share of the simulated peak content inside the window: direct 0.767, conversion 0.769, total 0.768 (pre)
+# efficiency of OA > 2 relative to pre: sim direct 0.614+-0.001 (generator M(ee) model not QED), conversion 0.564+-0.028, total 0.590+-0.013; data (pass/fail fits, this macro) 0.778 +- 0.031 (stat) +- 0.009 (model, 22 variants); data (assistant, today) 0.778
+# data pass/fail for OA > 2: S_pass 3632 +- 328 +- 752, S_fail 1037 +- 163 +- 353; S(pre) 4671 +- 367 +- 958 (stat, model)
+# data, nominal WITHOUT vz cut (reproduction of scan_peak.md 4319 +- 348): 4319 +- 348 (stat) +- 995 (model; data study: 19-26 % of S)
+# model spread relative to S:  pre 0.21  pre+OA>2 0.21  slides 0.21  old code 0.18  peak nominal 0.23

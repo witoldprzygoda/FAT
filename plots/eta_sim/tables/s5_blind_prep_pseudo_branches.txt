@@ -1,0 +1,40 @@
+# s5_blind_prep_pseudo_branches: content of the blind-test pseudo-data directory (s5_blind_prep_check.C)
+# directory /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/pseudo (the sealed directory is NOT read)
+# whitelist: eta_toys {toy, evt, m4, mee, mm4, dz_pi, pivtx}; toys {id, index}; histograms toy_<id>_m4mee (TH2D), toy_<id>_mee (TH1D);
+# forbidden tokens in any name / title / branch / leaf: background bkg br bump class classes cls conversion dalitz direct expect expected flag flags fold gconv geninfo geta ghost goth gpi0d grp gsig2 gsig3 gsig4 gsig5 gvec half inject injected key lcls lep mu own owna ownb parent parentid pcls peak45 seed set sets signal sim std sumw template templates tmpl true truth w wdb weight weights x17perbr
+
+## files in the directory
+  README.md              0.00 MB
+  eta_toys.root        206.32 MB
+  x17_toys.root         24.50 MB
+
+## /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/pseudo/eta_toys.root
+  key: eta_toys   class TTree    title "pi+pi-e+e- pseudo-data rows (pre applied), M4 0.30-1.20 GeV/c2"
+  key: info       class TNamed   title "Eta pseudo-data of the blind test: rows passing pre (isBest >= 0, vz > -500 mm, PT3 bit, vz > -160 mm, cor_ok), 0.30 <= M4 < 1.20 GeV/c2, at an integrated luminosity of 110.525 nb^-1. Columns: toy (toy index), evt (event number in the toy; rows of one event share it), m4 [GeV/c2], mee [GeV/c2], mm4 [GeV/c2], dz_pi = max(|z_pi+ - z_vtx|, |z_pi- - z_vtx|) [mm], pivtx (1 = both pions used in the vertex fit). Unweighted: one entry = one row."
+  info: "Eta pseudo-data of the blind test: rows passing pre (isBest >= 0, vz > -500 mm, PT3 bit, vz > -160 mm, cor_ok), 0.30 <= M4 < 1.20 GeV/c2, at an integrated luminosity of 110.525 nb^-1. Columns: toy (toy index), evt (event number in the toy; rows of one event share it), m4 [GeV/c2], mee [GeV/c2], mm4 [GeV/c2], dz_pi = max(|z_pi+ - z_vtx|, |z_pi- - z_vtx|) [mm], pivtx (1 = both pions used in the vertex fit). Unweighted: one entry = one row."
+  tree 'eta_toys' (title "pi+pi-e+e- pseudo-data rows (pre applied), M4 0.30-1.20 GeV/c2"), 14200862 entries; branches:
+    toy       leaves: toy/Int_t                 title "toy/I"
+    evt       leaves: evt/Int_t                 title "evt/I"
+    m4        leaves: m4/Float_t                title "m4/F"
+    mee       leaves: mee/Float_t               title "mee/F"
+    mm4       leaves: mm4/Float_t               title "mm4/F"
+    dz_pi     leaves: dz_pi/Float_t             title "dz_pi/F"
+    pivtx     leaves: pivtx/Int_t               title "pivtx/I"
+  toys: 200 (index 0..199); rows per toy: mean 71004.3, min 70247, max 71755; non-finite values 0; pivtx outside {0,1} 0; M4 outside 0.30-1.20: 0
+
+## /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/pseudo/x17_toys.root
+  example key: toy_806966_m4mee   class TH2D  title "pseudo-data toy 806966: M4 x M(ee)"
+  example key: toy_806966_mee     class TH1D  title "pseudo-data toy 806966: M(ee) in the X17 M4 window"
+  key: toys       class TTree    title "list of the X17 pseudo-data toys in file order"
+  key: info       class TNamed  
+  info: "X17 pseudo-data of the blind test at L_data = 6080.5 nb^-1 (UNCONFIRMED): 1500 toys in random order with random six-digit ids (tree 'toys'). Per toy: toy_<id>_m4mee = observed rows in M4 0.4830-0.6080 GeV/c2 (50 bins of 2.5 MeV/c2) x M(ee) 0-100 MeV/c2 (200 bins of 0.5 MeV/c2), after pre + both pions in the vertex fit; toy_<id>_mee = its M(ee) projection over the X17 M4 window 0.5330-0.5555 GeV/c2 (M4 bins 21-29). Observed rows only."
+  objects per class: TH1D 1500; TH2D 1500; TNamed 1; TTree 1;
+  toys 1500 (ids unique by construction of the map; histograms 3000); non-integer bins 0, negative bins 0, histograms with Sumw2 0, M(ee) projection mismatches 0
+  tree 'toys' (title "list of the X17 pseudo-data toys in file order"), 1500 entries; branches:
+    id        leaves: id/Int_t                  title "id/I"
+    index     leaves: index/Int_t               title "index/I"
+  tree 'toys': 1500 entries, 1500 distinct ids, all with histograms: yes
+
+## README.md: 40 lines, checked for injected BR values and seeds
+
+RESULT: PASS: no truth, weight, class or set column, no forbidden token (0 violations)

@@ -1,0 +1,78 @@
+# s5_blind_prep_checks: checks of the blind-test preparation (s5_blind_prep.C); simulation only; public part (no sealed numbers)
+# rows: std + lep + eta owned rows, mode A, w (PDG) x physics weights V3; pre; T1 classes 2-5 + T2 (X17, T3, T4 not in the pseudo-data)
+
+## 1. frozen selections used (read from the frozen files, unchanged)
+PEAK     pre + max|z_pi - z_vtx| < 40 mm + MM4 < 2.85 GeV/c2
+DIRECT   pre + max|z_pi - z_vtx| < 40 mm
+BUMP     pre
+X17SEL   pre + both pions in the vertex fit + M(ee) >= 13 MeV/c2 + M(ee) < 26.5 MeV/c2
+PRE      pre
+X17 M4 window 0.5330-0.5555 GeV/c2 = 2D M4 bins 21-29 (1-based); M(ee) window 13.0-26.5 MeV/c2 = bins 27-53 (1-based)
+
+## 2. cross-check: the frozen numbers recomputed on the FULL sample (both halves) with this macro's cut code
+target                                    FOM     frozen     purity     frozen        eff     frozen
+PEAK: classes 4+5, peak window         54.793     54.793     0.2345     0.2345     0.9310     0.9310
+DIRECT: class 5, peak window           28.950     28.950     0.1186     0.1186     0.9625     0.9625
+BUMP: classes 2+3, bump window        152.704    152.704     0.3958     0.3958     1.0000     1.0000
+X17SEL in the X17 M4 window: X17 per unit BR 4484.32481 nb (frozen 4484.32481); background T1 (no X17) + T2 1.33344 +- 0.05055 nb (frozen 1.33280 +- 0.05052)
+
+window bins of the X17 histograms against the direct window cuts: 1178475 rows in the M4 window, 0 mismatches (M4 or M(ee))
+half A, X17SEL in the X17 window: sum of the 2D window cells 300.580172, exact window sum 300.580172 (expected rows at L_sim)
+
+## 3. split into halves (public part; the half-B numbers per set and per component are sealed)
+rule: half A = event groups with even grp, half B = odd grp, per e+e- tree (grp = event-group index in file order)
+rows: pre, owned (mode A), T1 classes 2-5 + T2, w x phys > 0, 0.30 <= M4 < 1.20
+set       groups A       rows A    sum w A (x 1)
+std          38491        41978       40592.0399
+lep        2591702      2716522       30001.0824
+eta         487615       590977         370.4081
+half B in total: 3121037 groups, 3354302 rows (= the candidates of the eta pseudo-data)
+
+## 4. eta pseudo-data: 200 toys at L_sim / 2 = 110.525 nb^-1, 14200862 rows and 13231438 events in total (71004 rows per toy)
+# totals of ALL rows (signal + background together; observable) per selection and M4 region across the toys:
+# mean and variance of the toys against the bootstrap prediction (half-B sum of w; variance of the coherent-thinning model
+# V_coh = sum over groups of sum_rs min(w_r, w_s); V_ind = the same with independent lepton pairs; plain Poisson = mean)
+sel     region     toy mean  predicted     pull    toy var      V_coh      V_ind    Poisson  var/Vc
+PEAK    below        691.64     694.37    -1.44      711.5      720.3      720.3      694.4   0.988
+PEAK    bump        2187.28    2181.03     1.86     2547.7     2256.7     2256.6     2181.0   1.129
+PEAK    gap          213.48     214.29    -0.79      231.5      214.5      214.4      214.3   1.080
+PEAK    peak         998.84     999.68    -0.38      917.5     1012.9     1012.8      999.7   0.906
+PEAK    056_070    10271.16   10279.41    -1.12    11758.8    10944.8    10937.0    10279.4   1.074
+PEAK    070_100    34153.55   34132.45     1.57    39366.3    36332.7    36311.5    34132.5   1.083
+PEAK    100_120    14873.75   14874.13    -0.04    14540.6    14999.5    14998.9    14874.1   0.969
+PEAK    x17win       889.76     889.43     0.16      823.1      897.4      897.4      889.4   0.917
+DIRECT  below        755.78     757.81    -1.02      752.1      791.4      791.4      757.8   0.950
+DIRECT  bump        2377.07    2371.38     1.62     2788.5     2473.2     2473.1     2371.4   1.127
+DIRECT  gap          234.25     234.91    -0.61      244.8      235.2      235.1      234.9   1.041
+DIRECT  peak        1091.60    1092.25    -0.28      985.1     1110.6     1110.5     1092.2   0.887
+DIRECT  056_070    10366.62   10375.42    -1.18    11685.0    11070.4    11062.4    10375.4   1.056
+DIRECT  070_100    34153.55   34132.45     1.57    39366.3    36332.7    36311.5    34132.5   1.083
+DIRECT  100_120    14873.75   14874.13    -0.04    14540.6    14999.5    14998.9    14874.1   0.969
+DIRECT  x17win       967.09     966.83     0.12      921.2      981.6      981.6      966.8   0.938
+BUMP    below        886.83     887.52    -0.32      812.8      924.7      924.7      887.5   0.879
+BUMP    bump        2742.78    2739.01     1.00     2997.3     2868.1     2867.9     2739.0   1.045
+BUMP    gap          287.62     289.30    -1.39      304.0      289.7      289.7      289.3   1.049
+BUMP    peak        1270.90    1272.12    -0.48     1316.7     1300.4     1300.3     1272.1   1.013
+BUMP    056_070    11962.91   11975.67    -1.59    14446.6    12919.7    12909.7    11975.7   1.118
+BUMP    070_100    37835.64   37816.56     1.34    44254.5    40810.7    40782.6    37816.6   1.084
+BUMP    100_120    16017.64   16019.96    -0.26    16525.3    16232.4    16231.3    16020.0   1.018
+BUMP    x17win      1129.55    1129.55    -0.00     1190.2     1151.8     1151.7     1129.6   1.033
+X17SEL  below        110.94     113.06    -2.79      121.3      115.4      115.4      113.1   1.051
+X17SEL  bump         362.94     361.71     0.89      390.8      375.9      375.9      361.7   1.040
+X17SEL  gap           38.83      39.83    -2.26       37.3       39.9       39.9       39.8   0.935
+X17SEL  peak         174.93     174.94    -0.02      163.9      178.4      178.4      174.9   0.919
+X17SEL  056_070     1823.27    1827.26    -1.28     1974.0     1938.8     1938.4     1827.3   1.018
+X17SEL  070_100     6614.88    6609.71     0.87     7343.6     7025.6     7024.7     6609.7   1.045
+X17SEL  100_120     3196.89    3196.87     0.01     3283.9     3223.9     3223.9     3196.9   1.019
+X17SEL  x17win       144.46     144.47    -0.01      137.3      145.6      145.6      144.5   0.943
+(expected spread of var/V_coh for 200 toys: about +-0.100)
+
+## 5. X17 pseudo-data: 1500 toys (five BR values mixed, shuffled, random ids); observed rows in the frozen window: mean 8188.6, min 7669, max 9027
+
+## 6. files
+/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/templates/templates.root  1.4 MB
+/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/templates/README.md  0.0 MB
+/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/pseudo/eta_toys.root  206.3 MB
+/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/pseudo/x17_toys.root  24.5 MB
+sealed directory: /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/blind/sealed (key_summary.txt, eta_key.root, x17_key.root, seed.txt)
+physics-weight angles (V3): hit 11866160, miss 0

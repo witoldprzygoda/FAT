@@ -1,0 +1,22 @@
+# s5_opt_x17_lineshape: reconstructed M(ee) line of X17 (eta -> pi+pi- X17, X17 -> e+e-, m = 17 MeV/c2; class 6, eta set)
+# selection pre (isBest >= 0, vz > -500, PT3 bit, vz > -160, cor_ok); M(ee) from corrected momenta; per unit BR weights (W = 2)
+# core = Gaussian fitted iteratively in +-1.5 sigma; q = weighted quantiles; f(k) = fraction within +-k sigma_core;
+# double Gaussian over +-8 sigma (narrow 1 / wide 2, fr2 = wide fraction). Errors: fit errors (statistics of the class-6 rows).
+
+true M(ee) of the accepted X17 rows: mean 17.0000 MeV, rms 0.0005 MeV, min 16.9976, max 17.0022 (rows 787659)
+
+selection                    sig/BR nb     N_eff       mean [MeV]       sigma_core      q16      q50      q84     f1     f2     f3    <-3s    >+3s |      m1     s1      m2     s2   fr2  chi2/ndf
+pre, all M4                  7126.52341    787659  17.066+-0.007   4.134+-0.009   12.827   17.104   21.444  0.663  0.933  0.989  0.0036  0.0073 |  17.010  4.020  17.853  6.561 0.151   808/190
+pre, M4 peak window          6109.92083    675299  17.251+-0.007   4.042+-0.009   13.127   17.294   21.552  0.663  0.933  0.989  0.0037  0.0069 |  17.180  3.845  17.934  5.987 0.211   565/186
+pre, M4 bump window          376.07781     41566  14.097+-0.029   4.087+-0.038   10.005   14.190   18.544  0.664  0.934  0.991  0.0007  0.0087 |  13.868  3.869  15.579  5.561 0.234   177/154
+peak window, OA < 3          1011.44537    111790  13.580+-0.018   4.095+-0.023    9.347   13.546   17.596  0.680  0.952  0.998  0.0002  0.0019 |  15.460  2.197  13.392  4.190 0.955   164/121
+peak window, OA 3-5          2143.87695    236952  16.279+-0.011   3.682+-0.014   12.872   16.426   20.273  0.682  0.952  0.994  0.0000  0.0056 |  15.246  3.002  18.674  3.699 0.393   819/131
+peak window, OA 5-8          2099.49785    232047  18.057+-0.011   3.477+-0.013   14.917   18.268   22.118  0.670  0.939  0.989  0.0000  0.0113 |  17.390  2.892  21.354  3.810 0.287  1035/139
+peak window, OA > 8          855.10066     94510  20.257+-0.016   3.383+-0.021   17.283   20.529   24.390  0.668  0.933  0.982  0.0000  0.0178 |  19.592  2.706  23.629  3.700 0.303   974/143
+peak window, p_ee < 300      1312.13753    145024  17.217+-0.015   3.873+-0.019   13.285   17.221   21.218  0.672  0.941  0.993  0.0032  0.0039 |  17.211  3.602  17.315  4.975 0.292   192/158
+peak window, p_ee 300-500    2634.04660    291128  17.207+-0.011   4.018+-0.014   13.109   17.239   21.406  0.667  0.937  0.991  0.0036  0.0052 |  17.157  3.715  17.487  5.415 0.295   284/175
+peak window, p_ee > 500      2163.73671    239147  17.342+-0.013   4.217+-0.016   13.047   17.414   21.951  0.658  0.927  0.987  0.0036  0.0094 |  17.180  4.055  18.775  6.368 0.208   489/186
+
+# sig/BR = X17 cross section per unit BR [nb] (sum W / L_sim with W = 2): multiply by BR for the cross section.
+
+X17 reconstructed M4 (pre, 0.40-0.70): core mean 546.62 +- 0.01 MeV/c2, sigma_core 5.92 +- 0.01 MeV/c2; q16/q50/q84 537.3/545.9/552.6; fraction of all-M4 X17 in the peak window 0.8573, in the bump window 0.0528

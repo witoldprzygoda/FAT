@@ -1,0 +1,68 @@
+# rw_compare_variants: headline numbers for the variants of the physics weights (sim_eta_physics.h codes)
+#   off   code   0: no physics weights (as produced)
+#   V0    code 105: direct V0 (KW x p*^3 lambda^3/2) + bump KLOE + conv F_V
+#   V1    code 106: direct V1 (V0 x |F_V|^2) + bump KLOE + conv F_V
+#   main  code 108: MAIN: direct V3 (V1 x |F_VMD|^2 x e+ and pi+ decay angles) + bump KLOE + conv F_V
+#   V2    code 107: direct V2 (V3 without the decay angles; main before the review) + bump KLOE + conv F_V
+#   1+aY  code 116: direct V3 + bump 1 + aY (X17 slides) + conv F_V
+#   GS    code 236: main with F_V Gounaris-Sakurai
+#   V4    code 109: direct V4 (V3 x plane term R_phi, check) + bump KLOE + conv F_V
+# simulation as in rw_compare_peak.txt / rw_compare_enriched.txt; L_data = 6080.5 nb^-1 UNCONFIRMED; V3 (main) and V4 use the true decay angles
+# scale-free rows first (shares, efficiencies, chi2); absolute rows (contents, data/sim, alpha, methods) scale with 6080.5 / L_data and the peak
+#   data/sim depends on the method: NOT physics results
+
+quantity                                                   off            V0            V1          main            V2          1+aY            GS            V4
+pre: sim peak total all M4 [rows at L_data]              15874         18436         17526         16167         17550         16167         16249         16151
+pre: sim direct all M4 [rows]                             8422         10884          9974          8615          9998          8615          8660          8599
+pre: direct share of the sim peak                        0.531         0.590         0.569         0.533         0.570         0.533         0.533         0.532
+pre: data/sim method A (data 4671 rows)                  0.294         0.253         0.266         0.289         0.266         0.289         0.287         0.289
+pre: eff OA > 2, sim peak total (data 0.778)             0.590         0.712         0.708         0.697         0.708         0.697         0.697         0.697
+pre: pull OA > 2 (sim - data) / sigma                    -5.33         -1.87         -1.99         -2.26         -1.97         -2.26         -2.27         -2.25
+pre: share of the sim peak at M(ee) > 20 MeV             0.046         0.246         0.233         0.219         0.235         0.219         0.220         0.220
+pre: eff OA < 4, sim peak total (data 0.586)             0.852         0.642         0.653         0.671         0.651         0.671         0.671         0.671
+pre OA classes: one factor chi2 (ndf 4)                   9.54          1.17          1.34          1.73          1.30          1.73          1.74          1.72
+pre M(ee) classes: one factor chi2 (ndf 4)               10.83          0.61          0.88          1.04          0.79          1.04          1.03          1.01
+E2 OA classes: one factor chi2 (ndf 4)                   14.84          3.22          3.47          4.01          3.41          4.01          4.02          3.98
+pre OA classes: one factor a1                            0.221         0.250         0.262         0.282         0.262         0.282         0.281         0.283
+pre OA classes: two factors, a_conv                     -1.069         0.178         0.177         0.173         0.179         0.173         0.172         0.174
+pre OA classes: two factors, a_conv error                0.497         0.115         0.116         0.116         0.115         0.116         0.116         0.116
+pre OA classes: two factors, a_dir                       1.465         0.301         0.329         0.386         0.327         0.386         0.384         0.387
+pre OA classes: two factors, a_dir error                 0.472         0.088         0.097         0.113         0.096         0.113         0.113         0.113
+pre M(ee) classes: two factors, a_conv                  -1.525         0.217         0.210         0.211         0.213         0.211         0.210         0.213
+pre M(ee) classes: two factors, a_dir                    1.905         0.280         0.310         0.359         0.308         0.359         0.357         0.358
+bump tagged: eff M(pipi) > 0.34 (data 0.705)             0.444         0.667         0.667         0.667         0.667         0.700         0.667         0.667
+E1: data/sim bump window                                 0.953         0.983         0.984         0.984         0.984         0.987         0.984         0.984
+E1: data/sim peak window                                 1.264         1.142         1.158         1.184         1.157         1.183         1.183         1.184
+E1: jump at the bump edge                                1.466         1.438         1.437         1.437         1.437         1.436         1.437         1.437
+E1: M1 alpha_bump                                        0.443         0.487         0.487         0.487         0.487         0.484         0.487         0.487
+E1: M1 alpha_peak                                        1.037         0.627         0.663         0.729         0.661         0.725         0.726         0.729
+E1: M1 alpha_bkg                                         1.327         1.321         1.321         1.321         1.321         1.321         1.321         1.321
+E1: M1 chi2 (ndf 67)                                     192.8         210.2         210.2         210.2         210.2         217.7         210.2         210.2
+E1: peak data/sim, method A                              0.405         0.278         0.294         0.323         0.293         0.323         0.322         0.323
+E1: peak data/sim, method B                              0.530         0.352         0.371         0.409         0.370         0.409         0.407         0.410
+E1: peak data/sim, method C                              0.704         0.401         0.425         0.470         0.423         0.467         0.468         0.470
+E1: peak data/sim, method D                              1.037         0.627         0.663         0.729         0.661         0.725         0.726         0.729
+E1: peak data/sim, method E                              0.839         0.449         0.474         0.522         0.473         0.512         0.521         0.523
+E2: data/sim bump window                                 0.901         0.940         0.940         0.941         0.940         0.944         0.941         0.941
+E2: data/sim peak window                                 1.155         1.092         1.106         1.127         1.105         1.127         1.126         1.127
+E2: jump at the bump edge                                1.477         1.439         1.438         1.438         1.438         1.436         1.438         1.438
+E2: M1 alpha_bump                                        0.426         0.476         0.476         0.476         0.476         0.479         0.476         0.476
+E2: M1 alpha_peak                                        0.832         0.645         0.677         0.733         0.676         0.730         0.730         0.733
+E2: M1 alpha_bkg                                         1.262         1.258         1.258         1.258         1.258         1.258         1.258         1.258
+E2: M1 chi2 (ndf 67)                                     168.7         169.4         169.4         169.4         169.4         171.1         169.4         169.4
+E2: peak data/sim, method A                              0.291         0.246         0.258         0.279         0.258         0.279         0.278         0.280
+E2: peak data/sim, method B                              0.356         0.298         0.312         0.337         0.311         0.337         0.336         0.338
+E2: peak data/sim, method C                              0.444         0.340         0.357         0.387         0.356         0.385         0.385         0.387
+E2: peak data/sim, method D                              0.832         0.645         0.677         0.733         0.676         0.730         0.730         0.733
+E2: peak data/sim, method E                              0.656         0.459         0.480         0.519         0.480         0.510         0.517         0.520
+
+# spread of the variants around the main one V3 (V0, V1, V2, V4, 1+aY, GS): largest |x - main| / main per quantity
+pre sim peak total                                 14.0 % (V0)
+pre eff OA > 2                                      2.2 % (V0)
+E1 data/sim peak window                             3.5 % (V0)
+E2 data/sim bump window                             0.4 % (1+aY)
+E2 M1 alpha_bump                                    0.6 % (1+aY)
+E2 M1 alpha_peak                                   12.0 % (V0)
+E2 method B                                        11.7 % (V0)
+E2 method C                                        12.1 % (V0)
+bump tagged eff M(pipi) > 0.34                      5.0 % (1+aY)

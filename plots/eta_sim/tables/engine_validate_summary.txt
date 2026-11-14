@@ -1,0 +1,87 @@
+sim_validate: production /hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew
+
+[std_us] output_std_pippimepem.root  (0.8 s)  OK
+  rows 230469 (expected 230469)  after vz > -160: 230115 (expected 230115)
+  owned (mode A) after vz > -160: 115414 rows, sum sim_w 112014 ; dropped 114701 rows, 81762.1 ; mode B owned 230115 rows, 193776
+  owned rows: event-group variance sum_g (sum W)^2 = 133787, N_eff(group) = 93784.0
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 133787, N_eff(group) = 93784.0
+  table vs part_std_us.txt: 185 reference lines, 185 mine; identical 185, equal within print rounding 0 (max rel 0), differ 0, missing 0, extra 0 
+  event groups 213044 (vz > -160: 212711); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 213044 (212711)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 1.14e-07 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 230469 x 67 epemg_nt;1 83237 x 21 fwdet_nt;1 230469 x 41 pippimepem_nt;1 230469 x 52 pippimepem_nt_cor;1 230469 x 52 scan_nt;1 230469 x 233
+
+[std_pp] output_std_pippimepep.root  (0.0 s)  OK
+  rows 1133 (expected 1133)  after vz > -160: 1132 (expected 1132)
+  owned (mode A) after vz > -160: 1055 rows, sum sim_w 864.485 ; dropped 77 rows, 57.5076 ; mode B owned 1132 rows, 921.993
+  owned rows: event-group variance sum_g (sum W)^2 = 971.198, N_eff(group) = 769.5
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 971.198, N_eff(group) = 769.5
+  table vs part_std_pp.txt: 85 reference lines, 85 mine; identical 85, equal within print rounding 0 (max rel 0), differ 0, missing 0, extra 0 
+  event groups 1053 (vz > -160: 1052); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 1053 (1052)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 5.95e-08 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 1133 x 67 epemg_nt;1 309 x 21 fwdet_nt;1 1133 x 41 pippimepem_nt;1 1133 x 52 pippimepem_nt_cor;1 1133 x 52 scan_nt;1 1133 x 233
+
+[std_mm] output_std_pippimemem.root  (0.0 s)  OK
+  rows 4791 (expected 4791)  after vz > -160: 4777 (expected 4777)
+  owned (mode A) after vz > -160: 4599 rows, sum sim_w 4167.36 ; dropped 178 rows, 141.111 ; mode B owned 4777 rows, 4308.47
+  owned rows: event-group variance sum_g (sum W)^2 = 4852.55, N_eff(group) = 3578.9
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 4852.55, N_eff(group) = 3578.9
+  table vs part_std_mm.txt: 116 reference lines, 116 mine; identical 116, equal within print rounding 0 (max rel 0), differ 0, missing 0, extra 0 
+  event groups 4397 (vz > -160: 4384); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 4397 (4384)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 5.96e-08 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 4791 x 67 epemg_nt;1 1631 x 21 fwdet_nt;1 4791 x 41 pippimepem_nt;1 4791 x 52 pippimepem_nt_cor;1 4791 x 52 scan_nt;1 4791 x 233
+
+[lep_us] output_lep_pippimepem.root  (25.7 s)  OK
+  rows 7441490 (expected 7441490)  after vz > -160: 7432170 (expected 7432170)
+  owned (mode A) after vz > -160: 7082339 rows, sum sim_w 72804 ; dropped 349831 rows, 40683.7 ; mode B owned 219598 rows, 24.7604
+  owned rows: event-group variance sum_g (sum W)^2 = 926.135, N_eff(group) = 5723161.1
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 926.135, N_eff(group) = 5723161.1
+  table vs part_lep_us.txt: 145 reference lines, 145 mine; identical 142, equal within print rounding 3 (max rel 4.4e-05), differ 0, missing 0, extra 0 
+  event groups 6856223 (vz > -160: 6847400); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 6856223 (6847400)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 1.19e-07 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 7441490 x 67 epemg_nt;1 2511668 x 21 fwdet_nt;1 7441490 x 41 pippimepem_nt;1 7441490 x 52 pippimepem_nt_cor;1 7441490 x 52 scan_nt;1 7441490 x 233
+
+[lep_pp] output_lep_pippimepep.root  (0.8 s)  OK
+  rows 205527 (expected 205527)  after vz > -160: 205288 (expected 205288)
+  owned (mode A) after vz > -160: 159543 rows, sum sim_w 62.9839 ; dropped 45745 rows, 457.518 ; mode B owned 12060 rows, 0.2076
+  owned rows: event-group variance sum_g (sum W)^2 = 0.601385, N_eff(group) = 6596.4
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 0.601385, N_eff(group) = 6596.4
+  table vs part_lep_pp.txt: 96 reference lines, 96 mine; identical 96, equal within print rounding 0 (max rel 0), differ 0, missing 0, extra 0 
+  event groups 196123 (vz > -160: 195891); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 196123 (195891)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 1.18e-07 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 205527 x 67 epemg_nt;1 88115 x 21 fwdet_nt;1 205527 x 41 pippimepem_nt;1 205527 x 52 pippimepem_nt_cor;1 205527 x 52 scan_nt;1 205527 x 233
+
+[lep_mm] output_lep_pippimemem.root  (1.7 s)  OK
+  rows 495711 (expected 495711)  after vz > -160: 495101 (expected 495101)
+  owned (mode A) after vz > -160: 328641 rows, sum sim_w 134.335 ; dropped 166460 rows, 2104.65 ; mode B owned 9137 rows, 0.141541
+  owned rows: event-group variance sum_g (sum W)^2 = 1.39767, N_eff(group) = 12911.4
+  reference: owned rows: event-group variance sum_g (sum W)^2 = 1.39767, N_eff(group) = 12911.4
+  table vs part_lep_mm.txt: 120 reference lines, 120 mine; identical 120, equal within print rounding 0 (max rel 0), differ 0, missing 0, extra 0 
+  event groups 466029 (vz > -160: 465449); groups without exactly one isBest==1 row: 0 (vz > -160: 0); isBest==1 rows 466029 (465449)
+  trigger bit 8192 missing 0 ; isBest < 0 0 ; vz <= -500 0 ; cor_ok != 1 0
+  NaN: sim_w 0, sim_w_db 0, m4_cor 0, mee_cor 0, mpipi_cor 0, oa 0, oa_lab 0, oa_eta 0 ; sim_w < 0 0
+  re-evaluation with sim_truth.h, mismatching rows: cls 0, lcls 0, pcls 0, tmpl 0, w 0, w_db 0, own_A 0, own_B 0, flags 0, m4_true 0, mee_true 0, mpipi_true 0, sim_set 0, rules_ver 0, m4_cor recomputed 0,
+  max |M4 recomputed - m_pippimepem_cor| = 1.15e-07 GeV/c2
+  columns 233 (sim columns missing 0, differing from the first output 0, branches with fewer entries 0)
+  trees: ecal_nt;1 495711 x 67 epemg_nt;1 225129 x 21 fwdet_nt;1 495711 x 41 pippimepem_nt;1 495711 x 52 pippimepem_nt_cor;1 495711 x 52 scan_nt;1 495711 x 233
+
+sim_validate: ALL CHECKS PASSED, total 29.1 s

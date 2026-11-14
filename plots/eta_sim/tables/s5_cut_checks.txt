@@ -1,0 +1,72 @@
+# s5_cut_checks: checks of s5_cut.C (compact-row accumulators against the engine and the earlier tables)
+# weights: std + lep + eta owned rows (mode A), w (PDG) x phys 108 (direct V3, bump KLOE, conv F_V, bkg rules); X17: W = 2 x 1e-05 per class-6 row
+
+## 1. sigma [nb], all M4: this macro against simeng::SumMany (same rows, same weights)
+  pre: S2 bump, pi0 Dalitz (cls 2) sigma                                     this      7.04559  ref      7.04559  diff        +0  OK
+  pre: S2 bump, pi0 Dalitz (cls 2) error                                     this     0.193059  ref     0.193059  diff        +0  OK
+  pre: S3 bump, conversion (cls 3) sigma                                     this      5.18975  ref      5.18975  diff        +0  OK
+  pre: S3 bump, conversion (cls 3) error                                     this     0.168534  ref     0.168534  diff  +2.8e-17  OK
+  pre: S4 peak, pipigamma conv. (cls 4) sigma                                this      1.24201  ref      1.24201  diff        +0  OK
+  pre: S4 peak, pipigamma conv. (cls 4) error                                this    0.0756268  ref    0.0756268  diff        +0  OK
+  pre: S5 peak, direct pipiee (cls 5) sigma                                  this      1.41677  ref      1.41677  diff        +0  OK
+  pre: S5 peak, direct pipiee (cls 5) error                                  this   0.00342607  ref   0.00342607  diff  +5.2e-18  OK
+  pre: X17 (cls 6), BR = 1e-5 sigma                                          this    0.0712652  ref    0.0712652  diff        +0  OK
+  pre: X17 (cls 6), BR = 1e-5 error                                          this   8.0299e-05  ref   8.0299e-05  diff  +1.2e-16  OK
+  pre: phys. background T2 sigma                                             this      686.189  ref      686.189  diff        +0  OK
+  pre: phys. background T2 error                                             this      1.42461  ref      1.42461  diff  -2.5e-10  OK
+  pre: G_fake (T3) sigma                                                     this      124.956  ref      124.956  diff        +0  OK
+  pre: G_fake (T3) error                                                     this     0.726922  ref     0.726922  diff  -4.9e-13  OK
+  pre: G_diff (T4) sigma                                                     this        12.51  ref        12.51  diff        +0  OK
+  pre: G_diff (T4) error                                                     this     0.252001  ref     0.252001  diff  -1.1e-15  OK
+  pre: simulated sum T1+T2 sigma                                             this      701.083  ref      701.083  diff        +0  OK
+  pre: simulated sum T1+T2 error                                             this      1.46239  ref      1.46239  diff  -2.4e-10  OK
+  slides: S2 bump, pi0 Dalitz (cls 2) sigma                                  this      3.92823  ref      3.92823  diff        +0  OK
+  slides: S2 bump, pi0 Dalitz (cls 2) error                                  this     0.142618  ref     0.142618  diff        +0  OK
+  slides: S3 bump, conversion (cls 3) sigma                                  this       2.0497  ref       2.0497  diff        +0  OK
+  slides: S3 bump, conversion (cls 3) error                                  this      0.10461  ref      0.10461  diff        +0  OK
+  slides: S4 peak, pipigamma conv. (cls 4) sigma                             this     0.592678  ref     0.592678  diff        +0  OK
+  slides: S4 peak, pipigamma conv. (cls 4) error                             this    0.0528942  ref    0.0528942  diff        +0  OK
+  slides: S5 peak, direct pipiee (cls 5) sigma                               this      1.02937  ref      1.02937  diff        +0  OK
+  slides: S5 peak, direct pipiee (cls 5) error                               this   0.00319384  ref   0.00319384  diff        +0  OK
+  slides: X17 (cls 6), BR = 1e-5 sigma                                       this    0.0589048  ref    0.0589048  diff        +0  OK
+  slides: X17 (cls 6), BR = 1e-5 error                                       this  7.30038e-05  ref  7.30038e-05  diff        +0  OK
+  slides: phys. background T2 sigma                                          this      60.2986  ref      60.2986  diff        +0  OK
+  slides: phys. background T2 error                                          this     0.421662  ref     0.421662  diff        +0  OK
+  slides: G_fake (T3) sigma                                                  this      9.21461  ref      9.21461  diff        +0  OK
+  slides: G_fake (T3) error                                                  this     0.196322  ref     0.196322  diff        +0  OK
+  slides: G_diff (T4) sigma                                                  this      2.20833  ref      2.20833  diff        +0  OK
+  slides: G_diff (T4) error                                                  this     0.104634  ref     0.104634  diff        +0  OK
+  slides: simulated sum T1+T2 sigma                                          this      67.8986  ref      67.8986  diff        +0  OK
+  slides: simulated sum T1+T2 error                                          this      0.46709  ref      0.46709  diff        +0  OK
+
+## 2. efficiencies: this macro against simeng::Efficiency (event-group errors)
+  S4 in the peak window, OA > 2 alone: eps                                   this     0.559139  ref     0.559139  diff        +0  OK
+  S4 in the peak window, OA > 2 alone: error                                 this    0.0330615  ref    0.0330615  diff  +6.9e-18  OK
+  T2 in the bump window, alpha_lab < 50 alone: eps                           this     0.922482  ref     0.922482  diff        +0  OK
+  T2 in the bump window, alpha_lab < 50 alone: error                         this   0.00396537  ref   0.00396537  diff  -4.3e-15  OK
+  X17 in the peak window, OA > 2 N-1 (slides): eps                           this     0.951316  ref     0.951316  diff        +0  OK
+  X17 in the peak window, OA > 2 N-1 (slides): error                         this  0.000280518  ref  0.000280518  diff  +1.3e-15  OK
+  S5 in the peak window, both pions in the vertex fit alone: eps             this     0.930422  ref     0.930422  diff        +0  OK
+  S5 in the peak window, both pions in the vertex fit alone: error           this   0.00066549  ref   0.00066549  diff  -5.5e-18  OK
+
+## 3. against the earlier tables (tolerance = 0.6 x last printed digit)
+# rw_weights_xsec.txt, column 'sigma main' (phys 108), sections pre and E1 (slides), all M4; eta_engine_reference.txt X17
+  pre, all M4: S2 bump, pi0 Dalitz (cls 2)                                   this      7.04559  ref       7.0456  diff  -1.2e-05  OK
+  pre, all M4: S3 bump, conversion (cls 3)                                   this      5.18975  ref       5.1898  diff  -4.8e-05  OK
+  pre, all M4: S4 peak, pipigamma conv. (cls 4)                              this      1.24201  ref        1.242  diff  +1.5e-05  OK
+  pre, all M4: S5 peak, direct pipiee (cls 5)                                this      1.41677  ref       1.4168  diff  -2.8e-05  OK
+  pre, all M4: simulated sum T1+T2                                           this      701.083  ref      701.083  diff  +6.7e-06  OK
+  slides, all M4: S2 bump, pi0 Dalitz (cls 2)                                this      3.92823  ref       3.9282  diff  +3.3e-05  OK
+  slides, all M4: S3 bump, conversion (cls 3)                                this       2.0497  ref       2.0497  diff  +4.6e-06  OK
+  slides, all M4: S4 peak, pipigamma conv. (cls 4)                           this     0.592678  ref       0.5927  diff  -2.2e-05  OK
+  slides, all M4: S5 peak, direct pipiee (cls 5)                             this      1.02937  ref       1.0294  diff  -2.9e-05  OK
+  slides, all M4: simulated sum T1+T2                                        this      67.8986  ref      67.8986  diff  -8.1e-06  OK
+  pre, all M4: X17 BR 1e-5                                                   this    0.0712652  ref      0.07127  diff  -4.8e-06  OK
+  slides, all M4: X17 BR 1e-5                                                this    0.0589048  ref       0.0589  diff  +4.8e-06  OK
+
+## 4. content of G_oth (T2 rows not in G_eta, L1, L3, L4-L6), pre, all M4: lepton-pair class
+  L10 eta -> pi+pi-ee          rows    619621  sigma 1.96681 nb  share 1.0000
+  G_oth: share outside L10/L11                                               this            0  ref            0  diff        +0  OK
+
+# rows dropped: 0 without a group (no template), 1035391 with W = 0
+# 57 checks, 0 outside the tolerance

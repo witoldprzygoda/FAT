@@ -1,0 +1,37 @@
+1. owned rows after "pre" against part_*_us.txt (mode A, w)
+  std: rows 115414, sum w 112013.69, N_eff 93784.0 (reference 115414, 112014, 93784.0)
+  lep: rows 7082339, sum w 72803.996, N_eff 5723161.1 (reference 7082339, 72804, 5723161.1)
+  [PASS] std owned rows, sum w, N_eff(group)
+  [PASS] lep owned rows, sum w, N_eff(group)
+  mode B, std + lep: sum w 193800.5 (reference 193776 + 24.760 = 193800.8)
+  [PASS] mode B total
+2. precision of the accumulation (lep owned rows, pre)
+  double (engine) 72803.996 ; float variable 75303.062 ; TH1F 75303.062 ; TH1D 72803.996
+  [PASS] TH1D equals the double sum
+3. binned spectrum consistency (signal + physical background, M4 0.3-1.1, 5 MeV)
+  sum of bins 128154.27 = S 128154.27 ; all rows 154482.83 (outside the range 2.633e+04) ; sum V_bin 75967.2, V(range) 89952.5, V(all) 104240
+  [PASS] bin sums and variances
+4. efficiency of OA > 2 for the bump Dalitz signal and the physical background (pre)
+  bump, pi0 Dalitz             eps 0.81261 +- 0.00961 (group) ; from sums 0.81261 +- 0.00961 (no pass/fail correlation)
+  [PASS] efficiency value, bump, pi0 Dalitz
+  bump, conversion             eps 0.56866 +- 0.01438 (group) ; from sums 0.56866 +- 0.01438 (no pass/fail correlation)
+  [PASS] efficiency value, bump, conversion
+  peak, conversion             eps 0.56352 +- 0.02831 (group) ; from sums 0.56352 +- 0.02831 (no pass/fail correlation)
+  [PASS] efficiency value, peak, conversion
+  physical background          eps 0.67840 +- 0.00103 (group) ; from sums 0.67840 +- 0.00103 (no pass/fail correlation)
+  [PASS] efficiency value, physical background
+5. data path against the data reference (no vz cut, cor_ok only; ScanEngine binning)
+  reb 4 ; peak window N 86011, CB 11488 (reference 86011, 11488)
+  [PASS] data N and CB in the peak window
+  integral of dsigma/dM (N - CB) 537.553 nb = rows 3.26859e+06 / L_data 6080.5 = 537.553 nb
+  [PASS] data unit conversion
+6. presets on data: rows in the peak window 0.5336-0.5542 (N, CB)
+  pre                        N   77513  CB    7949  rows (any M4)   4423338
+  pre+OA>2                   N   60935  CB    7793  rows (any M4)   3236582
+  pre+pions in vertex fit    N   55947  CB    3279  rows (any M4)   3551526
+  slides                     N   46001  CB    5627  rows (any M4)    566949
+  old code                   N   51605  CB    4984  rows (any M4)    597656
+  peak nominal               N   61800  CB    5996  rows (any M4)   2776853
+  bump nominal               N   33240  CB    3278  rows (any M4)    395737
+
+self-test: all checks passed, 26.2 s

@@ -1,0 +1,28 @@
+# eta_overview: simulated sigma [nb] per component (e+e-), std + lep + eta owned rows, mode A, w (PDG)
+# sigma = sum w / L_sim, L_sim = 221.05 nb^-1; within the acceptance, no efficiency correction; errors from event groups
+# windows from 2.5 MeV bins whose centre is inside (exact window sums: tables/eta_engine_reference.txt)
+# X17: BR(eta -> pi+pi- X17, X17 -> e+e-) = 1e-5, illustration only, not in the sum
+
+## selection "pre"
+component                                                                   0.30-1.00      bump 0.455-0.5225     peak 0.5336-0.5542      N_eff
+bump, pi0 Dalitz                                                    7.924 +- 0.2            6.137 +- 0.17         0.03844 +- 0.014           1649
+bump, conversion                                                    5.821 +- 0.17           4.443 +- 0.15         0.01471 +- 0.0085          1187
+peak, conversion                                                    1.225 +- 0.07         0.05189 +- 0.014          0.958 +- 0.062            307
+peak, eta -> pi+pi-e+e-                                             1.385 +- 0.0018       0.05171 +- 0.00035        1.107 +- 0.0016        571246
+peak, conversion + direct                                           2.611 +- 0.07          0.1036 +- 0.014          2.065 +- 0.062           1392
+X17 signal, BR = 1e-05 (illustration)                             0.07126 +- 8e-05       0.003046 +- 1.7e-05      0.05792 +- 7.2e-05       787649
+physical background (std + lep)                                     479.1 +- 1.2            13.85 +- 0.21           7.794 +- 0.15          150714
+physical background (eta set)                                       1.386 +- 0.002         0.1545 +- 0.00061       0.1052 +- 0.00051       458542
+signal + physical background                                        496.8 +- 1.3            24.69 +- 0.31           10.02 +- 0.17          151041
+
+## selection "slides"
+component                                                                   0.30-1.00      bump 0.455-0.5225     peak 0.5336-0.5542      N_eff
+bump, pi0 Dalitz                                                    4.488 +- 0.15           4.109 +- 0.14         0.03364 +- 0.013            934
+bump, conversion                                                      2.3 +- 0.11           2.065 +- 0.1          0.01471 +- 0.0085           469
+peak, conversion                                                   0.5628 +- 0.047        0.02395 +- 0.0098        0.4351 +- 0.042            141
+peak, eta -> pi+pi-e+e-                                            0.7307 +- 0.0013       0.02981 +- 0.00027       0.5773 +- 0.0012        301359
+peak, conversion + direct                                           1.294 +- 0.047        0.05376 +- 0.0098         1.012 +- 0.042            744
+X17 signal, BR = 1e-05 (illustration)                              0.0589 +- 7.3e-05      0.00255 +- 1.5e-05      0.04811 +- 6.6e-05       651043
+physical background (std + lep)                                     59.45 +- 0.42           8.736 +- 0.16           4.568 +- 0.11           20377
+physical background (eta set)                                      0.3101 +- 0.00093      0.08773 +- 0.00046      0.05438 +- 0.00036       111978
+signal + physical background                                        67.84 +- 0.46           15.05 +- 0.24           5.683 +- 0.12           21344
