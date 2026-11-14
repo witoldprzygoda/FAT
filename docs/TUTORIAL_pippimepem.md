@@ -209,3 +209,180 @@ z `sel_pass == 1` i 2.9% takich wierszy w oknie η (0.53 < M(π⁺π⁻e⁺e⁻)
 GeV/c²). Licząc cokolwiek na polach `_cor`, dodaj warunek `cor_ok == 1` i podaj,
 ile wierszy odpadło. Warunek zaprzeczony, np. `!(m_pippim_cor >= 0.42)`,
 przepuszcza wiersze z NaN.
+
+## 8. Symulacja
+
+Ta sama analiza działa na symulacji SMASH: na zbiorze standardowym i na zbiorze
+leptonowym (zbiór η jest przewidziany w kodzie, ale jego plików jeszcze nie ma).
+Wszystko, co dotyczy symulacji, włączają klucze konfiguracji, których wartości
+domyślne odpowiadają danym, więc wyniki dla danych się nie zmieniają.
+
+| Konfiguracja | Zbiór (lista) | Kanał |
+|---|---|---|
+| `config_sim_std.json`, `config_sim_std_epep.json`, `config_sim_std_emem.json` | standardowy (`sim_std.list`) | π⁺π⁻e⁺e⁻, π⁺π⁻e⁺e⁺, π⁺π⁻e⁻e⁻ |
+| `config_sim_lep.json`, `config_sim_lep_epep.json`, `config_sim_lep_emem.json` | leptonowy (`sim_lep.list`) | jak wyżej |
+
+Każda lista zawiera jedną ścieżkę pliku. Wyniki trafiają do
+`/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/output_<zbiór>_<kanał>.root`.
+Względem konfiguracji danych zmieniają się trzy pola:
+
+- `"kinematics": {"simulated": true}` to główny przełącznik: program czyta
+  prawdę z GEANT o czterech śladach i zapisuje ją w `scan_nt`;
+- `"simulation": {"set": 1, "pdg_br": true, "br_eta_pipiee": 2.68e-4, "br_x17": 0.0}`
+  podaje numer zbioru (1 standardowy, 2 leptonowy, 3 η) i stosunki
+  rozgałęzień użyte w wagach;
+- `"trigger": {"bit_test": true}`: PT3 oznacza tu ustawiony bit 8192, czyli
+  `(trigbit & 8192) != 0`. W symulacji wiersze PT3 mają `trigbit` = 12288;
+  w danych zostaje warunek `trigbit == 8192`.
+
+Drzewa symulacji nie mają pola `start_iteration`; w ntuplach ma ono wartość −1.
+Pole `pat_entry` jest typu float i dokładnie zapisuje numery wierszy tylko do
+2²⁴ = 16 777 216. Dlatego w symulacji program odmawia pracy (kod 1, bez pliku
+wynikowego), gdy plik wejściowy ma więcej wierszy; taki plik trzeba podzielić.
+
+**Uruchomienie.** Gdy lista zawiera jeden plik, a części ma być więcej niż jedna,
+`run_parallel.sh` dzieli wiersze drzewa tego pliku na równe przedziały kolejnych
+numerów wierszy:
+
+```bash
+export FAT_TMPDIR=/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/tmp
+./run_parallel.sh config_sim_std.json 4 4
+./run_parallel.sh config_sim_lep.json 15 15
+```
+
+Skrypt wypisuje przedział każdej części. Przed scaleniem sprawdza w dziennikach
+zadań, czy każda część przetworzyła dokładnie swój przedział i czy przedziały
+pokrywają całość bez przerw i bez nakładania się. Jeśli nie, nie scala wyników
+i kończy się kodem 5. Pola `start_event` i `max_events` zawężają dzielony
+przedział (przydaje się do prób). Z pliku leptonowego czytany jest cykl `;3`
+drzewa `PipPimEpEm_ID` (7 622 819 wierszy), bo łańcuch plików bierze cykl
+najwyższy; cykl `;2` to tylko jego pierwsze 55 454 wiersze.
+
+Podziału na przedziały wierszy nie ma (plik idzie w jednej części, skrypt
+wypisuje ostrzeżenie), gdy:
+
+- `trigger.bias_correction` jest włączone: program liczy wagę PT3 pliku
+  z wierszy, które czyta jedno zadanie, więc podział zmieniłby `trigger_corr`;
+- wiersz listy nie jest zwykłym plikiem (wzorzec z `*`, adres sieciowy).
+
+Inne zasady skryptu:
+
+- Liczba części może wynosić od 1 do 999 (numery trzycyfrowe utrzymują
+  kolejność scalania). Bez trzeciego argumentu naraz działa najwyżej 15 zadań.
+- Przed scaleniem skrypt sprawdza kolumny ntupli w częściach. Część, w której
+  ntupla nie ma ani jednego wiersza, zapisuje ją tylko z kolumną `trigger_corr`.
+  Gdyby taka część szła pierwsza, `hadd` zgubiłby pozostałe kolumny bez żadnego
+  błędu. Dlatego skrypt zapisuje takie puste ntuple od nowa z kolumnami części,
+  które mają wiersze. Po scaleniu sprawdza, czy każda ntupla ma te kolumny
+  i sumę wierszy części. Jeśli nie, kończy się kodem 3 i nie zapisuje wyniku.
+- Przerwanie skryptu (Ctrl+C, `kill`, zamknięta sesja ssh) zatrzymuje
+  wszystkie działające części; nic nie jest scalane, a katalog roboczy
+  zostaje (kody 130, 143, 129). Długie przebiegi najlepiej uruchamiać przez
+  `nohup` z wyjściem do pliku dziennika.
+
+**Dodatkowe pola `scan_nt`.** Do 145 pól danych dochodzi 88 pól:
+
+| Pola | Zawartość |
+|---|---|
+| `ep_`, `em_`, `pip_`, `pim_` + `sim_id`, `sim_parentid`, `sim_grandparentid`, `sim_processid`, `sim_mediumid`, `sim_p`, `sim_px`, `sim_py`, `sim_pz`, `sim_vertexx`, `sim_vertexy`, `sim_vertexz`, `sim_geninfo`, `sim_geninfo1`, `sim_geninfo2`, `sim_genweight`, `sim_iscommon`, `sim_isghost`; leptony także `rich_sim_geanttrack` | prawda z GEANT o śladzie, przepisana z PAT (w kanałach jednoimiennych `ep_` i `em_` to pierwszy i drugi lepton) |
+| `sim_set`, `sim_rules_ver` | numer zbioru i wersja reguł (2) |
+| `sim_cls`, `sim_lcls`, `sim_pcls` | klasa czwórki, pary leptonów (L0–L11) i pary pionów (P0–P9) |
+| `sim_w`, `sim_w_db` | waga wiersza ze stosunkami rozgałęzień PDG i z bazy konwertera |
+| `sim_own_A`, `sim_own_B` | 1, gdy wiersz należy do tego zbioru w podziale A (podstawowym) lub B (wariant) |
+| `sim_flags` | bity ostrzeżeń (tabela niżej) |
+| `sim_tmpl` | wzorzec: 1 sygnał, 2 tło fizyczne, 3 fałszywy lepton, 4 leptony z różnych źródeł (opis niżej) |
+| `m4_true`, `mee_true`, `mpipi_true` | prawdziwe M(π⁺π⁻e⁺e⁻), M(e⁺e⁻), M(π⁺π⁻) w GeV/c² z pędów GEANT i mas nominalnych; −1, gdy któryś ślad jest inną cząstką |
+
+Reguły klas, przynależności i wag są w `src/sim_truth.h` (wersja reguł 2 z 13
+listopada 2026 r.; wersja 1 była liczbowo taka sama jak wzorcowy `simrules.h`,
+a wersja 2 różni się od niej tylko stosunkami rozgałęzień rozpadów π⁰ i η
+wykonywanych przez HGeant). Te stosunki rozgałęzień pochodzą teraz wprost z karty
+`ETA 37.30 30.20 21.00 4.75 6.0 7.1e-2` w plikach wejściowych HGeant tej produkcji
+(dla π⁰ z wartości domyślnych HGeant), a nie z pomiaru producentów na 10⁶
+zdarzeniach (raport `docs/latex/report.tex`, rozdział „The HGeant decay table of
+the eta”). Plik nie zależy od ROOT, więc
+można go dołączyć w makrze i przeliczyć wagi z innymi stosunkami rozgałęzień.
+
+Klasy czwórki (`sim_cls`): 0 błędnie zidentyfikowana cząstka, 1 pion rozpadł
+się na mion, 2 garb (η → π⁺π⁻π⁰, π⁰ → e⁺e⁻γ), 3 garb z konwersją fotonu
+z π⁰, 4 pik z konwersją fotonu (η → π⁺π⁻γ), 5 pik η → π⁺π⁻e⁺e⁻ (zbiór η),
+6 X17 (zbiór η), 7 piony z parą e⁺e⁻ z jednego źródła, 8 leptony z różnych
+źródeł.
+
+**Wagi i przynależność.** Do widm bierz wiersze z `sim_own_A == 1` (wariant:
+`sim_own_B == 1`) z wagą `sim_w`; wiersze z zerem dostarcza drugi zbiór.
+Tych samych rodzajów wierszy nigdy nie dodawaj z obu zbiorów. Oczekiwana
+liczba wierszy w danych to (L_dane / 221.05 nb⁻¹) · Σ `sim_w`, przy czym
+L_dane jest parametrem. Wariancja w przedziale histogramu to suma po
+zdarzeniach kwadratów sum wag ich wierszy; zdarzenie to ciąg sąsiednich
+wierszy o tych samych `event` i `eVertReco_z` (w symulacji `runnumber` = 0,
+`file_id` = −1). Histogramy w plikach symulacji zawierają tylko wiersze
+z `sim_own_A == 1` i nie są ważone (`trigger_corr` = 1), więc nadają się
+jedynie do kontroli. Widma licz z `scan_nt`, w której są wszystkie wiersze.
+Cięcie `eVertReco_z > −160` nakładasz sam, jak w danych.
+
+`sim_w_db` to wariant z wagami z bazy konwertera. Nie zawiera poprawek
+rozpadów naturalnych: zostają w nim stosunki rozgałęzień HGeant. Na przykład
+para z rozpadu Dalitza η w zbiorze standardowym ma `sim_w_db` = 1, a nie
+0.114 (w e⁺e⁻, wiersze należące do zbioru standardowego, vz > −160:
+Σ `sim_w` = 371, Σ `sim_w_db` = 3250). Wariant ma więc sens tylko dla
+wierszy z wymuszonymi rozpadami, które należą do zbioru leptonowego.
+
+**Sygnał bez tła kombinatorycznego.** W symulacji sygnałem kanału są wiersze,
+których cząstki według kodów generatora pochodzą dokładnie z tego kanału
+produkcji i rozpadu (`sim_cls` od 2 do 6). Niczego się nie odejmuje, a drzewa
+jednoimienne nie służą za tło, tylko do badań pobocznych (isBest,
+kombinatoryka); czynnik k pochodzi wyłącznie z danych.
+
+Podział na wzorce podaje pole `sim_tmpl`:
+
+| `sim_tmpl` | Wzorzec | Warunek |
+|---|---|---|
+| 1 | sygnał | `sim_cls` od 2 do 6, także z leptonem-duchem |
+| 2 | tło fizyczne | prawdziwa para e⁺e⁻ z jednego źródła (L1–L6; w zbiorze η także L10, L11 poza sygnałem), dowolne piony (również błędnie zidentyfikowane i rozpadłe na mion), lepton nie jest fałszywy |
+| 3 | fałszywy lepton | lepton błędnie zidentyfikowany (L0), ślad-duch na miejscu leptonu (`sim_isghost` = 1) albo ta sama cząstka na obu miejscach leptonów |
+| 4 | leptony z różnych źródeł | L7–L9; ani sygnał, ani tło (w symulacji nie ma tła kombinatorycznego) |
+
+`sim_cls` 0, 1 i 7 to nie są te wzorce: klasy 0 i 1 zawierają też wiersze
+z prawdziwą parą e⁺e⁻ i fałszywym pionem, a klasa 7 także wiersze
+z leptonem-duchem. Wielkości w zbiorze standardowym (e⁺e⁻, wiersze należące
+do zbioru w podziale A, vz > −160, 115 414 wierszy):
+
+| `sim_tmpl` | Wiersze | Σ `sim_w` |
+|---|---|---|
+| 1 sygnał | 3 143, w tym 395 z leptonem-duchem | 3309, w tym 413 |
+| 2 tło fizyczne | 86 834, w tym 13 572 z `sim_cls` 0 lub 1 | 83 999 |
+| 3 fałszywy lepton | 22 370: 1 401 L0 i 20 969 z leptonem-duchem | 22 063 |
+| 4 leptony z różnych źródeł | 3 067 | 2643 |
+
+Wiersze sygnału z leptonem-duchem (12.6%) zostają w sygnale; bit 10 pola
+`sim_flags` pozwala je wyłączyć. W drzewach jednoimiennych wszystkie wiersze
+z parą z jednego źródła (L1–L6) mają tę samą cząstkę na obu miejscach
+leptonów, więc trafiają do wzorca 3.
+
+| Bit `sim_flags` | Znaczenie |
+|---|---|
+| 0 (1) | zapisana waga generatora produktu wymuszonego rozpadu różni się od tabeli |
+| 1 (2) | zarezerwowany, nigdy nie jest ustawiany (rozpad wymuszony bez kodu w tabeli wag nie może wystąpić) |
+| 2 (4) | produkt drugiego rozpadu (π⁰ z ω → π⁰e⁺e⁻) razem z leptonem z dowolnego rozpadu ω → π⁰e⁺e⁻ w wierszu (licznika rozpadu się nie porównuje); czynnik łańcucha nie jest doliczony |
+| 3 (8) | kod generatora spoza słownika |
+| 4 (16) | zaokrąglony kod pasuje do kilku kodów słownika (sprawdzane są wszystkie liczby całkowite, które po zapisie jako float dają tę wartość) |
+| 5 (32) | elektron lub pozyton na miejscu pionu |
+| 6 (64) | w wierszu jest produkt drugiego rozpadu (525107 / 7051) |
+| 7 (128) | więcej niż jeden wymuszony rozpad (waga jest iloczynem) |
+| 8 (256) | ślad z wagą > 0 bez wymuszonego kodu tego zbioru |
+| 9 (512) | ślad z wymuszonym kodem innego zbioru (zły `simulation.set`?) |
+| 10 (1024) | ślad-duch na miejscu leptonu |
+| 11 (2048) | ślad-duch na miejscu pionu |
+| 12 (4096) | ta sama cząstka GEANT na obu miejscach leptonów (ten sam rodzaj, pęd i punkt powstania); w drzewie e⁺e⁻ jedno z miejsc ma wtedy zły rodzaj cząstki, więc wiersz i tak jest w L0 |
+| 13 (8192) | zbiór leptonowy: produkt wymuszonego rozpadu ρ⁰/ω/φ razem ze śladem FC (np. konwersja fotonu z rozpadu Dalitza π⁰ z ω → π⁰e⁺e⁻); według reguł wersji 1 i 2 takiego wiersza nie dostarcza żaden zbiór |
+| 14 (16384) | kod, którego reguły wersji 1 i 2 nie obsługują: odmiany φ → K⁰K̄⁰ 551010, 551016, 551610 (brak ich na liście rozpadów hadronowych, więc wiersz zbioru standardowego z leptonem FD jest odrzucany w podziale A, choć nie dostarcza go żaden zbiór) albo produkt η z rozpadu φ → ηγ (550117, bez poprawki η) |
+
+Bity 13 i 14 oznaczają znane luki reguł wersji 1, które zostały też w wersji 2. Ich zmiana zmieniłaby
+przynależność i wagi wzorcowych tabel, więc reguły zostały bez zmian,
+a wiersze są tylko oznaczone. W zbiorze standardowym (e⁺e⁻) bit 14 ma 27
+wierszy, z czego 1 jest odrzucony w podziale A. W zbiorze leptonowym (e⁺e⁻,
+wiersze 0–300 000, vz > −160) bit 13 ma 338 wierszy; to około 1% wagi
+wierszy z rozpadami ρ⁰/ω/φ.
+
+Rozkład M(e⁺e⁻) rozpadu η → π⁺π⁻e⁺e⁻ w zbiorze η jest niezgodny z QED już w generatorze; obserwację i poprawki w postaci wag opisuje [SYMULACJA_ETA_GENERATOR.md](SYMULACJA_ETA_GENERATOR.md).

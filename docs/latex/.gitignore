@@ -1,0 +1,12 @@
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.toc
+# ACLiC build products of the macros
+macros/*.so
+macros/*.d
+macros/*.pcm
+macros/*_ACLiC_*
+# preview images (the report uses the PDF figures)
+figs/*.png

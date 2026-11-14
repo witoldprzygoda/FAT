@@ -1,0 +1,19 @@
+# Ring-less electrons in the pion slots: charge asymmetry and cuts (2026-11-13)
+## A. Inclusive count, hadron PID sample without PID cut (HH_elossfix, tree PipPim, ALL combinations, 60 files,
+##    542211 events, every distinct ring-less track counted once per event; macro asym.C, run on vae25)
+created outside the target region: e+ 2633, e- 24751, e+/e- = 0.106
+  by true p [MeV/c]: 0-100 0.164 | 100-200 0.089 | 200-300 0.111 | 300-500 0.106 | >500 0.111
+  by theta [deg]:    <20 0.023 | 20-30 0.088 | 30-50 0.141 | 50-90 0.231
+created in the target region: e+ 29, e- 473, e+/e- = 0.061
+## B. Conversion pairs (same GEANT creation vertex), same sample (macro partner.C)
+e- from conversions 22562: ghost 32.4 %, e+ partner also reconstructed in 4.4 %
+e+ from conversions  2632: ghost 30.1 %, e- partner also reconstructed in 37.8 %
+## C. Analysis ntuple scan_nt (rules v2, after the PAT PID cuts, vertex z > -160 mm), pi- slot (macros eminpim_look.C, eminpim_cuts.C)
+std set: e- in the pi- slot 5464 rows (2.48 % of the slot), 95.1 % created at z > 100 mm, 90.2 % conversions, 7.1 % Compton, ghost 32.8 %, isring 10.5 %
+  momentum: p<300 MeV/c 67, 300-600 3508, >=600 1889
+  dE/dx MDC: e- q10/q50/q90 2.12/2.75/3.94 ; pi- (p>=200) 1.26/1.56/2.01
+  kept fraction pi- / e- (all p):  isUsedVertex 0.932/0.947 ; |z_trk-z_vtx|<20 0.860/0.834 ; r<10 0.938/0.949
+                                   dE/dx<2.2 0.915/0.147 ; dE/dx<2.0 0.849/0.053 ; dE/dx<1.9 0.797/0.028
+                                   rkchi2<50 0.921/0.777 ; not(0<=oa_hadr<2) 0.951/0.742
+  dE/dx<2.2 by p: <300 0.787/0.373 ; 300-600 0.965/0.165 ; >=600 0.951/0.105 ; e- share 2.48 % -> 0.41 %
+lep set: e- in the pi- slot 304668 rows (4.27 %); dE/dx<2.2: pi- 0.919, e- 0.181, share 4.27 % -> 0.87 %
