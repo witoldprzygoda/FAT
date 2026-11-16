@@ -1,0 +1,29 @@
+% fix_tableE3.tex -- review fix (prefix fix): Table E3 of WP6 (wp6_tableE3.tex) with full labels, the systematic column and the
+% revised errors (f_eta(edge) stat x 1.2; P_main model uncertainty 420 instead of the old envelope 1078). Ratios with PDG 2020 BRs
+% as in WP6 (PDG 2026 values in Table P2). Numbers from tables_all/wp6_tableE3.txt, fix_tableS1.txt and fix_numbers.txt.
+\begin{tabular}{@{}l r r r r r l@{}}
+\toprule
+quantity & value & stat & syst & MC & bias-corr. & note \\
+\midrule
+\Ybump (B4), $\Mee\ge10$\,\MeVcc & 7822 & 456 & 12\,870 & 1920 & 8638 & main bump estimator by fall-back; \textbf{not determined} (165\,\%) \\
+\Ybump (B4), all \Mee & 16\,389 & 1129 & 25\,770 & 4110 & 18\,385 & extrapolated with $f_{E2}=0.4773$; \textbf{not determined} (157\,\%) \\
+\Ypeak (side bands), all \Mee & 5088 & 432 & 584 & 245 & 5124 & \textbf{main result}; closure PASS (adopted rule) \\
+\Ypeak, $\Mee<10$\,\MeVcc (E1) & 2380 & 291 & -- & 164 & 2416 & per-class side bands \\
+\Ypeak, $\Mee\ge10$\,\MeVcc (E2) & 2780 & 326 & ($\sigma_{\mathrm{tr}}$ 395) & 179 & 2767 & per-class side bands \\
+$a_B(E2)=\Ybump(E2)/(\mathrm{C2}+\mathrm{C3})_{E2}$ & 0.312 & 0.018 & 0.52 & 0.076 & 0.344 & $\kappa=1$ in the denominator \\
+$a_B(\mathrm{all})=\Ybump(\mathrm{all})/(\mathrm{C2}+\mathrm{C3})_{\mathrm{all}}$ & 0.299 & 0.021 & 0.47 & 0.075 & 0.336 & numerator at $\kappa=0.832$, denominator at 1 \\
+$\aP=\Ypeak/(\mathrm{C4}+\mathrm{C5})$ & 0.418 & 0.035 & 0.048 & 0.025 & 0.423 & peak / SMASH \\
+DR $=\aP/a_B(\mathrm{all})$ & 1.397 & 0.152 & 0.94 & 0.533 & 1.089 & derived from B4: \textbf{not determined} (67\,\%) \\
+DR, both in E2 ($\aP(E2)/a_B(E2)$) & 1.731 & 0.227 & -- & 0.613 & 1.381 & information \\
+\midrule
+$\sigma_{\mathrm{tr}}$ (13 displaced windows) & 239 & \multicolumn{4}{l}{rms of the pulls $1.14^{+0.37}_{-0.59}$ ($n_{\mathrm{eff}}\approx3.4$)} & family S10 of the peak \\
+pull CR-L (0.5225--0.5300, E2) & $-1.88$ & \multicolumn{4}{l}{S10 term 2931 rows} & 37.5\,\% of \Ybump(E2) \\
+pull CR-K (S5, 0.400--0.5225, E2) & $-1.98$ & \multicolumn{4}{l}{S10 term 14\,436 rows} & 184.6\,\% of \Ybump(E2) \\
+pull 0.400--0.455 (E2) & $-2.78$ & \multicolumn{4}{l}{S10 term 7025 rows} & 89.8\,\% of \Ybump(E2) \\
+\midrule
+$f_\eta$(edge) $=E_{\mathrm{data}}/E_{\mathrm{sim}}$ & 0.392 & 0.024 & 0.021 & 0.039 & -- & stat $\times1.2$ (Part~II calibration); syst $=$ model \\
+$f_\eta$(tag) $=T_{\mathrm{data}}/T_{\mathrm{sim}}$ & 0.454 & 0.014 & -- & 0.040 & -- & emulated simulated tag, UNVERIFIED \\
+\Pmain $S$ (rows, whole Gaussian) & 4388 & 307 & 420 & -- & -- & model: edge-safe rms (old envelope 1078) \\
+\aEta (F-main, WP5) & 0.382 & 0.017 & 0.21 & 0.040 & 0.432 & cross-check (closure failed) \\
+\bottomrule
+\end{tabular}

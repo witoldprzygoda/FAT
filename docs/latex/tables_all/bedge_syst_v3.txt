@@ -1,0 +1,48 @@
+# bedge_syst_v3.txt -- bedge_combine_v3.py (D38 + D40); variants of f_eta(edge) = E_data/E_sim (all M(ee)); S0, isBest >= 0
+# Delta = variant - nominal (0.3916); noise = sqrt(|stat_v^2 - stat_0^2| + MC(Delta)^2) (literal WP7) | bootstrap version; delta = counted
+CHK  best        0.4248 +0.0331 0.0220 0.0220 0.0247 NOT COUNTED (check only) | isBest == 1 in data and simulation
+CHK  bestData    0.3464 -0.0452 0.0093 0.0097 0.0443 NOT COUNTED (check only) | isBest == 1 in data, simulation isBest >= 0 (WP7 convention)
+E1   edgeDn      0.3866 -0.0051 0.0093 0.0095 0.0000 counted | edge position x 0.9991
+E1   edgeUp      0.3926 +0.0010 0.0019 0.0018 0.0000 counted | edge position x 1.0009 (eta-peak position +1 sigma)
+E1   hiExt       0.3850 -0.0067 0.0125 0.0108 0.0000 counted | fit range extended by 10 MeV above
+E1   hr35        0.3791 -0.0126 0.0264 0.0270 0.0000 counted | fit range edge -+ 35 MeV in all slices
+E1   hr55        0.3954 +0.0037 0.0259 0.0265 0.0000 counted | fit range edge -+ 55 MeV in all slices
+E1   loExt       0.4150 +0.0234 0.0216 0.0225 0.0089 counted | fit range extended by 10 MeV below
+E1   pol1        0.4290 +0.0374 0.0152 0.0134 0.0341 NOT COUNTED (R1: data reject (chi2 308.9/124 vs 137.4/120)) | background pol1
+E1   pol3        0.4287 +0.0371 0.0948 0.0950 0.0000 counted | background pol3
+E1   smear4.4    0.3913 -0.0003 0.0029 0.0026 0.0000 counted | smearing 4.4 MeV (data and simulation)
+E1   smear6.4    0.3916 -0.0000 0.0024 0.0024 0.0000 counted | smearing 6.4 MeV
+E1   tmplBox     0.3917 +0.0000 0.0005 0.0005 0.0000 counted | smeared box in M4^2 (phase-space shape) instead of the step
+E1   tmplQ       0.3952 +0.0036 0.0043 0.0044 0.0000 counted | step averaged over the simulated M(ee) of the bump classes (edge E(m, q))
+E1   wgtData     0.3956 +0.0039 0.0058 0.0050 0.0000 counted | simulation fitted with the final data covariance (same linear estimator)
+E2   set1        0.3828 -0.0088 0.0141 0.0149 0.0000 counted | + 0.40-0.41
+E2   set2        0.3920 +0.0003 0.0185 0.0187 0.0000 counted | without 0.39-0.40
+E2   set3        0.3959 +0.0042 0.0118 0.0128 0.0000 counted | 8 half-width slices
+E2   set4        0.4089 +0.0173 0.0185 0.0208 0.0000 counted | 2 coarse slices 0.30-0.37, 0.37-0.40
+E2   set5        0.4067 +0.0151 0.0099 0.0095 0.0114 counted | lower start 0.29
+E2   set6        0.3845 -0.0071 0.0110 0.0109 0.0000 counted | lower start 0.31
+E2   set7        0.3942 +0.0026 0.0205 0.0219 0.0000 counted | inner edges moved: 0.30-0.33-0.36-0.38-0.40
+E2   set8        0.3977 +0.0061 0.0187 0.0210 0.0000 counted | 3 slices 0.30-0.35-0.38-0.40
+E3   ppDn        0.3925 +0.0009 0.0047 0.0045 0.0000 counted | M(pipi) x 0.9945
+E3   ppUp        0.3849 -0.0067 0.0052 0.0036 0.0043 counted | M(pipi) x 0.9959
+E3   r089        0.3701 -0.0215 0.0121 0.0101 0.0178 counted | r = 0.89 (data-like resolution)
+E3   r110        0.4036 +0.0120 0.0113 0.0102 0.0040 counted | r = 1.10
+E3   sDn         0.3799 -0.0117 0.0101 0.0089 0.0059 counted | s = 0.99525
+E3   sK0         0.3811 -0.0105 0.0098 0.0087 0.0037 counted | s = 0.99521 (K0S-based)
+E3   sUp         0.3960 +0.0044 0.0076 0.0070 0.0000 counted | s = 0.99705
+E3   smearMatch  0.3735 -0.0181 0.0066 0.0028 0.0168 counted | each sample its own peak width: data 5.4, simulation 6.1 MeV
+E4   cb20        0.3964 +0.0048 0.0035 0.0035 0.0033 counted | CB in 20 MeV cells (no bootstrap: cells not aligned with the replica window)
+E4   cb5         0.3957 +0.0040 0.0023 0.0020 0.0033 counted | CB in 5 MeV cells
+E4   cbSum       0.3968 +0.0052 0.0006 0.0038 0.0051 counted | CB = N++ + N-- (like-sign sum)
+E4   clsOwnCB    0.3916 +0.0000 0.0000 0.0000 0.0000 counted | class CB = its own 2 sqrt(N++ N--) (E1, E2 only)
+E4   k0.95       0.3920 +0.0004 0.0015 0.0002 0.0000 counted | CB x 0.95
+E4   k1.032      0.3914 -0.0003 0.0012 0.0002 0.0000 counted | CB x 1.032 (data event mixing)
+E4   k1.05       0.3912 -0.0004 0.0016 0.0002 0.0000 counted | CB x 1.05
+E5   bump1aY     0.3858 -0.0059 0.0038 0.0014 0.0045 counted | eta -> 3pi Dalitz plot 1 + aY (116)
+E5   bumpPS      0.4233 +0.0317 0.0154 0.0131 0.0277 NOT COUNTED (R1: phase-space Dalitz plot; per-slice data/simulation pattern chi2 67/3 (nominal 4.5/3), WP7 R1) | eta -> 3pi phase space (100)
+E5   modeB       0.4114 +0.0198 0.0236 0.0227 0.0000 counted | ownership mode B
+E5   wtsOff      0.4254 +0.0338 0.0153 0.0128 0.0301 NOT COUNTED (R1: includes the phase-space Dalitz plot; per-slice data/simulation pattern chi2 65/3 (nominal 4.5/3), WP7 R1) | physics weights off (0)
+E6   pre         0.3760 -0.0157 0.0174 0.0185 0.0000 counted | selection pre (data and simulation)
+FAMILIES f_all: E1 0.0045, E10 0.0133, E2 0.0114, E3 0.0168, E4 0.0051, E5 0.0045, E6 0.0000, E7 0.0234; total 0.0347 (8.9 %); bootstrap-noise total 0.0351
+FAMILIES fc_rec: E1 0.0057, E10 0.0155, E2 0.0122, E3 0.0181, E4 0.0056, E5 0.0050, E6 0.0000, E7 0.0253, E8 0.0010; total 0.0381 (9.0 %); bootstrap-noise total 0.0386
+FAMILIES a_k48: E1 0.0000, E10 0.0280, E2 0.0217, E3 0.0253, E4 0.0074, E5 0.0063, E6 0.0121, E7 0.0341, E8 0.0018, E9 0.0412; total 0.0707 (12.4 %); bootstrap-noise total 0.0707

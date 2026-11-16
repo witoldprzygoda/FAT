@@ -1,0 +1,99 @@
+# smp_cutflow.txt -- written by plots/exp_report/smp_report.C (Sat Nov 14 06:35:05 2026)
+# full cut flow of the three hypotheses; rows = stored particle combinations, events = event groups (adjacent rows with equal
+# (file, run, event)); steps 0-3 from the PAT files (smp_pat_counts.C), steps from 'FAT rows' on from the compact file (smp_flow.C).
+# Steps are cumulative down to 'dz_pi < 40'; the named selections below the line are each defined from pre.
+# frac = rows kept relative to the previous cumulative step (named selections: relative to pre).
+# isBest == 1 rows = events of the isBest == 1 variant. OA = OA(e+e-) > 2 deg variant (not a fixed cut).
+
+# check e+e-: PAT rows after PT3 4783467, FAT rows 4783467; events 4058586 vs 4058586; isBest==1 4058586 vs 4058586
+# check e+e+: PAT rows after PT3 122875, FAT rows 122875; events 102559 vs 102559; isBest==1 102559 vs 102559
+# check e-e-: PAT rows after PT3 371524, FAT rows 371524; events 302701 vs 302701; isBest==1 302701 vs 302701
+step                                   | e+e- rows   frac    events isBest==1 OA>2 rows | e+e+ rows   frac    events isBest==1 OA>2 rows | e-e- rows   frac    events isBest==1 OA>2 rows |
+PAT rows                               |   7186155 1.0000   6042727   6042727         - |    423230 1.0000    363618    363618         - |   1569416 1.0000   1323546   1323546         - |
+isBest >= 0 (FAT isBestAll)            |   7186155 1.0000   6042727   6042727         - |    423230 1.0000    363618    363618         - |   1569416 1.0000   1323546   1323546         - |
+vz > -500 mm                           |   4868213 0.6774   4131190   4131190         - |    124890 0.2951    104255    104255         - |    377646 0.2406    307705    307705         - |
+PT3 (trigbit == 8192) = FAT rows       |   4783467 0.9826   4058586   4058586         - |    122875 0.9839    102559    102559         - |    371524 0.9838    302701    302701         - |
+cor_ok == 1                            |   4753629 0.9938   4035344   4034170   3514472 |    121789 0.9912    101744    101669    119631 |    367954 0.9904    300060    299873    358879 |
+vz > -160 mm (= pre = BUMP)            |   4423338 0.9305   3783447   3782512   3236582 |     85921 0.7055     72360     72317     84075 |    267362 0.7266    220285    220168    260136 |
+both pions in the vertex fit           |   3551526 0.8029   3115863   3084387   2561995 |     44316 0.5158     39610     38549     43010 |    137408 0.5139    121025    117997    133217 |
+dz_pi < 40 mm                          |   3454715 0.9727   3039040   3004778   2489393 |     42225 0.9528     37809     36798     40959 |    131346 0.9559    116023    113037    127305 |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DIRECT = pre + dz_pi < 40 mm           |   3838094 0.8677   3338898   3313729   2782021 |     59606 0.6937     51735     50793     58134 |    174525 0.6528    150154    147272    169651 |
+PEAK = pre + dz_pi < 40 + MM4 < 2.85   |   3800262 0.8591   3313830   3283551   2751228 |     59143 0.6883     51398     50414     57677 |    166144 0.6214    144210    140602    161554 |
+peak nominal                           |   2776853 0.6278   2457493   2376008   1981683 |     52199 0.6075     46055     44338     51008 |    207586 0.7764    176096    171721    201706 |
+peak nominal + vertex                  |   2252756 0.5093   2030720   1955642   1581811 |     27278 0.3175     25138     23928     26380 |    108176 0.4046     96896     93108    104714 |
+bump nominal                           |    395737 0.0895    374126    328087    284443 |      9986 0.1162      9405      8329      9822 |     42139 0.1576     38338     34107     41023 |
+bump nominal + vertex                  |    296726 0.0671    284846    251410    208633 |      4681 0.0545      4542      4063      4572 |     19664 0.0735     18634     16660     19069 |
+X17 region (sim window)                |      6507 0.0015      6438      5422      6490 |        16 0.0002        16        13        16 |       285 0.0011       280       234       285 |
+X17 region (data window)               |      5258 0.0012      5210      4369      5245 |        14 0.0002        14        11        14 |       223 0.0008       218       184       223 |
+
+# vertex cut vz > -500 mm at the PAT level (rows with isBest >= 0):
+#   e+e-: removed 2317942 of 7186155 rows (32.3 %; per day 27.2-38.2 %); of the removed rows 99.94 % have vz = -1000 (no vertex reconstructed)
+#   e+e+: removed 298340 of 423230 rows (70.5 %; per day 68.5-73.5 %); of the removed rows 99.99 % have vz = -1000 (no vertex reconstructed)
+#   e-e-: removed 1191770 of 1569416 rows (75.9 %; per day 73.4-78.6 %); of the removed rows 99.97 % have vz = -1000 (no vertex reconstructed)
+# trigger words after the vertex cut (rows): e+e-: 4096 84410 8192 4783467 12288 335 131072 1 ; e+e+: 4096 2004 8192 122875 12288 11 ; e-e-: 4096 6100 8192 371524 12288 22 ; 
+# (FAT keeps trigbit == 8192 exactly; rows with 12288 = 8192 + 4096 are dropped)
+# PAT checks: rows with isBest < 0: 0; event groups without exactly one isBest == 1 row: 0
+
+# e+e- rows in the mass windows and CB/N (CB = 2 sqrt(N++ N--), 10 MeV bins interpolated, k = 1):
+#   pk = data peak 0.53364-0.55416, bu = data bump 0.4550-0.5225, pkS/buS = frozen simulation windows 0.5333-0.5587 / 0.4576-0.5255 GeV/c2
+
+# variant isBest >= 0
+step                                   |     N pk   CB/N |     N bu   CB/N |    N pkS   CB/N |    N buS   CB/N
+cor_ok == 1                            |    86011 0.1336 |   170751 0.1327 |   107619 0.1342 |   176408 0.1336 |
+vz > -160 mm (= pre = BUMP)            |    77513 0.1025 |   153183 0.1012 |    96904 0.1035 |   158276 0.1018 |
+both pions in the vertex fit           |    55947 0.0586 |   111212 0.0561 |    69802 0.0591 |   114805 0.0565 |
+dz_pi < 40 mm                          |    53425 0.0574 |   105642 0.0547 |    66714 0.0578 |   109037 0.0551 |
+DIRECT = pre + dz_pi < 40 mm           |    62969 0.0760 |   124327 0.0739 |    78705 0.0765 |   128402 0.0743 |
+PEAK = pre + dz_pi < 40 + MM4 < 2.85   |    56532 0.0719 |   111270 0.0643 |    70768 0.0729 |   114793 0.0650 |
+peak nominal                           |    61800 0.0970 |   128715 0.0954 |    76953 0.0982 |   132814 0.0958 |
+peak nominal + vertex                  |    45433 0.0553 |    94913 0.0530 |    56408 0.0559 |    97853 0.0533 |
+bump nominal                           |    33240 0.0986 |   103922 0.0905 |    40516 0.0996 |   105859 0.0910 |
+bump nominal + vertex                  |    24568 0.0577 |    77735 0.0510 |    29860 0.0582 |    79081 0.0515 |
+X17 region (sim window)                |     5258 0.0193 |        -      - |     6507 0.0197 |        -      - |
+X17 region (data window)               |     5258 0.0193 |        -      - |        -      - |        -      - |
+
+# variant isBest == 1
+step                                   |     N pk   CB/N |     N bu   CB/N |    N pkS   CB/N |    N buS   CB/N
+cor_ok == 1                            |    68900 0.1305 |   136400 0.1300 |    86251 0.1313 |   140878 0.1308 |
+vz > -160 mm (= pre = BUMP)            |    62759 0.1005 |   123499 0.0987 |    78414 0.1016 |   127575 0.0993 |
+both pions in the vertex fit           |    46494 0.0588 |    91899 0.0559 |    57986 0.0593 |    94860 0.0563 |
+dz_pi < 40 mm                          |    44474 0.0578 |    87445 0.0545 |    55511 0.0581 |    90251 0.0550 |
+DIRECT = pre + dz_pi < 40 mm           |    51735 0.0750 |   101475 0.0723 |    64625 0.0756 |   104784 0.0727 |
+PEAK = pre + dz_pi < 40 + MM4 < 2.85   |    46617 0.0705 |    91138 0.0631 |    58303 0.0715 |    94000 0.0638 |
+peak nominal                           |    50393 0.0956 |   104313 0.0931 |    62704 0.0968 |   107603 0.0936 |
+peak nominal + vertex                  |    37928 0.0557 |    78690 0.0528 |    47061 0.0564 |    81117 0.0531 |
+bump nominal                           |    27306 0.0969 |    84581 0.0885 |    33266 0.0978 |    86119 0.0891 |
+bump nominal + vertex                  |    20671 0.0585 |    64661 0.0509 |    25104 0.0589 |    65761 0.0514 |
+X17 region (sim window)                |     4369 0.0190 |        -      - |     5422 0.0193 |        -      - |
+X17 region (data window)               |     4369 0.0190 |        -      - |        -      - |        -      - |
+
+# variant isBest >= 0, OA > 2
+step                                   |     N pk   CB/N |     N bu   CB/N |    N pkS   CB/N |    N buS   CB/N
+cor_ok == 1                            |    68378 0.1650 |   136333 0.1632 |    85606 0.1657 |   140763 0.1644 |
+vz > -160 mm (= pre = BUMP)            |    60935 0.1279 |   120839 0.1258 |    76217 0.1289 |   124789 0.1266 |
+both pions in the vertex fit           |    43060 0.0742 |    85930 0.0707 |    53734 0.0748 |    88640 0.0713 |
+dz_pi < 40 mm                          |    41070 0.0727 |    81518 0.0690 |    51284 0.0732 |    84080 0.0697 |
+DIRECT = pre + dz_pi < 40 mm           |    48873 0.0958 |    96876 0.0928 |    61100 0.0964 |    99989 0.0935 |
+PEAK = pre + dz_pi < 40 + MM4 < 2.85   |    43648 0.0912 |    86073 0.0814 |    54648 0.0923 |    88739 0.0823 |
+peak nominal                           |    47917 0.1226 |   101101 0.1189 |    59666 0.1241 |   104211 0.1196 |
+peak nominal + vertex                  |    34510 0.0709 |    73110 0.0669 |    42794 0.0718 |    75283 0.0674 |
+bump nominal                           |    24713 0.1299 |    80262 0.1149 |    30114 0.1312 |    81604 0.1158 |
+bump nominal + vertex                  |    17835 0.0777 |    58892 0.0657 |    21644 0.0784 |    59781 0.0665 |
+X17 region (sim window)                |     5245 0.0194 |        -      - |     6490 0.0197 |        -      - |
+X17 region (data window)               |     5245 0.0194 |        -      - |        -      - |        -      - |
+
+# variant isBest == 1, OA > 2
+step                                   |     N pk   CB/N |     N bu   CB/N |    N pkS   CB/N |    N buS   CB/N
+cor_ok == 1                            |    54353 0.1624 |   108095 0.1610 |    68091 0.1634 |   111597 0.1621 |
+vz > -160 mm (= pre = BUMP)            |    49039 0.1261 |    96861 0.1233 |    61303 0.1273 |   100015 0.1241 |
+both pions in the vertex fit           |    35669 0.0748 |    70771 0.0706 |    44508 0.0754 |    72998 0.0712 |
+dz_pi < 40 mm                          |    34084 0.0735 |    67239 0.0690 |    42551 0.0739 |    69347 0.0697 |
+DIRECT = pre + dz_pi < 40 mm           |    39962 0.0950 |    78682 0.0911 |    49934 0.0957 |    81200 0.0918 |
+PEAK = pre + dz_pi < 40 + MM4 < 2.85   |    35822 0.0899 |    70159 0.0801 |    44808 0.0911 |    72319 0.0811 |
+peak nominal                           |    38854 0.1214 |    81528 0.1165 |    48340 0.1230 |    84007 0.1173 |
+peak nominal + vertex                  |    28729 0.0718 |    60461 0.0667 |    35618 0.0727 |    62246 0.0672 |
+bump nominal                           |    20172 0.1285 |    65044 0.1129 |    24555 0.1298 |    66103 0.1138 |
+bump nominal + vertex                  |    14958 0.0791 |    48907 0.0656 |    18147 0.0796 |    49634 0.0664 |
+X17 region (sim window)                |     4359 0.0190 |        -      - |     5408 0.0193 |        -      - |
+X17 region (data window)               |     4359 0.0190 |        -      - |        -      - |        -      - |

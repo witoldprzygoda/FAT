@@ -1,0 +1,23 @@
+% written by plots/exp_report/cb_checks.C
+\begin{table}[H]\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Null tests of the like-sign spectra, experimental data, isBest $\geq 0$ unless marked. $S$ = $\eta$-peak content from $P_\text{main}$ ($N-\text{CB}$, frozen Gaussian 0.5439~GeV/$c^2$, $\sigma=5.4$~MeV, pol2, 0.5225--0.6100) with stat.\ error. $S(++)$, $S(--)$, $S(\Sigma)$: the same frozen fit (Poisson likelihood) on $N_{++}$, $N_{--}$ and $N_{++}+N_{--}$. Pulls: mean and rms of $S/\sigma_S$ of $N_{++}+N_{--}$ for the test Gaussian at 46 positions 0.40--0.85~GeV/$c^2$. $E$: bump edge-step sum on $N-\text{CB}$; $E_\text{ls}$: the same fit on $N_{++}+N_{--}$ (rows per 2.5~MeV/$c^2$). Not normalised to luminosity.}
+\label{tab:cb_null}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+selection & $S$ & $S(++)$ & $S(--)$ & $S(\Sigma)$ & pulls mean/rms & $E$ / $E_\text{ls}$\\
+\midrule
+FAT only (vz$>$-500) & $4657\pm390$ & $-7\pm64$ & $-82\pm143$ & $-89\pm156$ & $-0.04$ / $1.00$ & $1241\pm76$ / $3\pm30$\\
+pre & $4671\pm367$ & $-42\pm52$ & $-15\pm121$ & $-56\pm132$ & $-0.04$ / $0.96$ & $1199\pm71$ / $0\pm26$\\
+pre + OA$>$2 & $3632\pm328$ & $-38\pm52$ & $-5\pm119$ & $-43\pm130$ & $-0.04$ / $0.98$ & $898\pm64$ / $1\pm25$\\
+pre + vertex & $4388\pm307$ & $23\pm33$ & $36\pm79$ & $59\pm85$ & $-0.01$ / $1.07$ & $1142\pm59$ / $3\pm16$\\
+DIRECT (pre+dz\_pi$<$40) & $4492\pm327$ & $50\pm42$ & $18\pm91$ & $66\pm100$ & $-0.03$ / $1.00$ & --\\
+PEAK (DIRECT+MM4$<$2.85) & $4364\pm310$ & $20\pm40$ & $28\pm81$ & $47\pm91$ & $0.01$ / $0.98$ & --\\
+peak nominal & $4330\pm327$ & $-53\pm43$ & $-16\pm111$ & $-70\pm119$ & $-0.05$ / $1.08$ & --\\
+peak nominal + vertex & $3949\pm276$ & $14\pm28$ & $44\pm73$ & $59\pm78$ & $-0.01$ / $1.09$ & $1089\pm57$ / $6\pm16$\\
+bump nominal & $2635\pm237$ & $16\pm33$ & $37\pm77$ & $51\pm84$ & $-0.12$ / $1.11$ & $1082\pm60$ / $0\pm21$\\
+bump nominal + vertex & $2405\pm200$ & $25\pm22$ & $58\pm52$ & $84\pm56$ & $-0.07$ / $1.12$ & $1004\pm51$ / $-6\pm14$\\
+pre [isBest=1] & $4199\pm330$ & $-58\pm47$ & $52\pm108$ & $-6\pm117$ & $-0.03$ / $0.95$ & $1050\pm64$ / $-28\pm23$\\
+\bottomrule
+\end{tabular}}
+\end{table}

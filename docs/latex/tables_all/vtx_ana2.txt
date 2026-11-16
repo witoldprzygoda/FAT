@@ -1,0 +1,25 @@
+# A. S from N - CB (P_main), from N alone (no CB; pol2 and pol3), and the CB's own Gaussian content at m_eta
+  class         S(N-CB)      e |   S(N)p2      e   S(N)p3      e |     S_CB      e |   S(N++)      e   S(N--)      e
+  V                4657    390 |     4646    370     4668    476 |      -18    182 |       -7     64      -82    143
+  Nv                902    401 |      165    324      393    416 |     -736    341 |     -256    108       73    283
+  V,perI           2358    267 |     2330    253     2420    325 |      -31    125 |       42     45     -145     97
+  Nv,perI            25    269 |     -278    218     -250    280 |     -296    229 |      -88     74      -49    189
+  V,perIIA          291    101 |      243     95      200    123 |      -49     49 |      -17     17      -16     39
+  Nv,perIIA         169    117 |       94     95      149    121 |      -77     99 |      -32     31       72     83
+  V,perIIB          807    171 |      758    162      764    208 |      -46     84 |      -47     29       88     67
+  Nv,perIIB         195    195 |       96    157      275    202 |      -94    167 |      -28     53      -86    138
+  V,perIII         1202    203 |     1315    194     1283    249 |      109     89 |       15     31       -9     70
+  Nv,perIII         515    191 |      254    154      217    197 |     -273    161 |     -108     50      135    134
+  eta per 1e3 us rows (S(N-CB) / rows):  V 0.980+-0.082; Nv 0.401+-0.178; V,perI 1.068+-0.121; Nv,perI 0.024+-0.262; V,perIIA 0.914+-0.318; Nv,perIIA 0.886+-0.613; V,perIIB 0.893+-0.190; Nv,perIIB 0.369+-0.369; V,perIII 0.908+-0.154; Nv,perIII 1.032+-0.382;
+
+# B. pi0 peak in M(e+e-gamma) (rows with a good photon, M(ee) < 0.10; N - CB, 2.5 MeV bins, Gaussian + pol2 in 0.08-0.20)
+  V   pi0: yield 539887 +- 2342, mean 0.1416 +- 0.0000, sigma 0.0135 +- 0.0000 GeV/c2, chi2/ndf 372.7/42; N - CB in 0.119-0.173: 709640 of N 727380
+  Nv  pi0: yield 61648 +- 4364, mean 0.1361 +- 0.0003, sigma 0.0184 +- 0.0006 GeV/c2, chi2/ndf 64.6/42; N - CB in 0.119-0.173: 92051 of N 140228
+
+# C. M4 structure in the omega region: frozen Gaussian (5.4 and 8 MeV) + pol2 at the positions of the largest V pulls
+  mu 0.7325 sigma 5.4 MeV: S_V 4311 +- 602, S_Nv -180 +- 456, eps 1.044 +- 0.115, ratio Nv/V -0.042 +- 0.106
+  mu 0.7325 sigma 8.0 MeV: S_V 8193 +- 864, S_Nv -329 +- 665, eps 1.042 +- 0.088, ratio Nv/V -0.040 +- 0.081
+  mu 0.7400 sigma 5.4 MeV: S_V 7483 +- 600, S_Nv -914 +- 448, eps 1.139 +- 0.079, ratio Nv/V -0.122 +- 0.061
+  mu 0.7400 sigma 8.0 MeV: S_V 12695 +- 860, S_Nv -1329 +- 656, eps 1.117 +- 0.065, ratio Nv/V -0.105 +- 0.052
+  V : excess of N - CB over a pol3 side-band fit (0.62-0.70, 0.80-0.90) in 0.70-0.76: 35410 +- 799 (stat of N only)
+  Nv: excess of N - CB over a pol3 side-band fit (0.62-0.70, 0.80-0.90) in 0.70-0.76: -2426 +- 537 (stat of N only)

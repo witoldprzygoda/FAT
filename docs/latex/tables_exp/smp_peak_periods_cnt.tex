@@ -1,0 +1,26 @@
+% smp_peak_periods_cnt.tex: copy of smp_peak_periods.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% smp_peak_periods.tex -- written by plots/exp_report/smp_flow.C (numbers: tables_exp/smp_peak_periods.txt)
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\caption{$\eta$-peak content per period. $P_\mathrm{main}$: $\chi^2$ fit of $N-\mathrm{CB}$ (CB $=2\sqrt{N_{++}N_{--}}$, $k=1$) with the frozen Gaussian (0.5439~GeV/$c^2$, $\sigma=5.4$~MeV) and a second-order polynomial in 0.5225--0.6100~GeV/$c^2$; $S$ = whole Gaussian $\pm$ stat $\pm$ model spread (old envelope). All stored combinations (isBest $\geq 0$), corrected momenta, PT3, $v_z>-160$~mm. $s=Y_S=S\times\frac{64}{63}/L$ in visible counts per nb$^{-1}$, $L$ = START-free luminosity of the analysed runs; visible yield, not corrected for acceptance or efficiency. Constancy over I, IIA, IIB, III with the statistical errors.}
+\label{tab:smp_peak_periods}
+\begin{tabular}{lr rr rr}
+\toprule
+ & & \multicolumn{2}{c}{pre} & \multicolumn{2}{c}{peak nominal + vertex} \\
+Period (days) & $L$ [nb$^{-1}$] & $S$ & $s$ [counts/nb$^{-1}$] & $S$ & $s$ [counts/nb$^{-1}$] \\
+\midrule
+I (034-046) & 2809.5 & $2287\pm251\pm577$ & $0.827\pm0.091$ & $1931\pm189\pm431$ & $0.698\pm0.068$ \\
+IIA (047-048) & 372.6 & $310\pm94\pm74$ & $0.845\pm0.257$ & $180\pm69\pm84$ & $0.490\pm0.188$ \\
+IIB (049-053) & 1078.0 & $870\pm159\pm252$ & $0.820\pm0.150$ & $744\pm118\pm194$ & $0.701\pm0.111$ \\
+III (059-067) & 1819.1 & $1203\pm193\pm343$ & $0.672\pm0.108$ & $1093\pm148\pm313$ & $0.611\pm0.082$ \\
+\midrule
+034-044 (sector-2 deficit) & 2449.2 & $1883\pm233\pm518$ & $0.781\pm0.097$ & $1586\pm176\pm328$ & $0.658\pm0.073$ \\
+045-067 & 3630.0 & $2788\pm283\pm724$ & $0.780\pm0.079$ & $2361\pm213\pm607$ & $0.661\pm0.060$ \\
+\midrule
+all 29 days & 6079.2 & $4671\pm367\pm958$ & $0.780\pm0.061$ & $3949\pm276\pm936$ & $0.660\pm0.046$ \\
+\midrule
+$\chi^2/\mathrm{ndf}$ (I, IIA, IIB, III) &  & \multicolumn{2}{c}{1.4/3 ($p=0.70$)} & \multicolumn{2}{c}{1.6/3 ($p=0.65$)} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,7 @@
+# Tracks removed by the hadron pass of the DST track sorter (beta >= 0 && tof <= 60 ns), estimated from the leptons of the final sample
+# (FAT rows of PipPimEpEm_ID: isBest >= 0, vz > -500, PT3; 9566934 lepton entries = 2 per row)
+lepton entries with tof in [0,0.1) ns: 215 ; [0,1) ns: 4577 ; [0,3) ns: 27588
+exponential fit 0-1.5 ns: slope 0.815 /ns -> extrapolated entries below tof = 0: 3568 = 0.00037 of the lepton entries
+straight-line fit 0-1.5 ns: zero at -0.487 ns -> extrapolated entries below tof = 0: 545 = 0.00006 of the lepton entries
+tof in 40-60 ns: 1114 entries (55.7 per ns) -> a flat continuation beyond 60 ns adds about 55.7 entries per ns of the START window
+rows: the START shift is common to all tracks of an event, the lepton (fastest track) leaves first; the row loss is of the order of the lepton estimate

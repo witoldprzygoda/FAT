@@ -1,0 +1,28 @@
+# WP5 acceptance criteria (SPEC report_all) for the nominal F-main (E2, cross-check) and the fall-backs
+chi2/ndf <= 1.2                      | GLS (data + MC covariance) 883.7/341 = 2.59; minimised 2.16; Pearson 1158.0/341 = 3.40 | FAIL -> total errors x sqrt(chi2_GLS/ndf) = x 1.61 (scaled columns); fall-back 'stage B chi2/ndf > 1.5' FIRED
+|rho(a_eta, b)| < 0.7                | stat 0.276, stat+MC 0.052 | PASS
+per-slice a_eta p > 0.01             | stat+MC p = 0.922 (chi2 0.92/4); stat only p = 0.109 (chi2 7.57/4) | PASS
+no pull run > 4 bins in 0.52-0.56    | longest same-sign run per slice 8 3 5 6 4, slice sum 4; with |pull| > 1: max 5, sum 2 | FAIL (3 of 5 slices)
+free s within 2 sigma of 0.99615     | peak region: s = 0.99500 +- 0.00057 (-2.0 sigma; -1.8 sigma with sqrt(chi2/ndf)); whole fit: 0.99653 +- 0.00019 (1.9 sigma) | PASS only with the chi2-scaled error
+folds p > 0.05                       | joint chi2 10.77/12 p = 0.549; a_eta z = -1.69 | PASS
+
+# fall-backs
+- k_E1 outside 0.8-3 (F-main E1+E2: k_E1 = 7.63 +- 1.72): FIRED -> E1 dropped, kappa = 1 +- 0.2 (nominal FMAIN)
+- stage B chi2/ndf > 1.5 (GLS 2.59): FIRED -> S3/S4 variants run; best GLS chi2/ndf 1.86 (FMAIN_r45); unresolved -> the side-band estimators are the main result (already required by WP4)
+- |rho(a_eta, b)| > 0.7: not fired (0.05)
+- per-slice a_eta p < 0.01: not fired (p = 0.922 with MC, 0.109 stat only)
+- corr(rho_d, kappa) > 0.9: not fired (nominal 0.04 stat+MC, 0.07 stat; F-main E1+E2 -0.05); direct-decay bias > 20 %: WP4 RF +9.7 % in (a), +22.6 % only in the stress scenario (e) -> not fired
+- R_34 off by > 2 sigma: F-free E2 R_34 = -4.23 +- 4.77 (alpha_3, alpha_4 not determined without E1); F-free E1+E2 R_34 = 0.917 +- 0.304 (-0.3 sigma) -> BR_C WITHDRAWN in the nominal (E2) configuration; the E1+E2 value is a labelled cross-check
+- MC error > data statistical error: FIRED (a_eta MC/stat = 2.34, Y_bump 2.31, Y_peak 2.00) -> simulation-limited
+- WP4 gate: F-main, F-free, F-gold FAILED -> every number of this package is a CROSS-CHECK; B4 + peak side bands (WP6) are the main result
+
+# variants (S3/S4/S5/S8 members; GLS chi2 with MC covariance)
+FMAIN_bA     Pearson 1164.5/342 GLS 888.3 | a_eta 0.3792 (-0.8%) Y_bump 19271 (-0.8%) Y_peak 5006 (-0.8%) rho_d 1.316 | nominal with b constrained to stage A (fall-back form for |rho(a_eta, b)| > 0.7)
+FMAIN_quad   Pearson 974.2/340 GLS 796.7 | a_eta 0.5317 (+39.1%) Y_bump 25638 (+32.0%) Y_peak 5307 (+5.2%) rho_d 0.910 | S3: nominal + quadratic term q x^2
+FMAIN_tiltj  Pearson 1170.0/337 GLS 901.8 | a_eta 0.3720 (-2.7%) Y_bump 18861 (-2.9%) Y_peak 5111 (+1.3%) rho_d 1.405 | S3: nominal with per-slice tilts b_j
+FMAIN_kfree  Pearson 1155.4/340 GLS 895.7 | a_eta 0.4261 (+11.5%) Y_bump 16660 (-14.2%) Y_peak 4393 (-12.9%) rho_d 1.316 | nominal with kappa free (no 1 +- 0.2)
+FMAIN_gfree  Pearson 1091.7/340 GLS 947.1 | a_eta 0.3588 (-6.1%) Y_bump 19067 (-1.8%) Y_peak 5159 (+2.3%) rho_d 1.411 | S8: nominal with g free
+FMAIN_r42    Pearson 957.0/321 GLS 734.3 | a_eta 0.3525 (-7.8%) Y_bump 18378 (-5.4%) Y_peak 4632 (-8.2%) rho_d 1.255 | S5: nominal on M4 0.42-0.70
+FMAIN_r45    Pearson 786.3/291 GLS 541.6 | a_eta 0.3630 (-5.0%) Y_bump 18934 (-2.5%) Y_peak 4484 (-11.1%) rho_d 1.130 | S5: nominal on M4 0.45-0.70
+FMAIN_raw    Pearson 2290.1/341 GLS 3389.1 | a_eta 0.4988 (+30.5%) Y_bump 16272 (-16.2%) Y_peak 6482 (+28.5%) rho_d 1.990 | S4: nominal with the RAW non-eta templates (BB-lite on them too: their variance is not in V)
+FMAIN_pol2   Pearson 2023.0/341 GLS 2018.9 | a_eta 0.5325 (+39.3%) Y_bump 29190 (+50.3%) Y_peak 9831 (+94.9%) rho_d 1.988 | S4: nominal with exp(pol2) smoothing of the non-eta templates

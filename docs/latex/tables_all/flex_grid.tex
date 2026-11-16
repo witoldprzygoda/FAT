@@ -1,0 +1,19 @@
+% flex_grid.tex -- plots/all_report/flex_tables.py
+\begin{tabular}{lrrrl}
+\toprule
+model & free & Pearson $\chi^2$ & hybrid GLS $\chi^2$ & content \\
+\midrule
+ASIS & 0 & 8398 & 1789 & SMASH as is: every scale 1, k\_E2 = 1 (no fit) \\
+P3 & 12 & 1159 & 648 & Part III F-main reproduced (E2, kappa = 1 +- 0.2, g = 1 +- 0.3): check against wp5 results \\
+F7 & 8 & 1026 & 628 & 7 free scales (C2, C3, C4, C5, G\_eta, G\_D, G\_C), no tilt \\
+F7b & 9 & 1033 & 628 & 7 free scales + common tilt (1 + b x) on G\_D, G\_C \\
+F7bj & 13 & 1073 & 603 & 7 free scales + per-slice tilts (1 + b\_j x) on G\_D, G\_C \\
+F8 & 9 & 1119 & 604 & 8 free scales (G\_D split omega/rho0 vs other), no tilt \\
+F8b & 10 & 1159 & 596 & 8 free scales (G\_D split) + common tilt \\
+F8bj & 14 & 1065 & 561 & 8 free scales (G\_D split) + per-slice tilts \\
+F9 & 10 & 1115 & 593 & 9 free scales (G\_D and G\_C split omega/rho0 vs other), no tilt \\
+F9b & 11 & 1158 & 560 & 9 free scales (G\_D and G\_C split) + common tilt \\
+F9bj & 15 & 1000 & 480 & 9 free scales (G\_D and G\_C split) + per-slice tilts \\
+F7cj & 13 & 1087 & 634 & Part III background c\_j (1 + b x)[G\_D + s\_GC G\_C] (s\_GD = 1) with free C2, C3, C4, C5 \\
+\bottomrule
+\end{tabular}

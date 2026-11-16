@@ -1,0 +1,46 @@
+Consistency tests (not combined unless a fold has p < 0.05). S0, isBest >= 0.
+
+Folds (event-group parity; yields x inverse row fraction):
+  Y_bump       fold0  1.656e+04 +- 1.5e+03  fold1  1.667e+04 +- 1.51e+03 z -0.05 p 0.961
+  Y_peak       fold0       4479 +- 611      fold1       5713 +- 610      z -1.43 p 0.153
+  Y5           fold0       2732 +- 394      fold1       3551 +- 397      z -1.46 p 0.143
+  Y4           fold0       1845 +- 287      fold1       2043 +- 310      z -0.47 p 0.64
+  a_eta        fold0      0.356 +- 0.0195   fold1     0.3946 +- 0.0204   z -1.37 p 0.172
+  BR_G         fold0  0.0002128 +- 6.13e-05 fold1   0.000273 +- 5.27e-05 z -0.74 p 0.457
+  BR_A         fold0  0.0003234 +- 4.51e-05 fold1  0.0003791 +- 4.13e-05 z -0.91 p 0.362
+  kappa        fold0      0.893 +- 0.161    fold1     0.8918 +- 0.158    z +0.01 p 0.996
+  DR           fold0      1.217 +- 0.198    fold1      1.543 +- 0.215    z -1.11 p 0.266
+  sigma_eta    fold0     0.3851 +- 0.0526   fold1     0.4912 +- 0.0525   z -1.43 p 0.153
+  Y_bump_E2    fold0       7786 +- 637      fold1       7837 +- 643      z -0.06 p 0.954
+  a_P          fold0     0.3682 +- 0.0502   fold1     0.4696 +- 0.0502   z -1.43 p 0.153
+  a_B          fold0     0.3102 +- 0.0254   fold1     0.3123 +- 0.0256   z -0.06 p 0.954
+  DR_F         fold0      1.108 +- 0.0921   fold1      1.222 +- 0.0842   z -0.91 p 0.361
+  sigma_eta_F  fold0     0.3723 +- 0.0204   fold1     0.4128 +- 0.0214   z -1.37 p 0.172
+  Y_bump_F     fold0   1.86e+04 +- 1.13e+03 fold1  2.061e+04 +- 1.19e+03 z -1.22 p 0.222
+  Y_peak_F     fold0       4578 +- 459      fold1       5594 +- 469      z -1.55 p 0.122
+  g            fold0      1.475 +- 0.197    fold1      1.584 +- 0.189    z -0.40 p 0.69
+  rho_d        fold0      1.207 +- 0.168    fold1      1.415 +- 0.154    z -0.91 p 0.362
+
+isBest == 1 / isBest >= 0 (data only, same templates; error = independent-sample bound):
+  Y_bump       0.8852 +- 0.0868
+  Y_bump_E2    0.8847 +- 0.0735
+  Y_peak       0.9149 +- 0.1093
+  a_P          0.9149 +- 0.1093
+  a_B          0.8847 +- 0.0735
+  DR           1.0335 +- 0.1590
+  a_eta        0.8669 +- 0.0548
+  Y5           0.8988 +- 0.1154
+  BR_G         1.0528 +- 0.2077
+  BR_A         1.0368 +- 0.1283
+  DR_F         1.0233 +- 0.0805
+
+cor_ok fallback (nested sample; z = Delta / sqrt|sig_v^2 - sig_0^2|):
+  Y_bump       nominal 16389  fallback 16766  Delta +376.7  sqrt|dsig2| 170  z +2.22
+  Y_peak       nominal 5088  fallback 5199.5  Delta +111.5  sqrt|dsig2| 47.96  z +2.32
+  a_P          nominal 0.41825  fallback 0.42741  Delta +0.009164  sqrt|dsig2| 0.003942  z +2.32
+  a_B          nominal 0.31168  fallback 0.31879  Delta +0.007109  sqrt|dsig2| 0.002206  z +3.22
+  DR           nominal 1.3974  fallback 1.396  Delta -0.001464  sqrt|dsig2| 0.0261  z -0.06
+  a_eta        nominal 0.38228  fallback 0.3881  Delta +0.005817  sqrt|dsig2| 0.002646  z +2.20
+  BR_G         nominal 0.00026546  fallback 0.00026653  Delta +1.065e-06  sqrt|dsig2| 5.802e-06  z +0.18
+  BR_A         nominal 0.00035247  fallback 0.00035397  Delta +1.494e-06  sqrt|dsig2| 3.394e-06  z +0.44
+  Y5           nominal 3197.8  fallback 3260.2  Delta +62.42  sqrt|dsig2| 37.96  z +1.64

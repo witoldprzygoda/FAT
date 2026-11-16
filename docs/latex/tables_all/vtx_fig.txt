@@ -1,0 +1,8 @@
+# vtx_fig.txt -- numbers drawn in figs_all/vtx_fig.pdf (plots/all_report/vtx_fig.C; rows of ve_verify)
+crossing point (us, cor_ok, doca < 10 mm): rows V 3440488, Nv 1183424; share r >= 8 mm: V 0.349, Nv 0.866
+crossing z: mean V -129.6 mm, Nv -207.1 mm; mode V -127.5, Nv -197.5
+S (P_main, nominal CB): V 4657 +- 390, Nv 902 +- 401
+S(Nv) with the smooth like-sign CB (pol4, 0.48-0.70; vtx_ana3.txt: mean of 12 variants 263, rms 30): 265 +- 324
+Nv: frozen Gaussian on N++: -256 +- 108; on the CB itself: -736 +- 341
+T (ECAL-tagged): V 3297 +- 110, Nv -4 +- 77
+eps: S nominal 0.838 +- 0.063; S N-only 0.966 +- 0.065; S smooth 0.947 +- 0.062; T 1.001 +- 0.023; E 0.983 +- 0.068; combined 0.994 +- 0.021

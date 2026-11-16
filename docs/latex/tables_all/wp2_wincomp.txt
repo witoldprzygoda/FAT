@@ -1,0 +1,26 @@
+# wp2_wincomp.C: composition of f_win (S0, N - CB) by vertex region, gas bound, bounds on b; beam spot x 1.60 y -2.12 mm
+
+[b bounds] day: b_ch = U_F/U_E (ch[-200,-170)) ; b_max = F/E of the unlike-sign S0-without-vz rows in [-170,-160)
+  034  b_ch 10.350 +- 0.623   b_max 12.593 +- 1.259   b_max/b_ch 1.217
+  047  b_ch 15.444 +- 0.772   b_max 17.985 +- 1.608   b_max/b_ch 1.165
+  065  b_ch 0.932 +- 0.023   b_max 0.992 +- 0.043   b_max/b_ch 1.064
+
+[on-axis share] rows with r < 4 mm (S0 without vz cut, unlike-sign), all three days
+  full  front material [-250,-170)   p(r<4) = 0.012 (n 1524)
+  full  cell [-145,-105)             p(r<4) = 0.541 (n 189466)
+  full  cell centre [-140,-110)      p(r<4) = 0.540 (n 145729)
+  empty front material [-250,-170)   p(r<4) = 0.000 (n 409)
+  empty cell [-145,-105)             p(r<4) = 0.335 (n 2860)
+  empty cell centre [-140,-110)      p(r<4) = 0.227 (n 1231)
+  on-axis (gas-like) share of the in-cell empty rows g = (p_cell,E - p_front,E)/(p_LH2,F - p_front,E) = 0.619
+
+[composition] f_win [%] (N - CB, S0, nominal b) split by vertex region, L-weighted over the three days; gas bound = g x cell part
+  all M4  total  11.87 :  entrance [-160,-145)   5.03  cell [-145,-105)   2.75  exit [-105,...)   4.10   gas bound  1.70
+wc|all M4,11.8700,5.0252,2.7477,4.0971,1.7022
+  B       total  18.96 :  entrance [-160,-145)   7.87  cell [-145,-105)   5.78  exit [-105,...)   5.30   gas bound  3.58
+wc|B,18.9595,7.8731,5.7827,5.3037,3.5824
+  P       total  16.45 :  entrance [-160,-145)   6.57  cell [-145,-105)   6.34  exit [-105,...)   3.55   gas bound  3.93
+wc|P,16.4539,6.5656,6.3369,3.5514,3.9257
+  B+P     total  17.16 :  entrance [-160,-145)   6.55  cell [-145,-105)   5.88  exit [-105,...)   4.73   gas bound  3.64
+wc|B+P,17.1567,6.5460,5.8785,4.7323,3.6417
+# note: the like-sign CB of the empty sample is taken per vertex region (small counts; the per-region split is indicative)

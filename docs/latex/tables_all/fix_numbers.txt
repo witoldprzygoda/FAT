@@ -1,0 +1,95 @@
+# fix_numbers.txt -- review fixes of report_all (fix_numbers.py); PDG 2026 unless stated
+a_P (PDG 2020) = 0.41825 ; a_P (PDG 2026) = 0.40909 ; C4 share of the simulated peak in P: 0.4772 (2020), 0.4734 (2026)
+sigma_eta adopted (v8) = a_P x 1.0694 x 1.0116 x 0.97 = 0.4293 mb
+
+## 1. composition of the eta peak (data)
+per-class side-band yields: E1 2380 +- 291 (stat) +- 164 (MC); E2 2780 +- 326 +- 179; E2 closure term sigma_tr(E2) = 395 rows (rms 1.572)
+side bands per class (rho = 1): direct route a = 0.592 +- 0.096 (stat+MC; v8 0.59 +- 0.10) +- -> 0.139 with the E2 closure term; conversion route a kappa = 0.218 +- 0.097; kappa = 0.37 +- 0.23
+per-class a_P: E1 0.333, E2 0.525 (SMASH E2 share 0.425, data 0.539)
+X17 2D fit: N5/N5ref = 0.476 +- 0.065, N4/N4ref = 0.244 +- 0.057 (PDG 2026; PDG 2020: 0.491, 0.248); kappa = 0.51
+F-main E1+E2: kappa = 0.504 +- 0.162 (WP5); F-main E2: a_eta rho_d = 0.3823 x 1.3152 = 0.503 (PDG 2020) -> 0.488 (2026)
+direct-decay route (weighted mean of side bands and X17 fit): a = 0.497 +- 0.059 ; conversion route: a = 0.237 +- 0.049
+COMPOSITION SYSTEMATIC of sigma_eta = half the difference of the two routes / a_P = (0.497 - 0.237)/2/0.4091 = +-31.8 %
+  for comparison: X17 fit alone +-28.4 %; side bands alone +-45.8 %; v8 prior kappa = 1 +- 0.2: +10.5/-8.7 % (+-9.6 %)
+  kappa_data = 0.37: a = a_P x 1.425 if C5 is right (direct reading), a_P x 0.527 if C4 is right (conversion reading)
+  kappa_data = 0.46: a = a_P x 1.343 if C5 is right (direct reading), a_P x 0.618 if C4 is right (conversion reading)
+  kappa_data = 0.50: a = a_P x 1.310 if C5 is right (direct reading), a_P x 0.655 if C4 is right (conversion reading)
+  kappa_data = 0.51: a = a_P x 1.302 if C5 is right (direct reading), a_P x 0.664 if C4 is right (conversion reading)
+  kappa_data = 0.80: a = a_P x 1.105 if C5 is right (direct reading), a_P x 0.884 if C4 is right (conversion reading)
+  kappa_data = 1.20: a = a_P x 0.914 if C5 is right (direct reading), a_P x 1.096 if C4 is right (conversion reading)
+
+## 2. sigma(pp -> eta X)
+syst: sqrt(16.01^2 - 2.5^2 - 0.34^2 + 1.0^2 (S8) + 31.8^2 (composition, S12 family maximum)) = 35.5 %
+sigma = 0.429 +- 0.036 (stat) +- 0.152 (syst) +- 0.025 (MC) +0.035/-0.037 (norm.) mb; total 37.9 % (+37.9/-38.0)
+sigma/sigma_SMASH = 0.401 +- 0.152 (C_sec(1 - f_eta) included)
+syst with the spec's prior kappa = 1 +- 0.2 (v8): 18.5 %; without any composition term: 16.0 %
+  sigma via the direct route (side bands per class, rho = 1) = 0.621 +- 0.146 (stat) mb
+  sigma via the direct route (X17 fit N5)                    = 0.500 +- 0.069 (stat) mb
+  sigma via the direct route, weighted                       = 0.522 +- 0.062 (stat) mb
+  sigma via the conversion route (side bands)                = 0.228 +- 0.102 (stat) mb
+  sigma via the conversion route (X17 fit N4)                = 0.256 +- 0.060 (stat) mb
+  sigma via the conversion route, weighted                   = 0.249 +- 0.051 (stat) mb
+known-sign items (central value of sigma after the item; not applied):
+  r = 0.89 (data peak width 5.44 vs 6.09 MeV)                  x 0.892 -> 0.383 mb
+  f_eta = 12 % (upper end of the nucleon-count expectation)    x 0.907 -> 0.389 mb
+  y-only reweighting                                           x 0.920 -> 0.395 mb
+  QED gamma* angle of C2                                       x 0.999 -> 0.429 mb
+  live time                                                    x 1.071 -> 0.460 mb
+  live time (upper)                                            x 1.073 -> 0.461 mb
+  START-based sorter                                           x 1.013 -> 0.435 mb
+  sorter (upper)                                               x 1.028 -> 0.441 mb
+  cor_ok rule                                                  x 1.022 -> 0.439 mb
+  pT-only reweighting                                          x 1.210 -> 0.519 mb
+  event-vertex efficiency at the N - CB rate                   x 1.400 -> 0.601 mb
+  event-vertex efficiency at the raw-row rate                  x 1.700 -> 0.730 mb
+  composition, direct route (weighted)                         x 1.216 -> 0.522 mb
+  composition, conversion route (weighted)                     x 0.580 -> 0.249 mb
+  vertex x live time x sorter x cor_ok: x 1.55-1.92 -> 0.67-0.82 mb; with the direct route in addition: 0.81-1.19 mb; with pT also: up to 1.44 mb
+  HADES 3.5 GeV PYTHIA 1.14 +- 0.20 mb: ratio 0.38; naive distance with the new total 2.8 sigma (not a significance: one-sided items missing)
+  HADES 3.5 GeV UrQMD 0.93 +- 0.14 mb: ratio 0.46; naive distance with the new total 2.3 sigma (not a significance: one-sided items missing)
+
+## 3. cross-check values of sigma, all with PDG 2026, sigma_SMASH = 1.0694 mb and the C_sec of their window
+  F-main a_eta (bump-dominated, C2/C3 rescaled, mean C_sec)    scale 0.3806 -> sigma 0.399 mb (WP8 value with PDG 2020, 1.0665: 0.400)
+  f_eta(edge) = 1141.9/2915.7 (C2+C3)                          scale 0.3899 -> sigma 0.409 mb (WP8 value with PDG 2020, 1.0665: 0.410)
+  f_eta(tag) = 0.454 (C2+C3, emulated tag)                     scale 0.4520 -> sigma 0.474 mb (WP8 value with PDG 2020, 1.0665: 0.475)
+  P_main S_data/S_sim, r = 1 (4388/10881)                      scale 0.3944 -> sigma 0.414 mb (WP8 value with PDG 2020, 1.0665: 0.422)
+  P_main S_data/S_sim, r = 0.89 (4388/12098)                   scale 0.3548 -> sigma 0.372 mb (WP8 value with PDG 2020, 1.0665: 0.379)
+  peak side bands a_P (adopted)                                scale 0.4091 -> sigma 0.429 mb (WP8 value with PDG 2020, 1.0665: 0.428)
+SMASH visible: C4 + C5 in P 2.046 nb (PDG 2020 2.001), C2 + C3 in B 9.047 nb (PDG 2020 9.008)
+
+## 4. bump scales and DR
+a_B(E2) = Y_bump(E2)/(C2+C3)_E2 = 0.3117 (2020) 0.3103 (2026); a_B(all) = Y_bump(all)/(C2+C3)_all = 0.2993 (2020) 0.2980 (2026)
+  (Y_bump(all) = Y_bump(E2)/f_E2 with f_E2(kappa = 0.832) = 0.4773; the SMASH denominators use kappa = 1)
+DR = a_P / a_B(all) = 1.3974 (2020) 1.3728 (2026)  [the adopted definition]
+kappa = 1 throughout (f_E2 = 0.4583): a_B(all) = a_B(E2): DR = 1.342 (2020) 1.318 (2026)
+kappa = 0.832 throughout (numerator and denominators): a_B = 0.3226, a_P = 0.4547: DR = 1.410 (2020) 1.384 (2026)
+sigma x BR(eta -> pi+pi-pi0) from a_B(all) = a x 1.0694 mb x 0.2292 x C_sec(bump) x 0.97 = 71.9 ub (PDG-edition independent)
+sigma x BR(eta -> pi+pi-pi0) from a_B(E2) = a x 1.0694 mb x 0.2292 x C_sec(bump) x 0.97 = 74.9 ub (PDG-edition independent)
+
+## 5. displaced-window closure of the peak side bands
+13 windows (10 MeV steps, 37.8 MeV wide): rms 1.143, mean +0.515
+  non-overlapping subset 0 (+0.97, +0.84, -1.17, +1.53): rms 1.157 -> sigma_tr = 251 rows
+  non-overlapping subset 1 (+0.12, -0.78, +2.29): rms 1.398 -> sigma_tr = 422 rows
+  non-overlapping subset 2 (-0.49, +1.94, +0.64): rms 1.213 -> sigma_tr = 296 rows
+  non-overlapping subset 3 (-0.38, +1.10, +0.08): rms 0.673 -> sigma_tr = 0 rows
+n_eff = 3.4: rms^2 = 1.31 +- 1.00 -> rms 1.14 (+0.37/-0.59); sigma_tr = 239 +254/-239 rows; mean pull +0.51 +- 0.62
+  with the upper value sigma_tr = 493 rows (9.7 %): Y_peak syst 14.2 % instead of 11.4 %
+E2 class: rms 1.572 -> sigma_tr(E2) = 326 x sqrt(1.572^2 - 1) = 395 rows (14 % of 2780)
+
+## 6. family S8 widened to the observed range of g (0.47-2.6), linear in g from the WP7 'g free' variant (g = 1.717 -> 2.56)
+  Y_bump                   g free +5.20 %; extrapolated to g = 0.47: -7.7 %; S8 WP7 4.55 % -> widened 7.7 %
+  Y_peak (and sigma_eta)   g free -0.69 %; extrapolated to g = 0.47: +1.0 %; S8 WP7 0.34 % -> widened 1.0 %
+  a_eta                    g free -6.14 %; extrapolated to g = 0.47: +9.1 %; S8 WP7 5.72 % -> widened 9.1 %
+  Y4                       g free +5.00 %; extrapolated to g = 0.47: -7.4 %; S8 WP7 3.42 % -> widened 7.4 %
+
+## 7. totals of the systematic uncertainty (per cent)
+Y_peak: WP7 rules (MC(Delta) subtraction + R1) 11.4; without R1 15.2; literal Barlow with stat only 14.7 (WP7 syst.txt)
+sigma_eta, WP7 rules                   : without composition 16.0 ; with the data composition term 35.5
+sigma_eta, without R1                  : without composition 18.6 ; with the data composition term 36.7
+sigma_eta, literal Barlow (stat only)  : without composition 17.7 ; with the data composition term 36.3
+
+## 8. small items
+fold z (printed errors, independent halves): a_eta -1.37
+folds (WP7 wp7_tests.txt): a_eta z -1.37, Y_bump(F-main) -1.22, Y_peak(F-main) -1.55, DR_F -0.91, Y_peak (side bands) -1.43
+edge step per class, statistical error x 1.2 (Part II calibration): E1 0.024 -> 0.029, E2 0.036 -> 0.043
+X17: r_UL = 3.06e-5/2.68e-4 = 0.1143 ; with PDG 2026 (2.76e-4): 3.16e-05 ; with the C4-replica offset (6 %): 3.25e-05 (PDG 2026 3.35e-05)

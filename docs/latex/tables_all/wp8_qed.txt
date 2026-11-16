@@ -1,0 +1,40 @@
+# wp8_qed.txt -- plots/all_report/wp8_qed.py (WP8, 2026-11-14): generator-level pi0 Dalitz pair mass q = M(ee)
+# fractions of ALL produced pi0 -> e+e-gamma decays; HGeant = histogram 9995 of hgeant2-7.4 uhbook.F (KW x rho-pole
+# VDM form factor, 0.1 MeV bins, value at the bin centre, sampled uniformly inside a bin by HRNDM1)
+# reference = Kroll-Wada with the PDG pi0 transition form factor slope a = 0.0332 +- 0.0029 (F = 1 + a q^2/m_pi0^2)
+
+model                                                  <8       8-20      20-30       >=30     30-100  >=10 (E2)       >=20  15.5-24.5
+QED Kroll-Wada, no form factor                    0.49976    0.23231    0.09558    0.17235    0.17021    0.44270    0.26793    0.11208
+Kroll-Wada x (1 + a x)^2, a = 0.0332 (PDG)        0.49870    0.23196    0.09559    0.17375    0.17152    0.44387    0.26934    0.11199
+Kroll-Wada x (1 + a x)^2, a = 0.0303              0.49880    0.23199    0.09559    0.17363    0.17141    0.44376    0.26922    0.11200
+Kroll-Wada x (1 + a x)^2, a = 0.0361              0.49861    0.23193    0.09559    0.17388    0.17164    0.44397    0.26946    0.11198
+Kroll-Wada x rho pole (770 MeV), exact            0.49878    0.23198    0.09558    0.17366    0.17143    0.44379    0.26924    0.11200
+HGeant histogram 9995 (C2 generator)              0.49958    0.23161    0.09543    0.17338    0.17116    0.44307    0.26881    0.11182
+
+fraction above q [MeV]                               >2       >8      >10      >17      >20      >30      >50     >100
+QED Kroll-Wada, no form factor                  0.85946  0.50024  0.44270  0.30806  0.26793  0.17235  0.07018  0.00214
+Kroll-Wada x (1 + a x)^2, a = 0.0332 (PDG)      0.85976  0.50130  0.44387  0.30943  0.26934  0.17375  0.07123  0.00223
+Kroll-Wada x (1 + a x)^2, a = 0.0303            0.85973  0.50120  0.44376  0.30931  0.26922  0.17363  0.07114  0.00222
+Kroll-Wada x (1 + a x)^2, a = 0.0361            0.85979  0.50139  0.44397  0.30955  0.26946  0.17388  0.07133  0.00224
+Kroll-Wada x rho pole (770 MeV), exact          0.85974  0.50122  0.44379  0.30934  0.26924  0.17366  0.07116  0.00222
+HGeant histogram 9995 (C2 generator)            0.85834  0.50042  0.44307  0.30884  0.26881  0.17338  0.07105  0.00222
+
+HGeant / reference (ratio of the fractions):
+                                                       <8       8-20      20-30       >=30     30-100  >=10 (E2)       >=20  15.5-24.5
+HGeant / KW x PDG form factor                     1.00176    0.99849    0.99838    0.99785    0.99787    0.99821    0.99804    0.99844
+KW no FF / KW x PDG form factor                   1.00212    1.00151    0.99994    0.99194    0.99234    0.99738    0.99478    1.00075
+
+HGeant probability below 2 m_e (bin 1.0-1.1 MeV straddles the threshold): 1.84e-03
+form-factor slope uncertainty on the >=20 MeV fraction: a -+ 0.0029 -> 0.26922 / 0.26946 (ref 0.26934)
+
+READING. The C2 generator (HGeant) samples the Kroll-Wada pair mass with a rho-pole form factor. Its fraction of
+decays with M(ee) >= 20 MeV differs from Kroll-Wada x the PDG form factor by the ratio printed above; the q
+spectrum of C2 is therefore QED at the per-mille level. What HGeant does NOT reproduce is the decay angle of
+gamma* -> e+e- (isotropic instead of 1 + cos^2 theta + (1 - beta^2) sin^2 theta); see wp8_results.md (toy estimate).
+
+qed QED_Kroll-Wada,_no_form_factor | <8=0.499759 8-20=0.232308 20-30=0.095580 >=30=0.172353 30-100=0.170210 >=10(E2)=0.442702 >=20=0.267933 15.5-24.5=0.112075
+qed Kroll-Wada_x_(1_+_a_x)^2,_a_=_0.0332_(PDG) | <8=0.498704 8-20=0.231957 20-30=0.095586 >=30=0.173753 30-100=0.171524 >=10(E2)=0.443865 >=20=0.269339 15.5-24.5=0.111992
+qed Kroll-Wada_x_(1_+_a_x)^2,_a_=_0.0303 | <8=0.498796 8-20=0.231988 20-30=0.095585 >=30=0.173630 30-100=0.171409 >=10(E2)=0.443764 >=20=0.269216 15.5-24.5=0.111999
+qed Kroll-Wada_x_(1_+_a_x)^2,_a_=_0.0361 | <8=0.498612 8-20=0.231926 20-30=0.095586 >=30=0.173875 30-100=0.171639 >=10(E2)=0.443967 >=20=0.269462 15.5-24.5=0.111984
+qed Kroll-Wada_x_rho_pole_(770_MeV),_exact | <8=0.498777 8-20=0.231980 20-30=0.095584 >=30=0.173659 30-100=0.171435 >=10(E2)=0.443786 >=20=0.269243 15.5-24.5=0.111997
+qed HGeant_histogram_9995_(C2_generator) | <8=0.499583 8-20=0.231607 20-30=0.095431 >=30=0.173379 30-100=0.171159 >=10(E2)=0.443072 >=20=0.268810 15.5-24.5=0.111817

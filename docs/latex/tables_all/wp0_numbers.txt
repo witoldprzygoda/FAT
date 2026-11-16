@@ -1,0 +1,1075 @@
+# wp0_numbers.txt -- plots/all_report/wp0_fill.C (WP0 histogram factory), full run
+# output /hdd3/przygoda/HADES/FAT_out/all_report/hists_v1.root
+
+[data]
+# rows read: us 4783467, pp 122875, mm 371524
+# S0 CB windows: value, linear error, replica mean, replica rms
+S0         B     N     111212 (+-   342.1)  CB    6236.84 lin +-   92.39  rep mean    6237.45 rms   90.83  N-CB   104975.2
+S0         P     N      55947 (+-   239.1)  CB    3279.02 lin +-   58.88  rep mean    3289.02 rms   56.56  N-CB    52668.0
+S0         SBlo  N      18578 (+-   136.9)  CB    1143.49 lin +-   27.03  rep mean    1147.20 rms   25.55  N-CB    17434.5
+S0         SBhi  N      25078 (+-   159.1)  CB    1551.55 lin +-   30.78  rep mean    1555.02 rms   30.63  N-CB    23526.5
+S0         X17c  N       6424 (+-    80.9)  CB     209.50 lin +-    3.53  rep mean     210.17 rms    7.12  N-CB     6214.5
+S0         CRU   N     722506 (+-   904.7)  CB   37078.72 lin +-  213.41  rep mean   37111.05 rms  243.02  N-CB   685427.3
+S0         CRK   N        964 (+-    31.0)  CB     199.52 lin +-    3.89  rep mean     198.87 rms    8.18  N-CB      764.5
+S0         CRL   N      15604 (+-   125.3)  CB     974.61 lin +-   26.58  rep mean     976.91 rms   25.18  N-CB    14629.4
+S0         R0    N      36644 (+-   195.6)  CB    1899.58 lin +-   52.40  rep mean    1887.81 rms   51.39  N-CB    34744.4
+S0         R1    N     111212 (+-   342.1)  CB    6236.84 lin +-   92.39  rep mean    6237.45 rms   90.83  N-CB   104975.2
+S0         R2    N      23773 (+-   155.0)  CB    1469.08 lin +-   35.12  rep mean    1473.36 rms   33.13  N-CB    22303.9
+S0         R3    N      55947 (+-   239.1)  CB    3279.02 lin +-   58.88  rep mean    3289.02 rms   56.56  N-CB    52668.0
+S0         R4    N      31988 (+-   179.8)  CB    1977.96 lin +-   37.84  rep mean    1982.20 rms   37.09  N-CB    30010.0
+S0         R5    N     722506 (+-   904.7)  CB   37078.72 lin +-  213.41  rep mean   37111.05 rms  243.02  N-CB   685427.3
+S0         R6    N    1387018 (+-  1254.1)  CB   58242.12 lin +-  255.42  rep mean   58229.26 rms  257.69  N-CB  1328775.9
+S0         R7    N     799427 (+-   921.8)  CB   29162.93 lin +-  176.38  rep mean   29165.88 rms  185.14  N-CB   770264.1
+S0         Jlo   N      67441 (+-   263.6)  CB    3974.83 lin +-   71.09  rep mean    3981.59 rms   70.63  N-CB    63466.2
+S0         Jhi   N     121796 (+-   355.6)  CB    7315.69 lin +-   92.00  rep mean    7317.47 rms   96.90  N-CB   114480.3
+S0         Fit   N     976545 (+-  1079.7)  CB   51691.34 lin +-  259.26  rep mean   51735.85 rms  304.51  N-CB   924853.7
+S0         Bef   N    3168515 (+-  2000.1)  CB  139346.26 lin +-  408.52  rep mean  139376.03 rms  466.39  N-CB  3029168.7
+S0         X17P  N       5258 (+-    73.2)  CB     171.03 lin +-    3.09  rep mean     171.63 rms    6.17  N-CB     5087.0
+# S0: rows passing us 3551526, pp 44316, mm 137408; rows without an F10 cell 0; empty CB bands (all families) 0
+# pre CB windows: value, linear error, replica mean, replica rms
+pre        B     N     153183 (+-   406.3)  CB   15506.98 lin +-  144.66  rep mean   15507.53 rms  163.65  N-CB   137676.0
+pre        P     N      77513 (+-   282.8)  CB    7948.83 lin +-   90.63  rep mean    7954.01 rms   92.83  N-CB    69564.2
+pre        SBlo  N      26488 (+-   163.9)  CB    2902.71 lin +-   42.35  rep mean    2906.19 rms   44.31  N-CB    23585.3
+pre        SBhi  N      35054 (+-   188.6)  CB    3756.44 lin +-   47.37  rep mean    3761.61 rms   47.26  N-CB    31297.6
+pre        X17c  N       9257 (+-    97.6)  CB     563.39 lin +-    6.04  rep mean     564.69 rms   12.61  N-CB     8693.6
+pre        CRU   N     955948 (+-  1059.2)  CB   80264.84 lin +-  310.34  rep mean   80313.42 rms  383.70  N-CB   875683.2
+pre        CRK   N       1247 (+-    35.3)  CB     534.11 lin +-    6.53  rep mean     533.87 rms   14.51  N-CB      712.9
+pre        CRL   N      22206 (+-   149.8)  CB    2444.99 lin +-   41.44  rep mean    2447.58 rms   42.97  N-CB    19761.0
+pre        R0    N      50593 (+-   232.7)  CB    4994.75 lin +-   84.65  rep mean    4973.29 rms   86.00  N-CB    45598.2
+pre        R1    N     153183 (+-   406.3)  CB   15506.98 lin +-  144.66  rep mean   15507.53 rms  163.65  N-CB   137676.0
+pre        R2    N      33798 (+-   185.4)  CB    3712.72 lin +-   54.91  rep mean    3716.95 rms   57.25  N-CB    30085.3
+pre        R3    N      77513 (+-   282.8)  CB    7948.83 lin +-   90.63  rep mean    7954.01 rms   92.83  N-CB    69564.2
+pre        R4    N      44753 (+-   213.5)  CB    4768.39 lin +-   58.13  rep mean    4774.64 rms   59.02  N-CB    39984.6
+pre        R5    N     955948 (+-  1059.2)  CB   80264.84 lin +-  310.34  rep mean   80313.42 rms  383.70  N-CB   875683.2
+pre        R6    N    1711964 (+-  1411.3)  CB  108372.64 lin +-  346.64  rep mean  108379.56 rms  384.13  N-CB  1603591.4
+pre        R7    N     945615 (+-  1009.9)  CB   49593.24 lin +-  229.46  rep mean   49581.53 rms  230.62  N-CB   896021.8
+pre        Jlo   N      93325 (+-   312.4)  CB    9744.03 lin +-  110.10  rep mean    9750.47 rms  118.89  N-CB    83581.0
+pre        Jhi   N     168583 (+-   421.6)  CB   17028.04 lin +-  138.86  rep mean   17044.51 rms  149.98  N-CB   151555.0
+pre        Fit   N    1308216 (+-  1283.5)  CB  116490.85 lin +-  386.21  rep mean  116543.29 rms  516.90  N-CB  1191725.1
+pre        Bef   N    3973367 (+-  2299.5)  CB  275162.40 lin +-  573.29  rep mean  275200.93 rms  735.33  N-CB  3698204.6
+pre        X17P  N       7550 (+-    88.0)  CB     459.29 lin +-    5.28  rep mean     460.36 rms   10.83  N-CB     7090.7
+# pre: rows passing us 4423338, pp 85921, mm 267362; rows without an F10 cell 0; empty CB bands (all families) 0
+# dz40 CB windows: value, linear error, replica mean, replica rms
+dz40       B     N     124327 (+-   363.5)  CB    9183.98 lin +-  108.61  rep mean    9187.09 rms  111.58  N-CB   115143.0
+dz40       P     N      62969 (+-   254.2)  CB    4784.14 lin +-   69.29  rep mean    4795.98 rms   67.79  N-CB    58184.9
+dz40       SBlo  N      21092 (+-   146.0)  CB    1694.90 lin +-   32.02  rep mean    1699.23 rms   31.82  N-CB    19397.1
+dz40       SBhi  N      28438 (+-   169.6)  CB    2236.92 lin +-   36.27  rep mean    2240.09 rms   37.11  N-CB    26201.1
+dz40       X17c  N       7329 (+-    86.7)  CB     293.03 lin +-    3.99  rep mean     294.06 rms    8.72  N-CB     7036.0
+dz40       CRU   N     803283 (+-   960.4)  CB   51540.42 lin +-  247.24  rep mean   51586.56 rms  286.41  N-CB   751742.6
+dz40       CRK   N       1053 (+-    32.4)  CB     269.95 lin +-    4.21  rep mean     269.15 rms   10.29  N-CB      783.0
+dz40       CRL   N      17699 (+-   133.6)  CB    1434.51 lin +-   31.43  rep mean    1437.85 rms   31.29  N-CB    16264.5
+dz40       R0    N      40197 (+-   206.0)  CB    2747.53 lin +-   60.46  rep mean    2735.88 rms   60.39  N-CB    37449.5
+dz40       R1    N     124327 (+-   363.5)  CB    9183.98 lin +-  108.61  rep mean    9187.09 rms  111.58  N-CB   115143.0
+dz40       R2    N      26958 (+-   165.3)  CB    2172.26 lin +-   41.58  rep mean    2177.59 rms   41.26  N-CB    24785.7
+dz40       R3    N      62969 (+-   254.2)  CB    4784.14 lin +-   69.29  rep mean    4795.98 rms   67.79  N-CB    58184.9
+dz40       R4    N      36298 (+-   191.8)  CB    2835.15 lin +-   44.51  rep mean    2838.89 rms   45.91  N-CB    33462.9
+dz40       R5    N     803283 (+-   960.4)  CB   51540.42 lin +-  247.24  rep mean   51586.56 rms  286.41  N-CB   751742.6
+dz40       R6    N    1498915 (+-  1309.3)  CB   75051.35 lin +-  287.75  rep mean   75060.14 rms  301.16  N-CB  1423863.7
+dz40       R7    N     845420 (+-   950.2)  CB   36045.07 lin +-  195.32  rep mean   36053.30 rms  188.92  N-CB   809374.9
+dz40       Jlo   N      75569 (+-   279.9)  CB    5847.22 lin +-   83.40  rep mean    5853.71 rms   86.02  N-CB    69721.8
+dz40       Jhi   N     137435 (+-   378.9)  CB   10340.58 lin +-  107.24  rep mean   10349.18 rms  113.04  N-CB   127094.4
+dz40       Fit   N    1088063 (+-  1151.4)  CB   72912.87 lin +-  301.80  rep mean   72975.44 rms  375.69  N-CB  1015150.1
+dz40       Bef   N    3438367 (+-  2102.5)  CB  184359.89 lin +-  465.07  rep mean  184435.43 rms  548.49  N-CB  3254007.1
+dz40       X17P  N       5991 (+-    78.2)  CB     239.21 lin +-    3.49  rep mean     240.14 rms    7.39  N-CB     5751.8
+# dz40: rows passing us 3838094, pp 59606, mm 174525; rows without an F10 cell 0; empty CB bands (all families) 0
+# PEAK CB windows: value, linear error, replica mean, replica rms
+PEAK       B     N     111270 (+-   342.0)  CB    7149.56 lin +-   91.20  rep mean    7151.69 rms   92.27  N-CB   104120.4
+PEAK       P     N      56532 (+-   240.3)  CB    4066.25 lin +-   62.20  rep mean    4076.29 rms   62.47  N-CB    52465.7
+PEAK       SBlo  N      18618 (+-   137.0)  CB    1398.25 lin +-   27.96  rep mean    1402.34 rms   27.59  N-CB    17219.7
+PEAK       SBhi  N      25875 (+-   161.7)  CB    1988.14 lin +-   33.37  rep mean    1990.60 rms   33.47  N-CB    23886.9
+PEAK       X17c  N       6723 (+-    82.9)  CB     234.49 lin +-    3.36  rep mean     234.97 rms    8.61  N-CB     6488.5
+PEAK       CRU   N     795139 (+-   954.2)  CB   50822.22 lin +-  244.98  rep mean   50869.77 rms  283.90  N-CB   744316.8
+PEAK       CRK   N       1051 (+-    32.4)  CB     208.87 lin +-    3.48  rep mean     207.67 rms    9.35  N-CB      842.1
+PEAK       CRL   N      15648 (+-   125.5)  CB    1174.53 lin +-   27.25  rep mean    1178.01 rms   27.04  N-CB    14473.5
+PEAK       R0    N      36378 (+-   195.2)  CB    2028.16 lin +-   48.49  rep mean    2018.96 rms   48.97  N-CB    34349.8
+PEAK       R1    N     111270 (+-   342.0)  CB    7149.56 lin +-   91.20  rep mean    7151.69 rms   92.27  N-CB   104120.4
+PEAK       R2    N      23826 (+-   155.2)  CB    1786.68 lin +-   36.19  rep mean    1791.85 rms   35.67  N-CB    22039.3
+PEAK       R3    N      56532 (+-   240.3)  CB    4066.25 lin +-   62.20  rep mean    4076.29 rms   62.47  N-CB    52465.7
+PEAK       R4    N      33055 (+-   182.9)  CB    2526.63 lin +-   41.10  rep mean    2529.54 rms   41.19  N-CB    30528.4
+PEAK       R5    N     795139 (+-   954.2)  CB   50822.22 lin +-  244.98  rep mean   50869.77 rms  283.90  N-CB   744316.8
+PEAK       R6    N    1498915 (+-  1309.3)  CB   75051.35 lin +-  287.75  rep mean   75060.14 rms  301.16  N-CB  1423863.7
+PEAK       R7    N     845420 (+-   950.2)  CB   36045.07 lin +-  195.32  rep mean   36053.30 rms  188.92  N-CB   809374.9
+PEAK       Jlo   N      67148 (+-   263.0)  CB    4594.59 lin +-   70.75  rep mean    4599.28 rms   72.55  N-CB    62553.4
+PEAK       Jhi   N     129121 (+-   366.4)  CB    9601.26 lin +-  101.88  rep mean    9609.98 rms  107.22  N-CB   119519.7
+PEAK       Fit   N    1050860 (+-  1123.7)  CB   68126.93 lin +-  287.20  rep mean   68189.38 rms  354.42  N-CB   982733.1
+PEAK       Bef   N    3400535 (+-  2085.5)  CB  179475.92 lin +-  455.46  rep mean  179551.54 rms  532.63  N-CB  3221059.1
+PEAK       X17P  N       5483 (+-    74.7)  CB     190.54 lin +-    2.93  rep mean     191.01 rms    7.40  N-CB     5292.5
+# PEAK: rows passing us 3800262, pp 59143, mm 166144; rows without an F10 cell 0; empty CB bands (all families) 0
+# vz150 CB windows: value, linear error, replica mean, replica rms
+vz150      B     N     103430 (+-   329.6)  CB    4824.21 lin +-   83.49  rep mean    4823.30 rms   81.27  N-CB    98605.8
+vz150      P     N      52299 (+-   231.1)  CB    2598.11 lin +-   53.62  rep mean    2604.06 rms   49.03  N-CB    49700.9
+vz150      SBlo  N      17248 (+-   131.9)  CB     893.61 lin +-   24.42  rep mean     895.82 rms   24.43  N-CB    16354.4
+vz150      SBhi  N      23374 (+-   153.6)  CB    1210.06 lin +-   27.93  rep mean    1213.13 rms   27.29  N-CB    22163.9
+vz150      X17c  N       5943 (+-    77.8)  CB     172.32 lin +-    3.34  rep mean     172.88 rms    6.76  N-CB     5770.7
+vz150      CRU   N     680859 (+-   877.3)  CB   29816.00 lin +-  194.78  rep mean   29834.64 rms  219.59  N-CB   651043.0
+vz150      CRK   N        895 (+-    29.9)  CB     162.60 lin +-    3.68  rep mean     161.66 rms    7.11  N-CB      732.4
+vz150      CRL   N      14494 (+-   120.8)  CB     752.68 lin +-   23.94  rep mean     754.32 rms   23.89  N-CB    13741.3
+vz150      R0    N      33654 (+-   187.2)  CB    1399.94 lin +-   47.37  rep mean    1386.21 rms   47.57  N-CB    32254.1
+vz150      R1    N     103430 (+-   329.6)  CB    4824.21 lin +-   83.49  rep mean    4823.30 rms   81.27  N-CB    98605.8
+vz150      R2    N      22078 (+-   149.4)  CB    1143.25 lin +-   31.69  rep mean    1145.91 rms   31.61  N-CB    20934.8
+vz150      R3    N      52299 (+-   231.1)  CB    2598.11 lin +-   53.62  rep mean    2604.06 rms   49.03  N-CB    49700.9
+vz150      R4    N      29809 (+-   173.6)  CB    1543.04 lin +-   34.31  rep mean    1547.16 rms   33.25  N-CB    28266.0
+vz150      R5    N     680859 (+-   877.3)  CB   29816.00 lin +-  194.78  rep mean   29834.64 rms  219.59  N-CB   651043.0
+vz150      R6    N    1318512 (+-  1221.5)  CB   48174.81 lin +-  234.48  rep mean   48153.07 rms  237.13  N-CB  1270337.2
+vz150      R7    N     762704 (+-   899.6)  CB   24538.24 lin +-  162.60  rep mean   24536.77 rms  163.43  N-CB   738165.8
+vz150      Jlo   N      62771 (+-   254.0)  CB    3119.58 lin +-   64.38  rep mean    3122.30 rms   60.68  N-CB    59651.4
+vz150      Jhi   N     113960 (+-   343.9)  CB    5726.57 lin +-   83.18  rep mean    5725.91 rms   83.58  N-CB   108233.4
+vz150      Fit   N     917073 (+-  1044.7)  CB   41140.36 lin +-  236.00  rep mean   41161.64 rms  269.09  N-CB   875932.6
+vz150      Bef   N    3003345 (+-  1943.6)  CB  114037.60 lin +-  374.05  rep mean  114031.12 rms  415.67  N-CB  2889307.4
+vz150      X17P  N       4885 (+-    70.5)  CB     141.01 lin +-    2.92  rep mean     141.54 rms    5.83  N-CB     4744.0
+# vz150: rows passing us 3367808, pp 35158, mm 117382; rows without an F10 cell 0; empty CB bands (all families) 0
+# vz170 CB windows: value, linear error, replica mean, replica rms
+vz170      B     N     114408 (+-   347.2)  CB    7187.81 lin +-   98.31  rep mean    7186.88 rms   95.95  N-CB   107220.2
+vz170      P     N      57289 (+-   242.0)  CB    3726.80 lin +-   62.29  rep mean    3734.78 rms   60.61  N-CB    53562.2
+vz170      SBlo  N      19094 (+-   138.8)  CB    1323.34 lin +-   28.65  rep mean    1326.65 rms   27.38  N-CB    17770.7
+vz170      SBhi  N      25720 (+-   161.1)  CB    1731.05 lin +-   32.40  rep mean    1734.02 rms   34.18  N-CB    23988.9
+vz170      X17c  N       6647 (+-    82.3)  CB     237.56 lin +-    3.72  rep mean     238.25 rms    7.91  N-CB     6409.4
+vz170      CRU   N     736245 (+-   913.5)  CB   41302.88 lin +-  224.02  rep mean   41335.23 rms  257.02  N-CB   694942.1
+vz170      CRK   N        996 (+-    31.6)  CB     222.95 lin +-    4.03  rep mean     222.38 rms    8.82  N-CB      773.0
+vz170      CRL   N      16035 (+-   127.0)  CB    1123.89 lin +-   28.12  rep mean    1126.19 rms   26.57  N-CB    14911.1
+vz170      R0    N      37953 (+-   199.3)  CB    2277.02 lin +-   56.20  rep mean    2262.67 rms   55.72  N-CB    35676.0
+vz170      R1    N     114408 (+-   347.2)  CB    7187.81 lin +-   98.31  rep mean    7186.88 rms   95.95  N-CB   107220.2
+vz170      R2    N      24445 (+-   157.2)  CB    1697.76 lin +-   37.20  rep mean    1701.69 rms   35.35  N-CB    22747.2
+vz170      R3    N      57289 (+-   242.0)  CB    3726.80 lin +-   62.29  rep mean    3734.78 rms   60.61  N-CB    53562.2
+vz170      R4    N      32816 (+-   182.2)  CB    2205.46 lin +-   39.81  rep mean    2209.14 rms   41.73  N-CB    30610.5
+vz170      R5    N     736245 (+-   913.5)  CB   41302.88 lin +-  224.02  rep mean   41335.23 rms  257.02  N-CB   694942.1
+vz170      R6    N    1406936 (+-  1263.5)  CB   63892.51 lin +-  266.70  rep mean   63885.05 rms  268.27  N-CB  1343043.5
+vz170      R7    N     809583 (+-   927.9)  CB   31696.11 lin +-  183.67  rep mean   31704.97 rms  195.15  N-CB   777886.9
+vz170      Jlo   N      69335 (+-   267.3)  CB    4552.90 lin +-   75.48  rep mean    4558.85 rms   77.65  N-CB    64782.1
+vz170      Jhi   N     124655 (+-   359.8)  CB    8169.92 lin +-   96.83  rep mean    8167.67 rms  103.45  N-CB   116485.1
+vz170      Fit   N     997413 (+-  1091.6)  CB   58077.25 lin +-  273.11  rep mean   58114.23 rms  317.51  N-CB   939335.8
+vz170      Bef   N    3219675 (+-  2016.9)  CB  153986.35 lin +-  427.93  rep mean  154020.40 rms  489.15  N-CB  3065688.6
+vz170      X17P  N       5439 (+-    74.4)  CB     193.92 lin +-    3.26  rep mean     194.53 rms    6.81  N-CB     5245.1
+# vz170: rows passing us 3607753, pp 49373, mm 149857; rows without an F10 cell 0; empty CB bands (all families) 0
+# none CB windows: value, linear error, replica mean, replica rms
+none       B     N     170751 (+-   431.0)  CB   22659.94 lin +-  172.76  rep mean   22647.06 rms  178.76  N-CB   148091.1
+none       P     N      86011 (+-   298.5)  CB   11487.56 lin +-  107.67  rep mean   11488.41 rms  114.11  N-CB    74523.4
+none       SBlo  N      29589 (+-   173.3)  CB    4281.12 lin +-   50.54  rep mean    4284.82 rms   53.00  N-CB    25307.9
+none       SBhi  N      39112 (+-   199.3)  CB    5340.75 lin +-   56.18  rep mean    5345.45 rms   58.22  N-CB    33771.3
+none       X17c  N      10601 (+-   104.5)  CB     786.40 lin +-    6.92  rep mean     787.80 rms   16.22  N-CB     9814.6
+none       CRU   N    1041579 (+-  1112.6)  CB  113770.80 lin +-  366.96  rep mean  113797.15 rms  444.12  N-CB   927808.2
+none       CRK   N       1402 (+-    37.5)  CB     760.02 lin +-    7.60  rep mean     759.45 rms   18.14  N-CB      642.0
+none       CRL   N      24826 (+-   158.5)  CB    3611.17 lin +-   49.36  rep mean    3614.77 rms   51.29  N-CB    21214.8
+none       R0    N      57557 (+-   249.3)  CB    7544.62 lin +-  102.83  rep mean    7519.39 rms  110.81  N-CB    50012.4
+none       R1    N     170751 (+-   431.0)  CB   22659.94 lin +-  172.76  rep mean   22647.06 rms  178.76  N-CB   148091.1
+none       R2    N      37799 (+-   196.2)  CB    5477.03 lin +-   65.47  rep mean    5481.86 rms   68.48  N-CB    32322.0
+none       R3    N      86011 (+-   298.5)  CB   11487.56 lin +-  107.67  rep mean   11488.41 rms  114.11  N-CB    74523.4
+none       R4    N      49905 (+-   225.6)  CB    6783.37 lin +-   68.93  rep mean    6788.91 rms   72.15  N-CB    43121.6
+none       R5    N    1041579 (+-  1112.6)  CB  113770.80 lin +-  366.96  rep mean  113797.15 rms  444.12  N-CB   927808.2
+none       R6    N    1830216 (+-  1466.2)  CB  150309.59 lin +-  406.50  rep mean  150307.37 rms  434.58  N-CB  1679906.4
+none       R7    N    1001865 (+-  1042.7)  CB   67633.64 lin +-  267.46  rep mean   67626.45 rms  280.43  N-CB   934231.4
+none       Jlo   N     103939 (+-   330.7)  CB   14153.03 lin +-  131.16  rep mean   14154.25 rms  138.00  N-CB    89786.0
+none       Jhi   N     186529 (+-   444.8)  CB   24282.29 lin +-  164.71  rep mean   24286.95 rms  172.00  N-CB   162246.7
+none       Fit   N    1434866 (+-  1356.0)  CB  166565.43 lin +-  458.18  rep mean  166576.16 rms  605.66  N-CB  1268300.6
+none       Bef   N    4275683 (+-  2405.5)  CB  385666.55 lin +-  675.36  rep mean  385656.60 rms  820.96  N-CB  3890016.5
+none       X17P  N       8616 (+-    94.0)  CB     640.57 lin +-    6.05  rep mean     641.69 rms   13.77  N-CB     7975.4
+# none: rows passing us 4753629, pp 121789, mm 367954; rows without an F10 cell 0; empty CB bands (all families) 0
+# S0_best CB windows: value, linear error, replica mean, replica rms
+S0_best    B     N      91899 (+-   303.1)  CB    5132.98 lin +-   83.74  rep mean    5129.18 rms   81.62  N-CB    86766.0
+S0_best    P     N      46494 (+-   215.6)  CB    2732.15 lin +-   53.85  rep mean    2742.38 rms   48.10  N-CB    43761.8
+S0_best    SBlo  N      15323 (+-   123.8)  CB     948.48 lin +-   24.63  rep mean     951.47 rms   22.75  N-CB    14374.5
+S0_best    SBhi  N      20683 (+-   143.8)  CB    1294.46 lin +-   28.02  rep mean    1297.32 rms   27.59  N-CB    19388.5
+S0_best    X17c  N       5355 (+-    73.2)  CB     176.52 lin +-    3.27  rep mean     176.93 rms    6.48  N-CB     5178.5
+S0_best    CRU   N     609044 (+-   780.4)  CB   31439.00 lin +-  196.56  rep mean   31468.33 rms  203.48  N-CB   577605.0
+S0_best    CRK   N        808 (+-    28.4)  CB     169.57 lin +-    3.60  rep mean     169.01 rms    7.55  N-CB      638.4
+S0_best    CRL   N      12881 (+-   113.5)  CB     805.30 lin +-   24.18  rep mean     806.82 rms   22.15  N-CB    12075.7
+S0_best    R0    N      29736 (+-   172.4)  CB    1541.09 lin +-   47.20  rep mean    1531.48 rms   44.54  N-CB    28194.9
+S0_best    R1    N      91899 (+-   303.1)  CB    5132.98 lin +-   83.74  rep mean    5129.18 rms   81.62  N-CB    86766.0
+S0_best    R2    N      19621 (+-   140.1)  CB    1217.20 lin +-   31.98  rep mean    1220.48 rms   29.25  N-CB    18403.8
+S0_best    R3    N      46494 (+-   215.6)  CB    2732.15 lin +-   53.85  rep mean    2742.38 rms   48.10  N-CB    43761.8
+S0_best    R4    N      26394 (+-   162.5)  CB    1651.04 lin +-   34.47  rep mean    1654.60 rms   33.80  N-CB    24743.0
+S0_best    R5    N     609044 (+-   780.4)  CB   31439.00 lin +-  196.56  rep mean   31468.33 rms  203.48  N-CB   577605.0
+S0_best    R6    N    1206395 (+-  1098.4)  CB   50846.25 lin +-  238.53  rep mean   50830.82 rms  219.66  N-CB  1155548.8
+S0_best    R7    N     721200 (+-   849.2)  CB   26134.76 lin +-  166.82  rep mean   26135.62 rms  160.46  N-CB   695065.2
+S0_best    Jlo   N      55620 (+-   235.8)  CB    3277.84 lin +-   64.49  rep mean    3280.50 rms   62.49  N-CB    52342.2
+S0_best    Jhi   N     101126 (+-   318.0)  CB    6112.69 lin +-   84.13  rep mean    6114.47 rms   84.47  N-CB    95013.3
+S0_best    Fit   N     818803 (+-   904.9)  CB   43507.20 lin +-  237.76  rep mean   43544.47 rms  249.25  N-CB   775295.8
+S0_best    Bef   N    2750783 (+-  1658.5)  CB  120694.47 lin +-  379.64  rep mean  120712.91 rms  370.22  N-CB  2630088.5
+S0_best    X17P  N       4369 (+-    66.1)  CB     144.54 lin +-    2.87  rep mean     144.94 rms    5.63  N-CB     4224.5
+# S0_best: rows passing us 3084387, pp 38549, mm 117997; rows without an F10 cell 0; empty CB bands (all families) 0
+# pre_best CB windows: value, linear error, replica mean, replica rms
+pre_best   B     N     123499 (+-   351.4)  CB   12189.11 lin +-  128.01  rep mean   12184.73 rms  131.24  N-CB   111309.9
+pre_best   P     N      62759 (+-   250.5)  CB    6307.73 lin +-   80.76  rep mean    6316.70 rms   77.70  N-CB    56451.3
+pre_best   SBlo  N      21257 (+-   145.8)  CB    2296.13 lin +-   37.57  rep mean    2299.27 rms   36.83  N-CB    18960.9
+pre_best   SBhi  N      28185 (+-   167.9)  CB    2985.38 lin +-   42.10  rep mean    2989.87 rms   41.08  N-CB    25199.6
+pre_best   X17c  N       7521 (+-    86.7)  CB     442.82 lin +-    5.33  rep mean     443.81 rms   10.34  N-CB     7078.2
+pre_best   CRU   N     789936 (+-   888.8)  CB   65251.09 lin +-  279.41  rep mean   65284.95 rms  301.18  N-CB   724684.9
+pre_best   CRK   N       1027 (+-    32.0)  CB     436.36 lin +-    6.00  rep mean     436.12 rms   12.66  N-CB      590.6
+pre_best   CRL   N      17820 (+-   133.5)  CB    1933.27 lin +-   36.75  rep mean    1935.55 rms   36.54  N-CB    15886.7
+pre_best   R0    N      40071 (+-   200.2)  CB    3878.36 lin +-   74.34  rep mean    3863.28 rms   68.24  N-CB    36192.6
+pre_best   R1    N     123499 (+-   351.4)  CB   12189.11 lin +-  128.01  rep mean   12184.73 rms  131.24  N-CB   111309.9
+pre_best   R2    N      27149 (+-   164.8)  CB    2936.86 lin +-   48.70  rep mean    2940.65 rms   47.73  N-CB    24212.1
+pre_best   R3    N      62759 (+-   250.5)  CB    6307.73 lin +-   80.76  rep mean    6316.70 rms   77.70  N-CB    56451.3
+pre_best   R4    N      36045 (+-   189.9)  CB    3782.08 lin +-   51.65  rep mean    3787.51 rms   51.41  N-CB    32262.9
+pre_best   R5    N     789936 (+-   888.8)  CB   65251.09 lin +-  279.41  rep mean   65284.95 rms  301.18  N-CB   724684.9
+pre_best   R6    N    1468735 (+-  1211.9)  CB   91471.83 lin +-  318.09  rep mean   91468.91 rms  319.15  N-CB  1377263.2
+pre_best   R7    N     844103 (+-   918.8)  CB   43135.06 lin +-  213.79  rep mean   43118.83 rms  206.90  N-CB   800967.9
+pre_best   Jlo   N      75085 (+-   274.0)  CB    7671.62 lin +-   97.47  rep mean    7672.57 rms   93.99  N-CB    67413.4
+pre_best   Jhi   N     136675 (+-   369.7)  CB   13605.60 lin +-  123.96  rep mean   13617.40 rms  131.91  N-CB   123069.4
+pre_best   Fit   N    1073566 (+-  1036.1)  CB   93804.56 lin +-  345.78  rep mean   93842.14 rms  375.64  N-CB   979761.4
+pre_best   Bef   N    3392297 (+-  1841.8)  CB  228952.11 lin +-  521.51  rep mean  228965.55 rms  520.48  N-CB  3163344.9
+pre_best   X17P  N       6125 (+-    78.3)  CB     361.09 lin +-    4.67  rep mean     361.99 rms    8.89  N-CB     5763.9
+# pre_best: rows passing us 3782512, pp 72317, mm 220168; rows without an F10 cell 0; empty CB bands (all families) 0
+# S0_corfb CB windows: value, linear error, replica mean, replica rms
+S0_corfb   B     N     112791 (+-   344.7)  CB    6335.94 lin +-   93.02  rep mean    6338.00 rms   91.47  N-CB   106455.1
+S0_corfb   P     N      56672 (+-   240.7)  CB    3318.06 lin +-   59.24  rep mean    3328.06 rms   56.92  N-CB    53353.9
+S0_corfb   SBlo  N      18834 (+-   137.9)  CB    1157.79 lin +-   27.22  rep mean    1161.34 rms   25.83  N-CB    17676.2
+S0_corfb   SBhi  N      25358 (+-   160.0)  CB    1574.08 lin +-   31.00  rep mean    1577.67 rms   30.88  N-CB    23783.9
+S0_corfb   X17c  N       6498 (+-    81.4)  CB     213.46 lin +-    3.57  rep mean     214.29 rms    7.12  N-CB     6284.5
+S0_corfb   CRU   N     728087 (+-   908.3)  CB   37414.07 lin +-  214.24  rep mean   37446.19 rms  241.68  N-CB   690672.9
+S0_corfb   CRK   N        970 (+-    31.1)  CB     201.30 lin +-    3.88  rep mean     200.64 rms    8.05  N-CB      768.7
+S0_corfb   CRL   N      15826 (+-   126.2)  CB     989.24 lin +-   26.79  rep mean     991.47 rms   25.32  N-CB    14836.8
+S0_corfb   R0    N      37015 (+-   196.7)  CB    1926.06 lin +-   52.78  rep mean    1914.01 rms   51.60  N-CB    35088.9
+S0_corfb   R1    N     112791 (+-   344.7)  CB    6335.94 lin +-   93.02  rep mean    6338.00 rms   91.47  N-CB   106455.1
+S0_corfb   R2    N      24097 (+-   156.1)  CB    1488.86 lin +-   35.39  rep mean    1492.96 rms   33.41  N-CB    22608.1
+S0_corfb   R3    N      56672 (+-   240.7)  CB    3318.06 lin +-   59.24  rep mean    3328.06 rms   56.92  N-CB    53353.9
+S0_corfb   R4    N      32348 (+-   180.9)  CB    2005.61 lin +-   38.10  rep mean    2010.05 rms   37.27  N-CB    30342.4
+S0_corfb   R5    N     728087 (+-   908.3)  CB   37414.07 lin +-  214.24  rep mean   37446.19 rms  241.68  N-CB   690672.9
+S0_corfb   R6    N    1391578 (+-  1256.2)  CB   58469.01 lin +-  255.86  rep mean   58455.26 rms  257.82  N-CB  1333109.0
+S0_corfb   R7    N     800634 (+-   922.5)  CB   29207.39 lin +-  176.51  rep mean   29210.13 rms  185.40  N-CB   771426.6
+S0_corfb   Jlo   N      68460 (+-   265.6)  CB    4039.01 lin +-   71.59  rep mean    4046.35 rms   70.05  N-CB    64421.0
+S0_corfb   Jhi   N     123148 (+-   357.6)  CB    7392.20 lin +-   92.47  rep mean    7394.48 rms   96.62  N-CB   115755.8
+S0_corfb   Fit   N     985463 (+-  1085.1)  CB   52235.68 lin +-  260.51  rep mean   52281.26 rms  300.67  N-CB   933227.3
+S0_corfb   Bef   N    3183222 (+-  2005.2)  CB  140165.00 lin +-  409.67  rep mean  140194.67 rms  462.32  N-CB  3043057.0
+S0_corfb   X17P  N       5315 (+-    73.6)  CB     174.23 lin +-    3.13  rep mean     174.97 rms    6.16  N-CB     5140.8
+# S0_corfb: rows passing us 3566638, pp 44570, mm 138114; rows without an F10 cell 0; empty CB bands (all families) 0
+# pre_corfb CB windows: value, linear error, replica mean, replica rms
+pre_corfb  B     N     156201 (+-   410.5)  CB   15863.50 lin +-  146.32  rep mean   15864.97 rms  165.18  N-CB   140337.5
+pre_corfb  P     N      78860 (+-   285.3)  CB    8099.21 lin +-   91.39  rep mean    8104.95 rms   94.69  N-CB    70760.8
+pre_corfb  SBlo  N      26978 (+-   165.4)  CB    2962.20 lin +-   42.80  rep mean    2966.37 rms   44.65  N-CB    24015.8
+pre_corfb  SBhi  N      35622 (+-   190.1)  CB    3830.28 lin +-   47.82  rep mean    3835.62 rms   48.13  N-CB    31791.7
+pre_corfb  X17c  N       9419 (+-    98.5)  CB     573.21 lin +-    6.08  rep mean     574.79 rms   12.73  N-CB     8845.8
+pre_corfb  CRU   N     965929 (+-  1065.0)  CB   81270.86 lin +-  312.12  rep mean   81320.83 rms  381.10  N-CB   884658.1
+pre_corfb  CRK   N       1258 (+-    35.5)  CB     539.40 lin +-    6.51  rep mean     539.28 rms   14.56  N-CB      718.6
+pre_corfb  CRL   N      22621 (+-   151.2)  CB    2496.29 lin +-   41.87  rep mean    2499.31 rms   43.56  N-CB    20124.7
+pre_corfb  R0    N      51312 (+-   234.4)  CB    5120.38 lin +-   85.96  rep mean    5098.81 rms   87.32  N-CB    46191.6
+pre_corfb  R1    N     156201 (+-   410.5)  CB   15863.50 lin +-  146.32  rep mean   15864.97 rms  165.18  N-CB   140337.5
+pre_corfb  R2    N      34416 (+-   187.1)  CB    3789.50 lin +-   55.48  rep mean    3794.52 rms   57.80  N-CB    30626.5
+pre_corfb  R3    N      78860 (+-   285.3)  CB    8099.21 lin +-   91.39  rep mean    8104.95 rms   94.69  N-CB    70760.8
+pre_corfb  R4    N      45464 (+-   215.2)  CB    4861.98 lin +-   58.68  rep mean    4868.66 rms   60.32  N-CB    40602.0
+pre_corfb  R5    N     965929 (+-  1065.0)  CB   81270.86 lin +-  312.12  rep mean   81320.83 rms  381.10  N-CB   884658.1
+pre_corfb  R6    N    1719564 (+-  1414.5)  CB  108994.21 lin +-  347.56  rep mean  108999.68 rms  385.56  N-CB  1610569.8
+pre_corfb  R7    N     947597 (+-  1011.0)  CB   49716.72 lin +-  229.72  rep mean   49704.63 rms  230.28  N-CB   897880.3
+pre_corfb  Jlo   N      95196 (+-   315.7)  CB    9968.95 lin +-  111.32  rep mean    9975.93 rms  118.74  N-CB    85227.1
+pre_corfb  Jhi   N     171075 (+-   424.8)  CB   17315.94 lin +-  139.98  rep mean   17333.40 rms  151.86  N-CB   153759.1
+pre_corfb  Fit   N    1324561 (+-  1292.4)  CB  118283.18 lin +-  389.14  rep mean  118339.42 rms  513.98  N-CB  1206277.8
+pre_corfb  Bef   N    3999343 (+-  2308.0)  CB  277716.35 lin +-  576.00  rep mean  277757.06 rms  740.42  N-CB  3721626.7
+pre_corfb  X17P  N       7677 (+-    88.8)  CB     467.19 lin +-    5.32  rep mean     468.49 rms   10.92  N-CB     7209.8
+# pre_corfb: rows passing us 4449982, pp 86661, mm 269797; rows without an F10 cell 0; empty CB bands (all families) 0
+
+[simulation]
+# rows 10510151, passing a selection 10498766, no component 0; tmpl 0-4: 0 1365676 7982914 732801 428760
+# MM4, y4 recomputed at 4530 MeV vs stored: max |dMM4| = 1.192e-07 GeV/c2, max |dy4| = 4.314e-08 (200000 rows)
+# sim S0__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__nom        C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__nom        C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__nom        C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__nom        C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__nom        C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__nom        Geta             21.146 +-     0.203 |     0.9657     0.6102     0.1955     0.2959    0.07401      5.855  0.0006867
+S0__nom        Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__nom        Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__nom        Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__nom        Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__nom        Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__nom        Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__nom        Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__nom        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__nom        Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__nom        Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__nom        Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__nom        Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__nom        GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__nom        T12              616.53 +-      1.36 |      20.38      7.996      2.365      3.111       0.88      90.45     0.1281
+S0__nom        T3               109.37 +-     0.672 |      2.263      1.109     0.4525     0.5256    0.04442      16.92    0.02684
+S0__nom        T4               10.692 +-      0.23 |     0.3721     0.1827    0.08101    0.06086  0.0006249      2.156  0.0005423
+# sim S0__V2 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__V2         C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__V2         C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__V2         C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__V2         C5               1.5158 +-   0.00382 |    0.06777      1.215      0.111    0.08462     0.1822    0.01476    0.00171
+S0__V2         C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__V2         Geta             21.146 +-     0.203 |     0.9657     0.6102     0.1955     0.2959    0.07401      5.855  0.0006867
+S0__V2         Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__V2         Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__V2         Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__V2         Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__V2         Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__V2         Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__V2         Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__V2         Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__V2         Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__V2         Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__V2         Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__V2         Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__V2         GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__V2         T12              616.74 +-      1.36 |      20.39      8.165      2.381      3.122      0.909      90.45     0.1283
+S0__V2         T3               109.37 +-     0.672 |      2.263      1.109     0.4525     0.5256    0.04442      16.92    0.02684
+S0__V2         T4               10.692 +-      0.23 |     0.3721     0.1827    0.08101    0.06086  0.0006249      2.156  0.0005423
+# sim S0__bump1aY [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__bump1aY    C2               6.3855 +-     0.188 |        5.1    0.01086    0.05217   0.007032          0    0.01248          0
+S0__bump1aY    C3               4.7872 +-     0.166 |      3.844   0.006767    0.02281          0   0.004326          0          0
+S0__bump1aY    C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__bump1aY    C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__bump1aY    C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__bump1aY    Geta             21.159 +-     0.206 |     0.9611     0.6146     0.1947      0.296    0.07373       5.86  0.0006867
+S0__bump1aY    Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__bump1aY    Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__bump1aY    Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__bump1aY    Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__bump1aY    Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__bump1aY    Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__bump1aY    Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__bump1aY    Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__bump1aY    Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__bump1aY    Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__bump1aY    Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__bump1aY    Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__bump1aY    GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__bump1aY    T12              616.39 +-      1.36 |      20.31          8      2.358      3.111     0.8798      90.45     0.1281
+S0__bump1aY    T3               109.36 +-     0.673 |      2.262      1.107     0.4509     0.5261    0.04442      16.92    0.02684
+S0__bump1aY    T4               10.691 +-     0.231 |     0.3681     0.1827    0.08083    0.06123  0.0006249      2.157  0.0005423
+# sim S0__bumpPS [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__bumpPS     C2               7.2755 +-     0.187 |       5.55    0.01442     0.0865   0.004806          0   0.009611          0
+S0__bumpPS     C3               5.4336 +-     0.163 |      4.065   0.009808    0.03923          0   0.004904          0          0
+S0__bumpPS     C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__bumpPS     C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__bumpPS     C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__bumpPS     Geta             20.949 +-     0.182 |     0.9967     0.5758      0.205     0.2902    0.07468       5.77  0.0006867
+S0__bumpPS     Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__bumpPS     Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__bumpPS     Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__bumpPS     Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__bumpPS     Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__bumpPS     Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__bumpPS     Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__bumpPS     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__bumpPS     Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__bumpPS     Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__bumpPS     Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__bumpPS     Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__bumpPS     GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__bumpPS     T12              617.72 +-      1.36 |      21.02      7.968      2.419      3.103     0.8813      90.36     0.1281
+S0__bumpPS     T3               109.38 +-     0.672 |      2.276      1.112     0.4616     0.5244    0.04442       16.9    0.02684
+S0__bumpPS     T4               10.699 +-     0.229 |     0.4131     0.1855    0.07833    0.05743  0.0006249      2.139  0.0005423
+# sim S0__convOff [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__convOff    C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__convOff    C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__convOff    C4               1.1456 +-    0.0676 |    0.05589     0.8982    0.09181    0.07584    0.01597   0.007984          0
+S0__convOff    C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__convOff    C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__convOff    Geta             21.089 +-     0.198 |     0.9693      0.601     0.1952      0.294    0.07261      5.824  0.0006867
+S0__convOff    Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__convOff    Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__convOff    Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__convOff    Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__convOff    Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__convOff    Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__convOff    Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__convOff    Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__convOff    Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__convOff    Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__convOff    Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__convOff    Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__convOff    GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__convOff    T12              616.45 +-      1.36 |      20.39       7.93      2.375      3.126     0.8829      90.42     0.1281
+S0__convOff    T3               109.37 +-     0.672 |      2.265      1.109     0.4536     0.5256    0.04442      16.91    0.02684
+S0__convOff    T4               10.689 +-      0.23 |     0.3772     0.1814      0.081    0.06051  0.0006249      2.148  0.0005423
+# sim S0__GS [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__GS         C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__GS         C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__GS         C4               1.1708 +-    0.0736 |    0.04969     0.9582    0.08258    0.05864    0.01188   0.008855          0
+S0__GS         C5               1.3138 +-   0.00331 |     0.0595      1.051    0.09611    0.07359     0.1538    0.01299    0.00146
+S0__GS         C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__GS         Geta             21.143 +-     0.203 |     0.9662     0.6104     0.1955      0.296    0.07399      5.855  0.0006867
+S0__GS         Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__GS         Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__GS         Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__GS         Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__GS         Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__GS         Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__GS         Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__GS         Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__GS         Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__GS         Goth             1.6777 +-   0.00438 |     0.1579    0.09362    0.03563    0.03549    0.01631     0.4611   0.001179
+S0__GS         Goth_om       0.0031724 +-  0.000173 |  6.221e-05  2.317e-05  5.201e-05  5.452e-06          0  0.0007097          0
+S0__GS         Goth_nom         1.6745 +-   0.00437 |     0.1578     0.0936    0.03557    0.03548    0.01631     0.4603   0.001179
+S0__GS         GD               347.67 +-     0.715 |      6.115       3.26      1.111      1.488     0.5551      50.27     0.0807
+S0__GS         T12              616.54 +-      1.36 |      20.38      8.005      2.366      3.112     0.8809      90.45     0.1281
+S0__GS         T3               109.37 +-     0.672 |      2.263      1.109     0.4526     0.5257    0.04442      16.92    0.02684
+S0__GS         T4               10.692 +-      0.23 |     0.3724     0.1828    0.08104    0.06087  0.0006253      2.156  0.0005421
+# sim S0__wtsOff [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__wtsOff     C2               7.2755 +-     0.187 |       5.55    0.01442     0.0865   0.004806          0   0.009611          0
+S0__wtsOff     C3               5.4336 +-     0.163 |      4.065   0.009808    0.03923          0   0.004904          0          0
+S0__wtsOff     C4               1.1456 +-    0.0676 |    0.05589     0.8982    0.09181    0.07584    0.01597   0.007984          0
+S0__wtsOff     C5               1.2756 +-   0.00176 |    0.05438      1.007     0.1012     0.0772    0.06349    0.01433   0.001605
+S0__wtsOff     C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__wtsOff     Geta             20.893 +-     0.179 |          1     0.5665     0.2047     0.2883    0.07328      5.739  0.0006867
+S0__wtsOff     Gpi0D            345.93 +-     0.715 |      5.957      3.166      1.075      1.452     0.5387      49.81    0.07952
+S0__wtsOff     Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__wtsOff     Gpi0D_nom           310 +-     0.554 |      5.735      2.922      1.009       1.31     0.5077      38.76    0.07952
+S0__wtsOff     Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__wtsOff     Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__wtsOff     Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__wtsOff     Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__wtsOff     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__wtsOff     Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__wtsOff     Goth             1.2799 +-   0.00193 |     0.1245    0.07137    0.02674    0.02707   0.005402     0.3557    0.00112
+S0__wtsOff     Goth_om       0.0025048 +-  7.79e-05 |  8.002e-05  3.395e-05   1.94e-05  1.212e-05          0  0.0005432          0
+S0__wtsOff     Goth_nom         1.2774 +-   0.00193 |     0.1244    0.07134    0.02672    0.02706   0.005402     0.3552    0.00112
+S0__wtsOff     GD               347.27 +-     0.715 |      6.082      3.237      1.102      1.479     0.5442      50.17    0.08064
+S0__wtsOff     T12              617.22 +-      1.36 |      20.99      7.841      2.426      3.114     0.7837      90.23     0.1282
+S0__wtsOff     T3               109.52 +-     0.672 |      2.291      1.119     0.4655     0.5272    0.04448      16.92    0.02701
+S0__wtsOff     T4               10.696 +-     0.229 |     0.4181      0.184    0.07831    0.05708  0.0006236      2.132  0.0005429
+# sim S0__modeB [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__modeB      C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__modeB      C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__modeB      C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__modeB      C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__modeB      C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__modeB      Geta             22.934 +-     0.222 |      1.057     0.6533     0.2166     0.3194    0.09005      6.348          0
+S0__modeB      Gpi0D            377.99 +-      1.37 |      6.397      3.359      1.201      1.536     0.5318      53.02     0.1166
+S0__modeB      Gpi0D_om         35.931 +-     0.399 |     0.2217     0.2438     0.0665     0.1419    0.03103      11.05          0
+S0__modeB      Gpi0D_nom        342.06 +-      1.29 |      6.175      3.115      1.134      1.395     0.5008      41.97     0.1166
+S0__modeB      Gconv            233.92 +-      1.09 |      4.182      2.107        0.8      1.189    0.08186      34.29    0.04524
+S0__modeB      Gconv_om         22.849 +-     0.322 |     0.1898     0.1267    0.05429    0.08143   0.009048      6.758          0
+S0__modeB      Gconv_nom        211.07 +-      1.02 |      3.992      1.981     0.7457      1.107    0.07281      27.53    0.04524
+S0__modeB      Gvec           0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__modeB      Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__modeB      Gvec_nom       0.059435 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002972          0
+S0__modeB      Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__modeB      Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__modeB      Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__modeB      GD               379.73 +-      1.37 |      6.555      3.453      1.237      1.572     0.5482      53.49     0.1178
+S0__modeB      T12              650.38 +-      1.79 |      20.91      8.232      2.512      3.218     0.8891      94.15     0.1645
+S0__modeB      T3               112.16 +-     0.753 |      2.284      1.097     0.4846     0.5251    0.04609      17.11    0.02755
+S0__modeB      T4               10.649 +-     0.233 |     0.3686     0.1776    0.07972    0.07559  0.0006028      2.149  0.0005354
+# sim S0__wdb [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__wdb        C2               6.0862 +-     0.174 |      4.838    0.01044    0.05309    0.00646          0    0.01145          0
+S0__wdb        C3               4.4821 +-     0.151 |      3.569   0.006323    0.02276          0   0.003911          0          0
+S0__wdb        C4               1.3209 +-    0.0832 |    0.05573      1.082    0.09288    0.06585    0.01324   0.009941          0
+S0__wdb        C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__wdb        C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__wdb        Geta             30.554 +-     0.315 |     0.9756      0.617     0.1997     0.2854    0.06785      6.726  0.0005971
+S0__wdb        Gpi0D            352.06 +-     0.723 |      5.962      3.192      1.084      1.466     0.5454      50.58     0.0798
+S0__wdb        Gpi0D_om         36.661 +-     0.407 |     0.2262     0.2488    0.06786     0.1448    0.03167      11.28          0
+S0__wdb        Gpi0D_nom         315.4 +-     0.556 |      5.736      2.943      1.016      1.321     0.5138      39.31     0.0798
+S0__wdb        Gconv            233.66 +-      1.09 |      4.131      2.095     0.7962      1.185    0.08143      34.21    0.04524
+S0__wdb        Gconv_om          22.85 +-     0.322 |       0.19     0.1267    0.05429    0.08143   0.009048      6.759          0
+S0__wdb        Gconv_nom        210.81 +-      1.02 |      3.941      1.968      0.742      1.104    0.07238      27.45    0.04524
+S0__wdb        Gvec           0.051507 +-  0.000369 |  0.0003082  0.0002159  4.849e-05  6.544e-05  2.186e-05   0.002291          0
+S0__wdb        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__wdb        Gvec_nom       0.051507 +-  0.000369 |  0.0003082  0.0002159  4.849e-05  6.544e-05  2.186e-05   0.002291          0
+S0__wdb        Goth             1.6767 +-   0.00437 |     0.1578    0.09355    0.03559    0.03546    0.01632     0.4607   0.001179
+S0__wdb        Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+S0__wdb        Goth_nom         1.6735 +-   0.00437 |     0.1578    0.09353    0.03554    0.03546    0.01632       0.46   0.001179
+S0__wdb        GD               353.79 +-     0.723 |       6.12      3.285       1.12      1.501     0.5618      51.05    0.08098
+S0__wdb        T12               631.2 +-      1.38 |      19.75      8.142       2.38      3.118     0.8813      92.01     0.1283
+S0__wdb        T3               110.91 +-     0.678 |      2.246      1.107     0.4585     0.5414    0.04476      17.11    0.02662
+S0__wdb        T4               12.301 +-      0.25 |     0.3922     0.1868    0.08237    0.07937   0.004632      2.388    0.00455
+# sim S0__ghostA [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__ghostA     C2               6.4651 +-     0.185 |      5.139    0.01109    0.05639   0.006862          0    0.01217          0
+S0__ghostA     C3               4.8587 +-     0.163 |      3.868   0.006855    0.02467          0   0.004239          0          0
+S0__ghostA     C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+S0__ghostA     C5                1.307 +-   0.00329 |      0.059      1.046    0.09557     0.0733     0.1531    0.01295   0.001477
+S0__ghostA     C6                 6582 +-      7.72 |      315.2       5319      454.3      344.4       3502       51.4      5.962
+S0__ghostA     Geta             23.082 +-     0.218 |      1.103     0.6687     0.2123     0.3185    0.07607       6.54  0.0006867
+S0__ghostA     Gpi0D            373.37 +-     0.744 |      6.422      3.404      1.157      1.573     0.5625      53.69    0.08725
+S0__ghostA     Gpi0D_om         38.529 +-     0.413 |      0.235     0.2527    0.07536     0.1596    0.03103      11.88          0
+S0__ghostA     Gpi0D_nom        334.84 +-     0.578 |      6.187      3.151      1.082      1.414     0.5315      41.81    0.08725
+S0__ghostA     Gconv            304.03 +-      1.24 |      5.443      2.735      1.082      1.499    0.09983      44.69    0.06372
+S0__ghostA     Gconv_om         29.432 +-     0.365 |      0.244     0.1854    0.06786     0.1086   0.009048      8.786          0
+S0__ghostA     Gconv_nom         274.6 +-      1.17 |      5.199       2.55      1.014       1.39    0.09078      35.91    0.06372
+S0__ghostA     Gvec           0.061033 +-  0.000487 |   0.000402  0.0002955  6.327e-05  9.929e-05  2.852e-05   0.003192          0
+S0__ghostA     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__ghostA     Gvec_nom       0.061033 +-  0.000487 |   0.000402  0.0002955  6.327e-05  9.929e-05  2.852e-05   0.003192          0
+S0__ghostA     Goth             1.7911 +-   0.00442 |     0.1689    0.09964    0.03796    0.03773    0.01674     0.4916   0.001297
+S0__ghostA     Goth_om       0.0033651 +-  0.000173 |  6.805e-05  2.478e-05  5.388e-05  8.614e-06          0  0.0007511          0
+S0__ghostA     Goth_nom         1.7878 +-   0.00441 |     0.1688    0.09962     0.0379    0.03772    0.01674     0.4909   0.001297
+S0__ghostA     GD               375.22 +-     0.744 |      6.591      3.504      1.195      1.611     0.5793      54.19    0.08854
+S0__ghostA     T12              716.13 +-       1.5 |      22.25      8.927      2.748      3.566     0.9242      105.5     0.1544
+S0__ghostA     T3                9.769 +-     0.212 |     0.3891     0.1782     0.0695    0.06984  0.0002051      1.916  0.0005161
+S0__ghostA     T4               10.692 +-      0.23 |     0.3721     0.1827    0.08101    0.06086  0.0006249      2.156  0.0005423
+# sim S0__sK0 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__sK0        C2               6.4651 +-     0.185 |      5.119    0.01109    0.04714   0.006862          0    0.01217          0
+S0__sK0        C3               4.8587 +-     0.163 |      3.858   0.006855    0.02067          0   0.004239          0          0
+S0__sK0        C4               1.1656 +-    0.0734 |    0.04918     0.9556     0.0768    0.05468    0.01168   0.008772          0
+S0__sK0        C5                1.307 +-   0.00329 |    0.06128      1.046     0.1029    0.06463     0.1529    0.01198   0.001583
+S0__sK0        C6                 6582 +-      7.72 |      326.5       5319      489.3        300       3500      47.47      6.415
+S0__sK0        Geta             21.146 +-     0.203 |     0.9858     0.6021     0.2021      0.307    0.07445      5.874  0.0007179
+S0__sK0        Gpi0D            345.93 +-     0.715 |      5.985      3.192      1.105       1.47     0.5414      50.07    0.08544
+S0__sK0        Gpi0D_om         35.931 +-     0.399 |     0.2261     0.2438     0.0665     0.1507    0.03103      11.15   0.004433
+S0__sK0        Gpi0D_nom           310 +-     0.554 |      5.759      2.948      1.038      1.319     0.5104      38.92    0.08101
+S0__sK0        Gconv            233.92 +-      1.09 |      4.219      2.148     0.8049      1.185    0.07733      34.48    0.04524
+S0__sK0        Gconv_om         22.849 +-     0.322 |     0.1898     0.1221    0.05881    0.08143   0.009048      6.804          0
+S0__sK0        Gconv_nom        211.07 +-      1.02 |      4.029      2.026     0.7461      1.104    0.06828      27.68    0.04524
+S0__sK0        Gvec           0.059435 +-  0.000475 |   0.000402  0.0002884  5.622e-05  9.216e-05  2.852e-05   0.002987          0
+S0__sK0        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__sK0        Gvec_nom       0.059435 +-  0.000475 |   0.000402  0.0002884  5.622e-05  9.216e-05  2.852e-05   0.002987          0
+S0__sK0        Goth             1.6767 +-   0.00437 |     0.1591    0.09354    0.03614    0.03521    0.01637     0.4605   0.001257
+S0__sK0        Goth_om       0.0031708 +-  0.000172 |  6.227e-05  2.372e-05  5.144e-05  4.929e-06          0   0.000722          0
+S0__sK0        Goth_nom         1.6735 +-   0.00437 |      0.159    0.09352    0.03609     0.0352    0.01637     0.4598   0.001257
+S0__sK0        GD               347.67 +-     0.715 |      6.145      3.286      1.141      1.505     0.5578      50.53     0.0867
+S0__sK0        T12              616.53 +-      1.36 |      20.44      8.056      2.396      3.124     0.8784      90.92     0.1342
+S0__sK0        T3               109.37 +-     0.672 |      2.278      1.144     0.4668     0.5001    0.04434      17.01    0.02715
+S0__sK0        T4               10.692 +-      0.23 |     0.3723     0.1834    0.07792    0.06546    0.00062      2.164  0.0005423
+# sim S0__sUp [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__sUp        C2               6.4651 +-     0.185 |      5.144    0.01303    0.05876   0.006862    0.00317    0.01217          0
+S0__sUp        C3               4.8587 +-     0.163 |      3.902   0.006855     0.0267          0   0.004239          0          0
+S0__sUp        C4               1.1656 +-    0.0734 |    0.04366     0.9504    0.08087    0.06365    0.01168   0.008772          0
+S0__sUp        C5                1.307 +-   0.00329 |    0.05686      1.045    0.08869    0.08243      0.153    0.01384   0.001308
+S0__sUp        C6                 6582 +-      7.72 |      304.9       5310      423.3      391.2       3500      55.08      5.537
+S0__sUp        Geta             21.146 +-     0.203 |     0.9623     0.6155     0.1839     0.2886     0.0741       5.85  0.0005931
+S0__sUp        Gpi0D            345.93 +-     0.715 |      5.929      3.131      1.092      1.465     0.5399      49.54     0.0783
+S0__sUp        Gpi0D_om         35.931 +-     0.399 |     0.2172     0.2394     0.0665     0.1286    0.03103      10.94          0
+S0__sUp        Gpi0D_nom           310 +-     0.554 |      5.712      2.892      1.025      1.337     0.5089       38.6     0.0783
+S0__sUp        Gconv            233.92 +-      1.09 |      4.205      2.098     0.7862      1.198    0.08186      34.08    0.04524
+S0__sUp        Gconv_om         22.849 +-     0.322 |     0.1898     0.1221    0.04524    0.08595   0.009048      6.695          0
+S0__sUp        Gconv_nom        211.07 +-      1.02 |      4.015      1.976      0.741      1.112    0.07281      27.39    0.04524
+S0__sUp        Gvec           0.059435 +-  0.000475 |  0.0003949  0.0002815  4.934e-05  9.194e-05  2.155e-05   0.002978          0
+S0__sUp        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__sUp        Gvec_nom       0.059435 +-  0.000475 |  0.0003949  0.0002815  4.934e-05  9.194e-05  2.155e-05   0.002978          0
+S0__sUp        Goth             1.6767 +-   0.00437 |     0.1567    0.09366    0.03517    0.03537    0.01643     0.4605   0.001128
+S0__sUp        Goth_om       0.0031708 +-  0.000172 |  6.307e-05   2.32e-05  5.197e-05  2.115e-06          0  0.0007043          0
+S0__sUp        Goth_nom         1.6735 +-   0.00437 |     0.1567    0.09364    0.03512    0.03536    0.01643     0.4598   0.001128
+S0__sUp        GD               347.67 +-     0.715 |      6.086      3.225      1.127      1.501     0.5564         50    0.07943
+S0__sUp        T12              616.53 +-      1.36 |       20.4      7.954      2.352       3.14     0.8845      89.96     0.1266
+S0__sUp        T3               109.37 +-     0.672 |      2.243      1.085     0.4512      0.512    0.04442      16.82    0.02214
+S0__sUp        T4               10.692 +-      0.23 |     0.3721     0.1828    0.08722    0.06085  0.0006248       2.16  0.0005387
+# sim S0__sDn [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__sDn        C2               6.4651 +-     0.185 |      5.119    0.01109    0.04714   0.006862          0    0.01217          0
+S0__sDn        C3               4.8587 +-     0.163 |      3.858   0.006855    0.02067          0   0.004239          0          0
+S0__sDn        C4               1.1656 +-    0.0734 |    0.04918     0.9583     0.0768    0.05468    0.01168   0.008772          0
+S0__sDn        C5                1.307 +-   0.00329 |    0.06118      1.046     0.1025    0.06504     0.1529    0.01204   0.001583
+S0__sDn        C6                 6582 +-      7.72 |      325.9       5320        488      301.4       3500      47.58      6.406
+S0__sDn        Geta             21.146 +-     0.203 |     0.9809      0.602     0.2043     0.3068    0.07448      5.874  0.0007179
+S0__sDn        Gpi0D            345.93 +-     0.715 |      5.984      3.191      1.105       1.47     0.5412      50.06    0.08544
+S0__sDn        Gpi0D_om         35.931 +-     0.399 |     0.2261     0.2438     0.0665     0.1507    0.03103      11.15   0.004433
+S0__sDn        Gpi0D_nom           310 +-     0.554 |      5.758      2.947      1.038       1.32     0.5102      38.91    0.08101
+S0__sDn        Gconv            233.92 +-      1.09 |      4.205      2.139     0.8049      1.185    0.07733      34.48    0.04524
+S0__sDn        Gconv_om         22.849 +-     0.322 |     0.1898     0.1221    0.05881    0.08143   0.009048      6.804          0
+S0__sDn        Gconv_nom        211.07 +-      1.02 |      4.015      2.017     0.7461      1.104    0.06828      27.68    0.04524
+S0__sDn        Gvec           0.059435 +-  0.000475 |   0.000402  0.0002884  5.622e-05  9.216e-05  2.852e-05   0.002987          0
+S0__sDn        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__sDn        Gvec_nom       0.059435 +-  0.000475 |   0.000402  0.0002884  5.622e-05  9.216e-05  2.852e-05   0.002987          0
+S0__sDn        Goth             1.6767 +-   0.00437 |      0.159    0.09351    0.03611    0.03524    0.01636     0.4606   0.001256
+S0__sDn        Goth_om       0.0031708 +-  0.000172 |  6.227e-05  2.372e-05  5.144e-05  4.929e-06          0   0.000722          0
+S0__sDn        Goth_nom         1.6735 +-   0.00437 |      0.159    0.09349    0.03606    0.03523    0.01636     0.4598   0.001256
+S0__sDn        GD               347.67 +-     0.715 |      6.144      3.285      1.141      1.506     0.5576      50.52     0.0867
+S0__sDn        T12              616.53 +-      1.36 |      20.42      8.049      2.397      3.124     0.8783      90.91     0.1342
+S0__sDn        T3               109.37 +-     0.672 |      2.277       1.14     0.4715     0.5001    0.04434      17.01    0.02715
+S0__sDn        T4               10.692 +-      0.23 |     0.3723     0.1834    0.07792    0.06093  0.0006207      2.164  0.0005423
+# sim S0__r089 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__r089       C2               6.4651 +-     0.185 |      5.158    0.01795    0.04812          0          0    0.01217          0
+S0__r089       C3               4.8587 +-     0.163 |      3.908   0.006855    0.01703          0   0.004239          0          0
+S0__r089       C4               1.1656 +-    0.0734 |    0.03767     0.9815    0.07308    0.04349    0.01544   0.008772          0
+S0__r089       C5                1.307 +-   0.00329 |    0.04797      1.092     0.0821    0.05917     0.1576   0.009439   0.000929
+S0__r089       C6                 6582 +-      7.72 |      261.1       5538      394.2      270.8       3594      37.96        3.8
+S0__r089       Geta             21.146 +-     0.203 |     0.9679      0.613      0.187     0.2798     0.0747      5.852  0.0006243
+S0__r089       Gpi0D            345.93 +-     0.715 |      5.912      3.109      1.113      1.471     0.5382      49.45      0.083
+S0__r089       Gpi0D_om         35.931 +-     0.399 |     0.2261     0.2305    0.05763     0.1374    0.03103       10.9   0.004433
+S0__r089       Gpi0D_nom           310 +-     0.554 |      5.685      2.878      1.056      1.333     0.5072      38.55    0.07857
+S0__r089       Gconv            233.92 +-      1.09 |      4.169      2.143     0.7923      1.167    0.08638      34.07    0.04072
+S0__r089       Gconv_om         22.849 +-     0.322 |     0.1807     0.1357    0.04976    0.07691   0.009048      6.695          0
+S0__r089       Gconv_nom        211.07 +-      1.02 |      3.988      2.007     0.7425       1.09    0.07733      27.38    0.04072
+S0__r089       Gvec           0.059435 +-  0.000475 |  0.0003872  0.0002879  4.964e-05  7.753e-05  2.852e-05   0.002887          0
+S0__r089       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__r089       Gvec_nom       0.059435 +-  0.000475 |  0.0003872  0.0002879  4.964e-05  7.753e-05  2.852e-05   0.002887          0
+S0__r089       Goth             1.6767 +-   0.00437 |      0.157    0.09321    0.03552    0.03552    0.01644     0.4602   0.001163
+S0__r089       Goth_om       0.0031708 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0   0.000707          0
+S0__r089       Goth_nom         1.6735 +-   0.00437 |     0.1569    0.09319    0.03547    0.03551    0.01644     0.4595   0.001163
+S0__r089       GD               347.67 +-     0.715 |      6.069      3.202      1.149      1.506     0.5547      49.91    0.08416
+S0__r089       T12              616.53 +-      1.36 |      20.36      8.056      2.348      3.056      0.893      89.87     0.1264
+S0__r089       T3               109.37 +-     0.672 |      2.251      1.084     0.4192     0.5421    0.04398      16.77    0.02215
+S0__r089       T4               10.692 +-      0.23 |     0.3689     0.1785    0.08122    0.05993  0.0006233      2.169  0.0005387
+# sim S0__r110 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+S0__r110       C2               6.4651 +-     0.185 |      5.118    0.01695    0.05584   0.006862    0.00317    0.01217          0
+S0__r110       C3               4.8587 +-     0.163 |      3.835   0.006855    0.02941          0   0.004239          0          0
+S0__r110       C4               1.1656 +-    0.0734 |    0.05712     0.9285    0.08085    0.06916    0.01168   0.009451          0
+S0__r110       C5                1.307 +-   0.00329 |    0.06885      1.005      0.107    0.08603     0.1485     0.0163   0.002013
+S0__r110       C6                 6582 +-      7.72 |      364.8       5119      510.1      406.8       3412      65.64      7.953
+S0__r110       Geta             21.146 +-     0.203 |     0.9715     0.6065     0.1969     0.3003     0.0742      5.878  0.0007492
+S0__r110       Gpi0D            345.93 +-     0.715 |      6.016      3.238       1.09      1.467     0.5387      50.11    0.08053
+S0__r110       Gpi0D_om         35.931 +-     0.399 |      0.235     0.2748    0.05763     0.1419    0.03546      11.17          0
+S0__r110       Gpi0D_nom           310 +-     0.554 |      5.781      2.963      1.032      1.325     0.5033      38.94    0.08053
+S0__r110       Gconv            233.92 +-      1.09 |      4.241      2.166     0.7819      1.183    0.07733      34.44    0.04977
+S0__r110       Gconv_om         22.849 +-     0.322 |     0.1898     0.1312    0.04976    0.08595   0.009048      6.795          0
+S0__r110       Gconv_nom        211.07 +-      1.02 |      4.051      2.035     0.7321      1.097    0.06828      27.64    0.04977
+S0__r110       Gvec           0.059435 +-  0.000475 |  0.0004033  0.0002975  6.426e-05  9.878e-05  2.852e-05   0.003047          0
+S0__r110       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+S0__r110       Gvec_nom       0.059435 +-  0.000475 |  0.0004033  0.0002975  6.426e-05  9.878e-05  2.852e-05   0.003047          0
+S0__r110       Goth             1.6767 +-   0.00437 |     0.1585     0.0939    0.03569    0.03539    0.01634     0.4608   0.001237
+S0__r110       Goth_om       0.0031708 +-  0.000172 |  6.307e-05  2.372e-05  5.197e-05  1.586e-06          0  0.0007239          0
+S0__r110       Goth_nom         1.6735 +-   0.00437 |     0.1585    0.09387    0.03564    0.03539    0.01634     0.4601   0.001237
+S0__r110       GD               347.67 +-     0.715 |      6.175      3.332      1.126      1.503     0.5551      50.58    0.08177
+S0__r110       T12              616.53 +-      1.36 |      20.47      8.061      2.378      3.148     0.8742      90.93     0.1343
+S0__r110       T3               109.37 +-     0.672 |      2.271      1.131     0.4542     0.5339    0.04465      17.07    0.02687
+S0__r110       T4               10.692 +-      0.23 |     0.3745     0.1882    0.06436     0.0828  0.0006132      2.169  0.0005463
+# sim pre__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__nom       C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__nom       C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__nom       C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__nom       C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__nom       C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__nom       Geta             24.273 +-     0.213 |      1.169     0.7108     0.2275     0.3373    0.08695      6.756  0.0008116
+pre__nom       Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__nom       Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__nom       Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__nom       Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__nom       Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__nom       Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__nom       Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__nom       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__nom       Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__nom       Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__nom       Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__nom       Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__nom       GD               396.57 +-     0.776 |      7.948      4.085      1.422      1.934     0.7256      60.68    0.08653
+pre__nom       T12              701.08 +-      1.46 |      24.24       9.59      2.934      3.843      1.074      108.4     0.1387
+pre__nom       T3               124.96 +-     0.727 |      2.894      1.358     0.6126     0.6766    0.05606       20.2    0.03195
+pre__nom       T4                12.51 +-     0.252 |     0.4595      0.241     0.0867    0.07283  0.0006951       2.58  0.0005507
+# sim pre__V2 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__V2        C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__V2        C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__V2        C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__V2        C5               1.6442 +-   0.00398 |     0.0761      1.303     0.1244     0.0952     0.1952    0.01898   0.001823
+pre__V2        C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__V2        Geta             24.273 +-     0.213 |      1.169     0.7108     0.2275     0.3373    0.08695      6.756  0.0008116
+pre__V2        Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__V2        Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__V2        Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__V2        Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__V2        Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__V2        Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__V2        Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__V2        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__V2        Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__V2        Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__V2        Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__V2        Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__V2        GD               396.57 +-     0.776 |      7.948      4.085      1.422      1.934     0.7256      60.68    0.08653
+pre__V2        T12              701.31 +-      1.46 |      24.25      9.772      2.951      3.856      1.106      108.4     0.1389
+pre__V2        T3               124.96 +-     0.727 |      2.894      1.358     0.6126     0.6766    0.05606       20.2    0.03195
+pre__V2        T4                12.51 +-     0.252 |     0.4595      0.241     0.0867    0.07283  0.0006951       2.58  0.0005507
+# sim pre__bump1aY [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__bump1aY   C2               6.9631 +-     0.196 |      5.581    0.01086    0.05825   0.007032          0    0.01248          0
+pre__bump1aY   C3                5.114 +-     0.171 |      4.107   0.007183    0.02306          0   0.004326          0          0
+pre__bump1aY   C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__bump1aY   C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__bump1aY   C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__bump1aY   Geta             24.292 +-     0.216 |      1.165     0.7162      0.227     0.3376    0.08669      6.762  0.0008116
+pre__bump1aY   Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__bump1aY   Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__bump1aY   Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__bump1aY   Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__bump1aY   Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__bump1aY   Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__bump1aY   Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__bump1aY   Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__bump1aY   Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__bump1aY   Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__bump1aY   Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__bump1aY   Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__bump1aY   GD               396.57 +-     0.776 |      7.948      4.085      1.422      1.934     0.7256      60.68    0.08653
+pre__bump1aY   T12              700.94 +-      1.46 |      24.17      9.594      2.926      3.843      1.074      108.4     0.1387
+pre__bump1aY   T3               124.95 +-     0.727 |      2.894      1.358     0.6107     0.6771    0.05606      20.21    0.03195
+pre__bump1aY   T4                12.51 +-     0.252 |     0.4558     0.2413    0.08652    0.07334  0.0006951      2.582  0.0005507
+# sim pre__bumpPS [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__bumpPS    C2               7.9243 +-     0.195 |      6.069    0.01442    0.09611   0.004806          0   0.009611          0
+pre__bumpPS    C3                5.821 +-     0.169 |       4.36    0.01471    0.04414          0   0.004904          0          0
+pre__bumpPS    C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__bumpPS    C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__bumpPS    C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__bumpPS    Geta             24.017 +-      0.19 |      1.197      0.668     0.2337     0.3342    0.08858      6.648  0.0008116
+pre__bumpPS    Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__bumpPS    Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__bumpPS    Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__bumpPS    Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__bumpPS    Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__bumpPS    Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__bumpPS    Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__bumpPS    Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__bumpPS    Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__bumpPS    Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__bumpPS    Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__bumpPS    Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__bumpPS    GD               396.57 +-     0.776 |      7.948      4.085      1.422      1.934     0.7256      60.68    0.08653
+pre__bumpPS    T12              702.34 +-      1.46 |      24.95      9.557      2.992      3.838      1.077      108.3     0.1387
+pre__bumpPS    T3               124.95 +-     0.726 |      2.907      1.356     0.6238     0.6754    0.05606      20.17    0.03195
+pre__bumpPS    T4               12.515 +-     0.251 |     0.5005     0.2411    0.08402     0.0687  0.0006951      2.563  0.0005507
+# sim pre__convOff [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__convOff   C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__convOff   C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__convOff   C4               1.2255 +-    0.0699 |    0.05988       0.95     0.0998    0.09181    0.01597   0.007984          0
+pre__convOff   C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__convOff   C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__convOff   Geta             24.211 +-     0.208 |      1.171      0.701      0.227     0.3357    0.08566      6.723  0.0008116
+pre__convOff   Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__convOff   Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__convOff   Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__convOff   Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__convOff   Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__convOff   Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__convOff   Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__convOff   Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__convOff   Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__convOff   Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__convOff   Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__convOff   Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__convOff   GD               396.57 +-     0.776 |      7.948      4.085      1.422      1.934     0.7256      60.68    0.08653
+pre__convOff   T12                 701 +-      1.46 |      24.25      9.523      2.949      3.857      1.077      108.4     0.1387
+pre__convOff   T3               124.96 +-     0.727 |      2.896      1.358     0.6139     0.6765    0.05606      20.19    0.03195
+pre__convOff   T4               12.507 +-     0.252 |     0.4646     0.2391    0.08668    0.07244  0.0006951      2.573  0.0005507
+# sim pre__GS [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__GS        C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__GS        C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__GS        C4                1.248 +-    0.0759 |    0.05393      1.011     0.0845    0.07684    0.01188   0.008855          0
+pre__GS        C5               1.4243 +-   0.00345 |    0.06668      1.128     0.1076    0.08268     0.1648    0.01667   0.001556
+pre__GS        C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__GS        Geta             24.271 +-     0.213 |      1.169     0.7111     0.2276     0.3375    0.08694      6.756  0.0008116
+pre__GS        Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__GS        Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__GS        Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__GS        Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__GS        Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__GS        Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__GS        Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__GS        Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__GS        Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__GS        Goth              1.968 +-   0.00484 |     0.2034     0.1263    0.04946    0.04635     0.0218     0.5455   0.001424
+pre__GS        Goth_om       0.0032889 +-  0.000175 |  6.356e-05  2.317e-05  5.201e-05  5.452e-06          0  0.0007571          0
+pre__GS        Goth_nom         1.9647 +-   0.00483 |     0.2034     0.1263    0.04941    0.04635     0.0218     0.5448   0.001424
+pre__GS        GD               396.57 +-     0.776 |      7.949      4.085      1.422      1.934     0.7256      60.68    0.08652
+pre__GS        T12               701.1 +-      1.46 |      24.25        9.6      2.935      3.844      1.075      108.4     0.1387
+pre__GS        T3               124.96 +-     0.727 |      2.894      1.358     0.6126     0.6766    0.05606       20.2    0.03195
+pre__GS        T4                12.51 +-     0.252 |     0.4598     0.2411    0.08672    0.07285  0.0006956       2.58  0.0005506
+# sim pre__wtsOff [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__wtsOff    C2               7.9243 +-     0.195 |      6.069    0.01442    0.09611   0.004806          0   0.009611          0
+pre__wtsOff    C3                5.821 +-     0.169 |       4.36    0.01471    0.04414          0   0.004904          0          0
+pre__wtsOff    C4               1.2255 +-    0.0699 |    0.05988       0.95     0.0998    0.09181    0.01597   0.007984          0
+pre__wtsOff    C5               1.3852 +-   0.00183 |    0.06137      1.082     0.1136    0.08638    0.06797    0.01797   0.001719
+pre__wtsOff    C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__wtsOff    Geta             23.955 +-     0.187 |      1.199     0.6581     0.2331     0.3325    0.08728      6.616  0.0008116
+pre__wtsOff    Gpi0D             394.5 +-     0.776 |      7.744      3.958      1.373      1.887     0.7037      60.13     0.0851
+pre__wtsOff    Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__wtsOff    Gpi0D_nom        356.65 +-     0.619 |      7.492      3.697      1.302      1.701     0.6727      48.24     0.0851
+pre__wtsOff    Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__wtsOff    Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__wtsOff    Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__wtsOff    Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__wtsOff    Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__wtsOff    Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__wtsOff    Goth             1.5023 +-   0.00213 |     0.1595    0.09603    0.03707    0.03534   0.007209      0.421   0.001324
+pre__wtsOff    Goth_om       0.0026236 +-  7.98e-05 |  8.244e-05  3.395e-05   1.94e-05  1.212e-05          0  0.0005892          0
+pre__wtsOff    Goth_nom         1.4997 +-   0.00213 |     0.1594      0.096    0.03705    0.03532   0.007209     0.4204   0.001324
+pre__wtsOff    GD               396.11 +-     0.776 |      7.905      4.055       1.41      1.923      0.711      60.55    0.08642
+pre__wtsOff    T12              701.76 +-      1.46 |      24.91       9.42      3.001      3.845      0.969      108.2     0.1387
+pre__wtsOff    T3               125.11 +-     0.726 |      2.925      1.365      0.629     0.6789    0.05613       20.2    0.03214
+pre__wtsOff    T4               12.512 +-     0.251 |     0.5055     0.2392      0.084     0.0683  0.0006937      2.555  0.0005513
+# sim pre__modeB [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__modeB     C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__modeB     C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__modeB     C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__modeB     C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__modeB     C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__modeB     Geta             26.368 +-     0.235 |       1.28     0.7592     0.2512     0.3648     0.1061      7.348          0
+pre__modeB     Gpi0D            430.24 +-      1.48 |        8.3      4.121      1.502      1.988     0.7124       64.2      0.121
+pre__modeB     Gpi0D_om          37.85 +-      0.41 |     0.2527     0.2616    0.07093     0.1862    0.03103      11.89          0
+pre__modeB     Gpi0D_nom        392.39 +-       1.4 |      8.047       3.86      1.431      1.802     0.6814      52.31      0.121
+pre__modeB     Gconv            265.35 +-      1.17 |      5.253      2.646      1.004      1.406    0.08186      40.95    0.04977
+pre__modeB     Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.08595   0.009048      7.134          0
+pre__modeB     Gconv_nom        241.49 +-      1.11 |       5.05       2.51     0.9453      1.321    0.07281      33.81    0.04977
+pre__modeB     Gvec            0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__modeB     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__modeB     Gvec_nom        0.10657 +-  0.000711 |  0.0009777  0.0005079   0.000162  0.0002328  6.385e-05   0.006759  8.179e-08
+pre__modeB     Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__modeB     Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__modeB     Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__modeB     GD               432.31 +-      1.48 |      8.504      4.248      1.551      2.034     0.7343      64.75     0.1224
+pre__modeB     T12              738.92 +-      1.93 |      24.91      9.801      3.087      3.971      1.102      113.1     0.1738
+pre__modeB     T3                127.8 +-     0.812 |      2.898      1.391     0.6515      0.667    0.06408      20.45    0.03214
+pre__modeB     T4               12.465 +-     0.256 |     0.4571      0.233    0.08432    0.08574  0.0006126       2.57  0.0005404
+# sim pre__wdb [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__wdb       C2               6.6326 +-     0.182 |      5.291    0.01044    0.05905    0.00646          0    0.01145          0
+pre__wdb       C3               4.7875 +-     0.155 |      3.812   0.007502    0.02386          0   0.003911          0          0
+pre__wdb       C4               1.4076 +-    0.0857 |    0.06048      1.141    0.09501    0.08632    0.01324   0.009941          0
+pre__wdb       C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__wdb       C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__wdb       Geta             34.395 +-     0.331 |      1.188     0.7203      0.237     0.3229    0.09067      7.701  0.0007057
+pre__wdb       Gpi0D            401.42 +-     0.784 |      7.744      3.991      1.384      1.906     0.7105      61.06    0.08549
+pre__wdb       Gpi0D_om          38.62 +-     0.418 |     0.2579     0.2669    0.07238       0.19    0.03167      12.13          0
+pre__wdb       Gpi0D_nom         362.8 +-     0.621 |      7.486      3.724      1.311      1.716     0.6788      48.92    0.08549
+pre__wdb       Gconv            265.05 +-      1.17 |      5.194      2.633     0.9998      1.402    0.08143      40.85    0.04977
+pre__wdb       Gconv_om         23.859 +-     0.329 |     0.2036     0.1357    0.05881    0.08595   0.009048      7.134          0
+pre__wdb       Gconv_nom        241.19 +-      1.11 |       4.99      2.497      0.941      1.317    0.07238      33.71    0.04977
+pre__wdb       Gvec           0.090022 +-   0.00055 |  0.0007494  0.0003895  0.0001241  0.0001786  4.894e-05   0.005197  6.395e-08
+pre__wdb       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__wdb       Gvec_nom       0.090022 +-   0.00055 |  0.0007494  0.0003895  0.0001241  0.0001786  4.894e-05   0.005197  6.395e-08
+pre__wdb       Goth             1.9668 +-   0.00483 |     0.2033     0.1262    0.04942    0.04632    0.02181     0.5452   0.001425
+pre__wdb       Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007563          0
+pre__wdb       Goth_nom         1.9635 +-   0.00482 |     0.2032     0.1262    0.04936    0.04631    0.02181     0.5444   0.001425
+pre__wdb       GD               403.48 +-     0.784 |      7.948      4.118      1.433      1.952     0.7323      61.61    0.08692
+pre__wdb       T12              717.17 +-      1.48 |      23.56      9.752      2.955      3.853      1.086      110.2      0.139
+pre__wdb       T3               126.72 +-     0.733 |      2.868      1.357     0.6193     0.6926     0.0565      20.42    0.03175
+pre__wdb       T4               14.446 +-     0.274 |     0.4864     0.2524    0.08809    0.09116   0.004704      2.861   0.004558
+# sim pre__ghostA [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__ghostA    C2               7.0456 +-     0.193 |      5.621    0.01109    0.06273   0.006862          0    0.01217          0
+pre__ghostA    C3               5.1898 +-     0.169 |      4.133   0.008132    0.02587          0   0.004239          0          0
+pre__ghostA    C4                1.242 +-    0.0756 |    0.05336      1.007    0.08383    0.07617    0.01168   0.008772          0
+pre__ghostA    C5               1.4168 +-   0.00343 |    0.06613      1.122      0.107    0.08234      0.164     0.0166   0.001574
+pre__ghostA    C6               7126.5 +-      8.03 |      350.5       5699      509.3      387.7       3764      67.49      6.424
+pre__ghostA    Geta             26.464 +-     0.229 |      1.325     0.7796     0.2456     0.3618    0.08926      7.542  0.0008116
+pre__ghostA    Gpi0D            425.89 +-     0.808 |      8.335      4.234      1.491       2.05     0.7342      64.81     0.0933
+pre__ghostA    Gpi0D_om         40.564 +-     0.424 |      0.266     0.2704     0.0798     0.2084    0.03103      12.77          0
+pre__ghostA    Gpi0D_nom        385.33 +-     0.646 |      8.069      3.964      1.411      1.842     0.7031      52.04     0.0933
+pre__ghostA    Gconv             345.3 +-      1.33 |      6.922      3.432       1.39      1.811     0.1044      53.41    0.07277
+pre__ghostA    Gconv_om         30.889 +-     0.374 |     0.2667     0.1944    0.07724     0.1176   0.009048      9.329          0
+pre__ghostA    Gconv_nom        314.41 +-      1.26 |      6.656      3.237      1.313      1.694    0.09531      44.08    0.07277
+pre__ghostA    Gvec            0.11019 +-  0.000729 |    0.00102   0.000543  0.0001692  0.0002469  6.393e-05   0.007199  8.179e-08
+pre__ghostA    Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__ghostA    Gvec_nom        0.11019 +-  0.000729 |    0.00102   0.000543  0.0001692  0.0002469  6.393e-05   0.007199  8.179e-08
+pre__ghostA    Goth             2.1008 +-   0.00488 |     0.2175     0.1344    0.05265    0.04917    0.02239     0.5816    0.00158
+pre__ghostA    Goth_om       0.0034953 +-  0.000176 |  7.303e-05  2.531e-05  5.388e-05  8.614e-06          0  0.0008008          0
+pre__ghostA    Goth_nom         2.0973 +-   0.00487 |     0.2174     0.1344     0.0526    0.04917    0.02239     0.5808    0.00158
+pre__ghostA    GD                428.1 +-     0.808 |      8.553      4.369      1.544        2.1     0.7566       65.4    0.09488
+pre__ghostA    T12              814.76 +-      1.62 |      26.67      10.73      3.459      4.438       1.13      126.4       0.17
+pre__ghostA    T3               11.277 +-     0.229 |     0.4636     0.2199    0.08722    0.08102  0.0002493      2.234  0.0005933
+pre__ghostA    T4                12.51 +-     0.252 |     0.4595      0.241     0.0867    0.07283  0.0006951       2.58  0.0005507
+# sim pre__sK0 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__sK0       C2               7.0456 +-     0.193 |      5.601    0.01109    0.05143   0.006862          0    0.01217          0
+pre__sK0       C3               5.1898 +-     0.169 |      4.119   0.008132    0.02067          0   0.004239          0          0
+pre__sK0       C4                1.242 +-    0.0756 |    0.05336      1.004    0.08222    0.07275    0.01168   0.008772          0
+pre__sK0       C5               1.4168 +-   0.00343 |     0.0687      1.122     0.1149    0.07291     0.1638    0.01547   0.001686
+pre__sK0       C6               7126.5 +-      8.03 |      363.5       5699      548.3      339.8       3763      62.91       6.94
+pre__sK0       Geta             24.273 +-     0.213 |      1.193      0.697     0.2409     0.3485     0.0873      6.776  0.0008428
+pre__sK0       Gpi0D             394.5 +-     0.776 |      7.779      3.989      1.407      1.917     0.7156      60.43    0.09139
+pre__sK0       Gpi0D_om          37.85 +-      0.41 |     0.2571     0.2616    0.07093     0.1951    0.03103         12   0.004433
+pre__sK0       Gpi0D_nom        356.65 +-     0.619 |      7.522      3.727      1.336      1.722     0.6845      48.43    0.08696
+pre__sK0       Gconv            265.35 +-      1.17 |      5.295       2.71      1.005       1.38    0.07733      41.17    0.04977
+pre__sK0       Gconv_om         23.858 +-     0.329 |     0.2033     0.1312    0.06367    0.08595   0.009048      7.184          0
+pre__sK0       Gconv_nom        241.49 +-      1.11 |      5.091      2.579     0.9411      1.294    0.06828      33.98    0.04977
+pre__sK0       Gvec            0.10657 +-  0.000711 |  0.0009778  0.0005079   0.000162  0.0002328  7.081e-05   0.006782  8.179e-08
+pre__sK0       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__sK0       Gvec_nom        0.10657 +-  0.000711 |  0.0009778  0.0005079   0.000162  0.0002328  7.081e-05   0.006782  8.179e-08
+pre__sK0       Goth             1.9668 +-   0.00483 |     0.2052     0.1259    0.05004    0.04588    0.02186     0.5448   0.001529
+pre__sK0       Goth_om       0.0032871 +-  0.000175 |  6.361e-05  2.372e-05  5.144e-05  4.929e-06          0  0.0007693          0
+pre__sK0       Goth_nom         1.9635 +-   0.00482 |     0.2051     0.1259    0.04999    0.04587    0.02186      0.544   0.001529
+pre__sK0       GD               396.57 +-     0.776 |      7.986      4.115      1.458      1.963     0.7375      60.98    0.09292
+pre__sK0       T12              701.08 +-      1.46 |      24.31      9.667      2.972      3.845      1.082        109     0.1452
+pre__sK0       T3               124.96 +-     0.727 |      2.904      1.412     0.6226      0.633      0.056      20.31    0.03232
+pre__sK0       T4                12.51 +-     0.252 |     0.4597     0.2415    0.08383    0.08191  0.0006903      2.589  0.0005514
+# sim pre__sUp [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__sUp       C2               7.0456 +-     0.193 |      5.622    0.01303    0.06509   0.006862    0.00317    0.01217          0
+pre__sUp       C3               5.1898 +-     0.169 |      4.166   0.008132     0.0279          0   0.004239          0          0
+pre__sUp       C4                1.242 +-    0.0756 |    0.04784     0.9988    0.08274    0.08564    0.01168   0.008772          0
+pre__sUp       C5               1.4168 +-   0.00343 |    0.06374      1.121    0.09941    0.09218      0.164     0.0177   0.001395
+pre__sUp       C6               7126.5 +-      8.03 |      338.8       5691      475.1      438.3       3762      72.02      5.962
+pre__sUp       Geta             24.273 +-     0.213 |      1.165     0.7098     0.2158     0.3311    0.08711      6.749  0.0007179
+pre__sUp       Gpi0D             394.5 +-     0.776 |      7.707      3.922      1.398      1.888     0.7041      59.81    0.08367
+pre__sUp       Gpi0D_om          37.85 +-      0.41 |     0.2483     0.2571    0.07093     0.1729    0.03103      11.77          0
+pre__sUp       Gpi0D_nom        356.65 +-     0.619 |      7.458      3.665      1.327      1.715     0.6731      48.04    0.08367
+pre__sUp       Gconv            265.35 +-      1.17 |      5.276      2.641     0.9905      1.407    0.08186      40.71    0.04977
+pre__sUp       Gconv_om         23.858 +-     0.329 |     0.2033     0.1312     0.0501    0.09048   0.009048      7.057          0
+pre__sUp       Gconv_nom        241.49 +-      1.11 |      5.073       2.51     0.9404      1.316    0.07281      33.65    0.04977
+pre__sUp       Gvec            0.10657 +-  0.000711 |  0.0009636   0.000508  0.0001619  0.0002324  5.688e-05   0.006743  8.179e-08
+pre__sUp       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__sUp       Gvec_nom        0.10657 +-  0.000711 |  0.0009636   0.000508  0.0001619  0.0002324  5.688e-05   0.006743  8.179e-08
+pre__sUp       Goth             1.9668 +-   0.00483 |     0.2016     0.1263     0.0489    0.04636    0.02189     0.5451    0.00137
+pre__sUp       Goth_om       0.0032871 +-  0.000175 |  6.441e-05   2.32e-05  5.197e-05  2.115e-06          0  0.0007516          0
+pre__sUp       Goth_nom         1.9635 +-   0.00482 |     0.2015     0.1263    0.04885    0.04636    0.02189     0.5443    0.00137
+pre__sUp       GD               396.57 +-     0.776 |      7.909      4.049      1.447      1.934     0.7261      60.36    0.08504
+pre__sUp       T12              701.08 +-      1.46 |      24.25       9.54      2.929      3.857      1.078      107.9     0.1369
+pre__sUp       T3               124.96 +-     0.727 |      2.874      1.339     0.6202     0.6627    0.05597       20.1     0.0272
+pre__sUp       T4                12.51 +-     0.252 |     0.4595      0.232     0.0929     0.0816   0.000695       2.58  0.0005472
+# sim pre__sDn [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__sDn       C2               7.0456 +-     0.193 |      5.601    0.01109    0.05143   0.006862          0    0.01217          0
+pre__sDn       C3               5.1898 +-     0.169 |      4.119   0.008132    0.02067          0   0.004239          0          0
+pre__sDn       C4                1.242 +-    0.0756 |    0.05336      1.007    0.08222    0.07275    0.01168   0.008772          0
+pre__sDn       C5               1.4168 +-   0.00343 |     0.0686      1.122     0.1145    0.07334     0.1638    0.01553   0.001685
+pre__sDn       C6               7126.5 +-      8.03 |      362.9       5699      546.9      341.3       3763      63.05      6.931
+pre__sDn       Geta             24.273 +-     0.213 |      1.188     0.6968      0.243     0.3484    0.08733      6.776  0.0008428
+pre__sDn       Gpi0D             394.5 +-     0.776 |      7.778      3.988      1.407      1.918     0.7153      60.42    0.09134
+pre__sDn       Gpi0D_om          37.85 +-      0.41 |     0.2571     0.2616    0.07093     0.1951    0.03103         12   0.004433
+pre__sDn       Gpi0D_nom        356.65 +-     0.619 |      7.521      3.726      1.336      1.723     0.6843      48.42    0.08691
+pre__sDn       Gconv            265.35 +-      1.17 |      5.281      2.701      1.005       1.38    0.07733      41.17    0.04977
+pre__sDn       Gconv_om         23.858 +-     0.329 |     0.2033     0.1312    0.06367    0.08595   0.009048      7.184          0
+pre__sDn       Gconv_nom        241.49 +-      1.11 |      5.078      2.569     0.9411      1.294    0.06828      33.98    0.04977
+pre__sDn       Gvec            0.10657 +-  0.000711 |  0.0009778  0.0005079   0.000162  0.0002328  7.081e-05   0.006781  8.179e-08
+pre__sDn       Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__sDn       Gvec_nom        0.10657 +-  0.000711 |  0.0009778  0.0005079   0.000162  0.0002328  7.081e-05   0.006781  8.179e-08
+pre__sDn       Goth             1.9668 +-   0.00483 |     0.2051     0.1259    0.04999    0.04593    0.02185     0.5448   0.001528
+pre__sDn       Goth_om       0.0032871 +-  0.000175 |  6.361e-05  2.372e-05  5.144e-05  4.929e-06          0  0.0007693          0
+pre__sDn       Goth_nom         1.9635 +-   0.00482 |      0.205     0.1258    0.04994    0.04592    0.02185      0.544   0.001528
+pre__sDn       GD               396.57 +-     0.776 |      7.984      4.114      1.457      1.964     0.7372      60.97    0.09287
+pre__sDn       T12              701.08 +-      1.46 |      24.29       9.66      2.974      3.845      1.082      108.9     0.1452
+pre__sDn       T3               124.96 +-     0.727 |      2.904      1.408     0.6274     0.6329      0.056      20.32    0.03232
+pre__sDn       T4                12.51 +-     0.252 |     0.4597     0.2415    0.08383    0.07738  0.0006909      2.589  0.0005514
+# sim pre__r089 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__r089      C2               7.0456 +-     0.193 |      5.647    0.01795    0.04812          0          0    0.01217          0
+pre__r089      C3               5.1898 +-     0.169 |      4.177   0.008132    0.01703          0   0.004239          0          0
+pre__r089      C4                1.242 +-    0.0756 |    0.04186      1.034    0.07496    0.06156    0.01544   0.008772          0
+pre__r089      C5               1.4168 +-   0.00343 |    0.05362      1.172    0.09214    0.06725      0.169    0.01241  0.0009943
+pre__r089      C6               7126.5 +-      8.03 |      289.5       5942        443      309.2       3868      50.88      4.044
+pre__r089      Geta             24.273 +-     0.213 |       1.17     0.7188     0.2136     0.3205    0.08745       6.75  0.0007492
+pre__r089      Gpi0D             394.5 +-     0.776 |      7.694      3.884      1.424      1.904     0.7066      59.74    0.08837
+pre__r089      Gpi0D_om          37.85 +-      0.41 |     0.2571     0.2483    0.06206     0.1729    0.03103      11.73   0.004433
+pre__r089      Gpi0D_nom        356.65 +-     0.619 |      7.437      3.636      1.362      1.731     0.6756      48.01    0.08393
+pre__r089      Gconv            265.35 +-      1.17 |      5.231      2.686       1.01      1.385    0.08638      40.71    0.04525
+pre__r089      Gconv_om         23.858 +-     0.329 |     0.1943     0.1402    0.04976    0.08595   0.009048      7.071          0
+pre__r089      Gconv_nom        241.49 +-      1.11 |      5.037      2.546     0.9605      1.299    0.07733      33.64    0.04525
+pre__r089      Gvec            0.10657 +-  0.000711 |   0.000942  0.0005071  0.0001622  0.0002322  6.376e-05   0.006663  8.179e-08
+pre__r089      Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__r089      Gvec_nom        0.10657 +-  0.000711 |   0.000942  0.0005071  0.0001622  0.0002322  6.376e-05   0.006663  8.179e-08
+pre__r089      Goth             1.9668 +-   0.00483 |     0.2023     0.1258     0.0494    0.04626    0.02194     0.5448   0.001409
+pre__r089      Goth_om       0.0032871 +-  0.000175 |  6.361e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007537          0
+pre__r089      Goth_nom         1.9635 +-   0.00482 |     0.2022     0.1258    0.04935    0.04625    0.02194     0.5441   0.001409
+pre__r089      GD               396.57 +-     0.776 |      7.898       4.01      1.474      1.951     0.7286      60.29    0.08977
+pre__r089      T12              701.08 +-      1.46 |      24.22      9.648       2.93      3.785      1.091      107.8     0.1368
+pre__r089      T3               124.96 +-     0.727 |      2.881      1.351     0.5608     0.6757    0.05548      20.07    0.02722
+pre__r089      T4                12.51 +-     0.252 |      0.456     0.2366    0.08697    0.07194   0.000696       2.58  0.0005472
+# sim pre__r110 [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+pre__r110      C2               7.0456 +-     0.193 |      5.601    0.01695    0.06745   0.006862    0.00317    0.01217          0
+pre__r110      C3               5.1898 +-     0.169 |      4.095   0.008132    0.03523          0   0.004239          0          0
+pre__r110      C4                1.242 +-    0.0756 |    0.06131     0.9733    0.08626    0.09115    0.01168   0.009451          0
+pre__r110      C5               1.4168 +-   0.00343 |    0.07731      1.076     0.1196    0.09578     0.1589    0.02069   0.002152
+pre__r110      C6               7126.5 +-      8.03 |      406.4       5479      570.7        454       3663      85.06       8.65
+pre__r110      Geta             24.273 +-     0.213 |      1.176     0.6952     0.2349     0.3479    0.08733      6.774  0.0009052
+pre__r110      Gpi0D             394.5 +-     0.776 |      7.815      4.046      1.394      1.901     0.7034      60.44    0.08653
+pre__r110      Gpi0D_om          37.85 +-      0.41 |      0.266     0.2926    0.06206     0.1906    0.03546      12.01          0
+pre__r110      Gpi0D_nom        356.65 +-     0.619 |      7.549      3.753      1.332       1.71      0.668      48.43    0.08653
+pre__r110      Gconv            265.35 +-      1.17 |      5.326      2.682      1.009        1.4    0.07733      41.13    0.05429
+pre__r110      Gconv_om         23.858 +-     0.329 |     0.2033     0.1357    0.05914    0.09048   0.009048      7.166          0
+pre__r110      Gconv_nom        241.49 +-      1.11 |      5.123      2.546     0.9497       1.31    0.06828      33.97    0.05429
+pre__r110      Gvec            0.10657 +-  0.000711 |  0.0009863  0.0005242  0.0001631  0.0002261  7.081e-05   0.006854  8.179e-08
+pre__r110      Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+pre__r110      Gvec_nom        0.10657 +-  0.000711 |  0.0009863  0.0005242  0.0001631  0.0002261  7.081e-05   0.006854  8.179e-08
+pre__r110      Goth             1.9668 +-   0.00483 |     0.2042     0.1265    0.04954    0.04635    0.02189     0.5452   0.001504
+pre__r110      Goth_om       0.0032871 +-  0.000175 |  6.441e-05  2.372e-05  5.197e-05  1.586e-06          0  0.0007712          0
+pre__r110      Goth_nom         1.9635 +-   0.00482 |     0.2041     0.1265    0.04948    0.04635    0.02189     0.5444   0.001504
+pre__r110      GD               396.57 +-     0.776 |       8.02      4.173      1.443      1.948     0.7254      60.99    0.08804
+pre__r110      T12              701.08 +-      1.46 |      24.36      9.625      2.996      3.889      1.068      108.9     0.1454
+pre__r110      T3               124.96 +-     0.727 |      2.903      1.404      0.619     0.6489    0.05634      20.38    0.03209
+pre__r110      T4                12.51 +-     0.252 |     0.4619     0.2378    0.07015     0.1034  0.0006828      2.598  0.0005554
+# sim dz40__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+dz40__nom      C2               6.6398 +-     0.187 |      5.275    0.01109    0.05844   0.006862          0   0.006225          0
+dz40__nom      C3                4.944 +-     0.165 |      3.934   0.008132    0.02587          0   0.004239          0          0
+dz40__nom      C4               1.1864 +-    0.0741 |    0.04552     0.9693    0.08383    0.06627   0.009218   0.008772          0
+dz40__nom      C5               1.3544 +-   0.00335 |    0.06163      1.081     0.1003    0.07669     0.1579    0.01334   0.001518
+dz40__nom      C6               6810.3 +-      7.85 |      326.7       5492      476.6      359.4       3621      52.59      6.089
+dz40__nom      Geta             21.909 +-     0.207 |      1.033     0.6623     0.2131      0.311    0.07742      6.126  0.0006555
+dz40__nom      Gpi0D            354.27 +-     0.725 |      6.194      3.193      1.104      1.539     0.5337      51.88    0.07526
+dz40__nom      Gpi0D_om         37.017 +-     0.405 |     0.2438     0.2483    0.07093     0.1596    0.03103      11.54          0
+dz40__nom      Gpi0D_nom        317.26 +-      0.56 |       5.95      2.944      1.033      1.379     0.5027      40.34    0.07526
+dz40__nom      Gconv            239.48 +-       1.1 |      4.274      2.184     0.7956      1.211    0.07733      35.35    0.04072
+dz40__nom      Gconv_om         23.392 +-     0.325 |     0.1988     0.1267    0.05429    0.07691   0.009048      6.971          0
+dz40__nom      Gconv_nom        216.09 +-      1.04 |      4.076      2.058     0.7413      1.134    0.06828      28.37    0.04072
+dz40__nom      Gvec           0.053504 +-  0.000427 |  0.0003251  0.0001908  5.639e-05  5.741e-05  2.139e-05   0.002371          0
+dz40__nom      Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+dz40__nom      Gvec_nom       0.053504 +-  0.000427 |  0.0003251  0.0001908  5.639e-05  5.741e-05  2.139e-05   0.002371          0
+dz40__nom      Goth             1.7591 +-   0.00449 |     0.1719     0.1064    0.04071    0.03951    0.01824     0.4843   0.001309
+dz40__nom      Goth_om       0.0032207 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0   0.000722          0
+dz40__nom      Goth_nom         1.7559 +-   0.00448 |     0.1719     0.1064    0.04066     0.0395    0.01824     0.4836   0.001309
+dz40__nom      GD               356.09 +-     0.725 |      6.366      3.299      1.145      1.578      0.552      52.37    0.07657
+dz40__nom      T12               631.6 +-      1.38 |      20.99      8.216      2.422       3.25     0.8781      93.87     0.1195
+dz40__nom      T3               111.39 +-     0.677 |      2.252      1.165     0.4525     0.5373    0.04404      17.46    0.02675
+dz40__nom      T4               10.832 +-     0.232 |     0.3768     0.1868    0.07109    0.06164  0.0001642      2.182  0.0005448
+# sim PEAK__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+PEAK__nom      C2               6.3111 +-     0.183 |      5.017    0.01109    0.05844   0.006862          0   0.006225          0
+PEAK__nom      C3               4.7496 +-     0.162 |      3.782   0.008132    0.02587          0   0.004239          0          0
+PEAK__nom      C4                1.149 +-     0.073 |    0.04552     0.9412    0.07859    0.06627   0.009218   0.008772          0
+PEAK__nom      C5               1.3124 +-    0.0033 |    0.05887      1.047    0.09694    0.07568     0.1537    0.01326   0.001518
+PEAK__nom      C6               6609.8 +-      7.73 |      312.7       5329      461.3      354.3       3514      52.41      6.071
+PEAK__nom      Geta             21.543 +-     0.203 |     0.8848     0.6133     0.1897     0.2821    0.07583      6.051  0.0006555
+PEAK__nom      Gpi0D            352.88 +-      0.72 |      5.634       2.96      1.001      1.431     0.4947      51.69    0.07515
+PEAK__nom      Gpi0D_om         36.897 +-     0.404 |     0.1995     0.2305    0.06206     0.1463     0.0266      11.51          0
+PEAK__nom      Gpi0D_nom        315.98 +-     0.556 |      5.435      2.729     0.9385      1.285     0.4681      40.18    0.07515
+PEAK__nom      Gconv            238.51 +-       1.1 |      3.922      2.034     0.7448      1.133    0.07733      35.22    0.04072
+PEAK__nom      Gconv_om         23.333 +-     0.325 |     0.1807     0.1131    0.04976    0.07691   0.009048      6.958          0
+PEAK__nom      Gconv_nom        215.18 +-      1.03 |      3.741       1.92      0.695      1.056    0.06828      28.26    0.04072
+PEAK__nom      Gvec           0.053503 +-  0.000427 |  0.0003247  0.0001907  5.631e-05  5.741e-05  2.139e-05   0.002371          0
+PEAK__nom      Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+PEAK__nom      Gvec_nom       0.053503 +-  0.000427 |  0.0003247  0.0001907  5.631e-05  5.741e-05  2.139e-05   0.002371          0
+PEAK__nom      Goth              1.721 +-   0.00441 |     0.1555    0.09927    0.03728     0.0371    0.01718     0.4802   0.001309
+PEAK__nom      Goth_om       0.0032037 +-  0.000172 |  5.163e-05   2.32e-05  5.197e-05  4.929e-06          0  0.0007162          0
+PEAK__nom      Goth_nom         1.7178 +-   0.00441 |     0.1555    0.09925    0.03723    0.03709    0.01718     0.4795   0.001309
+PEAK__nom      GD               354.65 +-      0.72 |       5.79      3.059      1.038      1.468     0.5119      52.18    0.07646
+PEAK__nom      T12              628.23 +-      1.37 |       19.5      7.714      2.232      3.032     0.8322      93.48     0.1193
+PEAK__nom      T3               110.76 +-     0.674 |      2.015      1.083     0.4154     0.4941    0.03921      17.34    0.02674
+PEAK__nom      T4               10.678 +-      0.23 |     0.3189     0.1336     0.0659    0.05133  0.0001512      2.167  0.0005448
+# sim vz150__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+vz150__nom     C2               6.2883 +-     0.183 |      5.019    0.01109    0.05021   0.006862          0    0.01217          0
+vz150__nom     C3               4.7086 +-     0.161 |      3.745   0.006855    0.02467          0   0.004239          0          0
+vz150__nom     C4                 1.12 +-     0.072 |    0.04263     0.9255    0.07766    0.05276    0.01168   0.008772          0
+vz150__nom     C5                1.276 +-   0.00325 |    0.05681      1.023    0.09112    0.07271     0.1497    0.01277   0.001427
+vz150__nom     C6               6424.4 +-      7.62 |      303.7       5199      433.1      342.3       3424      50.63      5.736
+vz150__nom     Geta             20.675 +-       0.2 |     0.9413     0.5882     0.1935     0.2765     0.0662      5.699  0.0006555
+vz150__nom     Gpi0D            340.22 +-     0.709 |      5.835      3.106       1.04      1.428     0.5309      48.86    0.07888
+vz150__nom     Gpi0D_om         35.279 +-     0.395 |     0.2039     0.2394     0.0665     0.1419    0.03103      10.81          0
+vz150__nom     Gpi0D_nom        304.94 +-      0.55 |      5.631      2.867     0.9732      1.287     0.4999      38.05    0.07888
+vz150__nom     Gconv            229.92 +-      1.08 |      4.087      2.043     0.7771      1.167      0.077      33.62    0.04072
+vz150__nom     Gconv_om         22.383 +-     0.318 |     0.1854     0.1221    0.05429    0.08143   0.009048      6.618          0
+vz150__nom     Gconv_nom        207.54 +-      1.02 |      3.902      1.921     0.7229      1.085    0.06795      27.01    0.04072
+vz150__nom     Gvec           0.058943 +-  0.000474 |  0.0004018  0.0002814  6.327e-05  8.498e-05  2.852e-05   0.002949          0
+vz150__nom     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+vz150__nom     Gvec_nom       0.058943 +-  0.000474 |  0.0004018  0.0002814  6.327e-05  8.498e-05  2.852e-05   0.002949          0
+vz150__nom     Goth             1.6415 +-   0.00433 |     0.1533     0.0917    0.03456    0.03461    0.01593     0.4505   0.001147
+vz150__nom     Goth_om       0.0031083 +-   0.00017 |   6.11e-05   2.32e-05  5.197e-05  5.458e-06          0   0.000688          0
+vz150__nom     Goth_nom         1.6384 +-   0.00432 |     0.1532    0.09168    0.03451     0.0346    0.01593     0.4498   0.001147
+vz150__nom     GD               341.92 +-     0.709 |      5.988      3.198      1.074      1.463     0.5469      49.32    0.08003
+vz150__nom     T12              605.91 +-      1.35 |      19.88      7.796      2.289      3.039     0.8558      88.68     0.1228
+vz150__nom     T3               107.86 +-     0.668 |      2.195      1.088     0.4425     0.5154    0.04429      16.64    0.02678
+vz150__nom     T4               10.452 +-     0.227 |     0.3622     0.1826    0.08098    0.05629  0.0006243      2.108  0.0005423
+# sim vz170__nom [nb]: comp, tot (all M4), windows B P SBlo SBhi X17c CRU CRK
+vz170__nom     C2               6.4908 +-     0.186 |      5.159    0.01109    0.05639   0.006862          0    0.01217          0
+vz170__nom     C3               4.8671 +-     0.164 |      3.873   0.006855    0.02467          0   0.004239          0          0
+vz170__nom     C4               1.1656 +-    0.0734 |    0.04918     0.9549    0.08195     0.0581    0.01168   0.008772          0
+vz170__nom     C5               1.3093 +-    0.0033 |    0.05917      1.048     0.0961    0.07335     0.1534    0.01296    0.00148
+vz170__nom     C6               6593.8 +-      7.72 |      316.5       5326      456.9      344.6       3507       51.5       5.99
+vz170__nom     Geta             21.161 +-     0.203 |     0.9674     0.6108     0.1956     0.3011     0.0741       5.86  0.0006867
+vz170__nom     Gpi0D            346.06 +-     0.715 |      5.967      3.168      1.081      1.462     0.5392      49.84    0.07952
+vz170__nom     Gpi0D_om         35.944 +-     0.399 |     0.2217     0.2438    0.07093     0.1419    0.03103      11.06          0
+vz170__nom     Gpi0D_nom        310.12 +-     0.554 |      5.746      2.925       1.01       1.32     0.5082      38.78    0.07952
+vz170__nom     Gconv            234.04 +-      1.09 |      4.196      2.116        0.8      1.189    0.09037       34.3    0.04524
+vz170__nom     Gconv_om         22.881 +-     0.322 |     0.1943     0.1267    0.05429    0.08143   0.009048      6.763          0
+vz170__nom     Gconv_nom        211.16 +-      1.02 |      4.002      1.989     0.7457      1.107    0.08132      27.54    0.04524
+vz170__nom     Gvec           0.059446 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002979          0
+vz170__nom     Gvec_om               0 +-         0 |          0          0          0          0          0          0          0
+vz170__nom     Gvec_nom       0.059446 +-  0.000475 |  0.0004019  0.0002815  6.327e-05  8.519e-05  2.852e-05   0.002979          0
+vz170__nom     Goth             1.6785 +-   0.00438 |     0.1584    0.09366    0.03563    0.03553    0.01634     0.4612   0.001194
+vz170__nom     Goth_om       0.0031749 +-  0.000172 |  6.227e-05   2.32e-05  5.197e-05  5.458e-06          0  0.0007091          0
+vz170__nom     Goth_nom         1.6753 +-   0.00437 |     0.1583    0.09364    0.03558    0.03553    0.01634     0.4605   0.001194
+vz170__nom     GD                347.8 +-     0.716 |      6.126      3.262      1.116      1.498     0.5556      50.31    0.08072
+vz170__nom     T12              616.83 +-      1.36 |      20.43      8.009      2.371      3.126     0.8893       90.5     0.1281
+vz170__nom     T3               109.42 +-     0.673 |      2.264      1.114     0.4528     0.5258    0.04449      16.94    0.02684
+vz170__nom     T4               10.692 +-      0.23 |     0.3721     0.1828    0.08101    0.06086  0.0006249      2.156  0.0005423
+
+[acceptance and checks]
+PASS E(0.30, 0) = 0.5186                                                                              value       0.51859395 ref           0.5186 tol 6e-05
+PASS E(0.39, 0) = 0.5008                                                                              value       0.50076853 ref           0.5008 tol 6e-05
+PASS E(0.39, 0.060) = 0.5096                                                                          value       0.50957749 ref           0.5096 tol 6e-05
+PASS E(0.4116, 0) = 0.4739                                                                            value       0.47389515 ref           0.4739 tol 0.0003
+PASS E(0.30, 0.100) = 0.533                                                                           value       0.53262427 ref            0.533 tol 0.0006
+PASS A2: data S0 peak-window N = 55947                                                                value            55947 ref            55947 tol 0.5
+PASS A2: data S0 peak-window CB/N = 0.059                                                             value      0.058609464 ref            0.059 tol 0.0005
+PASS A3: data none bump-window W = N - CB = 148091                                                    value        148091.06 ref           148091 tol 0.5
+PASS A4: data cell sums = 1D (max relative deviation; data PEAK all CB F5g vs G3)                     value    3.4543586e-15 ref                0 tol 1e-09
+PASS A1: sim pre T1+T2 all M4 = 701.083 nb                                                            value        701.08321 ref          701.083 tol 0.0005 (rel)
+PASS A1: sim pre C2+C3 in sim bump window 0.4576-0.5255 (s = 1) = 9.689 nb                            value         9.688703 ref            9.689 tol 0.0005 (rel)
+PASS extra: sim pre C4+C5 in sim peak window (s = 1) = 2.262 nb                                       value        2.2616679 ref            2.262 tol 0.001 (rel)
+PASS extra: sim pre C2 all M4 = 7.046 nb                                                              value        7.0455875 ref            7.046 tol 0.001 (rel)
+PASS extra: sim pre C3 all M4 = 5.19 nb                                                               value        5.1897517 ref             5.19 tol 0.002 (rel)
+PASS extra: sim pre C4 all M4 = 1.242 nb                                                              value        1.2420147 ref            1.242 tol 0.001 (rel)
+PASS extra: sim pre C5 all M4 = 1.417 nb                                                              value        1.4167719 ref            1.417 tol 0.001 (rel)
+PASS extra: sim pre G_eta all M4 = 24.27 nb                                                           value        24.273115 ref            24.27 tol 0.001 (rel)
+PASS extra: sim pre G_pi0D all M4 = 394.5 nb                                                          value        394.49703 ref            394.5 tol 0.001 (rel)
+PASS extra: sim pre G_conv all M4 = 265.3 nb                                                          value        265.34556 ref            265.3 tol 0.001 (rel)
+PASS extra: sim pre G_vec all M4 = 0.1066 nb                                                          value       0.10656586 ref           0.1066 tol 0.001 (rel)
+PASS extra: sim pre G_oth all M4 = 1.967 nb                                                           value         1.966808 ref            1.967 tol 0.001 (rel)
+PASS extra: sim pre T3 all M4 = 125.0 nb                                                              value        124.95585 ref              125 tol 0.001 (rel)
+PASS extra: sim pre T4 all M4 = 12.51 nb                                                              value        12.510008 ref            12.51 tol 0.001 (rel)
+PASS extra: sim pre X17 x 1e-5 all M4 = 0.07127 nb                                                    value      0.071265234 ref          0.07127 tol 0.001 (rel)
+PASS extra: sim pre G_pi0D = om + nom                                                                 value        394.49703 ref        394.49703 tol 1e-09 (rel)
+PASS extra: sim pre G_D = G_pi0D + G_vec + G_oth                                                      value         396.5704 ref         396.5704 tol 1e-09 (rel)
+PASS extra: sim pre T12 = C2..C5 + G_eta + G_D + G_conv                                               value        701.08321 ref        701.08321 tol 1e-09 (rel)
+PASS A4: sim cell sums = 1D (max relative deviation; sim pre__modeB T12 win Bef)                      value    2.9266079e-12 ref                0 tol 1e-09
+# 28 checks, 0 failed; run time 157 s

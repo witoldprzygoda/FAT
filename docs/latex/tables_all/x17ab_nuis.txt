@@ -1,0 +1,41 @@
+# x17ab_nuis.txt -- PRE-DATA PROJECTION (simulation Asimov set, no data N): background n_j = 1.35 x simulated G_D + G_C per M(ee) bin,
+# a_eta = 0.40, data CB. Nominal model: k_E1 1 +- 0.5, k_E2 1 +- 0.05, a_eta 0.40 +- 0.10, g 1 +- 0.30, B (1 + (b + b'u) t + (c + c'u) t^2) per class, u = (M(ee) - 30 MeV)/30 MeV, conversion tail +- 0.194.
+# Each line: the nominal Asimov set refitted with the changed model: r_hat (the bias the change would cause if the nominal
+# were true), its error, the asymptotic CLs 90 % limit; BR = r x 2.68e-4.
+projection (nominal): UL BR 2.829e-05; expected bands -2s 1.211e-05 -1s 1.764e-05 median 2.829e-05 +1s 5.067e-05 +2s 1.067e-04; profile-likelihood UL (no CLs) 2.829e-05
+X17 rows per unit BR at a_eta 0.40: 1.4979e+07; UL in rows: 423.7
+variant          rhat(BR)    err(BR)     UL(BR)     UL/UL0        N5  description
+nominal        +3.185e-20  1.264e-05  2.829e-05      1.000    2983.5  nominal model
+meeScale+2%    +3.181e-20  1.256e-05  2.828e-05      1.000    2983.5  X17 line with M(ee) scale x 1.020000, width x 1.000000
+meeScale-2%    +3.193e-20  1.275e-05  2.834e-05      1.002    2983.5  X17 line with M(ee) scale x 0.980000, width x 1.000000
+lineRes+10%    +3.637e-20  1.370e-05  3.120e-05      1.103    2983.5  X17 line with M(ee) scale x 1.000000, width x 1.100000
+lineRes-10%    +2.738e-20  1.161e-05  2.551e-05      0.902    2983.5  X17 line with M(ee) scale x 1.000000, width x 0.900000
+lineSlice      +3.150e-20  1.221e-05  2.705e-05      0.956    2983.5  X17 line from the reweighted C5 slice at 17 MeV/c2
+epsDL          +3.247e-20  1.289e-05  2.885e-05      1.020    2983.5  R_X: direct-like M(pipi)
+epsC2          +3.816e-20  1.515e-05  3.390e-05      1.198    2983.5  R_X: e+ decay angle 1+cos^2
+epsNP          +3.315e-20  1.316e-05  2.945e-05      1.041    2983.5  R_X: generator pion angle kept
+sim_V2         +1.896e-08  1.505e-05  3.369e-05      1.191    2908.4  peak/direct templates of S0__V2
+sim_GS         +5.137e-09  1.271e-05  2.843e-05      1.005    2983.5  peak/direct templates of S0__GS
+sim_r089       -1.935e-07  1.303e-05  2.921e-05      1.033    2702.6  peak/direct templates of S0__r089
+sim_r110       +2.080e-07  1.236e-05  2.766e-05      0.978    3230.4  peak/direct templates of S0__r110
+sim_sUp        -3.195e-08  1.274e-05  2.855e-05      1.009    2969.5  peak/direct templates of S0__sUp
+sim_sDn        +4.582e-08  1.264e-05  2.830e-05      1.000    2973.5  peak/direct templates of S0__sDn
+bkgPol2        -6.225e-07  1.147e-05  2.374e-05      0.839    3049.1  background flat x (1 + b t + c t^2) per class
+bkgTilt        -3.289e-21  1.177e-05  2.493e-05      0.881    2983.5  background B x (1 + b t) per class (tilt only)
+bkgCurv        +8.139e-22  1.177e-05  2.495e-05      0.882    2983.5  background B x (1 + b t + c t^2) per class (no M(ee) dependence)
+bkgFixed       +1.011e-20  1.176e-05  2.475e-05      0.875    2983.5  background shape fixed (no tilt)
+bkg3cl         -3.002e-06  1.020e-05  1.923e-05      0.680    3630.6  three background classes (E1, 10-30, >= 30 MeV), bkgMode 4
+bkg3clCurv     -3.023e-06  1.026e-05  1.937e-05      0.685    3610.3  three background classes, bkgMode 3
+Bexppol1       +5.625e-09  1.264e-05  2.826e-05      0.999    2982.1  background template smoothed with exp(pol1)
+Bexppol3       +9.858e-07  1.008e-05  2.128e-05      0.752    3752.2  background template smoothed with exp(pol3)
+bkgRaw         +8.948e-05  1.379e-04        nan        nan     600.9  background shape raw (not smoothed) [fit not converged]
+kappaB1.3      +1.299e-10  1.265e-05  2.832e-05      1.001    2982.9  B = G_D + 1.3 G_C
+CBfact         +2.210e-07  1.256e-05  2.812e-05      0.994    3011.8  CB factorised (sum rule)
+CBgeo          +7.397e-07  1.264e-05  2.850e-05      1.008    3010.2  CB per-row geometric mean
+kE1free        +1.219e-20  1.265e-05  2.831e-05      1.001    2983.5  k_E1 free
+kE2fixed       +3.335e-20  1.264e-05  2.829e-05      1.000    2983.5  k_E2 fixed at 1
+noCtail        +1.208e-20  1.257e-05  2.816e-05      0.996    2983.5  no conversion-tail nuisance
+etaFixed       +9.979e-21  1.262e-05  2.801e-05      0.990    2983.5  a_eta and g fixed
+xSig10         +3.185e-20  1.264e-05  2.856e-05      1.010    2983.5  X17 yield nuisance 10 %
+C4 replicas (20): r_hat RMS = 2.101e-06 in BR (mean -1.854e-06)
+N5 over the background and CB variants (bkgRaw excluded: MC-spike artefact): 2982.9 - 3630.6 (truth 2983.5), half spread 10.86 % = N5-bias nuisance

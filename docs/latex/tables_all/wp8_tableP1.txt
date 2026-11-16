@@ -1,0 +1,28 @@
+# wp8_tableP1.txt -- plots/all_report/wp8_physics.py (WP8, 2026-11-14): Table P1, acceptance x efficiency per class
+# eps = sigma_vis(sim) / sigma_prod; sigma_vis = sum w / L_sim (wp8_sim.C, mode A, owned rows, S0 unless stated, M4' = 0.99615 M4,
+# M(pipi)' = 0.9952 M(pipi)); sigma_prod = SMASH sigma(pp -> eta X) = 1.0665 mb x PDG BR (C2: 0.2292 x 0.01174; C3: 0.2292, i.e. per
+# eta -> pi+pi-pi0 with the conversion probability inside eps; C4: 0.0422; C5: 2.68e-4; C6: 1 = per unit BR, at m_X = 17 MeV).
+# The simulation study (sim report Tab. s5eps) used N_eta/L_sim = 1.069 mb, so its eps are 0.24 % lower. Errors: event-group MC.
+# windows: C2, C3 in B (0.4550-0.5225), C4, C5 in P (0.53364-0.55416), C6 in X17c (M4 0.5312-0.5566 AND M(ee) 15.5-24.5 MeV);
+# M(ee) classes reconstructed: E1 < 10, E2 >= 10, >= 20 MeV; 'true >= 20' = true pair mass of the accepted rows.
+
+class                           sigma_prod | eps all M4 (V3)      | eps window (V3)      E1 < 10 MeV          E2 >= 10 MeV         >= 20 MeV            | window, no weights     V3/off
+C2 bump, pi0 Dalitz                   2870 | 0.2253 +- 0.0065 %   | 0.1791 +- 0.0059 %   0.06407 +- 0.0035 %  0.115 +- 0.0047 %    0.06733 +- 0.0036 %  | 0.1934 +- 0.0057 %     0.9259
+C3 bump, conversion              2.444e+05 | 0.001988 +- 6.7e-05 % | 0.001583 +- 6.1e-05 % 0.001244 +- 5.4e-05 % 0.0003387 +- 2.8e-05 % 7.283e-06 +- 3.6e-06 % | 0.001663 +- 5.8e-05 %   0.9515
+C4 peak, eta->pi+pi-gamma conv.   4.501e+04 | 0.00259 +- 0.00016 % | 0.002122 +- 0.00015 % 0.001782 +- 0.00014 % 0.0003393 +- 5.8e-05 % 0 +- 0 %             | 0.001996 +- 0.00013 %   1.0631
+C5 direct eta->pi+pi-e+e-            285.8 | 0.4573 +- 0.0012 %   | 0.366 +- 0.001 %     0.123 +- 0.00031 %   0.243 +- 0.00099 %   0.1515 +- 0.0009 %   | 0.3525 +- 0.00055 %    1.0385
+C6 X17 (per unit BR)             1.066e+06 | 0.6172 +- 0.00072 %  | 0.3283 +- 0.00053 %  nan +- nan %         nan +- nan %         nan +- nan %         | 0.3283 +- 0.00053 %    1.0000
+
+selection pre (for comparison) and the simulated pion-vertex efficiency S0/pre per class (window, all M(ee), V3):
+  C2 bump, pi0 Dalitz          eps(pre, window) = 0.1959 %   S0/pre = 0.9143
+  C3 bump, conversion          eps(pre, window) = 0.001691 %   S0/pre = 0.9360
+  C4 peak, eta->pi+pi-gamma conv. eps(pre, window) = 0.002238 %   S0/pre = 0.9481
+  C5 direct eta->pi+pi-e+e-    eps(pre, window) = 0.3925 %   S0/pre = 0.9326
+  C6 X17 (per unit BR)         eps(pre, window) = 0.353 %   S0/pre = 0.9302
+  check, pre all M4 with the sim-study normalisation 1.069 mb: C2 0.2449 % (0.245), C3 0.00212 % (0.00212), C4 0.00275 % (0.00275), C5 0.4945 % (0.4944), C6 0.6667 % (0.6665)
+  C2 in B: share of accepted rows with M(ee) >= 20 MeV: reconstructed 0.3760, true 0.3770 (generator 0.2688)
+
+PION-VERTEX EFFICIENCY S0/pre (both pions in the vertex fit), data vs simulation (recomputed here; WP1 Table A2 quoted 0.917/0.941
+(peak) and 0.945/0.950 (tagged) from the earlier studies):
+  eta peak: data Y_peak(S0)/Y_peak(pre) = 0.9414 +- 0.0522 (side bands, nested-sample error); sim (C4 + C5 in P) 0.9399; data/sim 1.0016 +- 0.0556
+  ECAL-tagged eta: data T(S0)/T(pre) = 0.9326 +- 0.0130; sim emulated tag 0.9327, truth C2 + C3 0.9473; data/sim 0.9999 +- 0.0140 (emulated), 0.9845 (truth)

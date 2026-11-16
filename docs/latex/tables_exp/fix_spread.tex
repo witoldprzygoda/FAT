@@ -1,0 +1,29 @@
+% written by plots/exp_report/fix_checks.C (review fixes)
+\begin{table}[H]\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Model uncertainty of the $\eta$-peak content $S$ (\Pmain), experimental data, all combinations (isBest $\geq0$, top) and isBest $=1$ (bottom), no OA cut. \emph{Old envelope} (chapter tables): half range of $S$ over the 48 variations (order 1--4, four ranges with lower bounds 0.505--0.520\,\GeVcc, width $\pm0.5$\,\MeVcc) with $p>0.05$ ($n$ fits), its rms and the share of these fits below the nominal $S$. \emph{Edge-safe} (every lower bound $\geq0.5225$\,\GeVcc): half range over the fits with $p>0.05$ (nominal included) of the polynomial order alone (pol1--pol4, nominal range), of the range alone (lower bound 0.5225/0.5250/0.5275 $\times$ upper bound 0.590/0.610/0.630/0.650, pol2) and of the width alone ($\pm0.5$\,\MeVcc), their quadrature sum, and the half range and rms of the full grid of 144 combinations ($n$ fits with $p>0.05$). \textbf{Quoted model uncertainty $=$ rms of the edge-safe grid.} stat$_g$ $=$ fit error $\times\sqrt{\mathrm{var}/N}$ (event-group factor of the unlike-sign rows in the data peak window); $F_{\mathrm{tot}}=S/\sqrt{\mathrm{stat}_g^2+\mathrm{model}^2}$. CB with $k=1$; rows, not normalised to luminosity.}
+\label{tab:fix_spread}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}l r r r | r r r | r r r r r r | r@{}}
+\toprule
+ & & & & \multicolumn{3}{c|}{old envelope} & \multicolumn{6}{c|}{edge-safe} & \\
+selection & $S$ & stat & stat$_g$ & half ($n$) & rms & below & order & range & width & quad.\ & grid half ($n$) & \textbf{model} (rms) & $F_{\mathrm{tot}}$ \\
+\midrule
+pre & 4671 & 367 & 372 & 958 (21) & 545 & 0.33 & 167 & 74 & 349 & 394 & 958 (86) & \textbf{453} & 7.96 \\
+pre + vertex & 4388 & 307 & 310 & 1078 (30) & 547 & 0.37 & 82 & 69 & 330 & 347 & 809 (117) & \textbf{420} & 8.41 \\
+peak nominal & 4330 & 327 & 331 & 981 (30) & 509 & 0.40 & 159 & 107 & 316 & 370 & 845 (132) & \textbf{380} & 8.59 \\
+peak nominal + vertex & 3949 & 276 & 278 & 936 (31) & 481 & 0.32 & 219 & 73 & 282 & 364 & 883 (132) & \textbf{373} & 8.49 \\
+DIRECT & 4492 & 327 & 331 & 907 (21) & 523 & 0.24 & 116 & 55 & 329 & 353 & 773 (114) & \textbf{423} & 8.36 \\
+PEAK & 4364 & 310 & 313 & 867 (28) & 498 & 0.29 & 118 & 47 & 328 & 352 & 958 (90) & \textbf{477} & 7.65 \\
+X17 band & 440 & 92 & 93 & 133 (27) & 70 & 0.52 & 53 & 70 & 39 & 96 & 147 (117) & \textbf{60} & 3.97 \\
+\midrule
+\multicolumn{14}{@{}l}{isBest $=1$} \\
+pre & 4199 & 330 & 330 & 671 (16) & 447 & 0.31 & 109 & 31 & 323 & 342 & 748 (55) & \textbf{414} & 7.93 \\
+pre + vertex & 3966 & 280 & 280 & 955 (28) & 484 & 0.43 & 67 & 72 & 308 & 323 & 850 (116) & \textbf{398} & 8.15 \\
+peak nominal & 3895 & 295 & 295 & 776 (32) & 418 & 0.44 & 146 & 78 & 296 & 339 & 671 (126) & \textbf{355} & 8.44 \\
+peak nominal + vertex & 3602 & 252 & 252 & 750 (32) & 403 & 0.41 & 195 & 84 & 268 & 342 & 663 (126) & \textbf{341} & 8.49 \\
+DIRECT & 4112 & 296 & 296 & 677 (18) & 422 & 0.28 & 88 & 68 & 308 & 328 & 821 (108) & \textbf{391} & 8.39 \\
+PEAK & 4061 & 281 & 281 & 782 (26) & 450 & 0.38 & 53 & 28 & 312 & 318 & 957 (85) & \textbf{470} & 7.42 \\
+X17 band & 368 & 84 & 84 & 122 (42) & 57 & 0.74 & 67 & 64 & 34 & 99 & 128 (135) & \textbf{59} & 3.57 \\
+\bottomrule
+\end{tabular}}
+\end{table}

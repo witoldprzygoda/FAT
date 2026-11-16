@@ -1,0 +1,27 @@
+# wp8_pty.txt -- plots/all_report/wp8_pty.py (WP8, 2026-11-14): (pT4, y4) reweighting variant (3 x 3 cells) of the eta production
+# data S0, isBest >= 0 (wp8_sim.C grid); simulation C4 + C5 in P, S0, V3, SMASH x PDG BR; generator: # files 40 events 4000000 etas 94517 outside 0 ycm 1.221399 per_collision 0.023629
+# cells: pT4 edges [MeV/c] 0, 500, 680, inf ; y_cm edges -inf, -0.25, 0.00, inf (inner edges = tertiles of the simulated C4 + C5 in P)
+
+cell (pT, y)                   N_P      N_SB       Y_c        +-       S_c       r_c       g_c
+pT1 y1                       15519     12126    1387.6     249.7    1803.0    0.7696    0.2417
+pT1 y2                       12152      9734     741.6     222.9    1650.5    0.4493    0.1376
+pT1 y3                        6866      5574     259.0     169.4     869.1    0.2980    0.3810
+pT2 y1                        5293      4089     541.8     144.2    1577.7    0.3434    0.0465
+pT2 y2                        5341      4088     597.8     144.4    1281.6    0.4665    0.0353
+pT2 y3                        3985      3084     411.8     125.1    1177.9    0.3496    0.0835
+pT3 y1                        2268      1677     354.1      93.3     978.6    0.3619    0.0156
+pT3 y2                        2437      1741     458.9      95.6    1386.3    0.3310    0.0214
+pT3 y3                        2086      1543     336.5      89.3    1440.3    0.2336    0.0373
+sum                          55947     43656    5089.1     473.1   12164.9
+
+sum of the cell yields 5089.1 (WP6 side-band Y_peak 5088.0); accepted fraction of the simulated signal per cell = 0.148 0.136 0.071 0.130 0.105 0.097 0.080 0.114 0.118
+flatness of r_c: chi2 = 15.0 / 8 (p = 0.060) against a common a_P
+a_P (accepted-weighted, cells) = 0.4183 ; a_P' (produced-weighted, reweighted SMASH production) = 0.4445 ; ratio 1.0625
+  => sigma(pp -> eta X) and a_P change by +6.25 % (toy stat noise of the variant +- 16.09 %; counted after the Barlow subtraction 0.00 %)
+  peak efficiency factor k_P = 0.9412 ; bump (C2 + C3 in B, reconstructed (pT4, y4) as proxy) k_B = 0.9243
+  => DR x k_B/k_P = -1.79 % (noise +- 2.51 %), a_B x 1/k_B = +8.19 %, BR_G-type ratios (C5/C2) x k_B/k_P = -1.79 %
+INFO pT only (3 x 1)  r = 0.552 0.384 0.302, g = 0.760 0.165 0.074: a_P'/a_P - 1 = +20.97 % +- 9.14 % (noise), counted 18.88 %; k_B/k_P - 1 (DR) = -1.75 %, 1/k_B - 1 (a_B) = +23.12 %
+INFO y only (1 x 3)   r = 0.524 0.416 0.289, g = 0.304 0.194 0.502: a_P'/a_P - 1 = -7.96 % +- 4.35 % (noise), counted 6.67 %; k_B/k_P - 1 (DR) = -0.30 %, 1/k_B - 1 (a_B) = -7.69 %
+pty aP_cells 0.418345 aP_rw 0.444490 rel 0.062495 noise 0.160946 counted 0.000000 kP 0.941181 kB 0.924310 relDR -0.017925 noiseDR 0.025103 chi2 14.967
+pty1d pT rel 0.209719 noise 0.091376 counted 0.188766 relDR -0.017452 aB_rel 0.231206
+pty1d y rel -0.079644 noise 0.043508 counted 0.066710 relDR -0.003003 aB_rel -0.076871

@@ -1,0 +1,26 @@
+% vtx_tableP2_corr.tex -- copy of v8_tableP2_corr.tex (plots/all_report/v8_verify.py, verifier v8) with the event-vertex row replaced by
+% the measurement of 2026-11-14 (notes_all/ve_verify_note.md; tables_all/vtx_numbers.txt) and the caption completed. Nothing else changed.
+\begin{table}[H]
+\centering
+\caption{Inclusive $\eta$ production cross section after the independent verification (v8). Peak side bands, S0, $\mathrm{isBest}\geq0$, $L=6079.2$\,nb$^{-1}$; PDG 2026 branching ratios; $\sigma_{\mathrm{SMASH}}$ of the simulated sample $1.069$\,mb; $C_{\mathrm{sec}}(1-f_\eta)=1.0116\times0.97$. Systematic error includes the composition of the peak (conversion scale of C4, $\kappa=1\pm0.2$). One-sided items are listed apart; all of them would raise $\sigma$. The systematic error here is v8's (prior $\kappa$); the adopted one with the composition from the data is in Table~\ref{tab:P2}. Event-vertex row updated with the measurement of \S\ref{sec:vertexeff} (\code{vtx_tableP2_corr.tex}).}
+\label{tab:v8sigma}
+\small
+\begin{tabular}{@{}p{0.37\textwidth} p{0.59\textwidth}@{}}
+\toprule
+$\sigma(pp\to\eta X)$ & $0.429\pm0.036\,(\mathrm{stat})\pm0.079\,(\mathrm{syst})\pm0.025\,(\mathrm{MC})^{+0.035}_{-0.037}\,(\mathrm{norm.})$\,mb \\
+$\sigma/\sigma_{\mathrm{SMASH}}$ & $0.401\pm0.092$ \\
+\midrule
+live time (PT3 live fraction) & $+7.1$ to $+7.3$\,\% \\
+START-based track-sorter loss & $+1.3$ to $+2.8$\,\% \\
+\texttt{cor\_ok} rule (absent in the simulation) & $+2.2\pm1.0$\,\% \\
+event-vertex efficiency of $v_z>-500$\,mm & measured: $\varepsilon_{\mathrm{vtx}}(\eta)=0.994\pm0.021$ (data), 0.9997 (simulation); $C_{\mathrm{vtx}}=1.006\pm0.021$, i.e.\ $+2$\,\% ($+4$\,\% at 95\,\% CL), not applied \\
+$(p_T,y)$ production model & $+19/-7$\,\% (WP8) \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Literature}} \\
+HADES, $p+p$ 3.5\,GeV, inclusive (EPJA 48 (2012) 64) & $1.14\pm0.20$\,mb (PYTHIA), $0.93\pm0.14$\,mb (UrQMD) \\
+HADES, same beam time, preliminary talk (Krak\'ow 2024) & 1.15\,mb ($\pm1\sigma$ window), 1.72\,mb ($\pm2\sigma$); no errors, unpublished \\
+HADES, $pp\to pp\eta$ 3.5\,GeV (exclusive) & $0.211\pm0.047$\,mb (prelim., IJMPA 26 (2011) 694); $0.137\pm0.010$\,mb (thesis) \\
+$pp\to pp\eta$ models, $\sqrt{s}=3.46$\,GeV (arXiv:2501.14952) & 0.081 / 0.116 / 0.137\,mb \\
+\bottomrule
+\end{tabular}
+\end{table}

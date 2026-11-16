@@ -1,0 +1,75 @@
+# wp1_A2.txt -- plots/all_report/wp1_before.C: Table A2, the corrections of this report in plain words with their procedure
+# numbers: hists_v1.root (S0 unless stated; data window contents N - CB are not signal yields); 'applied' = applied in the WP1 'before' comparison
+
+ 1. Combinatorial background (CB)
+    what it does: Pairs of an e+ and an e- that do not come from the same decay are removed by subtracting the like-sign pairs.
+    procedure:    CB = 2 sqrt(N++ N--) from the e+e+ and e-e- rows of the DATA in 10 MeV M4 cells (k = 1), linearly interpolated to 2.5 MeV and spread over the cells of a layout by the like-sign share of the 50 MeV band; error from 200 Poisson event-group replicas. The simulation never provides it.
+    applied:      yes (data)
+    size:         CB/N: S0 B 0.056, P 0.059; pre B 0.101, P 0.103
+
+ 2. Luminosity and PT3 word (64/63)
+    what it does: Turns counted rows into cross sections.
+    procedure:    sigma = (N - CB) x 64/63 / L with L = 6079.2 nb^-1, the elastic-scattering luminosity summed over the 17 557 runs present in the data (START-free chain, LH2 only; sector-2 deficit removed inside L). 64/63: 1/64 of the PT3 events carry the trigger word 4096 and FAT keeps 8192.
+    applied:      yes
+    size:         x 1.01587 / 6079.2 nb^-1 (+-6.9 %); old tables (6080.5, no 64/63) x 1.0161
+
+ 3. Live time of the PT3 input
+    what it does: The PT3 live fraction may be lower than the PT2 one contained in L.
+    procedure:    Ratio LF3/LF2 x 64/63 per day from the luminosity files (0.900-0.948, L-weighted 0.932). It is not known whether it applies to single-interaction PT3 events.
+    applied:      no
+    size:         one-sided +7.3/-0 % on cross sections (hatched band in the ratio panels)
+
+ 4. Mass scale of the simulation (D8)
+    what it does: The simulated eta peak sits at 0.5460 GeV/c2, the data peak at 0.5439; the simulated M4 is moved onto the data scale.
+    procedure:    M4' = s [m4_true + r (m4 - m4_true)] with s = 0.99615 and r = 1 (rows without a true mass: s m4); M(pi+pi-) x 0.9952 from the K0S position; M(ee) not scaled. Variants s = 0.99521, 0.99615 +- 0.0009, r = 0.89/1.10.
+    applied:      yes (sim)
+    size:         pre data/sim vs unscaled: B -0.96 %, P -1.73 %, J -2.5 % (wp1_repro.txt); S0 sim T12: s = 0.99521 B x1.0028, P x1.0075; s +- 0.0009 P x0.9948/x1.0066; C5 in P r = 0.89/1.10 x1.043/x0.960
+
+ 5. eta decay physics weights V3 (code 108)
+    what it does: The event generator decays eta -> pi+pi-e+e-, the eta -> 3pi Dalitz plot and the conversion photon spectrum without the measured matrix elements; each simulated row gets a weight that corrects this.
+    procedure:    Direct decay: Kroll-Wada x pion P-wave x |F_V|^2 (pion form factor) x |F_VMD|^2 x decay angles, divided by the generator density (mean weight 1, BR unchanged); bump: KLOE-2 Dalitz-plot parameters; conversion: |F_V|^2 photon spectrum; background rules.
+    applied:      yes (sim)
+    size:         S0: T12 in B x0.9709, in P x1.0198; C2+C3 in B x0.937; C4 in P x1.063; C5 in P x1.038
+
+ 6. Beam energy
+    what it does: The data were analysed at T = 4530 MeV, the simulation was generated at 4500 MeV.
+    procedure:    Variables that depend on the beam (missing mass MM4, rapidity y4) are recomputed for every simulated row at 4500 MeV and for the data at 4530 MeV; M4, M(pi+pi-), M(ee), OA do not depend on it. The SMASH cross sections are those at 4.5 GeV and are not rescaled.
+    applied:      yes (MM4, y4)
+    size:         MM4 and y4 spectra of data and simulation differ by the beam energy (Fig. B4 MM4, y4)
+
+ 7. Pions in the vertex fit (S0)
+    what it does: S0 keeps only rows whose two pion tracks were used in the event-vertex fit; the simulation must reproduce how often this happens.
+    procedure:    Efficiency of the flag for the eta peak and for the ECAL-tagged eta, data against simulation: 0.917/0.941 (peak) and 0.945/0.950 (tagged), from the earlier data and simulation studies. Not applied; it cancels in ratios and is the S12 systematic (+-2.5 %).
+    applied:      no (S12)
+    size:         S0/pre window contents: data N-CB B 0.762, P 0.757; sim T12 B 0.841, P 0.834
+
+ 8. Corrected momenta (cor_ok)
+    what it does: The energy-loss corrected pi- momentum is missing (NaN) for pi- at theta < 16 deg (0.62 % of the e+e- rows).
+    procedure:    Rows with cor_ok = 0 are dropped in data and simulation alike. Fall-back (data only, test): use the reconstructed pi- momentum for these rows.
+    applied:      yes (both)
+    size:         fall-back / nominal, S0 data N-CB: B 1.0141, P 1.0130 (test only, never combined)
+
+ 9. Ghost tracks (variant (a))
+    what it does: PAT marks some simulated lepton tracks as ghosts. A true one-source e+e- pair with such a track counts as signal (T1) when its pions fit an eta channel, but as fake lepton (T3) when it is background; the like-sign data do not contain these pairs, so the data N - CB does.
+    procedure:    Variant (a) moves the ghost-flagged true pairs from T3 into T2 and its groups, so that signal and background are treated alike. Shown dashed in Figs. B1-B4 and as column (a); a systematic (S4); the ruling is pending (D6).
+    applied:      variant
+    size:         S0 sim T12(a)/T12: B 1.092, P 1.116, all M4 1.162
+
+10. Ownership and branching ratios
+    what it does: The three simulated sets (std, lep, eta) describe the same SMASH events; each row must be counted once, with the PDG branching ratio.
+    procedure:    Mode A: the lepton set owns rows with a forced pi0/eta/rho/omega/phi decay product, the eta set rows with a forced-eta track; weight w = PDG BR correction. Variants: mode B, w_db (converter-database BR).
+    applied:      yes (sim)
+    size:         S0 sim T12 all M4: mode B x1.055, w_db x1.024
+
+11. Vertex cut vz > -160 mm
+    what it does: Removes interactions outside the LH2 target cell; the simulation has almost no rows there.
+    procedure:    Applied to data and simulation alike (vz > -500 mm is mandatory anyway). Below -160 mm lie 7 % of all data compact rows and 0.15 % of the simulated rows. Variants vz > -150 / -170 mm (S11).
+    applied:      yes (both)
+    size:         data pre/none: N in B 0.897, P 0.901; N - CB in B 0.930, P 0.933
+
+12. Sector-2 trigger deficit and empty target
+    what it does: Days 034-044 lack PT3 triggers in sector 2; L counts LH2 only.
+    procedure:    C_sec and f_win are determined in WP2.
+    applied:      no (WP2)
+    size:         not in this comparison
+

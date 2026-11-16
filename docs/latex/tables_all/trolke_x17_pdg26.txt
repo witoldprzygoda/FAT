@@ -1,0 +1,6 @@
+# trolke_x17_pdg26.txt -- trolke_x17.txt with PDG 2026: BR = N_X / (a_eta s1), a_eta(WP5) = 0.3823 / 1.00436 (PDG 2026 BR(eta -> pi+pi-pi0)
+# in the C2/C3 normalisation of the bump; v8); BR_dir does not enter. N_X intervals unchanged. (x17p26_tables.py)
+x=6424 bounded=0: N_X in [0, 2083] rows -> BR x BR in [0.00e+00, 2.61e-04]   (frozen PDG 2020: 2.60e-04)
+x=6424 bounded=1: N_X in [0, 2083] rows -> BR x BR in [0.00e+00, 2.61e-04]   (frozen PDG 2020: 2.60e-04)
+x=6466 bounded=0: N_X in [0, 2125] rows -> BR x BR in [0.00e+00, 2.66e-04]   (frozen PDG 2020: 2.65e-04)
+x=6466 bounded=1: N_X in [0, 2125] rows -> BR x BR in [0.00e+00, 2.66e-04]   (frozen PDG 2020: 2.65e-04)

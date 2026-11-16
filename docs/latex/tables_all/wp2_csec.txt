@@ -1,0 +1,102 @@
+# wp2_csec.py: C_sec = 1/(1 - f (1 - eps) L_e/L); f = simulated share with a sector-2 track (S0, V3, mode A),
+# eps = data double ratio (S0, N, all M4) of rows with a sector-2 track, deficit days vs late days
+# L = 6079.195; nominal span 034-045 (L_e 2619.622, L_e/L 0.4309); spec span 034-044 (L_e 2449.224, L_e/L 0.4029); L_I = 2809.452
+# eps(uses s2): span 034-045 vs 046-067 = 0.9266 +- 0.0024; span 034-044 vs 047-067 = 0.9290 +- 0.0025
+
+[bump C2+C3 in B]
+  f(sim, sector 2) = 0.3264 +- 0.0117   (f in the other sectors: 0.364 0.358 0.334 0.327 0.351)
+  f(data, late days, N - CB in the window) = 0.3934
+  pattern shares (sim) B0..B3: 0.0100 0.2484 0.0665 0.0014 ; one / >=2 sector-2 tracks: 0.1331 / 0.1933
+  loss per unit L_e/L: simple f(1-eps) 0.02397 +- 0.00117 ; by pattern 0.02965 ; by number of s2 tracks 0.02593 ; f from data 0.02889
+  C_sec nominal (exact, 034-045)      = 1.01044 +- 0.00051 (stat) +- 0.00346 (syst) = +- 0.00350
+      spec first-order form          = 1.01115
+      by pattern / by n(s2) / f data = 1.01294 / 1.01130 / 1.01261
+      spec span 034-044 (L_e 2449.2)  = 1.00943
+      syst parts: decomposition 0.00250, f data-sim 0.00217, span 0.00101
+  period I only (L_I 2809.5):  C_sec(I) = 1.02286 +- 0.00767 ; periods IIA, IIB, III: 1
+
+[peak C4+C5 in P]
+  f(sim, sector 2) = 0.3618 +- 0.0159   (f in the other sectors: 0.407 0.380 0.358 0.356 0.412)
+  f(data, late days, N - CB in the window) = 0.4280
+  pattern shares (sim) B0..B3: 0.0053 0.1969 0.1555 0.0041 ; one / >=2 sector-2 tracks: 0.1848 / 0.1770
+  loss per unit L_e/L: simple f(1-eps) 0.02657 +- 0.00146 ; by pattern 0.03022 ; by number of s2 tracks 0.02748 ; f from data 0.03143
+  C_sec nominal (exact, 034-045)      = 1.01158 +- 0.00065 (stat) +- 0.00291 (syst) = +- 0.00298
+      spec first-order form          = 1.01236
+      by pattern / by n(s2) / f data = 1.01319 / 1.01198 / 1.01373
+      spec span 034-044 (L_e 2449.2)  = 1.01046
+      syst parts: decomposition 0.00161, f data-sim 0.00215, span 0.00112
+  period I only (L_I 2809.5):  C_sec(I) = 1.02540 +- 0.00654 ; periods IIA, IIB, III: 1
+
+[C5 in P]
+  f(sim, sector 2) = 0.3819 +- 0.0014   (f in the other sectors: 0.385 0.395 0.380 0.383 0.379)
+  f(data, late days, N - CB in the window) = 0.4280
+  pattern shares (sim) B0..B3: 0.0062 0.2094 0.1586 0.0078 ; one / >=2 sector-2 tracks: 0.1927 / 0.1893
+  loss per unit L_e/L: simple f(1-eps) 0.02805 +- 0.00093 ; by pattern 0.03195 ; by number of s2 tracks 0.02909 ; f from data 0.03143
+  C_sec nominal (exact, 034-045)      = 1.01223 +- 0.00041 (stat) +- 0.00257 (syst) = +- 0.00261
+      spec first-order form          = 1.01304
+      by pattern / by n(s2) / f data = 1.01396 / 1.01269 / 1.01373
+      spec span 034-044 (L_e 2449.2)  = 1.01105
+      syst parts: decomposition 0.00173, f data-sim 0.00149, span 0.00119
+  period I only (L_I 2809.5):  C_sec(I) = 1.02686 +- 0.00572 ; periods IIA, IIB, III: 1
+
+[C4 in P]
+  f(sim, sector 2) = 0.3398 +- 0.0333   (f in the other sectors: 0.432 0.363 0.333 0.327 0.448)
+  f(data, late days, N - CB in the window) = 0.4280
+  pattern shares (sim) B0..B3: 0.0044 0.1833 0.1520 0.0000 ; one / >=2 sector-2 tracks: 0.1762 / 0.1635
+  loss per unit L_e/L: simple f(1-eps) 0.02495 +- 0.00258 ; by pattern 0.02832 ; by number of s2 tracks 0.02571 ; f from data 0.03143
+  C_sec nominal (exact, 034-045)      = 1.01087 +- 0.00114 (stat) +- 0.00339 (syst) = +- 0.00358
+      spec first-order form          = 1.01160
+      by pattern / by n(s2) / f data = 1.01235 / 1.01120 / 1.01373
+      spec span 034-044 (L_e 2449.2)  = 1.00982
+      syst parts: decomposition 0.00148, f data-sim 0.00286, span 0.00105
+  period I only (L_I 2809.5):  C_sec(I) = 1.02382 +- 0.00784 ; periods IIA, IIB, III: 1
+
+[C2 in B]
+  f(sim, sector 2) = 0.3200 +- 0.0151   (f in the other sectors: 0.377 0.373 0.328 0.323 0.350)
+  f(data, late days, N - CB in the window) = 0.3934
+  pattern shares (sim) B0..B3: 0.0101 0.2335 0.0739 0.0025 ; one / >=2 sector-2 tracks: 0.1385 / 0.1815
+  loss per unit L_e/L: simple f(1-eps) 0.02350 +- 0.00135 ; by pattern 0.02882 ; by number of s2 tracks 0.02515 ; f from data 0.02889
+  C_sec nominal (exact, 034-045)      = 1.01023 +- 0.00059 (stat) +- 0.00348 (syst) = +- 0.00353
+      spec first-order form          = 1.01093
+      by pattern / by n(s2) / f data = 1.01258 / 1.01096 / 1.01261
+      spec span 034-044 (L_e 2449.2)  = 1.00924
+      syst parts: decomposition 0.00235, f data-sim 0.00238, span 0.00099
+  period I only (L_I 2809.5):  C_sec(I) = 1.02240 +- 0.00774 ; periods IIA, IIB, III: 1
+
+[C3 in B]
+  f(sim, sector 2) = 0.3349 +- 0.0183   (f in the other sectors: 0.348 0.339 0.343 0.331 0.352)
+  f(data, late days, N - CB in the window) = 0.3934
+  pattern shares (sim) B0..B3: 0.0100 0.2683 0.0566 0.0000 ; one / >=2 sector-2 tracks: 0.1259 / 0.2090
+  loss per unit L_e/L: simple f(1-eps) 0.02459 +- 0.00157 ; by pattern 0.03075 ; by number of s2 tracks 0.02697 ; f from data 0.02889
+  C_sec nominal (exact, 034-045)      = 1.01071 +- 0.00069 (stat) +- 0.00347 (syst) = +- 0.00354
+      spec first-order form          = 1.01144
+      by pattern / by n(s2) / f data = 1.01343 / 1.01176 / 1.01261
+      spec span 034-044 (L_e 2449.2)  = 1.00967
+      syst parts: decomposition 0.00272, f data-sim 0.00190, span 0.00104
+  period I only (L_I 2809.5):  C_sec(I) = 1.02347 +- 0.00775 ; periods IIA, IIB, III: 1
+
+[T12 in CR-U]
+  f(sim, sector 2) = 0.4444 +- 0.0030   (f in the other sectors: 0.437 0.453 0.434 0.433 0.406)
+  f(data, late days, N - CB in the window) = 0.4520
+  pattern shares (sim) B0..B3: 0.0007 0.1404 0.2924 0.0110 ; one / >=2 sector-2 tracks: 0.2422 / 0.2022
+  loss per unit L_e/L: simple f(1-eps) 0.03264 +- 0.00110 ; by pattern 0.03383 ; by number of s2 tracks 0.03323 ; f from data 0.03319
+  C_sec nominal (exact, 034-045)      = 1.01426 +- 0.00049 (stat) +- 0.00151 (syst) = +- 0.00158
+      spec first-order form          = 1.01518
+      by pattern / by n(s2) / f data = 1.01479 / 1.01453 / 1.01451
+      spec span 034-044 (L_e 2449.2)  = 1.01288
+      syst parts: decomposition 0.00053, f data-sim 0.00025, span 0.00139
+  period I only (L_I 2809.5):  C_sec(I) = 1.03139 +- 0.00348 ; periods IIA, IIB, III: 1
+
+[T12 all M4]
+  f(sim, sector 2) = 0.4555 +- 0.0011   (f in the other sectors: 0.458 0.465 0.446 0.458 0.426)
+  f(data, late days, N - CB in the window) = 0.4570
+  pattern shares (sim) B0..B3: 0.0010 0.1001 0.3428 0.0116 ; one / >=2 sector-2 tracks: 0.2588 / 0.1967
+  loss per unit L_e/L: simple f(1-eps) 0.03345 +- 0.00111 ; by pattern 0.03359 ; by number of s2 tracks 0.03370 ; f from data 0.03356
+  C_sec nominal (exact, 034-045)      = 1.01462 +- 0.00049 (stat) +- 0.00143 (syst) = +- 0.00151
+      spec first-order form          = 1.01556
+      by pattern / by n(s2) / f data = 1.01469 / 1.01474 / 1.01467
+      spec span 034-044 (L_e 2449.2)  = 1.01320
+      syst parts: decomposition 0.00011, f data-sim 0.00005, span 0.00142
+  period I only (L_I 2809.5):  C_sec(I) = 1.03219 +- 0.00332 ; periods IIA, IIB, III: 1
+
+[ratios] C_sec(peak C4+C5)/C_sec(bump C2+C3) and C5/C2 (enter DR and the golden ratio): see the values above;

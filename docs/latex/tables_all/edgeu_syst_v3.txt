@@ -1,0 +1,89 @@
+# edgeu_syst_v3.txt -- edgeu_combine_v3.py (D38 per-row C2 weights, D40 peak tail in U8): variants of f_eta(u-edge) (C2 corrected); nominal 0.42574, stat (fit) 0.02031, stat (boot) 0.01989
+# columns: tag family pair f delta noise_literal noise_bootstrap counted_literal counted_bootstrap status | text
+# literal: delta^2 - |stat_v^2 - stat_0^2| - MC(Delta)^2; bootstrap: delta^2 - boot(Delta)^2 - MC(Delta)^2; MC(Delta) = robust replica spread
+pol1     U1    -1 0.42522 -0.00052 0.00561 0.00210 0.00000 0.00000 listed    | polynomial order 1  [R1: chi2 115.6/33 against 27.3/32 (rise 102 after scaling > 25)]
+pol3     U1    -1 0.42939 +0.00365 0.05886 0.06115 0.00000 0.00000 counted   | polynomial order 3
+r35      U1     1 0.43320 +0.00746 0.02658 0.02791 0.00000 0.00000 counted   | range -35..+35 MeV
+r55      U1     1 0.43540 +0.00966 0.01645 0.01698 0.00000 0.00000 counted   | range -55..+55 MeV
+r40      U1     2 0.43071 +0.00497 0.01953 0.02041 0.00000 0.00000 counted   | range -40..+40 MeV
+r50      U1     2 0.43215 +0.00641 0.01314 0.01322 0.00000 0.00000 counted   | range -50..+50 MeV
+loM60    U1     3 0.44482 +0.01908 0.01457 0.01665 0.01233 0.00933 counted   | lower end -60 MeV
+loM30    U1     3 0.43602 +0.01028 0.04001 0.04079 0.00000 0.00000 counted   | lower end -30 MeV
+hiP60    U1     4 0.41680 -0.00893 0.01165 0.01007 0.00000 0.00000 counted   | upper end +60 MeV
+hiP30    U1     4 0.45602 +0.03028 0.02537 0.02552 0.01653 0.01629 counted   | upper end +30 MeV
+simown   U1    -1 0.43938 +0.01364 0.01773 0.01697 0.00000 0.00000 counted   | simulation fitted with its own Poisson-like weights
+tcentre  U1    -1 0.42570 -0.00004 0.00019 0.00008 0.00000 0.00000 counted   | step template at the bin centre (scan::StepTemplate) instead of the bin average
+T12      U1    -1 0.40043 -0.02531 0.00755 0.00330 0.02416 0.02509 listed    | check: h_sim from all simulated classes (bedge/WP6 convention)  [check: h_sim with the raw simulated background (bedge convention)]
+sigData  U2    -1 0.40555 -0.02018 0.00619 0.00182 0.01921 0.02010 counted   | own smearing per sample: data 5.99 MeV (x 0.893), sim 6.70 MeV
+sigUp    U2     5 0.42646 +0.00073 0.00211 0.00198 0.00000 0.00000 counted   | smearing +1 MeV (both)
+sigDn    U2     5 0.42450 -0.00124 0.00182 0.00212 0.00000 0.00000 counted   | smearing -1 MeV (both)
+sig54    U2    -1 0.42402 -0.00171 0.00250 0.00281 0.00000 0.00000 counted   | smearing 5.4 MeV (the frozen bedge/WP6 value)
+emp      U2    -1 0.42334 -0.00239 0.00203 0.00234 0.00126 0.00051 counted   | empirical step: the simulated u resolution with its tails
+pp28     U3    -1 0.42265 -0.00309 0.00662 0.00817 0.00000 0.00000 counted   | M(pipi) from 0.28
+pp29     U3     6 0.42954 +0.00381 0.00480 0.00644 0.00000 0.00000 counted   | M(pipi) from 0.29
+pp31     U3     6 0.42558 -0.00016 0.00586 0.00739 0.00000 0.00000 counted   | M(pipi) from 0.31
+pp39     U3    -1 0.41415 -0.01159 0.01356 0.01308 0.00000 0.00000 counted   | M(pipi) up to 0.39
+pp41     U3    -1 0.41870 -0.00704 0.00840 0.00813 0.00000 0.00000 counted   | M(pipi) up to 0.41 (boxes close inside the range)
+dsUp     U4     7 0.42912 +0.00338 0.00096 0.00380 0.00324 0.00000 counted   | data edge scale x 1.0009
+dsDn     U4     7 0.42456 -0.00117 0.00099 0.00371 0.00062 0.00000 counted   | data edge scale / 1.0009
+dpp52    U4    -1 0.42151 -0.00423 0.00076 0.00225 0.00416 0.00358 counted   | data M(pipi) scale 0.9952 (eta-decay pions as in the simulation) instead of 0.9970
+dppUp    U4     8 0.42620 +0.00046 0.00030 0.00097 0.00035 0.00000 counted   | data M(pipi) scale 0.9974
+dppDn    U4     8 0.42439 -0.00134 0.00035 0.00099 0.00130 0.00091 counted   | data M(pipi) scale 0.9966
+q0       U4    -1 0.45100 +0.02526 0.01522 0.01640 0.02016 0.01921 listed    | edge without the M(ee) term, E(m, 0) (data and simulation)  [check: E(m, 0) is the kinematically wrong edge for Dalitz pairs (the M(ee) term is exact); shows what the q term does]
+q0all    U4    -1 0.45095 +0.02521 0.01555 0.01673 0.01985 0.01886 listed    | check: E(m, 0) and all M(ee) rows (the bedge row set)  [check: E(m, 0) and every M(ee) row (the bedge row set)]
+sUp      U4     9 0.42337 -0.00237 0.00378 0.00350 0.00000 0.00000 counted   | simulation s = 0.99705
+sDn      U4     9 0.42862 +0.00288 0.00439 0.00429 0.00000 0.00000 counted   | simulation s = 0.99525
+sK0      U4    -1 0.42958 +0.00384 0.00468 0.00462 0.00000 0.00000 counted   | simulation s = 0.99521 (K0S)
+r089     U2    10 0.40232 -0.02341 0.00873 0.00626 0.02172 0.02256 counted   | simulation r = 0.89 (data-like M4 resolution)
+r110     U2    10 0.43983 +0.01409 0.00754 0.00610 0.01191 0.01270 counted   | simulation r = 1.10
+sppUp    U4    11 0.42447 -0.00126 0.00359 0.00305 0.00000 0.00000 counted   | simulation M(pipi) x 0.9959
+sppDn    U4    11 0.42360 -0.00214 0.00233 0.00210 0.00000 0.00038 counted   | simulation M(pipi) x 0.9945
+rpp116   U2    -1 0.42584 +0.00010 0.00359 0.00339 0.00000 0.00000 counted   | simulation M(pipi) resolution x 1.16 (data/sim K0S width)
+cb095    U5    12 0.42638 +0.00064 0.00151 0.00024 0.00000 0.00059 counted   | CB x 0.95
+cb105    U5    12 0.42509 -0.00064 0.00155 0.00024 0.00000 0.00060 counted   | CB x 1.05
+cb1032   U5    -1 0.42533 -0.00041 0.00123 0.00016 0.00000 0.00038 counted   | CB x 1.032 (k from data mixing)
+cb5      U5    13 0.42757 +0.00183 0.00213 0.00179 0.00000 0.00042 counted   | CB cells 5 MeV
+cb20     U5    13 0.42730 +0.00156 0.00326 0.00220 0.00000 0.00000 counted   | CB cells 20 MeV
+cbsum    U5    -1 0.41466 -0.01107 0.00078 0.00380 0.01105 0.01040 counted   | CB = N++ + N--
+cbglob   U5    -1 0.42539 -0.00035 0.00012 0.00068 0.00033 0.00000 counted   | one CB for 0.30-0.40 (no slices)
+cb5mev   U5    -1 0.42699 +0.00125 0.00009 0.00127 0.00125 0.00000 counted   | CB per 5 MeV M(pipi) unit
+cbmap    U5    -1 0.41963 -0.00611 0.00479 0.00390 0.00379 0.00470 counted   | CB of the frozen M4 rule, distributed over u by the like-sign shape per 50 MeV band
+cb25     U5    -1 0.42637 +0.00064 0.00267 0.00237 0.00000 0.00000 counted   | CB cells 2.5 MeV (no smoothing)
+cbPP     U5    16 0.43043 +0.00469 0.00695 0.00430 0.00000 0.00189 counted   | CB shape from e+e+ only (no edge step), normalised to the nominal CB
+cbMM     U5    16 0.42000 -0.00574 0.00301 0.00484 0.00489 0.00308 counted   | CB shape from e-e- only (with its edge step), normalised to the nominal CB
+bw20     U6    -1 0.42967 +0.00393 0.00543 0.00709 0.00000 0.00000 counted   | 2.0 MeV bins
+bw50     U6    -1 0.42101 -0.00473 0.00340 0.00434 0.00329 0.00189 counted   | 5.0 MeV bins
+off      U6    -1 0.42956 +0.00382 0.00664 0.00838 0.00000 0.00000 counted   | grid shifted by 1.25 MeV
+wtsOff   U7    -1 0.45301 +0.02728 0.01411 0.01157 0.02334 0.02470 listed    | physics weights off (phase-space eta -> 3pi Dalitz plot)  [R1 (WP7): phase-space eta -> 3pi Dalitz plot, excluded by KLOE-2 and by the F-main fit (delta chi2 38 > 25)]
+bump1aY  U7    -1 0.41970 -0.00604 0.00351 0.00087 0.00492 0.00598 counted   | eta -> 3pi Dalitz plot 1 + aY
+bumpPS   U7    -1 0.45932 +0.03359 0.01431 0.01181 0.03039 0.03144 listed    | eta -> 3pi phase space  [R1 (WP7): phase-space eta -> 3pi Dalitz plot, excluded by KLOE-2 and by the F-main fit (delta chi2 38 > 25)]
+V2       U7    -1 0.42616 +0.00043 0.00045 0.00009 0.00000 0.00042 counted   | direct decay V2 (peak template)
+convOff  U7    -1 0.43259 +0.00686 0.00188 0.00184 0.00659 0.00660 counted   | conversion F_V off (peak template)
+modeB    U7    -1 0.42574 +0.00000 0.00000 0.00000 0.00000 0.00000 counted   | ownership mode B
+aPup     U8    14 0.42566 -0.00008 0.00112 0.00093 0.00000 0.00000 counted   | a_P + 1 sigma (0.080)
+aPdn     U8    14 0.42585 +0.00011 0.00112 0.00093 0.00000 0.00000 counted   | a_P - 1 sigma
+aPfree   U8    -1 0.42573 -0.00001 0.00070 0.00055 0.00000 0.00000 counted   | peak amplitude free (simulated u shape)
+pkr089   U8    -1 0.42212 -0.00362 0.00145 0.00137 0.00331 0.00335 counted   | peak template with r = 0.89 (data peak width)
+pksUp    U8    -1 0.42238 -0.00336 0.00138 0.00135 0.00306 0.00307 counted   | peak template with s + 0.0009
+nopeak   U8    -1 0.42668 +0.00094 0.00507 0.00487 0.00000 0.00000 listed    | check: no peak term  [check: no peak term (chi2 40.2/32)]
+pre      U9    -1 0.41305 -0.01269 0.01230 0.01394 0.00312 0.00000 counted   | selection pre (data and simulation)
+best     chk   -1 0.45534 +0.02960 0.01599 0.01558 0.02491 0.02516 listed    | check: isBest == 1 in data and simulation  [check]
+bestD    chk   -1 0.37339 -0.05234 0.00906 0.00856 0.05155 0.05164 listed    | check: isBest == 1 in the data only (WP7 convention)  [check]
+c2off    chk   -1 0.38995 -0.03579 0.00913 0.00443 0.03460 0.03551 listed    | check: no C2 angle correction  [check (the uncorrected reading)]
+cfUp     U10   15 0.42462 -0.00112 0.00148 0.00013 0.00000 0.00111 counted   | C2 per-row QED weights x (1 + 0.004/0.861) (D38 model allowance)
+cfDn     U10   15 0.42686 +0.00112 0.00148 0.00013 0.00000 0.00112 counted   | C2 per-row QED weights x (1 - 0.004/0.861) (D38 model allowance)
+# families (literal | bootstrap), absolute and per cent of f:
+FAM U1   0.00826 0.00815  1.94  1.91  fit model (polynomial order, range, simulation weights, template evaluation)
+FAM U2   0.01921 0.02010  4.51  4.72  resolution: step smearing and the data/simulation resolution ratio (r = 0.89 / 1.10, own smearing per sample)
+FAM U3   0.00000 0.00000  0.00  0.00  M(pipi) range
+FAM U4   0.00416 0.00358  0.98  0.84  mass scales and edge function (data edge and M(pipi) scales, simulated s, M(pipi) transfer)
+FAM U5   0.01105 0.01040  2.59  2.44  CB (normalisation k, cells, rule, slices, like-sign shape)
+FAM U6   0.00329 0.00189  0.77  0.44  u binning
+FAM U7   0.00659 0.00660  1.55  1.55  physics weights (eta -> 3pi Dalitz plot), peak form factors, ownership
+FAM U8   0.01455 0.01455  3.42  3.42  peak term (a_P, its template) and its low-mass tail t = 1 +- 0.5 (D40; family maximum)
+FAM U9   0.00312 0.00000  0.73  0.00  selection (pre vs S0)
+FAM U10  0.00112 0.00112  0.26  0.26  C2 gamma* angle: model allowance of the per-row QED weights (+-0.004, D38)
+FAM U11  0.01713 0.01713  4.02  4.02  step projection of the smooth background (pseudo-data envelope)
+TOTAL 0.03387 0.03384  7.96  7.95
+# U11 = max |Asimov bias| of the smooth-background truths a,c1,sA,sm3,sm5,sm6,om,datalike = 4.02 %
+# uncorrected reading: families U1 0.0064 U2 0.0153 U3 0.0000 U4 0.0038 U5 0.0101 U6 0.0034 U7 0.0060 U8 0.0133 U9 0.0000 U10 0.0000 U11 0.0157 ; total 0.02938

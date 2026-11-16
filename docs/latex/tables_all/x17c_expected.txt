@@ -1,0 +1,48 @@
+# x17c_expected.txt -- expected 90 % CLs upper limits on BR(eta -> pi+pi-X17) BR(X17 -> e+e-) of the FROZEN procedure (x17_frozen.txt).
+# Data side bands (M(ee) 2-12 and 28-62 MeV/c2) fitted with r = 0, masked rows 12-28 MeV/c2 predicted -> background-only truth.
+# Asimov: asymptotic bands of the Asimov set. Toys: quantiles (2.3, 15.9, 50, 84.1, 97.7 %) of the observed-style UL of background-only toys
+# (over-dispersed by qScale = 1.0299, constraint centres drawn), each fitted on all cells. S0, isBest >= 0, X2D; L = 6079.2 nb^-1.
+# norm (1) r x 2.68e-4, N5 fitted (PRIMARY); (2) eta yield from a_eta(WP5) = 0.382, sX 0.436; (3) from the peak a_P = 0.415, sX 0.270.
+m      norm method   ntoys        -2s        -1s     median        +1s        +2s   toy/Asimov median
+ 16.70    1 Asimov       -  1.190e-05  1.735e-05  2.808e-05  5.094e-05  1.045e-04
+ 16.70    1 toys      2000  8.968e-06  1.522e-05  2.636e-05  4.840e-05  9.297e-05   0.939 (converged 2000/2000)
+ 16.70    2 Asimov       -  1.226e-05  1.736e-05  2.682e-05  4.480e-05  7.712e-05
+ 16.70    2 toys      2000  9.439e-06  1.564e-05  2.636e-05  4.561e-05  7.695e-05   0.983 (converged 2000/2000)
+ 16.70    3 Asimov       -  1.101e-05  1.529e-05  2.271e-05  3.543e-05  5.543e-05
+ 16.70    3 toys      2000  9.451e-06  1.415e-05  2.242e-05  3.549e-05  5.360e-05   0.987 (converged 2000/2000)
+ 16.70   background-only r_hat/sigma (norm 1): mean -0.140, RMS 0.938 (2000 toys)
+ 16.85    1 Asimov       -  1.179e-05  1.719e-05  2.784e-05  5.056e-05  1.039e-04
+ 16.85    1 toys      2000  8.954e-06  1.508e-05  2.617e-05  4.817e-05  9.285e-05   0.940 (converged 2000/2000)
+ 16.85    2 Asimov       -  1.214e-05  1.719e-05  2.655e-05  4.437e-05  7.637e-05
+ 16.85    2 toys      2000  9.338e-06  1.550e-05  2.611e-05  4.507e-05  7.542e-05   0.983 (converged 2000/2000)
+ 16.85    3 Asimov       -  1.091e-05  1.514e-05  2.249e-05  3.509e-05  5.489e-05
+ 16.85    3 toys      2000  9.373e-06  1.401e-05  2.226e-05  3.518e-05  5.284e-05   0.990 (converged 2000/2000)
+ 16.85   background-only r_hat/sigma (norm 1): mean -0.140, RMS 0.938 (2000 toys)
+ 17.00    1 Asimov       -  1.167e-05  1.703e-05  2.759e-05  5.014e-05  1.032e-04
+ 17.00    1 toys      2000  8.933e-06  1.496e-05  2.604e-05  4.774e-05  9.240e-05   0.944 (converged 2000/2000)
+ 17.00    2 Asimov       -  1.201e-05  1.701e-05  2.629e-05  4.392e-05  7.560e-05
+ 17.00    2 toys      2000  9.246e-06  1.542e-05  2.588e-05  4.451e-05  7.470e-05   0.984 (converged 2000/2000)
+ 17.00    3 Asimov       -  1.080e-05  1.499e-05  2.227e-05  3.474e-05  5.434e-05
+ 17.00    3 toys      2000  9.297e-06  1.387e-05  2.200e-05  3.482e-05  5.241e-05   0.988 (converged 2000/2000)
+ 17.00   background-only r_hat/sigma (norm 1): mean -0.140, RMS 0.939 (2000 toys)
+ 10.00    1 Asimov       -  2.325e-05  3.342e-05  5.243e-05  8.943e-05  1.618e-04
+ 10.00    1 toys       500  1.989e-05  2.932e-05  4.910e-05  8.554e-05  1.550e-04   0.937 (converged 500/500)
+ 10.00    2 Asimov       -  2.517e-05  3.583e-05  5.552e-05  9.281e-05  1.595e-04
+ 10.00    2 toys       500  2.089e-05  3.270e-05  5.353e-05  9.986e-05  1.554e-04   0.964 (converged 500/500)
+ 10.00    3 Asimov       -  2.263e-05  3.158e-05  4.705e-05  7.338e-05  1.145e-04
+ 10.00    3 toys       500  2.138e-05  2.977e-05  4.631e-05  7.541e-05  1.103e-04   0.984 (converged 500/500)
+ 10.00   background-only r_hat/sigma (norm 1): mean -0.096, RMS 0.938 (500 toys)
+ 25.00    1 Asimov       -  7.633e-06  1.113e-05  1.799e-05  3.248e-05  6.591e-05
+ 25.00    1 toys       500  5.690e-06  9.777e-06  1.771e-05  3.154e-05  5.787e-05   0.985 (converged 500/500)
+ 25.00    2 Asimov       -  7.932e-06  1.127e-05  1.746e-05  2.925e-05  5.046e-05
+ 25.00    2 toys       500  6.085e-06  1.043e-05  1.805e-05  2.991e-05  4.964e-05   1.034 (converged 500/500)
+ 25.00    3 Asimov       -  7.130e-06  9.933e-06  1.480e-05  2.315e-05  3.631e-05
+ 25.00    3 toys       500  6.223e-06  9.727e-06  1.523e-05  2.283e-05  3.408e-05   1.029 (converged 500/500)
+ 25.00   background-only r_hat/sigma (norm 1): mean -0.074, RMS 0.923 (500 toys)
+ 40.00    1 Asimov       -  4.587e-06  6.586e-06  1.033e-05  1.758e-05  3.159e-05
+ 40.00    1 toys       500  3.794e-06  6.037e-06  1.014e-05  1.657e-05  2.855e-05   0.982 (converged 500/500)
+ 40.00    2 Asimov       -  4.970e-06  7.074e-06  1.097e-05  1.837e-05  3.166e-05
+ 40.00    2 toys       500  3.385e-06  6.786e-06  1.143e-05  1.936e-05  3.087e-05   1.042 (converged 500/500)
+ 40.00    3 Asimov       -  4.468e-06  6.236e-06  9.300e-06  1.454e-05  2.275e-05
+ 40.00    3 toys       500  3.651e-06  6.201e-06  9.540e-06  1.479e-05  2.243e-05   1.026 (converged 500/500)
+ 40.00   background-only r_hat/sigma (norm 1): mean -0.036, RMS 0.938 (500 toys)

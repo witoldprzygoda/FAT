@@ -1,0 +1,6 @@
+# x17ab_parent.txt -- parent-MC structure of the simulation-study X17 toys (x17ab_parent.C), nominal toy-grid model (bkgMode 4,
+# B = exp(pol2)-smoothed half A), no CB. N5_true = 7199.5 rows (half A). BR in 1e-6. Pearson chi2/ndf with the per-toy Poisson variance
+# (for the mean of 300 toys the Poisson part is 1/300 of it: chi2/ndf x 300 is the structure-to-Poisson ratio).
+data set                             N5_hat       BR1      BR2      err   chi2/ndf
+mean of the BR = 0 toys (half B)      10876    -11.80   -17.83     2.87      29.70
+half-A Asimov set                      3005     43.99    18.36    17.56      29.39

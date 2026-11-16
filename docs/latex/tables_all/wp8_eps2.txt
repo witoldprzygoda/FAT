@@ -1,0 +1,56 @@
+# wp8_eps2.txt -- plots/all_report/wp8_physics.py (WP8, 2026-11-14): eps2 QED check of class C2 (bump pi0 Dalitz) at M(ee) >= 20 MeV
+
+A. GENERATOR LEVEL (fractions of all produced pi0 -> e+e-gamma decays; wp8_qed.py, wp8/remote/pluto_pi0dalitz_lep3.txt)
+                                                               <8      8-20     20-30      >=30      >=20
+   QED Kroll-Wada                                          0.4998    0.2323    0.0956    0.1724    0.2679
+   Kroll-Wada x PDG form factor (a = 0.0332)               0.4987    0.2320    0.0956    0.1738    0.2693
+   HGeant (C2 generator, source uhbook.F/gdalet.F)         0.4996    0.2316    0.0954    0.1734    0.2688
+   PLUTO, lepton set (124378 decays, 3 converted files)    0.4949    0.2305    0.0944    0.1802    0.2746   (+- 0.0013)
+   HGeant / (KW x PDG FF) at >= 20 MeV: 0.9980 -> the C2 pair-mass spectrum is QED (difference -0.20 %).
+   PLUTO / HGeant at >= 20 MeV: 1.0215 (PLUTO's form factor is harder; PLUTO feeds G_pi0D, not C2)
+
+B. DECAY ANGLE of gamma* -> e+e- (lepton angle theta* to the gamma* direction, gamma* rest frame)
+   QED: dN/dcos ~ 1 + cos^2 + (1 - beta^2) sin^2  -> <cos^2> = 0.400 for beta -> 1; isotropic: <cos^2> = 0.333
+   HGeant gdalet.F: YINV uniform in [-beta, beta] = cos(theta*) uniform -> ISOTROPIC (source)
+   PLUTO (lepton set, measured on the converted events): <cos^2> = 0.4025 +- 0.0012 (M(ee) < 10), 0.3975 +- 0.0021 (10-20), 0.3970 +- 0.0017 (>= 20 MeV) -> QED
+   => the lep/std closure of pi0 Dalitz pairs (0.891 +- 0.003, called 'unexplained' in the simulation study) is the decay-angle difference
+
+C. EFFECT ON THE C2 EFFICIENCY: eps(QED angle) / eps(HGeant isotropic)
+                                                                 all   E1 <10  E2 >=10     >=20
+   toy, p e > 0.06 (nominal)                                  0.8800   0.8886   0.8675   0.8864
+   toy, p e > 0.04                                            0.8996   0.9053   0.8913   0.9106
+   toy, p e > 0.10                                            0.8576   0.8703   0.8390   0.8560
+   toy, p e > 0.06, OA > 2 deg                                0.8551   0.8271   0.8676   0.8864
+   lep/std closure, full simulation (prompt SMASH pi0, pre)   0.8906   0.8618   0.9055   0.9286
+   closure / (PLUTO/HGeant q spectrum)  [used: ang_clos]      0.8906   0.8690   0.8961   0.9090
+   toy nominal [used: ang_toy]: all 0.8800, E1 0.8886, E2 0.8675, >= 20 0.8864
+
+D. ECAL-TAGGED eta, SHARES PER M(ee) CLASS (S0, all M4; frozen m5c fit; share = T(class) / sum of the four disjoint classes)
+   M(ee)                    data          sim (fit)  sim (truth C2+C3)    C2 frac    data/sim(fit)  data/sim(truth)
+   <8           0.3928 +- 0.0149   0.4227 +- 0.0292   0.4588 +- 0.0295      0.378    0.929 +- 0.073    0.856 +- 0.064
+   8-20         0.4048 +- 0.0147   0.3866 +- 0.0297   0.3283 +- 0.0276      0.555    1.047 +- 0.089    1.233 +- 0.113
+   20-30        0.0714 +- 0.0077   0.0744 +- 0.0172   0.0495 +- 0.0117      1.000    0.959 +- 0.245    1.443 +- 0.377
+   30-100       0.1310 +- 0.0114   0.1163 +- 0.0167   0.1635 +- 0.0222      0.994    1.127 +- 0.190    0.802 +- 0.130
+   >=20         0.2024 +- 0.0138   0.1907 +- 0.0240   0.2129 +- 0.0252        nan    1.062 +- 0.152    0.951 +- 0.130
+   >=8          0.6072 +- 0.0202   0.5773 +- 0.0382   0.5412 +- 0.0373        nan    1.052 +- 0.078    1.122 +- 0.086
+   share of >= 20 MeV among the tagged eta with M(ee) >= 10 MeV: data 0.4424 +- 0.0231, sim fit 0.4361, truth 0.4852 (C2 = 0.995 of truth)
+   reproduction of the data scan (A1 note, bump start selection): share 20-30 0.0762 (0.077), > 30 0.1349 (0.144)
+
+E. EFFECT ON THE REPORT QUANTITIES (wp8_syst.C: the WP7 chain with C2 x the angle factors; relative change to the nominal)
+   quantity          nominal    ang_toy   ang_clos
+   a_eta             0.38228    +12.23%     +9.33%
+   Y_bump              16389     +3.36%     +1.53%
+   Y_bump_E2          7822.2     +0.46%     +0.36%
+   a_B               0.31168    +12.36%     +9.46%
+   DR                 1.3974    -10.20%     -7.98%
+   DR_F                1.169     -7.03%     -5.43%
+   BR_G           0.00026546     -8.58%     -6.84%
+   BR_A           0.00035247    -12.07%     -9.47%
+   rho_d              1.3152    -12.07%     -9.47%
+   kappa             0.83233     -3.40%     -2.59%
+   Y5                 3197.8     -1.32%     -1.02%
+   Y4                   1847     +8.42%     +6.50%
+   Y_peak               5088     -0.06%     -0.09%
+   a_P               0.41825     -0.06%     -0.09%
+   sigma_eta         0.43744     -0.06%     -0.09%
+   sigma_eta_F       0.39982    +12.23%     +9.33%

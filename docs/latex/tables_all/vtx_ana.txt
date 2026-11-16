@@ -1,0 +1,160 @@
+# vv_ana: rows read from the 29 PAT day files (isBest >= 0, trigbit == 8192)
+  smp 0: rows 7063032, vz>-500 4783467 (0.6773); cor_ok 7003545, cor_ok & vz>-500 4753629 (0.6787)
+  smp 1: rows 416407, vz>-500 122875 (0.2951); cor_ok 411512, cor_ok & vz>-500 121789 (0.2960)
+  smp 2: rows 1543953, vz>-500 371524 (0.2406); cor_ok 1523048, cor_ok & vz>-500 367954 (0.2416)
+
+# A. P_main (frozen 0.5439 / 5.4 MeV, pol2, 0.5225-0.61, N - CB, CB 10 MeV interpolated), per class
+  class                      N_win    CB_win    CB/N         S     stat   stat_g   chi2        ndf       p   Spois*                 
+  ALL                       152059     50258   0.331      5533      560      572   38.5   31   0.166   (rows us/pp/mm 7003545/411512/1523048)
+  V                          85942     11488   0.134      4657      390      397   33.5   31   0.347   (rows us/pp/mm 4753629/121789/367954)
+  Nv                         66117     38664   0.585       902      401      411   35.5   31   0.264   (rows us/pp/mm 2249916/289723/1155094)
+  Vpre(vz>-160)              77425      7949   0.103      4671      367      372   37.2   31   0.206   (rows us/pp/mm 4423338/85921/267362)
+  V,-500<vz<=-160             8517      3523   0.414       -19      133      138   44.9   31   0.051   (rows us/pp/mm 330291/35868/100592)
+  V,best1                    68897      8991   0.130      4167      349      349   37.9   31   0.184   (rows us/pp/mm 4034170/101669/299873)
+  Nv,best1                   52804     32486   0.615       767      361      361   34.5   31   0.305   (rows us/pp/mm 1855562/251908/984650)
+  V,perI                     40265      5453   0.135      2358      267      272   27.8   31   0.631   (rows us/pp/mm 2208210/57934/172198)
+  Nv,perI                    29979     17604   0.587        25      269      276   42.2   31   0.087   (rows us/pp/mm 1029989/133871/522393)
+  V,perIIA                    5730       833   0.145       291      101      103   39.5   31   0.141   (rows us/pp/mm 318017/9206/27836)
+  Nv,perIIA                   5628      3261   0.579       169      117      120   16.0   31   0.988   (rows us/pp/mm 191170/24297/98427)
+  V,perIIB                   16340      2438   0.149       807      171      175   30.0   31   0.519   (rows us/pp/mm 903543/25646/77227)
+  Nv,perIIB                  15584      9295   0.596       195      195      200   37.3   31   0.201   (rows us/pp/mm 529486/67489/275626)
+  V,perIII                   23606      2756   0.117      1202      203      207   24.6   31   0.786   (rows us/pp/mm 1323859/29003/90693)
+  Nv,perIII                  14925      8497   0.569       515      191      196   46.9   31   0.033   (rows us/pp/mm 499271/64066/258648)
+  V,start0                    7059      1532   0.217       297      115      118   36.2   31   0.239   (rows us/pp/mm 343310/16095/47862)
+  Nv,start0                  11159      6490   0.582        -9      164      168   45.5   31   0.045   (rows us/pp/mm 386390/48622/192178)
+  V,start1                   78883      9955   0.126      4355      373      379   34.5   31   0.303   (rows us/pp/mm 4410319/105694/320092)
+  Nv,start1                  54959     32173   0.585       910      366      375   26.6   31   0.691   (rows us/pp/mm 1863526/241101/962916)
+  V,rx<5                     14514       738   0.051      1521      156      157   20.4   31   0.927   (rows us/pp/mm 1418989/15034/48951)
+  Nv,rx<5                     1264       738   0.584        -1       55       56   23.8   31   0.820   (rows us/pp/mm 53259/7040/24518)
+  V,5<=rx<8                  11249       812   0.072       797      139      140   31.0   31   0.467   (rows us/pp/mm 819414/12546/38206)
+  Nv,5<=rx<8                  2107      1222   0.580       -34       71       72   23.2   31   0.843   (rows us/pp/mm 105821/13850/47766)
+  V,rx>=8                    27488      4611   0.168      1188      223      226   43.8   31   0.064   (rows us/pp/mm 1202085/50309/145991)
+  Nv,rx>=8                   25420     14432   0.568       422      248      252   30.2   31   0.507   (rows us/pp/mm 1024344/129619/497096)
+  V,dca>=10                  32691      5300   0.162      1151      242      246   21.5   31   0.897   (rows us/pp/mm 1313141/43900/134806)
+  Nv,dca>=10                 37326     22263   0.596       518      302      308   31.5   31   0.443   (rows us/pp/mm 1066492/139214/585714)
+  V,zp<-300                    151        69   0.457         3       19       20   45.1   31   0.049   (rows us/pp/mm 3986/372/3108)
+  Nv,zp<-300                 11203      5977   0.534       422      175      178   27.7   31   0.637   (rows us/pp/mm 297942/27764/234816)
+  V,-300<=zp<-170             8743      4400   0.503        57      139      144   39.6   31   0.138   (rows us/pp/mm 327249/40283/125301)
+  Nv,-300<=zp<-170           51714     30404   0.588       479      351      360   26.8   31   0.684   (rows us/pp/mm 1835509/250709/885438)
+  V,-170<=zp<-30             76790      6976   0.091      4593      363      368   35.5   31   0.265   (rows us/pp/mm 4409275/80971/239042)
+  Nv,-170<=zp<-30             3055      1368   0.448        46       82       83   32.6   31   0.390   (rows us/pp/mm 108124/11094/34302)
+  V,zp>=-30                    258        23   0.090        -0       21       22   23.9   31   0.813   (rows us/pp/mm 13119/163/503)
+  Nv,zp>=-30                   145        16   0.109       -20       16       16   31.2   31   0.458   (rows us/pp/mm 8341/156/538)
+  V,nwin=0                    1157       553   0.478       -14       50       51   44.6   31   0.054   (rows us/pp/mm 35420/4868/13675)
+  Nv,nwin=0                  51798     30345   0.586       673      355      363   34.6   31   0.301   (rows us/pp/mm 1730885/227760/902682)
+  V,nwin=1                    5700      2689   0.472       -54      111      113   36.1   31   0.244   (rows us/pp/mm 198184/25097/70452)
+  Nv,nwin=1                  14292      8310   0.581       224      186      189   29.5   31   0.545   (rows us/pp/mm 517624/61947/252104)
+  V,nwin>=2                  79086      8230   0.104      4736      371      376   34.3   31   0.312   (rows us/pp/mm 4520025/91824/283827)
+  Nv,nwin>=2                    27         0   0.004         9        8        8   23.7   31   0.821   (rows us/pp/mm 1407/16/308)
+  V,mee<0.03                 67300      1767   0.026      3591      332      337   26.7   31   0.687   (rows us/pp/mm 3793074/10042/64417)
+  Nv,mee<0.03                34962      6439   0.184       499      260      264   33.2   31   0.360   (rows us/pp/mm 1255651/26176/225184)
+  V,0.03<=mee<0.10           13905      5641   0.406       859      172      175   28.1   31   0.614   (rows us/pp/mm 725262/48037/167478)
+  Nv,0.03<=mee<0.10          18994     19748   1.040       289      244      249   26.5   31   0.695   (rows us/pp/mm 556437/120181/586096)
+  V,mee>=0.10                 4737      3858   0.814       224      110      113   38.8   31   0.157   (rows us/pp/mm 235293/63710/136059)
+  Nv,mee>=0.10               12161     11537   0.949        91      182      185   28.8   31   0.582   (rows us/pp/mm 437828/143366/343814)
+
+# B. eps_vtx from S = S(V)/(S(V)+S(Nv)), stat_g errors
+  eps_S(V | Nv) = 0.838 +- 0.063
+  eps_S(V,best1 | Nv,best1) = 0.845 +- 0.063
+  eps_S(V,perI | Nv,perI) = 0.990 +- 0.115
+  eps_S(V,perIIA | Nv,perIIA) = 0.632 +- 0.185
+  eps_S(V,perIIB | Nv,perIIB) = 0.805 +- 0.164
+  eps_S(V,perIII | Nv,perIII) = 0.700 +- 0.088
+  eps_S(V,rx<5 | Nv,rx<5) = 1.001 +- 0.037
+  eps_S(V,5<=rx<8 | Nv,5<=rx<8) = 1.044 +- 0.099
+  eps_S(V,rx>=8 | Nv,rx>=8) = 0.738 +- 0.121
+  eps_S(V,dca>=10 | Nv,dca>=10) = 0.690 +- 0.135
+  eps_S(V,mee<0.03 | Nv,mee<0.03) = 0.878 +- 0.057
+  eps_S(V,0.03<=mee<0.10 | Nv,0.03<=mee<0.10) = 0.748 +- 0.166
+  eps_S(V,mee>=0.10 | Nv,mee>=0.10) = 0.712 +- 0.431
+  sum check: S(V)+S(Nv) = 5560 vs S(ALL) = 5533
+
+# C. model variations (S_V, S_Nv, eps)
+  variation                                     S_V      e     S_Nv      e     eps      e  chi2V/chi2N
+  grid (order 1-4, hi 0.58-0.65, lo 0.5225-0.5275, width +-0.5 MeV; both p>0.05): 152 fits; S_V mean 4572 rms 478; S_Nv mean 1249 rms 498; eps mean 0.789 rms 0.060 (min 0.602 max 0.872)
+  nominal                                      4657    390      902    401   0.838  0.063  33.5/35.5 (ndf 31)
+  width 6.5 MeV                                5439    459      970    475   0.849  0.065  35.6/36.4 (ndf 31)
+  width 7.5 MeV                                6158    529     1018    550   0.858  0.068  40.8/37.1 (ndf 31)
+  CB x 0.85                                    4655    385      793    381   0.855  0.062  33.7/35.4 (ndf 31)
+  CB x 0.92                                    4656    387      844    390   0.847  0.063  33.6/35.4 (ndf 31)
+  CB x 1.08                                    4658    393      960    412   0.829  0.063  33.4/35.6 (ndf 31)
+  CB x 1.15                                    4660    396     1011    422   0.822  0.064  33.3/35.6 (ndf 31)
+  free CB scale (fit N = S G + pol2 + k CB): V: S 4673 +- 391, k 2.558 +- 1.575; Nv: S -1310 +- 1067, k -2.014 +- 1.347
+
+# D. free position and width (profile chi2 grid, mean 0.534-0.554, sigma 3-12 MeV)
+  ALL                  mean 0.54375 +- 0.00050  sigma 5.00 +- 0.50 MeV  S 5203 +- 525  chi2 38.0 (frozen chi2 38.5)
+  V                    mean 0.54325 +- 0.00037  sigma 5.50 +- 0.50 MeV  S 4760 +- 396  chi2 31.5 (frozen chi2 33.5)
+  Nv                   mean 0.54575 +- 0.00137  sigma 3.75 +- 1.00 MeV  S 825 +- 303  chi2 33.1 (frozen chi2 35.5)
+  Vpre(vz>-160)        mean 0.54300 +- 0.00037  sigma 5.25 +- 0.38 MeV  S 4619 +- 358  chi2 33.0 (frozen chi2 37.2)
+  Nv,perIII            mean 0.54400 +- 0.00087  sigma 3.00 +- 0.38 MeV  S 374 +- 122  chi2 44.8 (frozen chi2 46.9)  [at grid edge]
+  Nv,zp<-300           mean 0.54500 +- 0.00175  sigma 4.50 +- 1.75 MeV  S 381 +- 152  chi2 27.2 (frozen chi2 27.7)
+  Nv,-300<=zp<-170     mean 0.54700 +- 0.00212  sigma 4.00 +- 1.25 MeV  S 563 +- 276  chi2 24.5 (frozen chi2 26.8)
+
+# E. like-sign null tests: frozen Gaussian + pol2 on N++, N--, N++ + N-- (Poisson variance)
+  ALL    N++: -263 +- 126   N--: -11 +- 316   sum: -274 +- 341   (2 sqrt-weighted CB-equivalent ~ 0)
+  V      N++: -7 +- 64   N--: -82 +- 143   sum: -89 +- 156   (2 sqrt-weighted CB-equivalent ~ 0)
+  Nv     N++: -256 +- 108   N--: 73 +- 283   sum: -183 +- 303   (2 sqrt-weighted CB-equivalent ~ 0)
+
+# F. displaced-position scan (frozen width 5.4 MeV, range m-21.4..m+66.1 MeV, pol2, N - CB): pulls S/stat
+  V   positions 0.575-0.865 step 7.5 MeV: 39 fits, mean pull -0.11, rms 3.71, |pull|>2: 14
+    pulls: -1.4 -1.1 -0.8 -1.1 -1.3 1.0 0.4 -1.9 -1.4 0.2 -0.3 -0.2 0.1 -2.1 -3.2 -2.4 -3.9 -4.2 -2.1 -0.9 2.1 7.2 12.5 11.7 4.9 -1.8 -6.7 -5.5 -1.9 -1.1 -0.6 -0.2 -0.4 0.0 -0.6 -0.7 -0.4 1.5 2.2
+    at eta: pull 11.93
+  Nv  positions 0.575-0.865 step 7.5 MeV: 39 fits, mean pull 0.05, rms 0.93, |pull|>2: 2
+    pulls: 0.4 -0.3 -1.7 0.1 0.9 -0.3 0.6 0.3 -0.2 0.7 -0.7 -1.6 -1.6 1.1 2.0 -0.2 -0.1 1.4 0.7 0.9 1.1 -0.4 -2.0 -0.7 0.3 -0.8 0.3 1.7 1.1 -0.8 -0.1 0.0 -0.7 -0.2 1.3 0.3 -0.1 -0.2 -0.7
+    at eta: pull 2.25
+
+# G. ECAL-tagged eta T: tag 0.119 <= M(ee g) < 0.173, M(ee) < 0.10; fit N - CB in m5c 0.49-0.62, Gaussian 0.5463 / 6.2 MeV + pol2
+  ALL              T =    3304 +-  134  chi2 35.5/48  (rows us 840962)  free: mean 0.5462 sigma 6.3 MeV S 3322
+  V                T =    3297 +-  110  chi2 37.5/48  (rows us 707837)  free: mean 0.5462 sigma 6.0 MeV S 3226
+  Nv               T =      -4 +-   77  chi2 42.7/48  (rows us 133125)  free: mean 0.5540 sigma 3.0 MeV S 63
+  Vpre(vz>-160)    T =    3327 +-  106  chi2 38.5/48  (rows us 683381)  free: mean 0.5462 sigma 6.3 MeV S 3343
+  Nv,perIII        T =     -24 +-   36  chi2 65.3/48  (rows us 29995)  free: mean 0.5360 sigma 3.0 MeV S -40
+  V,perIII         T =    1063 +-   59  chi2 37.3/48  (rows us 201864)  free: mean 0.5460 sigma 6.3 MeV S 1068
+  Nv,start1        T =     -58 +-   70  chi2 40.7/48  (rows us 109190)  free: mean 0.5540 sigma 3.0 MeV S 64
+  Nv,zp>=-170      T =       4 +-   17  chi2 60.1/48  (rows us 10127)  free: mean 0.5540 sigma 3.3 MeV S 20
+  eps_T = 1.001 +- 0.023
+  M4 0.35-0.95, V, mee<0.1: N - CB = 3238271 (N 3431592)
+  M4 0.35-0.95, Nv, mee<0.1: N - CB = 912815 (N 1504772)
+  M4 0.35-0.95, V, tagged: N - CB = 532984 (N 547327)
+  M4 0.35-0.95, Nv, tagged: N - CB = 73048 (N 112839)
+  tag rate per (N - CB): V 0.1646, Nv 0.0800
+
+# H. bump edge step E (4 M(pipi) slices, edge fixed, pol2 + [eta] + h step, half range 45/45/45/35 MeV)
+  slice 0.30-0.34 V     h =    355 +-   48  chi2 18.9/31 (eta in model)
+  slice 0.30-0.34 Nv    h =    -29 +-   52  chi2 33.2/31 (eta in model)
+  slice 0.30-0.34 Vpre  h =    330 +-   45  chi2 18.2/31 (eta in model)
+  slice 0.34-0.37 V     h =    402 +-   43  chi2 43.5/32 (eta in model)
+  slice 0.34-0.37 Nv    h =      4 +-   45  chi2 37.1/32 (eta in model)
+  slice 0.34-0.37 Vpre  h =    380 +-   40  chi2 43.5/32 (eta in model)
+  slice 0.37-0.39 V     h =    360 +-   30  chi2 34.3/35 (eta in model)
+  slice 0.37-0.39 Nv    h =     41 +-   31  chi2 33.7/35 (eta in model)
+  slice 0.37-0.39 Vpre  h =    355 +-   28  chi2 32.5/35 (eta in model)
+  slice 0.39-0.40 V     h =    124 +-   27  chi2 30.0/22 
+  slice 0.39-0.40 Nv    h =      5 +-   27  chi2 20.9/22 
+  slice 0.39-0.40 Vpre  h =    134 +-   25  chi2 31.9/22 
+  slice 0.42-0.46 V     h =     36 +-   19  chi2 36.6/31 (eta in model)
+  slice 0.42-0.46 Nv    h =      5 +-   24  chi2 26.6/31 (eta in model)
+  slice 0.42-0.46 Vpre  h =     17 +-   18  chi2 39.6/31 (eta in model)
+  E(V) = 1241 +- 76
+  E(Nv) = 21 +- 80
+  E(Vpre) = 1199 +- 71
+  eps_E = 0.983 +- 0.062
+    var ord 2 half 0.035 s 0.0044: E_V 1146 E_Nv -41 eps 1.037
+    var ord 2 half 0.035 s 0.0054: E_V 1241 E_Nv -43 eps 1.036
+    var ord 2 half 0.035 s 0.0064: E_V 1345 E_Nv -45 eps 1.034
+    var ord 2 half 0.045 s 0.0044: E_V 1176 E_Nv 7 eps 0.994
+    var ord 2 half 0.045 s 0.0054: E_V 1248 E_Nv 10 eps 0.992
+    var ord 2 half 0.045 s 0.0064: E_V 1324 E_Nv 14 eps 0.990
+    var ord 2 half 0.055 s 0.0044: E_V 1108 E_Nv 32 eps 0.972
+    var ord 2 half 0.055 s 0.0054: E_V 1163 E_Nv 38 eps 0.969
+    var ord 2 half 0.055 s 0.0064: E_V 1220 E_Nv 44 eps 0.965
+    var ord 3 half 0.035 s 0.0044: E_V 967 E_Nv 10 eps 0.990
+    var ord 3 half 0.035 s 0.0054: E_V 1137 E_Nv 22 eps 0.981
+    var ord 3 half 0.035 s 0.0064: E_V 1344 E_Nv 42 eps 0.970
+    var ord 3 half 0.045 s 0.0044: E_V 1002 E_Nv -8 eps 1.008
+    var ord 3 half 0.045 s 0.0054: E_V 1132 E_Nv -1 eps 1.001
+    var ord 3 half 0.045 s 0.0064: E_V 1281 E_Nv 11 eps 0.992
+    var ord 3 half 0.055 s 0.0044: E_V 1211 E_Nv -51 eps 1.044
+    var ord 3 half 0.055 s 0.0054: E_V 1336 E_Nv -55 eps 1.043
+    var ord 3 half 0.055 s 0.0064: E_V 1476 E_Nv -58 eps 1.041
+  eps_E over 18 variations: mean 1.003 rms 0.028

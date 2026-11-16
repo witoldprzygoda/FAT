@@ -1,0 +1,229 @@
+# v0_verify.txt -- plots/all_report/v0_verify.C: independent recomputation of hists_v1.root contents (WP0 verification)
+# data: raw TTree reading of scan_v2/scan_compact.root; simulation: original FAT_simwt headers, streaming; nb = sum w / 221.05
+=============================== DATA (raw TTree reading of scan_v2/scan_compact.root)
+tree us: rows 4783467; event groups re-opened after another group (non-adjacent rows): 0; dz_pi column vs max(|pip_z-vz|,|pim_z-vz|): 0 of 4783467 differ by > 1e-4 mm
+tree pp: rows 122875; event groups re-opened after another group (non-adjacent rows): 0; dz_pi column vs max(|pip_z-vz|,|pim_z-vz|): 0 of 122875 differ by > 1e-4 mm
+tree mm: rows 371524; event groups re-opened after another group (non-adjacent rows): 0; dz_pi column vs max(|pip_z-vz|,|pim_z-vz|): 0 of 371524 differ by > 1e-4 mm
+S0        rows with M4 < 0.30 GeV/c2 (outside the CB grid, inside window R0 / tot): us 0 pp 0 mm 0
+pre       rows with M4 < 0.30 GeV/c2 (outside the CB grid, inside window R0 / tot): us 0 pp 0 mm 0
+none      rows with M4 < 0.30 GeV/c2 (outside the CB grid, inside window R0 / tot): us 0 pp 0 mm 0
+S0_corfb  rows with M4 < 0.30 GeV/c2 (outside the CB grid, inside window R0 / tot): us 0 pp 0 mm 0
+S0_best   rows with M4 < 0.30 GeV/c2 (outside the CB grid, inside window R0 / tot): us 0 pp 0 mm 0
+--- data S0
+S0 N   B                                                       mine    111212.000000  file    111212.000000  diff          0  OK 
+S0 N++ B                                                       mine      1231.000000  file      1231.000000  diff          0  OK 
+S0 N-- B                                                       mine      7941.000000  file      7941.000000  diff          0  OK 
+S0 N   P                                                       mine     55947.000000  file     55947.000000  diff          0  OK 
+S0 N++ P                                                       mine       691.000000  file       691.000000  diff          0  OK 
+S0 N-- P                                                       mine      3894.000000  file      3894.000000  diff          0  OK 
+S0 N   X17c                                                    mine      6424.000000  file      6424.000000  diff          0  OK 
+S0 N++ X17c                                                    mine        16.000000  file        16.000000  diff          0  OK 
+S0 N-- X17c                                                    mine       282.000000  file       282.000000  diff          0  OK 
+S0 N   CRU                                                     mine    722506.000000  file    722506.000000  diff          0  OK 
+S0 N++ CRU                                                     mine      9111.000000  file      9111.000000  diff          0  OK 
+S0 N-- CRU                                                     mine     37966.000000  file     37966.000000  diff          0  OK 
+S0 N   CRK                                                     mine       964.000000  file       964.000000  diff          0  OK 
+S0 N++ CRK                                                     mine         2.000000  file         2.000000  diff          0  OK 
+S0 N-- CRK                                                     mine       150.000000  file       150.000000  diff          0  OK 
+S0 N   CRL                                                     mine     15604.000000  file     15604.000000  diff          0  OK 
+S0 N++ CRL                                                     mine       181.000000  file       181.000000  diff          0  OK 
+S0 N-- CRL                                                     mine      1245.000000  file      1245.000000  diff          0  OK 
+S0 N   R0                                                      mine     36644.000000  file     36644.000000  diff          0  OK 
+S0 N++ R0                                                      mine       355.000000  file       355.000000  diff          0  OK 
+S0 N-- R0                                                      mine      2581.000000  file      2581.000000  diff          0  OK 
+S0 N   X17P                                                    mine      5258.000000  file      5258.000000  diff          0  OK 
+S0 N++ X17P                                                    mine        14.000000  file        14.000000  diff          0  OK 
+S0 N-- X17P                                                    mine       223.000000  file       223.000000  diff          0  OK 
+S0 CB  B                                                       mine      6236.837328  file      6236.837328  diff     -6e-11  OK 
+S0 CB  P                                                       mine      3279.023657  file      3279.023657  diff  -7.14e-11  OK 
+S0 CB  CRU                                                     mine     37078.715406  file     37078.715406  diff     -8e-10  OK 
+S0 CB  CRK (x f(S5 | band))                                    mine       199.524231  file       199.524231  diff  -3.98e-12  OK 
+S0 CB  X17P (x f(M(ee) 15.5-24.5 | band))                      mine       171.028368  file       171.028368  diff  -3.75e-12  OK 
+S0 CB  X17c                                                    mine       209.499790  file       209.499790  diff  -3.69e-12  OK 
+S0 CB  R0 (grid 0.30-0.455)                                    mine      1899.583187  file      1899.583187  diff   2.27e-13  OK 
+S0: N - CB in B = 104975.2, in P = 52668.0; CB/N in P = 0.05861; window geometric means 2 sqrt(N++ N--): P 3280.7, X17P 111.7, CRK 34.6, B 6253.1
+F10 bin 33 = [0.5400, 0.5425)
+S0 N   F10_S2E2 [0.540,0.5425)                                 mine       772.000000  file       772.000000  diff          0  OK 
+S0 N++ F10_S2E2 [0.540,0.5425)                                 mine        14.000000  file        14.000000  diff          0  OK 
+S0 N-- F10_S2E2 [0.540,0.5425)                                 mine        83.000000  file        83.000000  diff          0  OK 
+S0 CB  F10_S2E2 [0.540,0.5425) (x f(S2E2 | band))              mine        79.030385  file        79.030385  diff  -1.68e-12  OK 
+S0 N   X2D [0.5425,0.545) x M(ee) [30,32) MeV                  mine        84.000000  file        84.000000  diff          0  OK 
+S0 N++ X2D [0.5425,0.545) x M(ee) [30,32) MeV                  mine         2.000000  file         2.000000  diff          0  OK 
+blinding X2D (S0 all): 296 cells must be masked (M(ee) bins overlapping 13-27 MeV, all M4 incl. flows); wrong cells: 0
+blinding B_mee_R2 (S0 all): wrong cells 0
+blinding B_mee_R3 (S0 all): wrong cells 0
+blinding B_mee_R4 (S0 all): wrong cells 0
+S0 N P, period IIA (days 047-048)                              mine      3505.000000  file      3505.000000  diff          0  OK 
+S0 N P, fold0 (even fold)                                      mine     27892.000000  file     27892.000000  diff          0  OK 
+S0 N P event-group error                                       mine       239.066936  file       239.066936  diff          0  OK 
+--- data pre
+pre N   B                                                      mine    153183.000000  file    153183.000000  diff          0  OK 
+pre N++ B                                                      mine      3105.000000  file      3105.000000  diff          0  OK 
+pre N-- B                                                      mine     19362.000000  file     19362.000000  diff          0  OK 
+pre N   P                                                      mine     77513.000000  file     77513.000000  diff          0  OK 
+pre N++ P                                                      mine      1707.000000  file      1707.000000  diff          0  OK 
+pre N-- P                                                      mine      9212.000000  file      9212.000000  diff          0  OK 
+pre N   X17c                                                   mine      9257.000000  file      9257.000000  diff          0  OK 
+pre N++ X17c                                                   mine        48.000000  file        48.000000  diff          0  OK 
+pre N-- X17c                                                   mine       716.000000  file       716.000000  diff          0  OK 
+pre N   CRU                                                    mine    955948.000000  file    955948.000000  diff          0  OK 
+pre N++ CRU                                                    mine     20461.000000  file     20461.000000  diff          0  OK 
+pre N-- CRU                                                    mine     79127.000000  file     79127.000000  diff          0  OK 
+pre N   CRK                                                    mine      1247.000000  file      1247.000000  diff          0  OK 
+pre N++ CRK                                                    mine        15.000000  file        15.000000  diff          0  OK 
+pre N-- CRK                                                    mine       387.000000  file       387.000000  diff          0  OK 
+pre N   CRL                                                    mine     22206.000000  file     22206.000000  diff          0  OK 
+pre N++ CRL                                                    mine       489.000000  file       489.000000  diff          0  OK 
+pre N-- CRL                                                    mine      3023.000000  file      3023.000000  diff          0  OK 
+pre N   R0                                                     mine     50593.000000  file     50593.000000  diff          0  OK 
+pre N++ R0                                                     mine       927.000000  file       927.000000  diff          0  OK 
+pre N-- R0                                                     mine      6736.000000  file      6736.000000  diff          0  OK 
+pre N   X17P                                                   mine      7550.000000  file      7550.000000  diff          0  OK 
+pre N++ X17P                                                   mine        41.000000  file        41.000000  diff          0  OK 
+pre N-- X17P                                                   mine       586.000000  file       586.000000  diff          0  OK 
+pre CB  B                                                      mine     15506.979417  file     15506.979417  diff  -1.51e-10  OK 
+pre CB  P                                                      mine      7948.831725  file      7948.831725  diff  -1.74e-10  OK 
+pre CB  CRU                                                    mine     80264.836292  file     80264.836292  diff  -1.72e-09  OK 
+pre CB  CRK (x f(S5 | band))                                   mine       534.108105  file       534.108105  diff  -1.06e-11  OK 
+pre CB  X17P (x f(M(ee) 15.5-24.5 | band))                     mine       459.291789  file       459.291789  diff  -1.02e-11  OK 
+pre CB  X17c                                                   mine       563.387825  file       563.387825  diff  -1.03e-11  OK 
+pre CB  R0 (grid 0.30-0.455)                                   mine      4994.754198  file      4994.754198  diff          0  OK 
+pre: N - CB in B = 137676.0, in P = 69564.2; CB/N in P = 0.10255; window geometric means 2 sqrt(N++ N--): P 7930.9, X17P 310.0, CRK 152.4, B 15507.3
+--- data none
+none N   B                                                     mine    170751.000000  file    170751.000000  diff          0  OK 
+none N++ B                                                     mine      4690.000000  file      4690.000000  diff          0  OK 
+none N-- B                                                     mine     27376.000000  file     27376.000000  diff          0  OK 
+none N   P                                                     mine     86011.000000  file     86011.000000  diff          0  OK 
+none N++ P                                                     mine      2548.000000  file      2548.000000  diff          0  OK 
+none N-- P                                                     mine     12847.000000  file     12847.000000  diff          0  OK 
+none N   X17c                                                  mine     10601.000000  file     10601.000000  diff          0  OK 
+none N++ X17c                                                  mine        87.000000  file        87.000000  diff          0  OK 
+none N-- X17c                                                  mine       961.000000  file       961.000000  diff          0  OK 
+none N   CRU                                                   mine   1041579.000000  file   1041579.000000  diff          0  OK 
+none N++ CRU                                                   mine     29702.000000  file     29702.000000  diff          0  OK 
+none N-- CRU                                                   mine    109559.000000  file    109559.000000  diff          0  OK 
+none N   CRK                                                   mine      1402.000000  file      1402.000000  diff          0  OK 
+none N++ CRK                                                   mine        22.000000  file        22.000000  diff          0  OK 
+none N-- CRK                                                   mine       555.000000  file       555.000000  diff          0  OK 
+none N   CRL                                                   mine     24826.000000  file     24826.000000  diff          0  OK 
+none N++ CRL                                                   mine       763.000000  file       763.000000  diff          0  OK 
+none N-- CRL                                                   mine      4214.000000  file      4214.000000  diff          0  OK 
+none N   R0                                                    mine     57557.000000  file     57557.000000  diff          0  OK 
+none N++ R0                                                    mine      1452.000000  file      1452.000000  diff          0  OK 
+none N-- R0                                                    mine      9788.000000  file      9788.000000  diff          0  OK 
+none N   X17P                                                  mine      8616.000000  file      8616.000000  diff          0  OK 
+none N++ X17P                                                  mine        72.000000  file        72.000000  diff          0  OK 
+none N-- X17P                                                  mine       781.000000  file       781.000000  diff          0  OK 
+none CB  B                                                     mine     22659.935363  file     22659.935363  diff  -2.11e-10  OK 
+none CB  P                                                     mine     11487.559164  file     11487.559164  diff  -2.55e-10  OK 
+none CB  CRU                                                   mine    113770.804667  file    113770.804667  diff  -2.42e-09  OK 
+none CB  CRK (x f(S5 | band))                                  mine       760.019234  file       760.019234  diff  -1.49e-11  OK 
+none CB  X17P (x f(M(ee) 15.5-24.5 | band))                    mine       640.567604  file       640.567604  diff  -1.43e-11  OK 
+none CB  X17c                                                  mine       786.397769  file       786.397769  diff  -1.43e-11  OK 
+none CB  R0 (grid 0.30-0.455)                                  mine      7544.615412  file      7544.615412  diff          0  OK 
+none: N - CB in B = 148091.1, in P = 74523.4; CB/N in P = 0.13356; window geometric means 2 sqrt(N++ N--): P 11442.8, X17P 474.3, CRK 221.0, B 22662.2
+--- data S0_corfb
+S0_corfb N   B                                                 mine    112791.000000  file    112791.000000  diff          0  OK 
+S0_corfb N++ B                                                 mine      1255.000000  file      1255.000000  diff          0  OK 
+S0_corfb N-- B                                                 mine      8044.000000  file      8044.000000  diff          0  OK 
+S0_corfb N   P                                                 mine     56672.000000  file     56672.000000  diff          0  OK 
+S0_corfb N++ P                                                 mine       698.000000  file       698.000000  diff          0  OK 
+S0_corfb N-- P                                                 mine      3945.000000  file      3945.000000  diff          0  OK 
+S0_corfb N   X17c                                              mine      6498.000000  file      6498.000000  diff          0  OK 
+S0_corfb N++ X17c                                              mine        17.000000  file        17.000000  diff          0  OK 
+S0_corfb N-- X17c                                              mine       285.000000  file       285.000000  diff          0  OK 
+S0_corfb N   CRU                                               mine    728087.000000  file    728087.000000  diff          0  OK 
+S0_corfb N++ CRU                                               mine      9213.000000  file      9213.000000  diff          0  OK 
+S0_corfb N-- CRU                                               mine     38238.000000  file     38238.000000  diff          0  OK 
+S0_corfb N   CRK                                               mine       970.000000  file       970.000000  diff          0  OK 
+S0_corfb N++ CRK                                               mine         2.000000  file         2.000000  diff          0  OK 
+S0_corfb N-- CRK                                               mine       151.000000  file       151.000000  diff          0  OK 
+S0_corfb N   CRL                                               mine     15826.000000  file     15826.000000  diff          0  OK 
+S0_corfb N++ CRL                                               mine       183.000000  file       183.000000  diff          0  OK 
+S0_corfb N-- CRL                                               mine      1265.000000  file      1265.000000  diff          0  OK 
+S0_corfb N   R0                                                mine     37015.000000  file     37015.000000  diff          0  OK 
+S0_corfb N++ R0                                                mine       360.000000  file       360.000000  diff          0  OK 
+S0_corfb N-- R0                                                mine      2619.000000  file      2619.000000  diff          0  OK 
+S0_corfb N   X17P                                              mine      5315.000000  file      5315.000000  diff          0  OK 
+S0_corfb N++ X17P                                              mine        14.000000  file        14.000000  diff          0  OK 
+S0_corfb N-- X17P                                              mine       226.000000  file       226.000000  diff          0  OK 
+S0_corfb CB  B                                                 mine      6335.939624  file      6335.939624  diff  -6.28e-11  OK 
+S0_corfb CB  P                                                 mine      3318.061277  file      3318.061277  diff  -7.23e-11  OK 
+S0_corfb CB  CRU                                               mine     37414.067964  file     37414.067964  diff     -8e-10  OK 
+S0_corfb CB  CRK (x f(S5 | band))                              mine       201.301076  file       201.301076  diff  -4.04e-12  OK 
+S0_corfb CB  X17P (x f(M(ee) 15.5-24.5 | band))                mine       174.231159  file       174.231159  diff  -3.78e-12  OK 
+S0_corfb CB  X17c                                              mine       213.459044  file       213.459044  diff  -3.81e-12  OK 
+S0_corfb CB  R0 (grid 0.30-0.455)                              mine      1926.056648  file      1926.056648  diff  -6.82e-13  OK 
+S0_corfb: N - CB in B = 106455.1, in P = 53353.9; CB/N in P = 0.05855; window geometric means 2 sqrt(N++ N--): P 3318.8, X17P 112.5, CRK 34.8, B 6354.6
+--- data S0_best
+S0_best N   B                                                  mine     91899.000000  file     91899.000000  diff          0  OK 
+S0_best N++ B                                                  mine      1015.000000  file      1015.000000  diff          0  OK 
+S0_best N-- B                                                  mine      6528.000000  file      6528.000000  diff          0  OK 
+S0_best N   P                                                  mine     46494.000000  file     46494.000000  diff          0  OK 
+S0_best N++ P                                                  mine       577.000000  file       577.000000  diff          0  OK 
+S0_best N-- P                                                  mine      3253.000000  file      3253.000000  diff          0  OK 
+S0_best N   X17c                                               mine      5355.000000  file      5355.000000  diff          0  OK 
+S0_best N++ X17c                                               mine        13.000000  file        13.000000  diff          0  OK 
+S0_best N-- X17c                                               mine       231.000000  file       231.000000  diff          0  OK 
+S0_best N   CRU                                                mine    609044.000000  file    609044.000000  diff          0  OK 
+S0_best N++ CRU                                                mine      7725.000000  file      7725.000000  diff          0  OK 
+S0_best N-- CRU                                                mine     32201.000000  file     32201.000000  diff          0  OK 
+S0_best N   CRK                                                mine       808.000000  file       808.000000  diff          0  OK 
+S0_best N++ CRK                                                mine         2.000000  file         2.000000  diff          0  OK 
+S0_best N-- CRK                                                mine       132.000000  file       132.000000  diff          0  OK 
+S0_best N   CRL                                                mine     12881.000000  file     12881.000000  diff          0  OK 
+S0_best N++ CRL                                                mine       149.000000  file       149.000000  diff          0  OK 
+S0_best N-- CRL                                                mine      1033.000000  file      1033.000000  diff          0  OK 
+S0_best N   R0                                                 mine     29736.000000  file     29736.000000  diff          0  OK 
+S0_best N++ R0                                                 mine       287.000000  file       287.000000  diff          0  OK 
+S0_best N-- R0                                                 mine      2091.000000  file      2091.000000  diff          0  OK 
+S0_best N   X17P                                               mine      4369.000000  file      4369.000000  diff          0  OK 
+S0_best N++ X17P                                               mine        11.000000  file        11.000000  diff          0  OK 
+S0_best N-- X17P                                               mine       184.000000  file       184.000000  diff          0  OK 
+S0_best CB  B                                                  mine      5132.979083  file      5132.979083  diff     -5e-11  OK 
+S0_best CB  P                                                  mine      2732.151407  file      2732.151407  diff  -5.96e-11  OK 
+S0_best CB  CRU                                                mine     31439.002525  file     31439.002525  diff  -6.69e-10  OK 
+S0_best CB  CRK (x f(S5 | band))                               mine       169.566015  file       169.566015  diff  -3.41e-12  OK 
+S0_best CB  X17P (x f(M(ee) 15.5-24.5 | band))                 mine       144.543590  file       144.543590  diff  -3.18e-12  OK 
+S0_best CB  X17c                                               mine       176.524756  file       176.524756  diff  -3.21e-12  OK 
+S0_best CB  R0 (grid 0.30-0.455)                               mine      1541.092750  file      1541.092750  diff          0  OK 
+S0_best: N - CB in B = 86766.0, in P = 43761.8; CB/N in P = 0.05876; window geometric means 2 sqrt(N++ N--): P 2740.1, X17P 90.0, CRK 32.5, B 5148.2
+=============================== SIMULATION (original FAT_simwt headers, streaming, own definitions)
+sim tree std_us: 230469 rows, 230115 owned pre rows
+sim tree lep_us: 7441490 rows, 7082339 owned pre rows
+sim tree eta_us: 3366025 rows, 3180398 owned pre rows
+pre  T12 all M4 (acceptance 1: 701.1)                          mine       701.083207  file       701.083207  diff          0  OK 
+pre  C2+C3, sim-scale m4 0.4576-0.5255 (acc. 1: 9.689)         mine         9.688703  file         9.688700  diff   3.02e-06  OK (ref: WP0 note / sim study 9.689)
+S0   C5 in P (M4')                                             mine         1.046212  file         1.046212  diff          0  OK 
+S0   C5 in P (M4') event-group error                           mine         0.002949  file         0.002949  diff  -1.69e-17  OK 
+S0   C2+C3 in B (M4')                                          mine         9.007583  file         9.007583  diff   -1.6e-14  OK 
+S0   C2+C3 in B event-group error                              mine         0.224520  file         0.224520  diff   1.94e-16  OK (C2 and C3 rows of one group combined vs separate: expect a small difference)
+S0   G_eta in P                                                mine         0.610206  file         0.610206  diff          0  OK 
+S0   T12 F10_S3E1 [0.5425,0.545)                               mine         0.090849  file         0.090849  diff          0  OK 
+S0   modeB T12 all M4                                          mine       650.378932  file       650.378932  diff          0  OK 
+S0   ghostA T12 all M4                                         mine       716.130837  file       716.130837  diff          0  OK 
+S0   C6 (X17, per unit BR) in X17c                             mine      3501.596924  file      3501.596924  diff          0  OK 
+PEAK T12 all M4 (MM4 at 4500 MeV)                              mine       628.227601  file       628.227601  diff          0  OK 
+S0   r = 0.89 C5 in P                                          mine         1.091711  file         1.091711  diff          0  OK 
+S0   V2 (107) C5 in P                                          mine         1.214721  file         1.214721  diff  -2.22e-16  OK 
+S0   w_db T12 all M4                                           mine       631.200667  file       631.200667  diff          0  OK 
+S0   T12 in CR-U                                               mine        90.448990  file        90.448990  diff          0  OK 
+S0   T12 in CR-U event-group error                             mine         0.548301  file         0.548301  diff   9.15e-13  OK 
+S0   G_conv in CR-U                                            mine        34.285372  file        34.285372  diff          0  OK 
+PEAK: MM4 at 4500 MeV computed for 7577807 rows (own TLorentzVector code)
+=============================== FILE (internal consistency of hists_v1.root)
+closure data/S0/all/N_F10 (10 cells) vs fine 0.40-0.70         mine    976545.000000  file    976545.000000  diff          0  OK 
+closure data/S0/all/CB_F10 (10 cells) vs fine 0.40-0.70        mine     51691.336287  file     51691.336287  diff  -1.46e-11  OK 
+closure sim/S0__nom/T12_F10 (10 cells) vs fine 0.40-0.70       mine       131.588338  file       131.588338  diff  -2.84e-14  OK 
+sim S0__nom T12 = C2..C5 + G_eta + G_pi0D + G_conv + G_vec + G_oth mine       616.531042  file       616.531042  diff   1.49e-09  OK 
+sim S0__nom GD = G_pi0D + G_vec + G_oth                        mine       347.665733  file       347.665733  diff   1.49e-09  OK 
+sim S0__nom Gconv = _om + _nom                                 mine       233.923353  file       233.923353  diff          0  OK 
+sim S0__nom C5 P: half A + half B = full                       mine         1.046212  file         1.046212  diff          0  OK 
+sim S0__nom C5 P: half A 0.52147, half B 0.52474 (ratio 0.9938)
+data S0 CB P   : CB 3279.02, linear error 58.88; 200 replicas: mean 3289.02 (pull of mean 2.50), rms 56.56 (rms/linear 0.96)
+data S0 CB B   : CB 6236.84, linear error 92.39; 200 replicas: mean 6237.45 (pull of mean 0.10), rms 90.83 (rms/linear 0.98)
+data S0 CB CRK : CB 199.52, linear error 3.89; 200 replicas: mean 198.87 (pull of mean -1.13), rms 8.18 (rms/linear 2.10)
+data S0 CB X17P: CB 171.03, linear error 3.09; 200 replicas: mean 171.63 (pull of mean 1.37), rms 6.17 (rms/linear 2.00)
+sim S0__nom C5 P: 1.04621 +- 0.00295 (event groups); 100 replicas: mean 1.04563, rms 0.00269 (rms/error 0.912)
+C5 in P, S0: 1.04621 nb x 6079.2 x 63/64 = 6260.8 expected raw rows at SMASH x V3
+TOTAL mismatches: 0

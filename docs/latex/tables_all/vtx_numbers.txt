@@ -1,0 +1,42 @@
+# vtx_numbers.txt -- plots/all_report/vtx_numbers.py; inputs: ve_verify (vtx_ana*.txt, vtx_sim.txt), fix_numbers.txt, fix_x17_fold.txt
+## 1. eps_vtx(eta, data) = X_V / (X_V + X_Nv), classes V (vz > -500) and Nv (vz = -1000); base PT3, isBest >= 0, cor_ok
+S nominal CB      : 0.838 +- 0.063
+S smooth CB       : 0.947 +- 0.062   (rms over 12 smooth variants of S_Nv: 30 rows)
+S N only (no CB)  : 0.966 +- 0.065
+T (ECAL-tagged)   : 1.001 +- 0.023
+E (edge step)     : 0.983 +- 0.062 (stat) +- 0.028 (model) = 0.068 total
+combined S(smooth)+T+E : 0.9934 +- 0.0209, chi2 0.70/2;  one-sided 95 % CL lower bound 0.959
+combined S(nominal, stat (+) model)+T+E: 0.9895 +- 0.0215, chi2 3.30/2
+combined S(smooth)+E (no ECAL): 0.9633 +- 0.0460, chi2 0.16/1
+
+## 2. correction factor (not applied)
+C_vtx = eps_sim/eps_data = 0.99970/0.994 = 1.0057 +- 0.0212 (relative 2.1 %)
+95 % CL: eps_data > 0.9595 -> C_vtx < 1.0419 (+4.2 %)
+bump: T and E combined 0.999 +- 0.022 (verifier); simulation C2+C3 0.9986 +- 0.0007 (all M4), 0.9981 +- 0.0009 (bump window)
+      C_vtx(bump) = 1.000 -> 1.00 +- 0.02; ratios peak/bump (DR, BR_G, BR_A): C_vtx(peak)/C_vtx(bump) = 1.00 +- 0.03
+sigma with C_vtx applied: 0.4315 mb; at the 95 % CL bound: 0.4470 mb
+
+## 3. what eps would give the published values (sigma scales as eps_sim/eps_data)
+sigma = 0.93 mb needs eps_data = 0.460;  distance: T 23.1 sigma, E 7.7 sigma, S(smooth) 7.8 sigma, S(nominal) 4.3 sigma, combined 26 sigma
+sigma = 1.14 mb needs eps_data = 0.380;  distance: T 26.5 sigma, E 8.8 sigma, S(smooth) 9.1 sigma, S(nominal) 5.3 sigma, combined 29 sigma
+row survival (not an eta efficiency): all unlike-sign rows 0.6773, cor_ok 0.6787, peak window 0.565
+
+## 4. sigma(pp -> eta X) with the one-sided items, WITHOUT the vertex item (it was x1.4-1.7 before the measurement)
+live time x sorter x cor_ok = 1.1088 - 1.1273
+adopted 0.429 mb x that = 0.476 - 0.484 mb
+direct-decay route (weighted 0.522, side bands 0.621) x that = 0.579 - 0.700 mb  [lower: weighted x low product; upper: side bands x high product, as in fix_numbers.txt]
+with the pT-only production item (x1.21) in addition, upper end: 0.847 mb
+with C_vtx at its 95 % CL bound (x1.042) in addition: 0.496 - 0.504 mb (adopted), 0.603 - 0.729 mb (direct route)
+before (fix_numbers.txt): vertex x live time x sorter x cor_ok x1.55-1.92 -> 0.67-0.82 mb; with the direct route 0.81-1.19 mb; with pT up to 1.44 mb
+
+## 5. X17 sigma x BR x BR (normalisation (1), frozen PDG 2020, sigma uncertainty 37.9 % folded; fix_x17_fold.txt)
+folded 15.01 nb; with C_vtx applied x1.0057: 15.10 nb; at the 95 % CL bound: 15.64 nb; plain product 13.14 -> 13.22 nb
+before: 21-26 nb 'if the eta lose their vertex at the N - CB / raw-row rate' (x1.4-1.7): excluded by the measurement
+
+## 6. close-pair reading (analyst's interpretation, to be tested; numbers from fix_numbers.txt, WP5-WP8)
+direct-decay route a = 0.497 +- 0.059 (side bands per class 0.592 +- 0.139, X17 fit 0.476 +- 0.065); F-main rho_d x a_eta = 1.3152 x 0.3823 = 0.503 (PDG 2020; 0.488 with PDG 2026)
+conversion route a = 0.237 +- 0.049; bump scale a_B(all) 0.299, a_B(E2) 0.312, f_eta(edge) 0.392 -> 0.30-0.39
+ratio direct / conversion = 2.10 +- 0.50; direct / bump (0.30-0.39) = 1.27-1.66
+E2 share of the peak (M(ee) >= 10 MeV): data 0.546 +- 0.053 (WP6) against 0.423 (WP8) / 0.425 (C4/C5 shapes) in SMASH: +2.3 sigma
+HGeant C2 gamma* angle isotropic: simulated C2 efficiency 11-12 % too high -> bump scale x1.09-1.12 at most: 0.33-0.35
+sigma by the direct-decay route 0.52 +- 0.06 mb (stat); with the one-sided items 0.58-0.59 mb

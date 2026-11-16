@@ -2,9 +2,11 @@
 // scan_prepare.C  --  compact data file for the eta cut scan in M(pi+pi-e+e-)
 // ============================================================================
 // One pass over scan_nt of the three hypotheses (e+e-, e+e+, e-e-) of the
-// production pippimepem_isBestAll_T4530. Writes
-//   <prod>/scan/scan_compact.root   trees us, pp, mm (columns = scan::Row)
-//   <prod>/scan/scan_prepare.log    verification numbers
+// production pippimepem_isBestAll_T4530. Writes (paths from ScanEngine.h)
+//   <prod>/scan_v2/scan_compact.root   trees us, pp, mm (columns = scan::Row)
+//   <prod>/scan_v2/scan_prepare.log    verification numbers
+// (The first version wrote <prod>/scan/; that file and the outputs of the first
+// study stay untouched. scan_v2 = the same rows and columns plus the pion z.)
 //
 // Per row it adds to the stored values:
 //   - event group (maximal run of adjacent rows with equal file_id, runnumber,
@@ -13,10 +15,15 @@
 //   - crossing points of the two leptons and of the two pions
 //   - the photon whose M(e+e-gamma) is closest to 0.140 GeV/c2
 //   - T_pi0 and the kinematic limit M4max for the measured M(pi+pi-)
+//   - (scan_v2) pip_z, pim_z = z of the pion track at its closest approach to
+//     the beam axis, and dz_pi = max(|pip_z - vz|, |pim_z - vz|) [mm] with
+//     vz = eVertReco_z, as in the simulation study (frozen PEAK / DIRECT cut
+//     dz_pi < 40 mm)
 //
-// Run (ACLiC, build directory outside the repository):
-//   root -l -b -q -e 'gSystem->SetBuildDir("/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan/aclic_engine", kTRUE)' 'plots/scan_prepare.C+'
+// Run (ACLiC, build directory outside the repository; from the repository root):
+//   root -l -b -q -e 'gSystem->SetBuildDir("/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/report_exp/aclic_prep", kTRUE)' 'plots/scan_prepare.C+'
 // ============================================================================
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <limits>
@@ -26,6 +33,7 @@
 #include "TFile.h"
 #include "TLorentzVector.h"
 #include "TStopwatch.h"
+#include "TSystem.h"
 #include "TTree.h"
 #include "TVector3.h"
 
@@ -130,6 +138,7 @@ struct Stat {
     Long64_t withGam = 0, parallelEE = 0, parallelPP = 0;
     double sumDist[2][2] = {{0, 0}, {0, 0}};            // [convention][lepton/pion], isUsedVertex tracks
     Long64_t nDist[2] = {0, 0};
+    Long64_t nanPiZ = 0, dzpi40 = 0, dzpi40vz = 0, vz160 = 0;   // pion z (scan_v2)
 };
 
 } // namespace prep
@@ -149,6 +158,7 @@ void scan_prepare() {
     const TLorentzVector ini(0, 0, std::sqrt(Ebeam * Ebeam - mP * mP), Ebeam + mP);
     const double yCM = ini.Rapidity();
 
+    gSystem->mkdir(scan::kScanDir, kTRUE);
     TFile* fout = TFile::Open(scan::kCompact, "RECREATE");
     if (!fout || fout->IsZombie()) { printf("cannot create %s\n", scan::kCompact); return; }
     fout->SetCompressionSettings(404);   // LZ4: fast to read
@@ -327,6 +337,12 @@ void scan_prepare() {
                                       in.eVertReco_x, in.eVertReco_y, in.eVertReco_z);
             r.dz_ee = cE.dz; r.r_ee = cE.r; r.rv_ee = cE.rv; r.doca_ee = cE.doca;
             r.dz_pipi = cP.dz; r.r_pipi = cP.r; r.rv_pipi = cP.rv; r.doca_pipi = cP.doca;
+            // ---- pion track z (scan_v2): float arithmetic as in the simulation study ----
+            r.pip_z = in.pip_z; r.pim_z = in.pim_z;
+            r.dz_pi = std::max(std::fabs(r.pip_z - r.vz), std::fabs(r.pim_z - r.vz));
+            if (std::isnan(r.pip_z) || std::isnan(r.pim_z)) S.nanPiZ++;
+            if (r.dz_pi < 40.f) S.dzpi40++;
+            if (r.vz > -160.f) { S.vz160++; if (r.dz_pi < 40.f) S.dzpi40vz++; }
             if (cE.r < 0) S.parallelEE++;
             if (cP.r < 0) S.parallelPP++;
             // convention check: tracks used in the vertex fit must pass close to it
@@ -406,6 +422,7 @@ void scan_prepare() {
     // ---- read-back check: compact file against the source, row by row ----
     Long64_t rbRows[3] = {0, 0, 0}, rbGroups[3] = {0, 0, 0}, rbBest[3] = {0, 0, 0};
     Long64_t rbM4bad[3] = {0, 0, 0}, rbCorOk[3] = {0, 0, 0}, rbKeyBad[3] = {0, 0, 0};
+    Long64_t rbZbad[3] = {0, 0, 0};      // pip_z, pim_z or dz_pi differ from the source (NaN == NaN)
     {
         TFile* fc = TFile::Open(scan::kCompact, "READ");
         for (int k = 0; k < 3 && fc && !fc->IsZombie(); ++k) {
@@ -421,10 +438,18 @@ void scan_prepare() {
             tc->SetBranchAddress("grp", &cGrp); tc->SetBranchAddress("isBest", &cBest);
             tc->SetBranchAddress("cor_ok", &cCor); tc->SetBranchAddress("pat_entry", &cPat);
             tc->SetBranchAddress("file_id", &cFile); tc->SetBranchAddress("m4", &cM4);
+            Float_t cPipZ = 0, cPimZ = 0, cDz = 0, sPipZ = 0, sPimZ = 0, sVz = 0;
+            for (const char* b : {"pip_z", "pim_z", "dz_pi"}) tc->SetBranchStatus(b, 1);
+            tc->SetBranchAddress("pip_z", &cPipZ); tc->SetBranchAddress("pim_z", &cPimZ);
+            tc->SetBranchAddress("dz_pi", &cDz);
             tin->SetBranchStatus("*", 0);
-            for (const char* b : {"m_pippimepem_cor", "pat_entry", "file_id"}) tin->SetBranchStatus(b, 1);
+            for (const char* b : {"m_pippimepem_cor", "pat_entry", "file_id", "pip_z", "pim_z", "eVertReco_z"})
+                tin->SetBranchStatus(b, 1);
             tin->SetBranchAddress("m_pippimepem_cor", &sM4);
             tin->SetBranchAddress("pat_entry", &sPat); tin->SetBranchAddress("file_id", &sFile);
+            tin->SetBranchAddress("pip_z", &sPipZ); tin->SetBranchAddress("pim_z", &sPimZ);
+            tin->SetBranchAddress("eVertReco_z", &sVz);
+            auto same = [](float a, float b) { return a == b || (std::isnan(a) && std::isnan(b)); };
             const Long64_t n = tc->GetEntries();
             rbRows[k] = n;
             if (n != tin->GetEntries()) ok = false;
@@ -435,9 +460,11 @@ void scan_prepare() {
                 if (cBest == 1) rbBest[k]++;
                 if (cPat != (int)std::lround(sPat) || cFile != (int)std::lround(sFile)) rbKeyBad[k]++;
                 if (cCor) { rbCorOk[k]++; if (!(cM4 == sM4)) rbM4bad[k]++; }
+                const float sDz = std::max(std::fabs(sPipZ - sVz), std::fabs(sPimZ - sVz));
+                if (!same(cPipZ, sPipZ) || !same(cPimZ, sPimZ) || !same(cDz, sDz)) rbZbad[k]++;
             }
             if (rbRows[k] != expRows[k] || rbGroups[k] != expGrp[k] || rbBest[k] != expGrp[k] ||
-                rbM4bad[k] != 0 || rbKeyBad[k] != 0) ok = false;
+                rbM4bad[k] != 0 || rbKeyBad[k] != 0 || rbZbad[k] != 0) ok = false;
             fin->Close();
             delete fin;
         }
@@ -465,6 +492,11 @@ void scan_prepare() {
                     rbRows[k], rbGroups[k], rbBest[k], rbCorOk[k]);
             fprintf(o, "  read-back: m4 != m_pippimepem_cor for cor_ok==1 in %lld rows ; (file_id, pat_entry) differ in %lld rows\n",
                     rbM4bad[k], rbKeyBad[k]);
+            fprintf(o, "  read-back: pip_z, pim_z or dz_pi (recomputed from scan_nt) differ in %lld rows\n", rbZbad[k]);
+            fprintf(o, "  pion z: rows with NaN pip_z or pim_z %lld ; dz_pi < 40 mm: %lld of %lld rows (%.4f) ;"
+                       " with vz > -160: %lld of %lld (%.4f)\n",
+                    S.nanPiZ, S.dzpi40, S.rows, S.rows ? (double)S.dzpi40 / S.rows : 0.,
+                    S.dzpi40vz, S.vz160, S.vz160 ? (double)S.dzpi40vz / S.vz160 : 0.);
             fprintf(o, "  max |recomputed - stored| for cor_ok==1:");
             for (int j = 0; j < 10; ++j) fprintf(o, " %s %.2g", vn[j], S.maxd[j]);
             fprintf(o, "\n  groups with 1,2,3,4,5,>=6 rows: %lld %lld %lld %lld %lld %lld\n",

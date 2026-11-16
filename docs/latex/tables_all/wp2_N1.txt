@@ -1,0 +1,79 @@
+# Table N1 (WP2): normalisation items for absolute quantities; numbers from the WP2 tables (see wp2_tableN1.py)
+# L = START-free elastic luminosity (chain N) of the analysed runs. It ALREADY contains: the PT2 DAQ live fraction and beam
+#   duty factor, the sector-2 PT2 (elastic) trigger deficit of days 034-044 (S_2, sector 2 replaced by rho x mean of the
+#   other sectors), and (1 - w6): target-window elastic events removed (LH2 only). It does NOT contain: the PT3 word
+#   factor 64/63, the PT3 live fraction (one-sided +7.3/-0 %, not applied), the sector-2 deficit of the PT3 channel
+#   rows (C_sec below), the material (empty-target) contribution of the PT3 channel rows (f_win below).
+
+[luminosity] analysed runs, nb^-1 (stat = Poisson of the elastic count)
+  I    L =  2809.453 +- 1.345   (all runs  2810.669, analysed runs 7893)
+  IIA  L =   372.610 +- 0.475   (all runs   372.610, analysed runs 1317)
+  IIB  L =  1078.022 +- 0.804   (all runs  1078.134, analysed runs 3423)
+  III  L =  1819.110 +- 1.064   (all runs  1819.110, analysed runs 4924)
+  all  L =  6079.195 +- 1.953   (all runs  6080.524, analysed runs 17557)
+  deficit span 034-045: L_e = 2619.622 (L_e/L = 0.4309); 034-044: 2449.224; clean days 046-067: 3459.573; 045-067: 3629.972
+  correlated L uncertainty: 5.56 % HADES syst (6.9 % total with sigma_int and the Argonne normalisation)
+n1|L,6079.195,2809.453,372.610,1078.022,1819.110,2619.622,3459.573
+
+[C_sec] sector-2 PT3 deficit: C_sec = 1/(1 - f (1 - eps) L_e/L); eps from data (S0 rows with a sector-2 track, double ratio
+  against rows without one, days 034-045 vs 046-067), f = simulated share with a sector-2 track (S0, V3)
+  eps = 0.9266 +- 0.0024 (034-045 vs 046-067); 0.9290 +- 0.0025 (spec span 034-044 vs 047-067)
+  bump C2+C3 in B    f = 0.3264 +- 0.0117   C_sec = 1.0104 +- 0.0005 (stat) +- 0.0035 (syst)   period I only: 1.0229 +- 0.0077
+n1|csec|bump C2+C3 in B,1.01044,0.00051,0.00346,1.02286,0.00767
+  peak C4+C5 in P    f = 0.3618 +- 0.0159   C_sec = 1.0116 +- 0.0006 (stat) +- 0.0029 (syst)   period I only: 1.0254 +- 0.0065
+n1|csec|peak C4+C5 in P,1.01158,0.00065,0.00291,1.02540,0.00654
+  C2 in B            f = 0.3200 +- 0.0151   C_sec = 1.0102 +- 0.0006 (stat) +- 0.0035 (syst)   period I only: 1.0224 +- 0.0077
+n1|csec|C2 in B,1.01023,0.00059,0.00348,1.02240,0.00774
+  C3 in B            f = 0.3349 +- 0.0183   C_sec = 1.0107 +- 0.0007 (stat) +- 0.0035 (syst)   period I only: 1.0235 +- 0.0077
+n1|csec|C3 in B,1.01071,0.00069,0.00347,1.02347,0.00775
+  C4 in P            f = 0.3398 +- 0.0333   C_sec = 1.0109 +- 0.0011 (stat) +- 0.0034 (syst)   period I only: 1.0238 +- 0.0078
+n1|csec|C4 in P,1.01087,0.00114,0.00339,1.02382,0.00784
+  C5 in P            f = 0.3819 +- 0.0014   C_sec = 1.0122 +- 0.0004 (stat) +- 0.0026 (syst)   period I only: 1.0269 +- 0.0057
+n1|csec|C5 in P,1.01223,0.00041,0.00257,1.02686,0.00572
+  T12 in CR-U        f = 0.4444 +- 0.0030   C_sec = 1.0143 +- 0.0005 (stat) +- 0.0015 (syst)   period I only: 1.0314 +- 0.0035
+n1|csec|T12 in CR-U,1.01426,0.00049,0.00151,1.03139,0.00348
+  T12 all M4         f = 0.4555 +- 0.0011   C_sec = 1.0146 +- 0.0005 (stat) +- 0.0014 (syst)   period I only: 1.0322 +- 0.0033
+n1|csec|T12 all M4,1.01462,0.00049,0.00143,1.03219,0.00332
+  ratio peak/bump C_sec = 1.0011 (enters DR); C5/C2 = 1.0020 (enters the golden ratio): both 1 within 0.2 %
+
+[f_win] material (empty-target) share of the full-target rows, N - CB, L-weighted over days 034 (I), 047 (IIA+IIB), 065 (III) [%]
+  normaliser b = U_full/U_empty, channel rows in [-200,-170) mm. Per day b: 034 10.350 +- 0.790 (fit 8.757 +- 0.548, bound 12.593), 047 15.444 +- 0.946 (fit 13.871 +- 0.565, bound 17.985), 065 0.932 +- 0.030 (fit 0.816 +- 0.023, bound 0.992)
+  window      f_win +- stat | fit-b   bound-b | EpEm near / far (excluded) | per day 034 047 065 (stat)
+  all M4      11.86 +- 0.59 |  10.29   13.80 |  15.42 /  24.15 | 12.31 +- 1.15  12.84 +- 0.98  10.39 +- 0.36
+n1|fwin|S0|all M4,11.8629,0.5884,10.2881,13.8000,15.4217,24.1462,12.3100,10.3930
+  B           18.64 +- 2.04 |  16.15   21.84 |  24.21 /  37.43 | 21.06 +- 3.86  21.73 +- 3.98  12.45 +- 0.94
+n1|fwin|S0|B,18.6428,2.0395,16.1528,21.8449,24.2057,37.4328,21.0640,12.4450
+  P           15.78 +- 3.07 |  13.58   18.49 |  20.85 /  32.68 | 20.75 +- 6.29  10.12 +- 3.79  12.61 +- 1.22
+n1|fwin|S0|P,15.7754,3.0683,13.5844,18.4938,20.8465,32.6794,20.7490,12.6080
+  B+P         16.76 +- 1.88 |  14.50   19.61 |  21.85 /  34.00 | 19.29 +- 3.69  17.24 +- 3.16  12.47 +- 0.81
+n1|fwin|S0|B+P,16.7599,1.8805,14.5044,19.6086,21.8539,33.9961,19.2860,12.4730
+  0.40-0.70   13.12 +- 0.85 |  11.38   15.27 |  17.06 /  26.70 | 13.66 +- 1.67  14.20 +- 1.44  11.42 +- 0.46
+n1|fwin|S0|0.40-0.70,13.1196,0.8541,11.3773,15.2653,17.0565,26.6977,13.6630,11.4210
+  CR-U        12.29 +- 0.87 |  10.66   14.30 |  15.98 /  25.05 | 12.69 +- 1.70  13.24 +- 1.49  10.92 +- 0.47
+n1|fwin|S0|CR-U,12.2945,0.8731,10.6631,14.2962,15.9841,25.0451,12.6930,10.9230
+  composition by vertex region (B+P): entrance 6.55, in-cell 5.88, exit 4.73; on-axis share of in-cell empty rows g = 0.619
+  selection variants, B+P (N - CB): S0 16.76 +- 1.88; pre 22.44 +- 2.21; S0b1 16.48 +- 1.95; vz150 12.36 +- 1.58; vz170 19.00 +- 2.02; dz40 16.63 +- 1.90
+  selection variants, all M4 (N - CB): S0 11.86 +- 0.59; pre 16.06 +- 0.78; S0b1 10.73 +- 0.52; vz150 9.24 +- 0.47; vz170 12.86 +- 0.63; dz40 11.87 +- 0.59
+
+[recommended] f_win for the eta yields (S0, isBest >= 0): 16.8 %  +5.0 / -5.9  (stat 1.9, normaliser +2.8/-2.3, gas -3.6, composition 3.6)
+  1 - f_win = 0.832 +0.059 / -0.050   (relative +7.1 / -6.0 %)
+  C_sec (eta, mean of bump and peak) = 1.0110 +- 0.0035;  C_sec x (1 - f_win) = 0.842 +0.060 / -0.051
+  sigma(pp -> eta X) = a_eta x 1.0665 mb x C_sec x (1 - f_win) (spec WP8); a_eta and its bias treatment are WP5/WP8 items
+n1|recommended,16.7599,4.9903,5.9277,1.8805,2.8487,2.2555,3.6417,3.6403,1.01101,0.00350,0.8416,0.0600,0.0505
+  ratios (DR, golden ratio): (1 - f_P)/(1 - f_B) = 1.035 +- 0.046 (stat) -> no correction; quote +-4.6 % as a systematic
+n1|ratioPB,1.0352,0.0458
+
+[per period] factors for the WP7 stability test: K_p = C_sec,p x (1 - f_win,p); f_win,p = B+P value of the empty-target day of the period
+  I    L = 2809.453  C_sec = 1.0241 +- 0.0077  f_win = 19.29 +- 3.69 %  K = 0.8266 +- 0.0383
+n1|period|I,2809.453,1.02413,0.00767,19.2860,3.6900,0.82662,0.03829
+  IIA  L =  372.610  C_sec = 1.0000 +- 0.0000  f_win = 17.24 +- 3.16 %  K = 0.8276 +- 0.0316
+n1|period|IIA,372.610,1.00000,0.00000,17.2430,3.1630,0.82757,0.03163
+  IIB  L = 1078.022  C_sec = 1.0000 +- 0.0000  f_win = 17.24 +- 3.16 %  K = 0.8276 +- 0.0316
+n1|period|IIB,1078.022,1.00000,0.00000,17.2430,3.1630,0.82757,0.03163
+  III  L = 1819.110  C_sec = 1.0000 +- 0.0000  f_win = 12.47 +- 0.81 %  K = 0.8753 +- 0.0080
+n1|period|III,1819.110,1.00000,0.00000,12.4730,0.8050,0.87527,0.00805
+  (IIA and IIB share the empty-target day 047, so their f_win are fully correlated; the f_win differences between the days
+   are within about 2 sigma of the per-day statistics: test with and without per-period f_win)
+
+[fall-backs] C_sec determinable: yes. f_win determinable: yes (empty-target runs exist: 7 + 16 + 104 runs, 1270 DSTs);
+  the spec fall-back range 0.7-2.1 % (elastic w6 x A-dependence) is NOT used: the measured share is about 8x larger.

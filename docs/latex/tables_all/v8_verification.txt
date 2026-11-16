@@ -1,0 +1,56 @@
+# v8_verification.txt -- plots/all_report/v8_verify.py (independent verifier v8, 2026-11-14)
+# S0, isBest >= 0, L = 6079.2 nb^-1; data yields = raw rows x 64/63; SMASH window sums at L (no 63/64) from wp6 'simsmash'.
+
+## A. Reproduction with own arithmetic (WP8 value in brackets)
+BR_G = 2.68e-4 x alpha_5/alpha_2 = 2.68e-4 x 0.38457/0.38825 = 2.65460e-04   [2.6546e-4]
+BR_A = 2.68e-4 x rho_d = 3.52474e-04   [3.5247e-4]
+a_P = Y_peak/(C4+C5 SMASH in P) = 5087.97/12164.94 = 0.418249   [0.418249]
+a_B(all) = Y_bump(all)/(C2+C3 SMASH in B) = 16389.3/54758.9 = 0.299299 ; a_B(E2) = 0.311677 [0.311677]
+DR = a_P/a_B(all) = 1.39743   [1.39743];  DR_F = (5044.8/19426.1)/(12164.9/54758.9) = 1.16896   [1.16896]
+sigma = a_P x 1.0665 x 1.0110 x 0.97 = 0.43744 mb   [0.43744];  F-main: 0.39982 mb [0.39982]
+sigma/sigma_SMASH = 0.4102 [0.410];  visible peak 0.83695 nb [0.83695], bump 2.6960 nb [2.696]
+sigma x BR: ppee 117.2 nb [117.2], ppg 18460 nb [18460], ppp0 (a_B E2) 74714 nb [74714]; F-main a rho: 140.9 nb [140.9]
+units: Y_peak raw = 5008.5 (WP6 iteration limit 5008.5); a_P from raw rows / (SMASH x 63/64) = 0.418249
+L_sim factor: 6079.2/221.05 x 63/64 = 27.0718 (WP0/WP6: 27.0718)
+
+## B. Normalisation (N) of sigma, own propagation
+peak BR mix (PDG 2020, C4 share 0.4772): 2.33 %  [WP7 2.3 %];  C_sec(1-f_eta): +3.11/-4.14 %;  L 6.9 %
+N(sigma) = +7.92/-8.38 %  [WP7 +7.915/-8.357 %]
+bump/C2 BRs (ppp0 (+) pi0 Dalitz): 3.22 % [WP7 3.22 %]; DR N = 3.98 % [3.97 %]
+total (stat 8.48, syst 16.01, MC 5.93, N-dn 8.38 %) = 20.82 % -> 0.0911 mb  [WP8 20.7 %, 0.091 mb]
+live time: 1/0.932 - 1 = 7.30 % (spec +7.3 %); with the L-weighted LF3/LF2 x 64/63 = 0.9334 (5675.7/6080.5): 7.13 %
+
+## C. Corrected factors (v8): PDG 2026 BRs, SMASH sigma of the simulated sample, C_sec of the peak
+class factors PDG2026/PDG2020: C2,C3 x 1.00436; C4 x 1.01422; C5 x 1.02985
+SMASH peak in P: 12164.94 -> 12437.32 rows (x 1.02239); bump in B x 1.00436
+a_P: 0.41825 -> 0.40909 ; sigma_SMASH(sample) 1.0694 mb (was 1.0665); C_sec(peak) 1.0116 (was 1.0110 mean)
+sigma(pp -> eta X) = 0.40909 x 1.0694 x 1.0116 x 0.97 = 0.4293 mb   (WP8 0.4374; change -1.86 %)
+   of which: PDG BRs -2.19 %, SMASH sample sigma +0.28 %, C_sec(peak) +0.06 %
+sigma/sigma_SMASH(sample) = 0.4014 (unchanged by the SMASH factor)
+DR: 1.3974 -> 1.3728 ; DR_F: 1.1690 -> 1.1483
+BR_G: 2.6546e-04 -> 2.6662e-04 ; BR_A: 3.5247e-04 -> 3.5401e-04 (scale with BR(eta->pi+pi-pi0) of the C2 normalisation; the 2.68e-4 factor cancels)
+PDG reference for the BR comparison: 2.76 +- 0.16 e-4 (PDG 2026; 2.68 +- 0.11 e-4 in PDG 2020-2024)
+N with PDG 2026: peak BR mix 3.15 % (C4 share 0.4734); N(sigma) +8.20/-8.64 %; bump/C2 BRs 3.17 %; DR N 4.47 %
+
+## D. Missing systematic of sigma (side bands): composition of the peak (photon-conversion scale of C4)
+a = a_P (C4 + C5)/(kappa C4 + C5); kappa = 1 +- 0.2 (the analysis' own prior, WP3/WP5 fall-back): +10.46 % / -8.65 % -> +-9.55 %
+SMASH peak by class (rows, PDG 2026): C4 E1 4946 E2 942 ; C5 E1 2201 E2 4349 ; data E1 2380 +- 334, E2 2780 +- 372 (stat (+) MC)
+solve with rho = 1: a = 0.592 +- 0.096, a kappa = 0.218 +- 0.086 -> kappa = 0.37 ; sigma would be 0.621 +- 0.101 mb (vs a_P route 0.429)
+(indication only: E1 is the class with the unmodelled component, k_E1 = 7.6; the F-main kappa is 0.83 +- 0.30 with the prior, 0.33 +- 0.52 free)
+syst(sigma) with the composition term in S12 (spec max rule): 18.47 % (was 16.01 %); as a separate family: 18.64 %
+
+## E. Corrected headline (v8)
+sigma(pp -> eta X) = 0.429 +- 0.036 (stat) +- 0.079 (syst) +- 0.025 (MC) +0.035/-0.037 (norm.) mb; total 0.098 mb (22.9 %)
+   data/SMASH = 0.401 +- 0.092;  sigma x BR(eta -> pi+pi-e+e-, PDG 2026) = 118.5 nb;  sigma x BR(pi+pi-gamma) = 18374 nb
+   one-sided (not in the total, all would RAISE sigma): live time +7.1..+7.3 %; START-based track-sorter loss +1.3..+2.8 % (report_exp);
+   cor_ok rule +2.2 +- 1.0 % (data drop cor_ok == 0 rows, the simulation has none: checked, 0 of 230469 std / 7441490 lep rows);
+   event-vertex efficiency of vz > -500 (data keeps 0.565 of the e+e- rows in P, about 0.68 of N - CB; simulation >= 0.96):
+   NOT MEASURED for the eta signal, up to x 1.4 (N - CB rate) or x 1.7 (row rate); (pT, y) production model +19/-7 % (WP8).
+BR_G = 2.67 e-4 (vs PDG 2026 2.76 +- 0.16); BR_A = 3.54 e-4; DR = 1.373; DR_F = 1.148
+
+## F. Literature (verified on line, 2026-11-14)
+  HADES p+p 3.5 GeV inclusive, PYTHIA extrapolation    1.14 +- 0.20 mb ; this/lit = 0.38 ; difference 3.2 sigma
+  same, UrQMD extrapolation                            0.93 +- 0.14 mb ; this/lit = 0.46 ; difference 2.9 sigma
+  [G. Agakishiev et al. (HADES), Eur. Phys. J. A 48 (2012) 64, arXiv:1112.3607, Table 1; T = 3.5 GeV, sqrt(s) = 3.18 GeV]
+  preliminary, same beam time (eta -> pi+pi-pi0, pi0 -> gamma gamma, ECAL): 1.15 mb (+-1 sigma window) / 1.72 mb (+-2 sigma), no errors
+  [A. Strach, talk, Workshop at 1 GeV scale: From mesons to axions, Jagiellonian University, Krakow, 20 Sep 2024, slide 13] -> ratio 0.37 / 0.25

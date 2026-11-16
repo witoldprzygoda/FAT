@@ -1,0 +1,46 @@
+% res_peak_cnt.tex: copy of res_peak.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% res_peak.tex -- written by plots/exp_report/res_peak.C (numbers: tables_exp/res_peak.txt)
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{The $\eta$ peak in $M(\pi^+\pi^-e^+e^-)$ for the final candidate selections, experimental data. $P_\mathrm{main}$: $\chi^2$ fit of $N-\mathrm{CB}$ with the frozen Gaussian (0.5439~GeV/$c^2$, $\sigma=5.4$~MeV/$c^2$) + pol2 in 0.5225--0.6100~GeV/$c^2$; $S$ = whole Gaussian $\pm$ stat $\pm$ model spread (old envelope: half range over the 48 variations with $p>0.05$; the revised model uncertainty, the rms over an edge-safe grid of variations, is in Table~\ref{tab:fix_spread}). stat: fit error, per-count Poisson (no event-group term; checked with independent halves, Table~\ref{tab:fix_stat}). $N$, CB: counts in the data peak window 0.53364--0.55416~GeV/$c^2$, CB $=2\sqrt{N_{++}N_{--}}$, $k=1$. $\Delta S_\mathrm{CB}$: change of $S$ for CB $\times 1.03$. $Y=S\times\frac{64}{63}/L$ with $L=6079.2$~nb$^{-1}$: visible counts per nb$^{-1}$ (counts, not events; not a cross section), not corrected for acceptance or efficiency; luminosity uncertainty $\pm6.9$\% (and one-sided $+7.3$\% on $Y$ if the PT3 live fraction applies) not included. Selections: pre $=$ cor\_ok, $v_z>-160$~mm; pre + vertex $=$ pre + both pions in the event-vertex fit; peak nominal $=$ pre + $\alpha_\mathrm{lab}<55^\circ$ + $M_{\pi\pi}>0.30$~GeV/$c^2$; DIRECT $=$ pre + $\Delta z_\pi<40$~mm; PEAK $=$ DIRECT + $MM_4<2.85$~GeV/$c^2$; X17 region $=$ pre + $15.5\leq M_{ee}<24.5$~MeV/$c^2$ + both pions in the vertex fit. Counts: all stored combinations (isBest $\geq0$) or isBest $=1$, corrected momenta, PT3, vertex $z>-500$~mm. $F=S/\sigma_\mathrm{stat}$ compares selections, it is not a significance.}
+\label{tab:res_peak}
+\begin{tabular}{llrrcrrrc}
+\toprule
+Selection & isBest & $N$ & CB/$N$ & $S\pm$stat$\pm$model & $S/B$ & $F$ & $\Delta S_\mathrm{CB}$ & $Y$ [counts/nb$^{-1}$] \\
+\midrule
+pre & $\geq0$ & 77513 & 0.103 & $4671\pm367\pm958$ & 0.060 & 12.7 & +1 & $0.780\pm0.061\pm0.160$ \\
+pre + vertex & $\geq0$ & 55947 & 0.059 & $4388\pm307\pm1078$ & 0.080 & 14.3 & -1 & $0.733\pm0.051\pm0.180$ \\
+peak nominal & $\geq0$ & 61800 & 0.097 & $4330\pm327\pm981$ & 0.071 & 13.2 & +3 & $0.724\pm0.055\pm0.164$ \\
+peak nominal + vertex & $\geq0$ & 45433 & 0.055 & $3949\pm276\pm936$ & 0.089 & 14.3 & -1 & $0.660\pm0.046\pm0.156$ \\
+DIRECT & $\geq0$ & 62969 & 0.076 & $4492\pm327\pm907$ & 0.072 & 13.7 & -3 & $0.751\pm0.055\pm0.152$ \\
+PEAK & $\geq0$ & 56532 & 0.072 & $4364\pm310\pm867$ & 0.078 & 14.1 & -1 & $0.729\pm0.052\pm0.145$ \\
+X17 region & $\geq0$ & 5258 & 0.019 & $440\pm92\pm133$ & 0.086 & 4.8 & +0 & $0.073\pm0.015\pm0.022$ \\
+\addlinespace
+pre & $=1$ & 62759 & 0.101 & $4199\pm330\pm671$ & 0.067 & 12.7 & +1 & $0.702\pm0.055\pm0.112$ \\
+pre + vertex & $=1$ & 46494 & 0.059 & $3966\pm280\pm955$ & 0.088 & 14.2 & -1 & $0.663\pm0.047\pm0.160$ \\
+peak nominal & $=1$ & 50393 & 0.096 & $3895\pm295\pm776$ & 0.079 & 13.2 & +2 & $0.651\pm0.049\pm0.130$ \\
+peak nominal + vertex & $=1$ & 37928 & 0.056 & $3602\pm252\pm750$ & 0.098 & 14.3 & -1 & $0.602\pm0.042\pm0.125$ \\
+DIRECT & $=1$ & 51735 & 0.075 & $4112\pm296\pm677$ & 0.081 & 13.9 & -2 & $0.687\pm0.050\pm0.113$ \\
+PEAK & $=1$ & 46617 & 0.071 & $4061\pm281\pm782$ & 0.089 & 14.4 & -1 & $0.679\pm0.047\pm0.131$ \\
+X17 region & $=1$ & 4369 & 0.019 & $368\pm84\pm122$ & 0.087 & 4.4 & +0 & $0.062\pm0.014\pm0.020$ \\
+\midrule
+\multicolumn{9}{l}{\emph{with OA$(e^+e^-)>2^\circ$ (not a fixed cut)}} \\
+pre & $\geq0$ & 60935 & 0.128 & $3632\pm328\pm752$ & 0.060 & 11.1 & +1 & $0.607\pm0.055\pm0.126$ \\
+pre + vertex & $\geq0$ & 43060 & 0.074 & $3407\pm271\pm834$ & 0.081 & 12.6 & -2 & $0.569\pm0.045\pm0.139$ \\
+peak nominal & $\geq0$ & 47917 & 0.123 & $3391\pm291\pm721$ & 0.071 & 11.6 & +3 & $0.567\pm0.049\pm0.121$ \\
+peak nominal + vertex & $\geq0$ & 34510 & 0.071 & $3076\pm242\pm715$ & 0.092 & 12.7 & -1 & $0.514\pm0.040\pm0.120$ \\
+DIRECT & $\geq0$ & 48873 & 0.096 & $3460\pm290\pm841$ & 0.071 & 11.9 & -3 & $0.578\pm0.049\pm0.141$ \\
+PEAK & $\geq0$ & 43648 & 0.091 & $3302\pm274\pm681$ & 0.077 & 12.0 & -1 & $0.552\pm0.046\pm0.114$ \\
+X17 region & $\geq0$ & 5245 & 0.019 & $441\pm92\pm136$ & 0.087 & 4.8 & +0 & $0.074\pm0.015\pm0.023$ \\
+\addlinespace
+pre & $=1$ & 49039 & 0.126 & $3286\pm294\pm555$ & 0.067 & 11.2 & +1 & $0.549\pm0.049\pm0.093$ \\
+pre + vertex & $=1$ & 35669 & 0.075 & $3107\pm247\pm733$ & 0.089 & 12.6 & -2 & $0.519\pm0.041\pm0.122$ \\
+peak nominal & $=1$ & 38854 & 0.121 & $3080\pm262\pm667$ & 0.081 & 11.8 & +2 & $0.515\pm0.044\pm0.111$ \\
+peak nominal + vertex & $=1$ & 28729 & 0.072 & $2843\pm221\pm571$ & 0.103 & 12.9 & -1 & $0.475\pm0.037\pm0.095$ \\
+DIRECT & $=1$ & 39962 & 0.095 & $3185\pm263\pm735$ & 0.081 & 12.1 & -2 & $0.532\pm0.044\pm0.123$ \\
+PEAK & $=1$ & 35822 & 0.090 & $3098\pm248\pm573$ & 0.089 & 12.5 & -1 & $0.518\pm0.042\pm0.096$ \\
+X17 region & $=1$ & 4359 & 0.019 & $372\pm84\pm123$ & 0.088 & 4.4 & +0 & $0.062\pm0.014\pm0.021$ \\
+\bottomrule
+\end{tabular}
+\end{table}

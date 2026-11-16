@@ -1,0 +1,64 @@
+# eta signal split by the DST (START) beta of the leptons: class A = both leptons DST beta >= 0.9, class B = at least one < 0.9
+# (class B leptons entered through the hadron pass of the track sorter). P_main fit (frozen Gaussian, pol2, 0.5225-0.6100), S +- stat +- model spread;
+# W = N - CB in the bump window 0.4550-0.5225 (not a yield). CB = 2 sqrt(N++ N--) per class. Rows: cor_ok == 1, FAT: vz > -500, PT3.
+# class shares of the matched rows: us 0.1142, pp 0.2013, mm 0.1792
+
+=== isBest >= 0
+pre                      all   S =  4670.6 +- 366.7 +- 957.7 (spread from 21 of 48 fits with p > 0.05)  chi2/ndf 37.2/31  N(win) 77513 CB(win) 7948.8 (CB/N 0.103)  rows 4423338 / 85921 / 267362
+pre                      A     S =  4376.9 +- 344.2 +- 1080.5 (spread from 28 of 48 fits with p > 0.05)  chi2/ndf 29.5/31  N(win) 68757 CB(win) 6394.7 (CB/N 0.093)  rows 3950965 / 69553 / 222128
+pre                      B     S =   295.6 +- 126.5 +-   0.0 (spread from  0 of 48 fits with p > 0.05)  chi2/ndf 44.6/31  N(win) 8756 CB(win) 1547.4 (CB/N 0.177)  rows 472373 / 16368 / 45234
+pre                      share of class B: r = 0.063 +- 0.026 (CB x1.03: 0.063, x0.97: 0.063); A + B = 4672.5 vs all 4670.6
+peak nominal             all   S =  4329.7 +- 327.2 +- 980.7 (spread from 30 of 48 fits with p > 0.05)  chi2/ndf 28.0/31  N(win) 61800 CB(win) 5996.1 (CB/N 0.097)  rows 2776853 / 52199 / 207586
+peak nominal             A     S =  4024.2 +- 307.8 +- 913.0 (spread from 35 of 48 fits with p > 0.05)  chi2/ndf 24.8/31  N(win) 55094 CB(win) 4848.1 (CB/N 0.088)  rows 2502465 / 42784 / 173994
+peak nominal             B     S =   309.4 +- 110.9 +-  79.5 (spread from  6 of 48 fits with p > 0.05)  chi2/ndf 42.5/31  N(win) 6706 CB(win) 1141.3 (CB/N 0.170)  rows 274388 / 9415 / 33592
+peak nominal             share of class B: r = 0.071 +- 0.024 (CB x1.03: 0.071, x0.97: 0.071); A + B = 4333.6 vs all 4329.7
+peak nominal, OA>2       all   S =  3391.1 +- 291.1 +- 721.4 (spread from 36 of 48 fits with p > 0.05)  chi2/ndf 25.7/31  N(win) 47917 CB(win) 5874.7 (CB/N 0.123)  rows 1981683 / 51008 / 201706
+peak nominal, OA>2       A     S =  3178.0 +- 273.0 +- 678.8 (spread from 38 of 48 fits with p > 0.05)  chi2/ndf 22.8/31  N(win) 42529 CB(win) 4748.0 (CB/N 0.112)  rows 1776668 / 41809 / 168997
+peak nominal, OA>2       B     S =   217.5 +- 100.9 +- 138.4 (spread from  9 of 48 fits with p > 0.05)  chi2/ndf 39.1/31  N(win) 5388 CB(win) 1120.7 (CB/N 0.208)  rows 205015 / 9199 / 32709
+peak nominal, OA>2       share of class B: r = 0.064 +- 0.028 (CB x1.03: 0.064, x0.97: 0.064); A + B = 3395.5 vs all 3391.1
+peak nominal + vertex    all   S =  3948.6 +- 275.9 +- 935.6 (spread from 31 of 48 fits with p > 0.05)  chi2/ndf 24.6/31  N(win) 45433 CB(win) 2510.4 (CB/N 0.055)  rows 2252756 / 27278 / 108176
+peak nominal + vertex    A     S =  3611.7 +- 262.3 +- 848.3 (spread from 34 of 48 fits with p > 0.05)  chi2/ndf 24.3/31  N(win) 41157 CB(win) 2172.9 (CB/N 0.053)  rows 2051997 / 23329 / 95292
+peak nominal + vertex    B     S =   333.6 +-  85.4 +- 165.4 (spread from 39 of 48 fits with p > 0.05)  chi2/ndf 32.5/31  N(win) 4276 CB(win) 336.9 (CB/N 0.079)  rows 200759 / 3949 / 12884
+peak nominal + vertex    share of class B: r = 0.085 +- 0.021 (CB x1.03: 0.085, x0.97: 0.084); A + B = 3945.3 vs all 3948.6
+bump nominal             all   W =  94519.6 +-  352.1  N 103922 CB 9402.4 (CB/N 0.090)  rows 395737 / 9986 / 42139
+bump nominal             A     W =  84785.7 +-  330.5  N 92441 CB 7655.3 (CB/N 0.083)  rows 355556 / 8119 / 35288
+bump nominal             B     W =   9745.4 +-  121.5  N 11481 CB 1735.6 (CB/N 0.151)  rows 40181 / 1867 / 6851
+bump nominal             share of class B: r = 0.103 +- 0.001 (CB x1.03: 0.103, x0.97: 0.103); A + B = 94531.0 vs all 94519.6
+bump nominal, OA>2       all   W =  71036.9 +-  314.4  N 80262 CB 9225.1 (CB/N 0.115)  rows 284443 / 9822 / 41023
+bump nominal, OA>2       A     W =  63504.5 +-  294.1  N 71010 CB 7505.5 (CB/N 0.106)  rows 253905 / 7977 / 34329
+bump nominal, OA>2       B     W =   7543.4 +-  111.1  N 9252 CB 1708.6 (CB/N 0.185)  rows 30538 / 1845 / 6694
+bump nominal, OA>2       share of class B: r = 0.106 +- 0.001 (CB x1.03: 0.106, x0.97: 0.106); A + B = 71047.9 vs all 71036.9
+bump nominal + vertex    all   W =  73769.5 +-  294.2  N 77735 CB 3965.5 (CB/N 0.051)  rows 296726 / 4681 / 19664
+bump nominal + vertex    A     W =  66841.5 +-  279.2  N 70242 CB 3400.5 (CB/N 0.048)  rows 270431 / 3992 / 17360
+bump nominal + vertex    B     W =   6934.4 +-   92.6  N 7493 CB 558.6 (CB/N 0.075)  rows 26295 / 689 / 2304
+bump nominal + vertex    share of class B: r = 0.094 +- 0.001 (CB x1.03: 0.094, x0.97: 0.094); A + B = 73775.9 vs all 73769.5
+
+=== isBest == 1
+pre                      all   S =  4199.4 +- 329.7 +- 671.2 (spread from 16 of 48 fits with p > 0.05)  chi2/ndf 39.8/31  N(win) 62759 CB(win) 6307.7 (CB/N 0.101)  rows 3782512 / 72317 / 220168
+pre                      A     S =  3893.2 +- 310.1 +- 935.0 (spread from 34 of 48 fits with p > 0.05)  chi2/ndf 29.0/31  N(win) 55860 CB(win) 5115.5 (CB/N 0.092)  rows 3386738 / 58736 / 183846
+pre                      B     S =   305.3 +- 112.1 +-   0.0 (spread from  0 of 48 fits with p > 0.05)  chi2/ndf 56.6/31  N(win) 6899 CB(win) 1188.4 (CB/N 0.172)  rows 395774 / 13581 / 36322
+pre                      share of class B: r = 0.073 +- 0.025 (CB x1.03: 0.073, x0.97: 0.073); A + B = 4198.5 vs all 4199.4
+peak nominal             all   S =  3895.3 +- 295.2 +- 776.3 (spread from 32 of 48 fits with p > 0.05)  chi2/ndf 30.5/31  N(win) 50393 CB(win) 4815.6 (CB/N 0.096)  rows 2376008 / 44338 / 171721
+peak nominal             A     S =  3615.3 +- 278.2 +- 840.9 (spread from 34 of 48 fits with p > 0.05)  chi2/ndf 26.2/31  N(win) 45072 CB(win) 3937.1 (CB/N 0.087)  rows 2146266 / 36487 / 144670
+peak nominal             B     S =   281.5 +-  98.7 +-   0.0 (spread from  0 of 48 fits with p > 0.05)  chi2/ndf 56.9/31  N(win) 5321 CB(win) 875.5 (CB/N 0.165)  rows 229742 / 7851 / 27051
+peak nominal             share of class B: r = 0.072 +- 0.024 (CB x1.03: 0.072, x0.97: 0.072); A + B = 3896.7 vs all 3895.3
+peak nominal, OA>2       all   S =  3080.3 +- 262.0 +- 666.9 (spread from 34 of 48 fits with p > 0.05)  chi2/ndf 30.6/31  N(win) 38854 CB(win) 4716.7 (CB/N 0.121)  rows 1684269 / 43260 / 166790
+peak nominal, OA>2       A     S =  2894.7 +- 246.3 +- 624.4 (spread from 38 of 48 fits with p > 0.05)  chi2/ndf 28.5/31  N(win) 34610 CB(win) 3855.5 (CB/N 0.111)  rows 1514124 / 35596 / 140461
+peak nominal, OA>2       B     S =   187.5 +-  89.4 +-  63.9 (spread from  6 of 48 fits with p > 0.05)  chi2/ndf 46.5/31  N(win) 4244 CB(win) 858.7 (CB/N 0.202)  rows 170145 / 7664 / 26329
+peak nominal, OA>2       share of class B: r = 0.061 +- 0.028 (CB x1.03: 0.061, x0.97: 0.061); A + B = 3082.2 vs all 3080.3
+peak nominal + vertex    all   S =  3602.0 +- 252.1 +- 750.3 (spread from 32 of 48 fits with p > 0.05)  chi2/ndf 27.7/31  N(win) 37928 CB(win) 2113.4 (CB/N 0.056)  rows 1955642 / 23928 / 93108
+peak nominal + vertex    A     S =  3284.9 +- 239.9 +- 695.3 (spread from 33 of 48 fits with p > 0.05)  chi2/ndf 26.9/31  N(win) 34402 CB(win) 1849.1 (CB/N 0.054)  rows 1783290 / 20537 / 82207
+peak nominal + vertex    B     S =   313.2 +-  77.5 +- 113.8 (spread from 15 of 48 fits with p > 0.05)  chi2/ndf 37.7/31  N(win) 3526 CB(win) 264.0 (CB/N 0.075)  rows 172352 / 3391 / 10901
+peak nominal + vertex    share of class B: r = 0.087 +- 0.021 (CB x1.03: 0.087, x0.97: 0.087); A + B = 3598.1 vs all 3602.0
+bump nominal             all   W =  77094.0 +-  308.4  N 84581 CB 7487.0 (CB/N 0.089)  rows 328087 / 8329 / 34107
+bump nominal             A     W =  69321.1 +-  290.2  N 75437 CB 6115.9 (CB/N 0.081)  rows 295799 / 6794 / 28762
+bump nominal             B     W =   7787.3 +-  104.5  N 9144 CB 1356.7 (CB/N 0.148)  rows 32288 / 1535 / 5345
+bump nominal             share of class B: r = 0.101 +- 0.001 (CB x1.03: 0.101, x0.97: 0.101); A + B = 77108.4 vs all 77094.0
+bump nominal, OA>2       all   W =  57703.6 +-  274.5  N 65044 CB 7340.4 (CB/N 0.113)  rows 233567 / 8185 / 33196
+bump nominal, OA>2       A     W =  51719.6 +-  257.4  N 57711 CB 5991.4 (CB/N 0.104)  rows 209300 / 6669 / 27977
+bump nominal, OA>2       B     W =   5998.1 +-   95.2  N 7333 CB 1334.9 (CB/N 0.182)  rows 24267 / 1516 / 5219
+bump nominal, OA>2       share of class B: r = 0.104 +- 0.002 (CB x1.03: 0.104, x0.97: 0.104); A + B = 57717.7 vs all 57703.6
+bump nominal + vertex    all   W =  61370.6 +-  263.3  N 64661 CB 3290.4 (CB/N 0.051)  rows 251410 / 4063 / 16660
+bump nominal + vertex    A     W =  55679.4 +-  250.2  N 58497 CB 2817.6 (CB/N 0.048)  rows 229555 / 3462 / 14768
+bump nominal + vertex    B     W =   5702.4 +-   82.2  N 6164 CB 461.6 (CB/N 0.075)  rows 21855 / 601 / 1892
+bump nominal + vertex    share of class B: r = 0.093 +- 0.001 (CB x1.03: 0.093, x0.97: 0.093); A + B = 61381.8 vs all 61370.6

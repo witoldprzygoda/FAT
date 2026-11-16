@@ -1,0 +1,50 @@
+# wp0_check.txt -- plots/all_report/wp0_check.C, numbers read back from /hdd3/przygoda/HADES/FAT_out/all_report/hists_v1.root
+A1  sim pre__nom T12 all M4 = 701.0832 +- 1.4624 nb (ref 701.1)
+A2  data S0 peak window N = 55947 (ref 55947), CB = 3279.0 +- 56.6 (replicas) / 58.9 (linear), CB/N = 0.0586 (ref 0.059)
+    data S0 X17 counting window X17c (M4 0.5312-0.5566, M(ee) 15.5-24.5 MeV) N = 6424, CB = 209.5 +- 7.1 (replicas)
+    data S0 window X17P (P and M(ee) 15.5-24.5 MeV) N = 5258, CB = 171.0 +- 6.2 (replicas) (D19 quotes 5258 and CB 112; res/smp notes 101.7)
+A3  data none bump window W = N - CB = 148091.1 +- 466.6 (ref 148091 +- 469); N = 170751, CB = 22659.9, CB/N = 0.1327
+
+# CB of the spread rule vs 2 sqrt(N++ N--) of the same cell (summed over the cell), data S0 all
+# cell            N++      N--  N--/N++   CB(spread)  2sqrt(++--)    ratio
+  F10_S1E1       115      900     7.83        734.0        643.4    0.877
+  F10_S2E1        92      640     6.96        532.2        485.3    0.912
+  F10_S3E1        44      423     9.61        342.4        272.9    0.797
+  F10_S4E1        87      833     9.57        684.6        538.4    0.786
+  F10_S5E1       134     1877    14.01       1565.9       1003.0    0.641
+  F10_S1E2      3602    12999     3.61      12197.4      13685.4    1.122
+  F10_S2E2      2045     7866     3.85       7376.7       8021.5    1.087
+  F10_S3E2      1316     5283     4.01       4957.5       5273.5    1.064
+  F10_S4E2      2013     8998     4.47       8397.1       8511.9    1.014
+  F10_S5E2      2601    16266     6.25      14903.5      13008.9    0.873
+  win B          1231     7941     6.45       6236.8       6253.1    1.003
+  win P           691     3894     5.64       3279.0       3280.7    1.001
+  win X17c         16      282    17.62        209.5        134.3    0.641
+  win X17P         14      223    15.93        171.0        111.7    0.653
+  win CRU        9111    37966     4.17      37078.7      37197.2    1.003
+  win CRK           2      150    75.00        199.5         34.6    0.174
+A4  closure read back from the file: sum of the 10 F10 histograms vs fine_M4 0.40-0.70, 1056 (directory, quantity) pairs: max relative deviation 2.66e-15 (sim pre__r089 C5)
+
+# CB error per F10 histogram (data S0, all): sum over the 70 bins of CB; median over bins of (replica RMS / linear error)
+S1E1  CB      734.0  median(rep/lin) 3.163
+S2E1  CB      532.2  median(rep/lin) 3.608
+S3E1  CB      342.4  median(rep/lin) 4.191
+S4E1  CB      684.6  median(rep/lin) 3.602
+S5E1  CB     1565.9  median(rep/lin) 2.549
+S1E2  CB    12197.4  median(rep/lin) 1.186
+S2E2  CB     7376.7  median(rep/lin) 1.295
+S3E2  CB     4957.5  median(rep/lin) 1.568
+S4E2  CB     8397.1  median(rep/lin) 1.412
+S5E2  CB    14903.5  median(rep/lin) 1.325
+
+# sim S0__nom: T12 and C5 per F10 histogram: sum [nb], N_eff, median over bins of (replica RMS / event-group error), half A / half B
+S1E1  T12   16.8173 nb (N_eff     4958)  C5  0.07674 nb (N_eff    34540)  median(rep/err) 0.989  hA/hB 0.9902
+S2E1  T12   11.5515 nb (N_eff     2927)  C5  0.09520 nb (N_eff    42852)  median(rep/err) 1.016  hA/hB 0.9925
+S3E1  T12    7.8593 nb (N_eff     1782)  C5  0.07553 nb (N_eff    34295)  median(rep/err) 0.989  hA/hB 1.0650
+S4E1  T12   11.6453 nb (N_eff     2913)  C5  0.13166 nb (N_eff    60689)  median(rep/err) 0.994  hA/hB 0.9537
+S5E1  T12   19.5445 nb (N_eff     5298)  C5  0.06028 nb (N_eff    28413)  median(rep/err) 0.995  hA/hB 0.9973
+S1E2  T12   16.7223 nb (N_eff     7141)  C5  0.18941 nb (N_eff    15102)  median(rep/err) 1.011  hA/hB 0.9650
+S2E2  T12   11.1050 nb (N_eff     3845)  C5  0.21683 nb (N_eff    17918)  median(rep/err) 1.001  hA/hB 0.9996
+S3E2  T12    7.3616 nb (N_eff     2312)  C5  0.14967 nb (N_eff    13267)  median(rep/err) 0.992  hA/hB 0.9852
+S4E2  T12   11.2990 nb (N_eff     3845)  C5  0.22991 nb (N_eff    21636)  median(rep/err) 1.004  hA/hB 1.0051
+S5E2  T12   17.6826 nb (N_eff     6382)  C5  0.08174 nb (N_eff     8938)  median(rep/err) 0.997  hA/hB 1.0137

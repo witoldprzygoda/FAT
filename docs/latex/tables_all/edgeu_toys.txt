@@ -1,0 +1,24 @@
+# edgeu_toys.txt -- edgeu_combine.py (prefix edgeu): closure of f_eta(u-edge) on pseudo-data (edgeu_toys.py)
+# tag truth Asimov_bias[%] AA_bias[%] AA_pullSD AA_cov RF_bias[%] RF_pullSD RF_cov shift_vs_a[%] | truth
+a        0.4200   +2.04   +1.48 0.99 0.67   +2.87 0.95 0.70  +0.00 | WP4 (a): non-eta x 1.35, tilt b = -0.15, a = 0.42 (smoothed SMASH background)
+c1       0.4200   +1.30   +1.22 1.03 0.66   +2.63 1.01 0.69  -0.74 | non-eta x 1, no tilt, a = 0.42
+a1       1.0000   +0.92   +0.60 1.02 0.66   +1.94 0.90 0.73  -1.11 | (a) with a = 1
+null     0.0000   +0.01   +0.01 1.00 0.59   +0.01 0.57 0.89    -   | (a) with a = 0 (no eta at all)
+q-       0.4200   -0.20   -0.36 1.03 0.64   +1.02 1.00 0.69  -2.24 | (a) + q = -0.173 (the B4-killing quadratic term)
+q--      0.4200   -2.46   -2.37 0.99 0.64   -1.03 1.00 0.70  -4.50 | (a) + q = -0.346
+q+       0.4200   +4.25   +3.86 1.01 0.53   +5.27 0.92 0.64  +2.22 | (a) + q = +0.173
+om       0.4200   +2.50   +2.28 1.02 0.63   +3.69 0.97 0.66  +0.47 | WP4 (e): omega/rho0-pion background x 0.3, the rest x 1.6
+ty       0.4200   -1.32   -1.61 1.05 0.64   -0.25 1.01 0.68  -3.35 | (a) + M(pipi) tilt 1 + 0.3 (M(pipi) - 0.35)/0.05 of the non-eta background
+wide     0.4200  +19.30  +19.23 1.05 0.00  +20.86 0.85 0.11 +17.27 | (a) x (1 + 0.10 Gauss(0.490, 15 MeV)) in M4
+narrow   0.4200   +9.59   +9.29 1.04 0.17  +10.79 0.93 0.41  +7.55 | (a) x (1 + 0.05 Gauss(0.505, 8 MeV)) in M4
+raw      0.4200  +12.07  +12.00 1.02 0.06  +13.55 0.92 0.31 +10.04 | (a) with the RAW SMASH background and G_eta (template noise in the truth)
+mass     0.4200   +8.04   +7.98 1.07 0.24   +9.47 0.95 0.48  +6.01 | (a) with the eta truth at s + 0.0009, r = 0.89 (data-like resolution; templates nominal)
+kap      0.3267   +1.73   +1.64 0.98 0.66   +3.02 0.96 0.73  -0.31 | (a) with conversions (C3, C4) x 0.48 in the truth
+pk30     0.4200   +2.11   +1.92 1.01 0.66   +3.31 0.95 0.69  +0.07 | (a) with the true peak scale 0.30 (the estimator subtracts 0.418)
+pk55     0.4200   +1.99   +2.00 1.05 0.61   +3.40 0.98 0.69  -0.04 | (a) with the true peak scale 0.55
+datalike 0.3267   +1.06   +1.18 1.00 0.66   +2.57 0.98 0.70  -0.97 | data-like: a = 0.42, conversions x 0.48, non-eta x 1.16, no tilt
+sA       0.4200   +4.02   +4.01 1.04 0.55   +5.45 0.97 0.65  +1.99 | stage-A-like background: 0.98 (1 - 0.064 x)(G_D + 2.93 G_C), a = 0.42
+sm3      0.4200   -0.54   -0.59 1.03 0.67   +0.76 0.97 0.71  -2.57 | (a) with the background smoothed by exp(pol3)
+sm5      0.4200   +0.83   +0.79 1.02 0.68   +2.18 0.98 0.70  -1.20 | (a) with the background smoothed by exp(pol5)
+sm6      0.4200   +1.01   +0.78 1.02 0.66   +2.17 0.98 0.68  -1.03 | (a) with the background smoothed by exp(pol6)
+# free smearing on the Asimov of (a): 6.42 +- 0.86 MeV (data 7.02 +- 0.79 MeV)

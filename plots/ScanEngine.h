@@ -64,10 +64,15 @@ const double kMp    = 0.93827231;
 const double kTbeam = 4530.0;       // beam kinetic energy [MeV]
 
 // ---- files -----------------------------------------------------------------
+// scan_v2 (2026-11-14): the same compact rows as scan/ plus the pion track z
+// (pip_z, pim_z, dz_pi). The outputs of the first study stay untouched in
+// .../scan and plots/output/eta_scan; kCompactV1 is that first compact file
+// (it loads with NaN in the pion z columns, see BindRow).
 const char* const kProdDir    = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530";
-const char* const kScanDir    = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan";
-const char* const kCompact    = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan/scan_compact.root";
-const char* const kFigDir     = "/home/przygoda/HADES/FAT/FAT/plots/output/eta_scan";
+const char* const kScanDir    = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan_v2";
+const char* const kCompact    = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan_v2/scan_compact.root";
+const char* const kFigDir     = "/home/przygoda/HADES/FAT/FAT/plots/output/eta_scan_v2";
+const char* const kCompactV1  = "/hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/scan/scan_compact.root";
 
 // ---- M4 binning: 2.5 MeV from 0.35 to 0.95; CB in 10 MeV bins ---------------
 const int    kNbin  = 240;
@@ -191,6 +196,10 @@ inline double EdgeMeasured(double mpipi_meas, double scale = kScale, double scal
     X(T_pi0) X(m4max)                                                             \
     X(fw1_p) X(fw1_theta)
 
+// Columns added in scan_v2 (2026-11-14). Optional when reading: a compact file
+// without them (the first version, kCompactV1) loads with NaN in these fields.
+#define SCAN_FLT_FIELDS_V2(X) X(pip_z) X(pim_z) X(dz_pi)
+
 // One stored particle combination.
 //   keys      file_id, pat_entry (row in the PAT file), run, grp (event group),
 //             fold (grp parity), isBest, nrow (rows in the group), n_pip, n_pim,
@@ -211,23 +220,40 @@ inline double EdgeMeasured(double mpipi_meas, double scale = kScale, double scal
 //             g_idx (1..3), g_e [MeV], g_theta, g_phi, m_eeg, m5, mm5; -1 if none
 //   derived   T_pi0 = TPi0(mpipi), m4max = M4max(mpipi) (true-mass formula
 //             evaluated at the measured mpipi; -1 above the limit)
+//   pion z    (scan_v2) pip_z, pim_z = z of the pion track at its closest
+//             approach to the beam axis (PAT X_z) [mm]; dz_pi =
+//             max(|pip_z - vz|, |pim_z - vz|) [mm], vz = eVertReco_z (the same
+//             definition and float arithmetic as the simulation study,
+//             FAT_simwt plots/eta_sim/s5_blind_prep.C DzPi); NaN when the
+//             compact file has no such columns (a cut dz_pi < x then rejects
+//             every row)
 struct Row {
 #define X(n) Int_t n;
     SCAN_INT_FIELDS(X)
 #undef X
 #define X(n) Float_t n;
     SCAN_FLT_FIELDS(X)
+    SCAN_FLT_FIELDS_V2(X)
 #undef X
 };
 
-// create (write = true) or connect (write = false) the branches of a compact tree
-inline void BindRow(TTree* t, Row& r, bool write) {
+// create (write = true) or connect (write = false) the branches of a compact tree.
+// Reading: the optional columns SCAN_FLT_FIELDS_V2 that the tree lacks are set to
+// NaN; the return value is the number of such missing columns.
+inline int BindRow(TTree* t, Row& r, bool write) {
 #define X(n) if (write) t->Branch(#n, &r.n, #n "/I"); else t->SetBranchAddress(#n, &r.n);
     SCAN_INT_FIELDS(X)
 #undef X
 #define X(n) if (write) t->Branch(#n, &r.n, #n "/F"); else t->SetBranchAddress(#n, &r.n);
     SCAN_FLT_FIELDS(X)
 #undef X
+    int missing = 0;
+#define X(n) if (write) t->Branch(#n, &r.n, #n "/F");                              \
+             else if (t->GetBranch(#n)) t->SetBranchAddress(#n, &r.n);             \
+             else { r.n = std::numeric_limits<float>::quiet_NaN(); ++missing; }
+    SCAN_FLT_FIELDS_V2(X)
+#undef X
+    return missing;
 }
 
 enum Sample { kUS = 0, kPP = 1, kMM = 2 };
@@ -274,13 +300,18 @@ inline bool Load(Data& d, const char* path = kCompact,
     TStopwatch sw;
     TFile* f = TFile::Open(path, "READ");
     if (!f || f->IsZombie()) { printf("scan::Load: cannot open %s\n", path); return false; }
+    bool warned = false;
     for (int k = 0; k < 3; ++k) {
         d.s[k].clear();
         if (!(samples & (1 << k))) continue;
         TTree* t = (TTree*)f->Get(SampleName(k));
         if (!t) { printf("scan::Load: tree %s missing\n", SampleName(k)); return false; }
         Row r;
-        BindRow(t, r, false);
+        if (BindRow(t, r, false) > 0 && !warned) {
+            printf("scan::Load: WARNING %s has no pion track z columns (pip_z, pim_z, dz_pi): "
+                   "they are NaN, a cut on them rejects every row\n", path);
+            warned = true;
+        }
         const Long64_t n = t->GetEntries();
         d.s[k].reserve(n);
         for (Long64_t i = 0; i < n; ++i) {

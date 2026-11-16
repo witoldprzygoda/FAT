@@ -1,0 +1,43 @@
+# x17c_variants.txt -- variants of the X17 side-band fit (r = 0; x17c_freeze.C). Each: side-band Pearson chi2/ndf, deviance, N5 (direct rows,
+# all M(ee)), N4, a_eta, g, R_X, and the Asimov expected median 90 % CLs at 17 MeV/c2 built from the variant's own side-band fit.
+# 'N5spread' = used for the N5-bias nuisance (background-shape and CB variants with deviance <= nominal + 2 sqrt(2 ndf) = +76.4).
+variant      chi2/ndf     ddev        N5        N4   a_eta       g     R_X      exp(1)      exp(2)  B(X17c) N5spread  description
+nominal        1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   2.759e-05   2.629e-05   6311.7      yes  WP5 background shapes, bkgMode 4, 2 classes, spread-rule CB
+Bsim2          1.0250     -0.8    3366.3    1861.8  0.2672   1.449  1.3455   2.767e-05   2.629e-05   6328.3      yes  background shape: simulated G_D + G_C, exp(pol2) (x17ab nominal)
+Bsim1          1.0251     -0.7    3363.4    1884.2  0.2676   1.452  1.3455   2.762e-05   2.624e-05   6309.6      yes  background shape: simulated, exp(pol1)
+Bsim3          1.0818    +41.1    4025.5     517.7  0.2957   0.936  1.3455   2.164e-05   2.613e-05   6351.3      yes  background shape: simulated, exp(pol3)
+BkappaB        1.0250     -0.8    3363.3    1848.1  0.2669   1.447  1.3455   2.776e-05   2.632e-05   6327.3      yes  background shape: simulated G_D + kappa_B(WP5) G_C, exp(pol2)
+flatPol2       1.0342    +10.4    3013.3    2025.9  0.2748   1.532  1.3455   2.809e-05   2.452e-05   6327.0      yes  background flat x (1 + b t + c t^2) per class (spec 'pol2' variant)
+3class         1.0278     -3.2    3822.9    1741.6  0.0886   1.643  1.3455   2.056e-05   2.554e-05   6387.3      yes  three background classes (E1, 10-30, >= 30 MeV), simulated exp(pol2)
+tiltOnly       1.0343    +12.5    3055.5    1984.2  0.2499   1.432  1.3455   2.790e-05   2.453e-05   6290.8      yes  WP5 shapes x (1 + b t) per class
+noMeeDep       1.0345    +10.6    2992.5    2010.6  0.2699   1.471  1.3455   2.864e-05   2.446e-05   6291.8      yes  WP5 shapes x (1 + b t + c t^2), no M(ee) dependence
+CBfact         1.0269     +0.5    3441.4    1791.7  0.2533   1.378  1.3455   2.709e-05   2.633e-05   6318.0      yes  CB factorised (sum rule)
+CBgeo          1.0267     +0.4    3449.8    1789.8  0.2545   1.381  1.3455   2.690e-05   2.625e-05   6258.4      yes  CB per-row geometric mean
+kE1free        1.0250     -0.8    3341.4    1760.0  0.2684   1.443  1.3455   2.793e-05   2.621e-05   6261.3      yes  k_E1 free
+fill1          1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   2.769e-05   2.640e-05   6403.0       no  masked rows: pol1 in ln(n_j / sim_j)
+fill3          1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   2.766e-05   2.637e-05   6371.5       no  masked rows: pol3 in ln(n_j / sim_j)
+fillLS         1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   3.095e-05   3.028e-05   9622.2       no  masked rows: reference = like-sign rows N++ + N--
+fillFlat       1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   3.045e-05   2.959e-05   9042.6       no  masked rows: reference flat (pol2 in ln n_j)
+fillSmooth     1.0261     +0.0    3379.6    1803.3  0.2646   1.399  1.3455   2.885e-05   2.779e-05   7507.2       no  masked rows: reference = locally smoothed simulated G_D + G_C rows
+sim_V2         1.0259     -0.1    3302.4    1853.0  0.2652   1.399  1.1595   3.271e-05   2.629e-05   6312.2       no  peak/direct templates of S0__V2
+sim_GS         1.0261     -0.0    3379.3    1805.4  0.2646   1.399  1.3388   2.773e-05   2.629e-05   6311.6       no  peak/direct templates of S0__GS
+sim_r089       1.0257     -0.2    3096.3    1626.9  0.2713   1.464  1.3452   2.801e-05   2.435e-05   6305.4       no  peak/direct templates of S0__r089
+sim_r110       1.0279     +1.3    3620.6    1970.9  0.2639   1.349  1.3453   2.730e-05   2.801e-05   6314.3       no  peak/direct templates of S0__r110
+sim_sUp        1.0314     +3.9    3275.6    1804.5  0.2733   1.372  1.3454   2.880e-05   2.629e-05   6306.2       no  peak/direct templates of S0__sUp
+sim_sDn        1.0220     -2.9    3471.2    1795.2  0.2592   1.432  1.3455   2.650e-05   2.626e-05   6316.2       no  peak/direct templates of S0__sDn
+N5-bias = half spread 2992.5-4025.5 / 3379.6 = 0.1528
+yield-factor terms (1): direct shape 0.1579, peak width 0.0776, mass scale 0.0290; (2): 0.0000, 0.0090, 0.0017
+R_X kinematics (max over the mass grid): direct-like M(pipi) 0.0213, generator pion angle 0.0414; slice/C6 validation 0.0430; BR_dir 0.0410
+sX(1) = 0.2467, sX(2) = 0.4357 (incl. a_eta 0.4309), sX(3) = 0.2696 (incl. a_P 0.2619); all log-normal
+# single choices on the expected median at 17 MeV/c2 (nominal 2.7589e-05):
+  no variance factor (q~ not scaled)                      2.7008e-05  x 0.979
+  no X17 yield nuisance                                   2.6298e-05  x 0.953
+  no line-shape nuisances                                 2.7351e-05  x 0.991
+  a_eta and g fixed                                       2.6655e-05  x 0.966
+  no conversion-tail nuisance                             2.7513e-05  x 0.997
+  k_E2 fixed                                              2.7589e-05  x 1.000
+  line width x 1.10 (fixed)                               3.0269e-05  x 1.097
+  line width x 0.90 (fixed)                               2.5017e-05  x 0.907
+  R_X with e+ decay angle 1 + cos^2 (quoted separately)   3.3057e-05  x 1.198
+  R_X with direct-like M(pipi)                            2.8132e-05  x 1.020
+Asimov at 17 MeV: sigma(r_hat) 1.164e-05 (BR); r_hat RMS over 50 CB replicas 1.139e-06, over 50 C4 replicas 1.441e-06 (MC, quoted separately)

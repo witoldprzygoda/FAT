@@ -1,0 +1,50 @@
+# spec_vz500.txt -- what the FAT preselection (vertex z > -500 mm, PT3) and the analysis cuts (cor_ok, vz > -160 mm) remove,
+#   unlike-sign (us, PipPimEpEm_ID) vs like-sign (pp, PipPimEpEp_ID; mm, PipPimEmEm_ID) rows; written by plots/exp_report/spec_vz500.C
+# input: the 29 PAT day files of /hdd3/przygoda/HADES/files/exp/gen4/lep_betanew.list (1 parts added); all rows have isBest 0 or 1
+# A. cut flow (rows)
+   stage                                    us     kept         pp     kept         mm     kept    CB/N*
+   PAT rows (isBest >= 0)              7186155   1.0000     423230   1.0000    1569416   1.0000   0.2268
+   + vertex z > -500 mm (FAT)          4868213   0.6774     124890   0.2951     377646   0.2406   0.0892
+   + PT3 trigbit == 8192 (FAT)         4783467   0.9826     122875   0.9839     371524   0.9838   0.0893
+   + cor_ok (analysis)                 4753629   0.9938     121789   0.9912     367954   0.9904   0.0891
+   + vz > -160 mm (= pre)              4423338   0.9305      85921   0.7055     267362   0.7266   0.0685
+   * CB/N = 2 sqrt(N++ N--)/N of the totals (not the M4-binned CB); 'kept' = fraction kept by this stage.
+
+# B. row pass fractions per M4 region (corrected momenta, cor_ok rows), errors with the event-group correlation
+== vertex z > -500 mm (base: PAT rows)
+   region                        f(us)                f(pp)                f(mm)    CBkept CB/N chg
+   M4 < 0.455           0.5568 +- 0.0016       0.2657 +- 0.0062       0.1808 +- 0.0018    0.2192    0.394
+   bump window          0.5708 +- 0.0009       0.2615 +- 0.0034       0.1954 +- 0.0011    0.2261    0.396
+   gap                  0.5472 +- 0.0019       0.2528 +- 0.0064       0.1994 +- 0.0023    0.2245    0.410
+   peak window          0.5654 +- 0.0013       0.2552 +- 0.0044       0.2020 +- 0.0016    0.2271    0.402
+   upper gap            0.5621 +- 0.0023       0.2573 +- 0.0076       0.2062 +- 0.0029    0.2303    0.410
+   0.56-0.70            0.6170 +- 0.0004       0.2678 +- 0.0014       0.2260 +- 0.0007    0.2460    0.399
+   0.70-0.90            0.6973 +- 0.0003       0.2982 +- 0.0013       0.2622 +- 0.0007    0.2796    0.401
+   0.90-1.10            0.7449 +- 0.0004       0.3300 +- 0.0019       0.2895 +- 0.0011    0.3090    0.415
+   M4 > 1.10            0.7530 +- 0.0006       0.3582 +- 0.0028       0.2976 +- 0.0018    0.3265    0.434
+== PT3 trigbit == 8192 (base: z > -500)
+   region                        f(us)                f(pp)                f(mm)    CBkept CB/N chg
+   M4 < 0.455           0.9814 +- 0.0006       0.9857 +- 0.0031       0.9822 +- 0.0015    0.9840    1.003
+   bump window          0.9818 +- 0.0003       0.9834 +- 0.0019       0.9830 +- 0.0009    0.9832    1.001
+   gap                  0.9835 +- 0.0007       0.9865 +- 0.0034       0.9851 +- 0.0015    0.9858    1.002
+   peak window          0.9830 +- 0.0004       0.9819 +- 0.0027       0.9852 +- 0.0011    0.9835    1.001
+   upper gap            0.9835 +- 0.0008       0.9837 +- 0.0043       0.9860 +- 0.0019    0.9848    1.001
+   0.56-0.70            0.9828 +- 0.0001       0.9834 +- 0.0008       0.9842 +- 0.0004    0.9838    1.001
+   0.70-0.90            0.9827 +- 0.0001       0.9844 +- 0.0006       0.9838 +- 0.0004    0.9841    1.001
+   0.90-1.10            0.9826 +- 0.0001       0.9831 +- 0.0009       0.9833 +- 0.0006    0.9832    1.001
+   M4 > 1.10            0.9822 +- 0.0002       0.9844 +- 0.0012       0.9838 +- 0.0009    0.9841    1.002
+== vz > -160 mm (base: z > -500, PT3, cor_ok)
+   region                        f(us)                f(pp)                f(mm)    CBkept CB/N chg
+   M4 < 0.455           0.8790 +- 0.0015       0.6384 +- 0.0133       0.6882 +- 0.0051    0.6628    0.754
+   bump window          0.8971 +- 0.0008       0.6620 +- 0.0074       0.7073 +- 0.0030    0.6843    0.763
+   gap                  0.8942 +- 0.0016       0.6376 +- 0.0142       0.7152 +- 0.0058    0.6753    0.755
+   peak window          0.9012 +- 0.0011       0.6699 +- 0.0096       0.7171 +- 0.0041    0.6931    0.769
+   upper gap            0.8973 +- 0.0019       0.7065 +- 0.0158       0.7046 +- 0.0073    0.7056    0.786
+   0.56-0.70            0.9173 +- 0.0003       0.6889 +- 0.0030       0.7222 +- 0.0015    0.7054    0.769
+   0.70-0.90            0.9354 +- 0.0002       0.7081 +- 0.0024       0.7343 +- 0.0014    0.7211    0.771
+   0.90-1.10            0.9439 +- 0.0003       0.7263 +- 0.0031       0.7403 +- 0.0021    0.7333    0.777
+   M4 > 1.10            0.9415 +- 0.0004       0.7378 +- 0.0043       0.7292 +- 0.0032    0.7335    0.779
+   CBkept = sqrt(f(pp) f(mm)) = kept fraction of 2 sqrt(N++ N--); 'CB/N chg' = factor by which the cut changes CB/N.
+# C. vz of all PAT rows, sample us: fraction at vz <= -500 mm 0.3226 (of which at the lower clamp -1000: 0.3224)
+# C. vz of all PAT rows, sample pp: fraction at vz <= -500 mm 0.7049 (of which at the lower clamp -1000: 0.7048)
+# C. vz of all PAT rows, sample mm: fraction at vz <= -500 mm 0.7594 (of which at the lower clamp -1000: 0.7591)

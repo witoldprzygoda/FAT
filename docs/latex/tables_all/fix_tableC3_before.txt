@@ -1,0 +1,12 @@
+# fix_tableC3_before.txt (fix_after.py): 'before' ratio in the regions of Table C3, E2 (M(ee) >= 10 MeV/c2), all slices, S0, raw rows.
+# before = (N - CB)/T12 (SMASH T1+T2, no renormalisation, k = 1); after = (N - k CB)/(B_A + 0.4 eta) (WP3 Table C3). F10 bins split
+# uniformly at fractional window edges (N_frac vs the exact N of Table C3 given as a check).
+# region | N_frac (exact) | CB | T12 | before +- err | after (recomputed) | after (WP3)
+R0' 0.400-0.455        |     13786 ( 13786) |   1445.4 |    13729.2 | 0.899 +- 0.035 | 0.828 | 0.828
+R1 = B 0.4550-0.5225   |     53241 ( 53241) |   5667.8 |    57112.3 | 0.833 +- 0.017 | 0.952 | 0.952
+R2 0.5225-0.5336       |     11471 ( 11471) |   1341.9 |     9073.5 | 1.116 +- 0.045 | 0.932 | 0.932
+R3 = P 0.5336-0.5542   |     27099 ( 27099) |   2999.7 |    22597.8 | 1.066 +- 0.025 | 0.969 | 0.969
+R4 0.5542-0.565        |     15519 ( 15519) |   1818.9 |    11391.5 | 1.203 +- 0.043 | 0.960 | 0.960
+R5 0.565-0.700         |    357941 (357941) |  34558.5 |   270105.4 | 1.197 +- 0.009 | 0.998 | 0.998
+CR-U 0.575-0.700       |    342098 (342098) |  32696.3 |   258735.4 | 1.196 +- 0.010 | 0.999 | 0.999
+CR-L 0.5225-0.5300     |      7519 (  7519) |    890.3 |     6306.6 | 1.051 +- 0.054 | 0.923 | 0.923

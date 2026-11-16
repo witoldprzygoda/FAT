@@ -1,0 +1,29 @@
+% opt_named.tex -- written by plots/exp_report/opt_named.C (numbers: tables_exp/opt_named.txt)
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Named selections on the data, all stored combinations (isBest $\geq 0$), no OA cut. pre = $v_z>-160$~mm, corrected momenta (cor\_ok $=1$), PT3, FAT vertex $z>-500$~mm. $\eta$ peak: $P_\mathrm{main}$ fit of $N-\mathrm{CB}$ (frozen Gaussian 0.5439~GeV/$c^2$, $\sigma=5.4$~MeV, pol2, 0.5225--0.6100), $S$ = whole Gaussian $\pm$ stat $\pm$ model spread (old envelope; revised model uncertainty in Table~\ref{tab:fix_spread}); stat and the $E$ errors are per-row Poisson fit errors (no event-group term; the halving test of Table~\ref{tab:fix_stat} finds those of $E$ too small by a factor 1.2); $N$, CB/$N$ and $S/B$ in the data window 0.53364--0.55416~GeV/$c^2$; $F=S/\sigma_S^\mathrm{stat}$ compares selections and is not a significance. Bump: edge-step visibility $E$ (rows per 2.5~MeV, not a yield) $\pm$ stat $\pm$ spread. $T$: ECAL-tagged $\eta\to\pi^+\pi^-\pi^0$ (verification only), $\varepsilon_T=T/T(\mathrm{pre})$. CB $=2\sqrt{N_{++}N_{--}}$, $k=1$. Frozen = chosen on the simulation alone (freeze rule declared before the search); these data were not used in the choice. $E$ in brackets with $^\dagger$: the summed edge fit fails ($p<10^{-3}$, the $\eta$-rest angle cut is a band-pass in $M_4$), $E$ is not valid. Rows, not normalised to luminosity.}
+\label{tab:opt_named}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Selection & $N$ & CB/$N$ & $S\pm$stat$\pm$spread & $S/B$ & $F$ & $E\pm$stat$\pm$spread & $T\pm$stat & $\varepsilon_T$ \\
+\midrule
+pre without $v_z>-160$ & 86011 & 0.134 & $4657\pm390\pm1233$ & 0.054 & 11.9 & $1241\pm76\pm319$ & $3300\pm108$ & 0.996 \\
+\midrule
+pre = BUMP (frozen) & 77513 & 0.103 & $4671\pm367\pm958$ & 0.060 & 12.7 & $1199\pm71\pm287$ & $3312\pm105$ & 1.000 \\
+peak nominal & 61800 & 0.097 & $4330\pm327\pm981$ & 0.071 & 13.2 & $1169\pm68\pm301$ & $3184\pm98$ & 0.961 \\
+peak nominal + vertex & 45433 & 0.055 & $3949\pm276\pm936$ & 0.089 & 14.3 & $1089\pm57\pm262$ & $2968\pm89$ & 0.896 \\
+peak nominal + $\Delta z_\pi<40$ & 50604 & 0.071 & $4182\pm293\pm837$ & 0.084 & 14.3 & $1139\pm60\pm253$ & $3050\pm91$ & 0.921 \\
+DIRECT (frozen) & 62969 & 0.076 & $4492\pm327\pm907$ & 0.072 & 13.7 & $1183\pm63\pm226$ & $3191\pm97$ & 0.963 \\
+PEAK (frozen) & 56532 & 0.072 & $4364\pm310\pm867$ & 0.078 & 14.1 & $1120\pm59\pm243$ & $2972\pm92$ & 0.897 \\
+pre + vertex & 55947 & 0.059 & $4388\pm307\pm1078$ & 0.080 & 14.3 & $1142\pm59\pm236$ & $3088\pm94$ & 0.932 \\
+\midrule
+bump nominal & 33240 & 0.099 & $2635\pm237\pm431$ & 0.081 & 11.1 & $1082\pm60\pm326$ & $3014\pm93$ & 0.910 \\
+bump nominal + vertex & 24568 & 0.058 & $2405\pm200\pm456$ & 0.102 & 12.0 & $1004\pm51\pm244$ & $2820\pm84$ & 0.851 \\
+bump nominal + $\Delta z_\pi<40$ & 27289 & 0.073 & $2600\pm212\pm477$ & 0.099 & 12.3 & $1040\pm54\pm265$ & $2895\pm87$ & 0.874 \\
+\midrule
+slides & 46001 & 0.122 & $3187\pm283\pm673$ & 0.070 & 11.2 & (918)$^\dagger$ & $1819\pm75$ & 0.549 \\
+old code & 51605 & 0.097 & $3633\pm296\pm671$ & 0.071 & 12.3 & (1239)$^\dagger$ & $2391\pm85$ & 0.722 \\
+\bottomrule
+\end{tabular}
+\end{table}

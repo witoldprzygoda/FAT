@@ -1,0 +1,41 @@
+# PDG 2026 (analyst ruling D25, 15 November 2026): BR(eta -> pi+pi-e+e-) = (2.76 +- 0.16) e-4 (S = 1.5) instead of the frozen PDG 2020
+# (2.68 +- 0.11) e-4. Normalisation (1): frozen code rerun with ONLY BR_dir changed (r -> BR x 2.76e-4; BR_dir part of the X17 yield
+# nuisance 4.10 % -> 5.80 %, sX1 0.2467 -> 0.2501; x17p26_limit.C); r_UL changes by +0.11..+0.14 %. (2): x 1.00436, (3): x 1.0224 (WP5 eta
+# scales a_eta, a_P fitted with PDG 2020 BRs; rerun with the rescaled scales). Toy-based numbers: frozen toys x 2.76/2.68 x k (k = rerun ratio).
+# Written by plots/all_report/x17p26_tables.py from the frozen PDG 2020 table of the same name without _pdg26.
+# x17d_checks_pdg26.txt -- x17d_checks.txt in PDG 2026 units (factors as in the header; nothing rerun except the asymptotic UL).
+toy CLs vs asymptotic (data):
+  m 16.70 norm 1: UL asym 3.1587e-05 toy 3.0250e-05 ratio 0.9577   (frozen: 3.0631e-05 / 2.9335e-05)
+  m 16.70 norm 2: UL asym 3.3081e-05 toy 3.3361e-05 ratio 1.0084   (frozen: 3.2938e-05 / 3.3216e-05)
+  m 16.70 norm 3: UL asym 2.8255e-05 toy 2.8558e-05 ratio 1.0107   (frozen: 2.7636e-05 / 2.7932e-05)
+  m 16.85 norm 1: UL asym 3.1602e-05 toy 3.1676e-05 ratio 1.0023   (frozen: 3.0646e-05 / 3.0717e-05)
+  m 16.85 norm 2: UL asym 3.3005e-05 toy 3.4129e-05 ratio 1.0341   (frozen: 3.2861e-05 / 3.3981e-05)
+  m 16.85 norm 3: UL asym 2.8177e-05 toy 2.8678e-05 ratio 1.0178   (frozen: 2.7559e-05 / 2.8050e-05)
+  m 17.00 norm 1: UL asym 3.1589e-05 toy 3.1066e-05 ratio 0.9834   (frozen: 3.0636e-05 / 3.0128e-05)
+  m 17.00 norm 2: UL asym 3.2901e-05 toy 3.4255e-05 ratio 1.0412   (frozen: 3.2758e-05 / 3.4106e-05)
+  m 17.00 norm 3: UL asym 2.8080e-05 toy 2.8448e-05 ratio 1.0131   (frozen: 2.7465e-05 / 2.7825e-05)
+FC at 17 MeV/c2 (norm 1): r, BR (PDG 2026 = r x 2.76e-4 x 1.00124), t_obs, t68, t90, t95, p
+  0.0000 0.0000e+00 0.2434 0.2171 1.5561 2.5478 0.3130
+  0.0100 2.7634e-06 0.0602 0.5881 1.5702 2.6367 0.8030
+  0.0200 5.5269e-06 0.0001 0.8447 1.8228 2.9057 0.9930
+  0.0300 8.2903e-06 0.0420 0.9372 2.2080 3.2230 0.8290
+  0.0400 1.1054e-05 0.1652 1.0231 2.4871 3.3729 0.7060
+  0.0500 1.3817e-05 0.3520 0.9681 2.3995 3.3614 0.5550
+  0.0600 1.6581e-05 0.5877 0.9349 2.6765 3.6015 0.4325
+  0.0700 1.9344e-05 0.8603 1.0358 2.7865 3.6624 0.3660
+  0.0800 2.2107e-05 1.1605 1.0329 2.8263 3.7511 0.2955
+  0.0900 2.4871e-05 1.4808 1.0446 2.7209 4.0041 0.2345
+  0.1000 2.7634e-05 1.8157 0.9903 2.6539 3.5893 0.1680
+  0.1100 3.0398e-05 2.1605 1.0442 2.8000 3.7285 0.1430
+  0.1200 3.3161e-05 2.5117 1.0342 2.8462 4.2530 0.1245
+  0.1400 3.8688e-05 3.2229 0.9820 2.7803 4.0364 0.0750
+FC 90 % CL interval: [0.0000e+00, 3.5540e-05]
+MC m 16.70 norm 1: nominal UL 3.1587e-05; CB replicas 200: UL mean 3.1653e-05 RMS 1.946e-06, r_hat RMS 1.223e-06; C4 replicas 100: UL mean 2.9737e-05 RMS 2.811e-06, r_hat RMS 1.776e-06; combined RMS 3.418e-06 (10.8 %)
+MC m 16.70 norm 2: nominal UL 3.3081e-05; CB replicas 200: UL mean 3.3069e-05 RMS 1.315e-06, r_hat RMS 1.334e-06; C4 replicas 100: UL mean 3.2015e-05 RMS 2.106e-06, r_hat RMS 2.034e-06; combined RMS 2.483e-06 (7.5 %)
+MC m 16.70 norm 3: nominal UL 2.8255e-05; CB replicas 200: UL mean 2.8243e-05 RMS 1.071e-06, r_hat RMS 1.251e-06; C4 replicas 100: UL mean 2.7382e-05 RMS 1.722e-06, r_hat RMS 1.908e-06; combined RMS 2.028e-06 (7.2 %)
+MC m 16.85 norm 1: nominal UL 3.1602e-05; CB replicas 200: UL mean 3.1666e-05 RMS 1.963e-06, r_hat RMS 1.230e-06; C4 replicas 100: UL mean 2.9722e-05 RMS 2.830e-06, r_hat RMS 1.771e-06; combined RMS 3.444e-06 (10.9 %)
+MC m 16.85 norm 2: nominal UL 3.3005e-05; CB replicas 200: UL mean 3.2985e-05 RMS 1.322e-06, r_hat RMS 1.333e-06; C4 replicas 100: UL mean 3.1917e-05 RMS 2.100e-06, r_hat RMS 2.017e-06; combined RMS 2.481e-06 (7.5 %)
+MC m 16.85 norm 3: nominal UL 2.8177e-05; CB replicas 200: UL mean 2.8163e-05 RMS 1.078e-06, r_hat RMS 1.250e-06; C4 replicas 100: UL mean 2.7289e-05 RMS 1.718e-06, r_hat RMS 1.892e-06; combined RMS 2.027e-06 (7.2 %)
+MC m 17.00 norm 1: nominal UL 3.1589e-05; CB replicas 200: UL mean 3.1647e-05 RMS 1.979e-06, r_hat RMS 1.235e-06; C4 replicas 100: UL mean 2.9678e-05 RMS 2.847e-06, r_hat RMS 1.766e-06; combined RMS 3.467e-06 (11.0 %)
+MC m 17.00 norm 2: nominal UL 3.2901e-05; CB replicas 200: UL mean 3.2878e-05 RMS 1.327e-06, r_hat RMS 1.331e-06; C4 replicas 100: UL mean 3.1795e-05 RMS 2.093e-06, r_hat RMS 2.000e-06; combined RMS 2.479e-06 (7.5 %)
+MC m 17.00 norm 3: nominal UL 2.8080e-05; CB replicas 200: UL mean 2.8062e-05 RMS 1.082e-06, r_hat RMS 1.248e-06; C4 replicas 100: UL mean 2.7176e-05 RMS 1.711e-06, r_hat RMS 1.876e-06; combined RMS 2.025e-06 (7.2 %)

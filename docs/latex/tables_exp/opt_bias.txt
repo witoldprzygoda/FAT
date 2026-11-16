@@ -1,0 +1,51 @@
+# opt_bias.txt  --  written by plots/exp_report/opt_bias.C
+# EXPERIMENTAL DATA. Base pre = cor_ok && isBest >= 0 && vz > -160 mm (FAT: vz > -500, PT3); rows with 0.50 <= M4 < 0.63 (661739 rows).
+# P_main (N - CB, frozen Gaussian 0.5439 / 5.4 MeV + pol2, 0.5225-0.6100), F = S/sigma_S statistical only.
+# Grid: oa_lab < 40..65/none x M(pipi) > 0.34/0.32/0.30/none x pions in vertex fit both/>=1/none x dz_pi < 20/30/40/60/none x MM4 < 2.85/none
+#   = 840 points; MM4 < 2.85 is never chosen by the rules (sculpting flag), only used for the fixed PEAK point.
+# Halvings: fold (parity of the event-group index) and 40 random halvings (hash of the group index, seeds 1..40, as scan_peak.C).
+# Bias b = 1/2 [(F_A(c_A) - F_B(c_A)) + (F_B(c_B) - F_A(c_B))], c_X = point chosen on half X; F of one half ~ F(full)/sqrt(2).
+# Independent gain = 1/2 [(F_B(c_A) - F_B(pre)) + (F_A(c_B) - F_A(pre))]: improvement over pre on events not used for the choice.
+# mean +- rms/sqrt(n) over the random halvings (the halvings reuse the same events: errors too small by an unknown factor).
+#
+FULL SAMPLE, reference points: F (S +- stat)
+   pre (fixed)                        F =  12.74  (S =  4671 +-  367)   pre
+   peak nominal (fixed)               F =  13.23  (S =  4330 +-  327)   oa_lab<55, Mpipi>0.30
+   peak nominal + vertex (fixed)      F =  14.31  (S =  3949 +-  276)   oa_lab<55, Mpipi>0.30, both pi in vtx
+   pre + vertex (fixed)               F =  14.31  (S =  4388 +-  307)   both pi in vtx
+   peak nominal + dz_pi<40 (fixed)    F =  14.29  (S =  4182 +-  293)   oa_lab<55, Mpipi>0.30, dz_pi<40
+   DIRECT (frozen)                    F =  13.74  (S =  4492 +-  327)   dz_pi<40
+   PEAK (frozen)                      F =  14.09  (S =  4364 +-  310)   dz_pi<40, MM4<2.85
+   best-F on the full sample          F =  14.98  (S =  4059 +-  271)   oa_lab<50, Mpipi>0.30, dz_pi<30
+
+FOLD (parity) halving:
+   nominal  chosen on fold 0: oa_lab<55, Mpipi>0.30, >=1 pi in vtx, dz_pi<40          F0  9.60 F1 10.63 | on fold 1: Mpipi>0.30, >=1 pi in vtx, dz_pi<40                     F1 11.05 F0  9.15 | b =  0.43, gain =  0.89
+   loose    chosen on fold 0: oa_lab<60, Mpipi>0.30, >=1 pi in vtx, dz_pi<60          F0  9.60 F1 10.50 | on fold 1: dz_pi<60                                                F1 10.79 F0  8.42 | b =  0.73, gain =  0.46
+   pure     chosen on fold 0: oa_lab<40, Mpipi>0.34, both pi in vtx, dz_pi<20         F0  9.93 F1  8.78 | on fold 1: oa_lab<55, Mpipi>0.34, >=1 pi in vtx, dz_pi<30          F1 10.72 F0 10.20 | b =  0.83, gain =  0.49
+   best-F   chosen on fold 0: oa_lab<50, Mpipi>0.34, both pi in vtx, dz_pi<30         F0 10.50 F1  9.72 | on fold 1: Mpipi>0.30, dz_pi<30                                    F1 11.47 F0  9.63 | b =  1.31, gain =  0.67
+
+40 RANDOM HALVINGS (per half; x sqrt(2) = full-sample scale):
+   rule / point                       |      bias b(F) |      x sqrt(2) |   independent gain
+   nominal                            |   0.29 +- 0.05 |   0.42 +- 0.07 |   0.96 +- 0.03 (x1.41 =  1.36)
+   loose                              |   0.57 +- 0.05 |   0.81 +- 0.07 |   0.49 +- 0.04 (x1.41 =  0.70)
+   pure                               |   0.81 +- 0.06 |   1.15 +- 0.08 |   0.36 +- 0.04 (x1.41 =  0.51)
+   best-F                             |   1.12 +- 0.07 |   1.58 +- 0.10 |   0.83 +- 0.06 (x1.41 =  1.17)
+   pre (fixed)                        |   0.00 +- 0.00 |   0.00 +- 0.00 |   0.00 +- 0.00 (x1.41 =  0.00)
+   peak nominal (fixed)               |   0.00 +- 0.00 |   0.00 +- 0.00 |   0.35 +- 0.00 (x1.41 =  0.50)
+   peak nominal + vertex (fixed)      |   0.00 +- 0.00 |   0.00 +- 0.00 |   1.11 +- 0.00 (x1.41 =  1.57)
+   pre + vertex (fixed)               |   0.00 +- 0.00 |   0.00 +- 0.00 |   1.11 +- 0.00 (x1.41 =  1.58)
+   peak nominal + dz_pi<40 (fixed)    |   0.00 +- 0.00 |   0.00 +- 0.00 |   1.10 +- 0.00 (x1.41 =  1.55)
+   DIRECT (frozen)                    |   0.00 +- 0.00 |   0.00 +- 0.00 |   0.71 +- 0.00 (x1.41 =  1.00)
+   PEAK (frozen)                      |   0.00 +- 0.00 |   0.00 +- 0.00 |   0.96 +- 0.00 (x1.41 =  1.35)
+
+POINTS CHOSEN on the 80 random halves (2 per halving):
+   nominal (17 distinct):  40x [oa_lab<55, Mpipi>0.30, >=1 pi in vtx, dz_pi<40]  9x [Mpipi>0.30, >=1 pi in vtx, dz_pi<40]  8x [oa_lab<55, Mpipi>0.30, dz_pi<40]  7x [oa_lab<55, >=1 pi in vtx, dz_pi<40]  3x [oa_lab<55, Mpipi>0.30, >=1 pi in vtx, dz_pi<60]  2x [>=1 pi in vtx, dz_pi<40]
+   loose (29 distinct):  10x [>=1 pi in vtx, dz_pi<60]  9x [dz_pi<60]  7x [dz_pi<30]  7x [>=1 pi in vtx]  6x [Mpipi>0.30, >=1 pi in vtx, dz_pi<60]  6x [Mpipi>0.30, >=1 pi in vtx]
+   pure (30 distinct):  11x [oa_lab<40, Mpipi>0.34, both pi in vtx, dz_pi<30]  9x [oa_lab<40, Mpipi>0.34, both pi in vtx, dz_pi<20]  7x [oa_lab<40, Mpipi>0.34, >=1 pi in vtx, dz_pi<20]  5x [oa_lab<40, Mpipi>0.34, dz_pi<20]  4x [oa_lab<50, Mpipi>0.34, both pi in vtx, dz_pi<30]  4x [oa_lab<40, Mpipi>0.30, dz_pi<20]
+   best-F (47 distinct):  8x [oa_lab<45, Mpipi>0.30, dz_pi<30]  4x [oa_lab<50, dz_pi<30]  4x [oa_lab<50, >=1 pi in vtx, dz_pi<30]  4x [Mpipi>0.30, dz_pi<30]  3x [oa_lab<55, Mpipi>0.34, >=1 pi in vtx, dz_pi<30]  3x [Mpipi>0.34, >=1 pi in vtx, dz_pi<30]
+
+FIRST STUDY (scan/peak_bias.txt; base WITHOUT vz > -160, grid OA lo/hi x oa_lab x M(pipi) lo, no vertex cuts), per half:
+   two folds: nominal 0.07, loose 0.29, pure 1.25, best-F 1.34 ; 40 random halvings: nominal 0.47 +- 0.06, loose 0.16 +- 0.03,
+   pure 0.96 +- 0.06, best-F 1.13 +- 0.05 ; gain of the kinematic nominal over 'none' dF = 0.48 +- 0.47, minus bias 0.47 = 0.01.
+
+run time 8.1 s

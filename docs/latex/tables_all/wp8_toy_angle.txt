@@ -1,0 +1,18 @@
+# wp8_toy_angle.txt -- plots/all_report/wp8_toy_angle.py (WP8, 2026-11-14). TOY, not a detector simulation.
+# eta (pT, y_cm) from the SMASH std generator (40 files), eta -> pi+pi-pi0 phase space x KLOE-2, pi0 -> gamma e+e- Kroll-Wada x PDG FF;
+# acceptance: 4 tracks 18-85 deg, pions p > 0.10 GeV/c, leptons p > p_min; classes in TRUE M(ee).
+# eps ratio = acceptance with the QED decay angle / acceptance with the isotropic angle of HGeant (same q spectrum)
+# share(>=20) = accepted fraction with M(ee) >= 20 MeV among all accepted; N = 3000000 toy decays
+
+variant                          all       <10      >=10       <20      >=20     20-30      >=30sh>=20 QED/iso   sh>=20|>=10
+p_e > 0.06 (nominal)          0.8800    0.8886    0.8675    0.8778    0.8864    0.8502    0.9045        1.0073        1.0218
+p_e > 0.04                    0.8996    0.9053    0.8914    0.8959    0.9106    0.8745    0.9288        1.0123        1.0216
+p_e > 0.10                    0.8576    0.8703    0.8390    0.8581    0.8560    0.8226    0.8730        0.9982        1.0202
+p_e > 0.06, OA > 2 deg        0.8551    0.8271    0.8676    0.8319    0.8864    0.8502    0.9045        1.0366        1.0217
+
+toy acceptance (isotropic): p_e > 0.06 (nominal) 0.0700, p_e > 0.04 0.1110, p_e > 0.10 0.0291, p_e > 0.06, OA > 2 deg 0.0413
+statistical precision of the >=20 MeV ratio (nominal): +- 0.0022
+toy p_e_>_0.06_(nominal) | all=0.87998 <10=0.88859 >=10=0.86749 <20=0.87783 >=20=0.88641 20-30=0.85018 >=30=0.90451 share20=1.00731 share20_10=1.02181 eff=0.07002
+toy p_e_>_0.04 | all=0.89961 <10=0.90533 >=10=0.89135 <20=0.89591 >=20=0.91065 20-30=0.87452 >=30=0.92878 share20=1.01227 share20_10=1.02165 eff=0.11101
+toy p_e_>_0.10 | all=0.85757 <10=0.87028 >=10=0.83903 <20=0.85808 >=20=0.85600 20-30=0.82264 >=30=0.87298 share20=0.99817 share20_10=1.02023 eff=0.02910
+toy p_e_>_0.06,_OA_>_2_deg | all=0.85508 <10=0.82709 >=10=0.86760 <20=0.83190 >=20=0.88641 20-30=0.85018 >=30=0.90451 share20=1.03665 share20_10=1.02168 eff=0.04125

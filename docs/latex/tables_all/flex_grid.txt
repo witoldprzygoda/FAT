@@ -1,0 +1,27 @@
+# flex_grid.txt -- plots/all_report/flex_tables.py: the model ladder (F10 E2, M4 0.40-0.70, 350 bins) and the D11 choice
+# hybrid GLS chi2 = data covariance (event groups + CB) + BB-lite variance of the raw templates + replica covariance of the smoothed ones
+model    free  Pearson   hybGLS  description
+ASIS        0   8398.3   1788.6  SMASH as is: every scale 1, k_E2 = 1 (no fit)
+ASIS9       0   8409.4   1772.2  SMASH as is: every scale 1, k_E2 = 1 (no fit)
+P3         12   1159.0    648.4  Part III F-main reproduced (E2, kappa = 1 +- 0.2, g = 1 +- 0.3): check against wp5 results.txt
+F7          8   1025.7    627.9  7 free scales (C2, C3, C4, C5, G_eta, G_D, G_C), no tilt
+F7b         9   1032.6    628.1  7 free scales + common tilt (1 + b x) on G_D, G_C
+F7bj       13   1073.0    603.0  7 free scales + per-slice tilts (1 + b_j x) on G_D, G_C
+F8          9   1119.0    603.6  8 free scales (G_D split omega/rho0 vs other), no tilt
+F8b        10   1158.5    596.1  8 free scales (G_D split) + common tilt
+F8bj       14   1065.4    561.0  8 free scales (G_D split) + per-slice tilts
+F9         10   1114.7    592.7  9 free scales (G_D and G_C split omega/rho0 vs other), no tilt
+F9b        11   1157.8    560.0  9 free scales (G_D and G_C split) + common tilt
+F9bj       15   1000.4    480.0  9 free scales (G_D and G_C split) + per-slice tilts
+F7cj       13   1086.6    634.1  Part III background c_j (1 + b x)[G_D + s_GC G_C] (s_GD = 1) with free C2, C3, C4, C5, G_eta
+
+D11 steps (physics first; then the tilt-first order for the alternative):
+  F7 -> F8 (omega/rho0 split of G_D) dchi2 24.33 ADD
+  F8 -> F9 (split of G_C) dchi2 10.85 no: (b) new s_GC_om undetermined (5.41);
+  F8 -> F8b (common tilt) dchi2 7.46 no: (c) s_GD_om becomes undetermined (0.35 -> 2.56);
+  F8 -> F8bj (per-slice tilts) dchi2 42.56 no: (c) s_GD_om becomes undetermined (0.35 -> 2.48);
+  F7 -> F7b ([tilt-first] common tilt) dchi2 -0.21 no: (a) dchi2 <= 4;
+  F7 -> F7bj ([tilt-first] per-slice tilts) dchi2 24.91 ADD
+  F7bj -> F8bj ([tilt-first] omega/rho0 split of G_D) dchi2 41.98 no: (b) new s_GD_om undetermined (2.48);
+
+nominal F8, alternative F7bj

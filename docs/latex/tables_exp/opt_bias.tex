@@ -1,0 +1,24 @@
+% opt_bias.tex -- written by plots/exp_report/opt_bias.C (numbers: tables_exp/opt_bias.txt)
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{Optimisation bias of data-driven choices of the $\eta$-peak selection and the gain over pre on independent events. 40 random halvings of the event groups; the working point is chosen on one half by a fixed rule (grid of 840 points on top of pre: $\alpha_\mathrm{lab}$, $M_{\pi\pi}$ lower cut, pions in the vertex fit, $\Delta z_\pi$, MM$_4<2.85$ or none; MM$_4<2.85$ is never chosen by the rules because of its sculpting flag) and evaluated on the other. $b$ = mean of $\frac12[(F_A(c_A)-F_B(c_A))+(F_B(c_B)-F_A(c_B))]$; gain = $F$ on the other half minus $F$(pre) there; per half and scaled by $\sqrt2$ to the full sample. Errors: rms$/\sqrt{n}$ (too small, the halvings share events). $^*$For a fixed point the halving test gives $b=0$ by construction: it cannot see a choice made on all data, so the points chosen on these data (peak nominal, + vertex, pre + vertex, + $\Delta z_\pi<40$) still carry the bias of the rule that found them (nominal rule: 0.42 on the full-sample scale); only the frozen DIRECT and PEAK are free of it. Data, isBest $\geq0$, $P_\mathrm{main}$.}
+\label{tab:opt_bias}
+\begin{tabular}{lcccc}
+\toprule
+Rule or point & $b(F)$ per half & $b(F)\times\sqrt2$ & gain per half & gain $\times\sqrt2$ \\
+\midrule
+nominal (data-driven) & $0.29\pm0.05$ & 0.42 & $0.96\pm0.03$ & 1.36 \\
+loose (data-driven) & $0.57\pm0.05$ & 0.81 & $0.49\pm0.04$ & 0.70 \\
+pure (data-driven) & $0.81\pm0.06$ & 1.15 & $0.36\pm0.04$ & 0.51 \\
+best-F (data-driven) & $1.12\pm0.07$ & 1.58 & $0.83\pm0.06$ & 1.17 \\
+\midrule
+peak nominal (chosen on data) & 0$^*$ & -- & $0.35$ & 0.50 \\
+peak nominal + vertex (chosen on data) & 0$^*$ & -- & $1.11$ & 1.57 \\
+pre + vertex (chosen on data) & 0$^*$ & -- & $1.11$ & 1.58 \\
+peak nominal + $\Delta z_\pi<40$ (chosen on data) & 0$^*$ & -- & $1.10$ & 1.55 \\
+DIRECT (frozen on simulation) & 0$^*$ & -- & $0.71$ & 1.00 \\
+PEAK (frozen on simulation) & 0$^*$ & -- & $0.96$ & 1.35 \\
+\bottomrule
+\end{tabular}
+\end{table}

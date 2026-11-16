@@ -1,0 +1,23 @@
+% fix_tC1_ra4.tex -- Part III long writer, fourth integration (2026-11-15): copy of fix_tC1.tex with "rows" -> "counts" (analyst instruction:
+% a count is one stored pi+pi-e+e- combination). Original header follows.
+% fix_tC1.tex -- review fix: wp3_tableC1.tex (WP3) with the notation of the report (no number changed)
+% Table C1 (wp3_stageA.C): candidate control regions
+\begin{tabular}{p{5.2cm}rrrrrp{5.6cm}}
+\toprule
+region & $N$ & CB/$N$ & C2--C5 [\%] & $G_\eta$ [\%] & $\frac{N-\mathrm{CB}}{T_{12}}$ & verdict \\
+\midrule
+CR-U 0.565--0.700, all slices, all $M(e^+e^-)$ & 722506 & 0.051 & 0.04 & 6.5 & 1.266 & spec; E1 part dropped ($k_{E1}$ fall-back), first 10 MeV dropped (A1 fall-back) \\
+CR-U 0.565--0.700, E1 ($M(e^+e^-)<10$\,MeV/$c^2$) & 364565 & 0.007 & 0.02 & 4.4 & 1.335 & rejected (fall-back): $k_{E1}=13.2$, 8.1 with ghost variant (a); outside 0.8--3 \\
+CR-U 0.575--0.700, E2 (adopted) & 342098 & 0.096 & 0.02 & 8.5 & 1.196 & ADOPTED (normalisation and tilt) \\
+CR-K S5 ($M(\pi^+\pi^-)\geq0.43$), 0.400--0.5225 & 964 & 0.207 & 1.15 & 0.5 & 0.997 & rejected by the A1/A2 fall-back (C5 radiative tail, S5 threshold, CB with $N_{++}=2$) \\
+CR-L 0.5225--0.5300 & 15604 & 0.062 & 11.11 & 7.6 & 1.161 & test only (closure term S10) \\
+below the bump 0.400--0.455 & 31119 & 0.053 & 36.35 & 5.1 & 0.876 & rejected: bump tail (C2/C3 at $q>0$) \\
+0.60--0.65 (part of 0.60--0.80) & 254818 & 0.053 & 0.02 & 6.9 & 1.283 &  \\
+0.65--0.70 & 340326 & 0.047 & 0.00 & 5.3 & 1.225 &  \\
+0.70--0.75 & 401835 & 0.042 & 0.00 & 3.9 & 1.128 &  \\
+0.75--0.80 & 356688 & 0.044 & 0.00 & 4.0 & 1.149 & rejected 0.60--0.80: data/sim drifts, long extrapolation \\
+$v_z<-160$\,mm (none $-$ ``pre''), CR-U range & 85631 & 0.391 & n/a & n/a & no sim & rejected: no simulation (0.15 \% of the simulated entries), CB$/N$ 0.42 in P; no $\eta$ (A1 notes: $S=-15\pm118$) \\
+like-sign $e^+e^+$, $e^-e^-$ (CR-U range) & 9111 + 37966 & -- & 0 & 0 & -- & not a background CR: it is the CB estimate ($k_{E2}$ constrained) \\
+ECAL-tagged $\eta$ (all $M_4$) & 571891 & -- & $T=3090\pm94$ & -- & S/B 0.90 & signal-enriched: cross-check of $a_\eta$ only (D14); in CR-K $T=-2.1\pm4.0$ \\
+\bottomrule
+\end{tabular}

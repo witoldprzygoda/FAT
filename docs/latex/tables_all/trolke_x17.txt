@@ -1,0 +1,4 @@
+x=6424 bounded=0: N_X in [0, 2083] rows -> BR x BR in [0.00e+00, 2.60e-04]
+x=6424 bounded=1: N_X in [0, 2083] rows -> BR x BR in [0.00e+00, 2.60e-04]
+x=6466 bounded=0: N_X in [0, 2125] rows -> BR x BR in [0.00e+00, 2.65e-04]
+x=6466 bounded=1: N_X in [0, 2125] rows -> BR x BR in [0.00e+00, 2.65e-04]

@@ -1,0 +1,31 @@
+# smp_lumi.txt -- written by plots/exp_report/smp_report.C (Sat Nov 14 06:35:05 2026)
+# START-free (LGAD-free) luminosity from the HADES elastic-scattering analysis (talk LGADfree_luminosity_talk_draft_v2,
+#   files of revision N, total L6 = 6080.5 nb^-1; copies in /hdd3/przygoda/HADES/FAT_out/exp/pippimepem_isBestAll_T4530/report_exp/smp/lumi_inputs)
+# L6_SF = six sectors (recommended); errors: stat, sectors (+ sector-2 correction; NOT independent between periods; a part of the
+#   HADES syst), HADES syst (total, without sigma_int and the Argonne normalisation)
+# L_an = sum of L6_SF over the runs present in the data (EpEm_ID rows); L_an(scaled) = with the two partly merged runs scaled
+# f_LF = PT3/PT2 live fraction LF3/LF2 x 64/63 (L-weighted over the days); L x f_LF = luminosity if the live-fraction ratio applies
+# L_LGAD = published chain with the LGAD START condition (Lstd_auth); L5 = five sectors x 6/5 (published convention)
+per   days     |     L6_SF    stat    sect    HADES |      L_an  L_an(sc) |  L_an*fLF   f_LF |    L_LGAD     L5_SF
+I     034-046  |  2810.669   2.910  78.356  152.739 |  2809.453  2809.453 |  2635.171 0.9380 |  2488.850  2886.487
+IIA   047-048  |   372.610   0.752  10.412   20.806 |   372.610   372.592 |   345.830 0.9281 |   335.730   381.815
+IIB   049-053  |  1078.134   1.422  33.475   62.896 |  1078.022  1078.022 |  1013.801 0.9404 |  1020.620  1106.329
+III   059-067  |  1819.110   1.953  46.280  103.867 |  1819.110  1819.104 |  1679.695 0.9234 |  1742.330  1862.361
+all   29 days  |  6080.524   5.172 167.478  337.942 |  6079.195  6079.170 |  5674.498 0.9334 |  5587.530  6236.991
+
+# total L6 = 6080.5 +- 5.2 (stat) +- 337.9 (HADES syst, 5.56 %) +- 62.6 (sigma_int fit, 1.03 %) +- 243.2 (Argonne norm, 4.0 %) nb^-1; total 6.92 %
+# analysed runs: 6079.195 nb^-1 (0.0219 % below all runs; 17557 of 17615 runs; the 58 missing runs have no reconstructed particles in the
+#   lepton production, 52 of them with L = 0), scaled for the two partly merged runs 6079.170
+# PT3 rules: visible yield = N x 64/63 (trigger word 8192 = 63/64 of the PT3 events);
+#   if the PT3/PT2 live-fraction ratio applies: L x f_LF = 5674.5 nb^-1 (f_LF = 0.9334, per day 0.8997-0.9481), i.e. L lower by 6.7 % (one-sided)
+# context: LGAD START condition (publication chain, six sectors) 5587.5 nb^-1 (= 0.919 x L6_SF); after a START-finder repair (not final) 6722 nb^-1
+# sector 2, days 034-044: hardware trigger deficit NOT contained in L (S2fac6 per day 1.058-1.120 is the correction of the PT2 elastic count)
+
+# runs with no_hf = 1 (no elastic event in the window, L = 0) that are present in the data:
+#   dst_stem            run  day |  EpEm_ID |   us PAT   us FAT   pp PAT   pp FAT   mm PAT   mm FAT
+#   be22038153859   1244739   38 |       25 |        0        0        0        0        1        1
+#   be22048154917   2109357   48 |    11384 |      372       38       30        4      199        9
+#   be22048155212   2109532   48 |     6120 |      184       22       21        1       94        1
+#   be22062033121   3274681   62 |        9 |        0        0        0        0        0        0
+#   sum: EpEm_ID 17538 of 109418665 rows (0.0160 %); FAT e+e- rows 60 of 4783467 (0.0013 %); after pre e+e- 38, e+e+ 3, e-e- 5 rows
+#   effect of removing them on the eta peak (all days): see smp_peak_periods.txt (pre S 4670.6 -> 4670.8): not material

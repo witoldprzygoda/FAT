@@ -1,0 +1,61 @@
+# wp1_repro.txt -- plots/all_report/wp1_repro.C (WP1 of SPEC report_all)
+# Reproduction of FAT_simwt/plots/eta_sim/tables/rw_compare_enriched.txt (selection pre, section 1) and the effect of the
+# mass transfer D8. Simulation streamed here (std + lep + eta owned rows, mode A, w x code 0 'before' / 108 'after', T1 + T2;
+# (a) = + ghost-flagged true pairs), sigma = sum w / 221.05 nb^-1, event-group errors. Data N - CB from hists_v1.root (pre, raw rows,
+# CB = spread rule; the B, P and jump-band windows are exact 'win' cells with CB replica errors; the other old regions are sums of
+# the fine 2.5 MeV bins (0.5542-0.56 = R4 minus the fine bins 0.560-0.565), errors in quadrature).
+# selected owned rows used: 9048304; non-adjacent event groups: 0
+
+## 1. Reproduction at the settings of the simulation study (s = 1, L_data = 6080.5 nb^-1, no 64/63), pre
+region                      | data N-CB [nb]    old               | sim bef -> aft    old               | data/sim before (a)           data/sim after (a)            | old after (a) ; rel. diff of 'after'
+below bump 0.35-0.455       |   7.4692+-0.0374    7.4688          |   7.869 -> 7.031     7.869 -> 7.031   |  0.949 +- 0.022 (0.855)       1.062 +- 0.025 (0.949)      |  1.062 (0.948) ; +3.46e-04
+bump window 0.455-0.5225    |  22.6422+-0.0720   22.6422          |  24.686 -> 24.008   24.686 -> 24.008  |  0.917 +- 0.012 (0.835)       0.943 +- 0.013 (0.858)      |  0.943 (0.858) ; +1.39e-04
+gap 0.5225-0.5336           |   4.9478+-0.0319    4.9478          |   3.965 -> 3.865     3.965 -> 3.865   |  1.248 +- 0.036 (1.082)       1.280 +- 0.037 (1.109)      |  1.280 (1.109) ; +1.29e-04
+peak window 0.5336-0.5542   |  11.4405+-0.0490   11.4405          |   9.271 -> 9.426     9.271 -> 9.426   |  1.234 +- 0.022 (1.099)       1.214 +- 0.022 (1.085)      |  1.214 (1.085) ; -2.80e-04
+0.5542-0.56                 |   3.4775+-0.0275    3.4775          |   2.493 -> 2.503     2.493 -> 2.503   |  1.395 +- 0.048 (1.208)       1.389 +- 0.049 (1.204)      |  1.389 (1.204) ; +1.63e-04
+0.56-0.70                   | 147.1134+-0.1643  147.1134          | 108.119 -> 108.380 108.119 -> 108.380 |  1.361 +- 0.008 (1.167)       1.357 +- 0.008 (1.165)      |  1.357 (1.165) ; +2.82e-04
+0.70-1.00                   | 353.9508+-0.2507  353.9476          | 340.405 -> 340.855 340.405 -> 340.855 |  1.040 +- 0.003 (0.894)       1.038 +- 0.003 (0.893)      |  1.038 (0.893) ; +4.06e-04
+all 0.35-1.00               | 551.0414+-0.3150  551.0378          | 496.807 -> 496.068 496.807 -> 496.068 |  1.109 +- 0.003 (0.957)       1.111 +- 0.003 (0.959)      |  1.111 (0.959) ; -1.63e-04
+band 0.4875-0.5225          |  13.7457+-0.0550     -              |  14.389 -> 13.934          -         |  0.955 +- 0.016 (0.863)       0.986 +- 0.017 (0.889)      |  0.986 (0.889) ; +4.79e-04
+band 0.5600-0.5950          |  24.9248+-0.0736     -              |  17.177 -> 17.214          -         |  1.451 +- 0.020 (1.236)       1.448 +- 0.020 (1.234)      |  1.448 (1.234) ; -5.99e-05
+JUMP = band 0.56 / band 0.49 |                                     |                                     |  1.519 +- 0.033 (1.432)       1.468 +- 0.033 (1.387)      |  1.468 (1.387) ; -1.58e-04
+# largest relative difference of the 'after' ratio to the old table (regions + jump): 4.79e-04
+
+## 2. Nominal normalisation of this report (L = 6079.2 nb^-1, x 64/63) and the mass transfer D8, pre, after (code 108)
+# old x 1.0161 = the old 'after' ratio with this normalisation; s = 1 / s = 0.99615 = the ratio with the simulated M4 unscaled / scaled
+region                      | old x 1.0161 | s = 1             | s = 0.99615 (nom) | (a), s = 0.99615  | s=1 / old | nom / old
+below bump 0.35-0.455       |       1.0791 |  1.0795 +- 0.0258 |  1.0150 +- 0.0236 |  0.9079 +- 0.0201 |    +0.03% |    -5.94%
+bump window 0.455-0.5225    |       0.9582 |  0.9583 +- 0.0133 |  0.9490 +- 0.0131 |  0.8625 +- 0.0113 |    +0.01% |    -0.96%
+gap 0.5225-0.5336           |       1.3006 |  1.3008 +- 0.0378 |  1.2858 +- 0.0369 |  1.1030 +- 0.0300 |    +0.01% |    -1.14%
+peak window 0.5336-0.5542   |       1.2335 |  1.2332 +- 0.0222 |  1.2121 +- 0.0216 |  1.0835 +- 0.0187 |    -0.03% |    -1.73%
+0.5542-0.56                 |       1.4114 |  1.4116 +- 0.0494 |  1.3790 +- 0.0484 |  1.1926 +- 0.0398 |    +0.02% |    -2.29%
+0.56-0.70                   |       1.3788 |  1.3792 +- 0.0078 |  1.3498 +- 0.0076 |  1.1582 +- 0.0061 |    +0.03% |    -2.11%
+0.70-1.00                   |       1.0547 |  1.0551 +- 0.0031 |  1.0532 +- 0.0031 |  0.9057 +- 0.0025 |    +0.04% |    -0.14%
+all 0.35-1.00               |       1.1289 |  1.1287 +- 0.0030 |  1.1198 +- 0.0029 |  0.9663 +- 0.0024 |    -0.02% |    -0.80%
+band 0.4875-0.5225          |       1.0019 |  1.0023 +- 0.0177 |  1.0066 +- 0.0177 |  0.9078 +- 0.0152 |    +0.05% |    +0.48%
+band 0.5600-0.5950          |       1.4713 |  1.4712 +- 0.0202 |  1.4409 +- 0.0196 |  1.2281 +- 0.0158 |    -0.01% |    -2.07%
+JUMP (no normalisation)     |       1.4680 |  1.4678 +- 0.0329 |  1.4313 +- 0.0318 |  1.3528 +- 0.0286 |    -0.02% |    -2.50%
+# factor of the normalisation (64/63)(6080.5/6079.2) = 1.01609 (defs.h kOldTab 1.0161)
+
+## 3. Closure: streamed s = 0.99615 sums against hists_v1.root (sim/<sel>__<var>/T12_win), Table B1 regions R0-R7, Fit, Bef
+# 60 comparisons, 0 mismatches, largest relative difference of the content 2.22e-16
+
+## 4. Acceptance criterion of WP1: pre reproduces rw_compare_enriched.txt x 1.0161 within 0.5 % (bump 0.958, peak 1.233); J 1.44-1.47
+(i)  same simulation settings as the old table (s = 1), this normalisation: bump 0.9583 vs 0.9582 (+0.01%) PASS; peak 1.2332 vs 1.2335 (-0.03%) PASS
+     J (s = 1) = 1.4678 +- 0.0329 PASS (range 1.44-1.47)
+(ii) nominal (s = 0.99615, D8): bump 0.9490 +- 0.0131 vs 0.9582 (-0.96%) FAIL; peak 1.2121 +- 0.0216 vs 1.2335 (-1.73%) FAIL
+     J (nominal) = 1.4313 +- 0.0318 FAIL (range 1.44-1.47); old 1.468
+# (i) tests the chain (data, CB, simulation, weights, units); (ii) adds the deliberate mass transfer of D8, which moves simulated rows
+#     across the window edges (sim content s = 1 -> 0.99615: bump 24.008 -> 24.244 nb, peak 9.426 -> 9.590 nb, jump bands 13.934 -> 13.875 / 17.214 -> 17.577 nb)
+
+## 5. S0 (nominal selection), after, T1 + T2: simulated nb at s = 1 and s = 0.99615 in the old regions
+below bump 0.35-0.455       | s = 1    5.9168 +- 0.1506  | s = 0.99615    6.3057 +- 0.1562  | (a)    6.9958
+bump window 0.455-0.5225    | s = 1   20.1948 +- 0.2994  | s = 0.99615   20.3788 +- 0.2999  | (a)   22.2524
+gap 0.5225-0.5336           | s = 1    3.1298 +- 0.0991  | s = 0.99615    3.1406 +- 0.0980  | (a)    3.6201
+peak window 0.5336-0.5542   | s = 1    7.8699 +- 0.1510  | s = 0.99615    7.9961 +- 0.1518  | (a)    8.9267
+0.5542-0.56                 | s = 1    2.0507 +- 0.0776  | s = 0.99615    2.0830 +- 0.0795  | (a)    2.3851
+0.56-0.70                   | s = 1   90.2572 +- 0.5483  | s = 0.99615   92.3674 +- 0.5549  | (a)  107.6567
+0.70-1.00                   | s = 1  299.3794 +- 0.9126  | s = 0.99615  300.0978 +- 0.9114  | (a)  348.8130
+all 0.35-1.00               | s = 1  428.7984 +- 1.1816  | s = 0.99615  432.3695 +- 1.1856  | (a)  500.6499
+band 0.4875-0.5225          | s = 1   11.6272 +- 0.2214  | s = 0.99615   11.5742 +- 0.2194  | (a)   12.7331
+band 0.5600-0.5950          | s = 1   13.9206 +- 0.2077  | s = 0.99615   14.2307 +- 0.2101  | (a)   16.7616

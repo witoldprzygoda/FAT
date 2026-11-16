@@ -1,0 +1,12 @@
+fix_x17_fold: 90 % CLs limits on sigma(pp -> eta X) x BR_X x BR_ee [nb], normalisation (1), K = 2.68e-4 (PDG 2020, frozen)
+columns: mass, UL(BR) from the scan (check), plain product UL x sigma0, folded with s_rel of sigma0
+m_X 17.00 MeV: r_hat 0.0200; UL r 0.11431 -> BR 3.0636e-05 (frozen 3.0636e-05 at 17.00, 3.0646e-05 at 16.85); plain product with sigma0 = 0.429 mb: 13.14 nb
+   folded (total before the final review 37.9 %): UL = 15.01 nb  (x 1.142 of the plain product)
+   folded (adopted total with the period normalisation of Part II 38.3 %): UL = 15.04 nb  (x 1.144 of the plain product)
+   with sigma_eta x 1.0057 (C_vtx applied), folded 38.3 %: UL = 15.13 nb
+   with sigma_eta x 1.0419 (C_vtx at its 95 % CL bound), folded 38.3 %: UL = 15.67 nb
+m_X 16.85 MeV: r_hat 0.0200; UL r 0.11435 -> BR 3.0647e-05 (frozen 3.0636e-05 at 17.00, 3.0646e-05 at 16.85); plain product with sigma0 = 0.429 mb: 13.15 nb
+   folded (total before the final review 37.9 %): UL = 15.01 nb  (x 1.142 of the plain product)
+   folded (adopted total with the period normalisation of Part II 38.3 %): UL = 15.04 nb  (x 1.144 of the plain product)
+   with sigma_eta x 1.0057 (C_vtx applied), folded 38.3 %: UL = 15.13 nb
+   with sigma_eta x 1.0419 (C_vtx at its 95 % CL bound), folded 38.3 %: UL = 15.68 nb

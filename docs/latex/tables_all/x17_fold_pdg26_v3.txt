@@ -1,0 +1,12 @@
+x17p26_fold_v3 (D40): 90 % CLs limits on sigma(pp -> eta X) x BR_X x BR_ee [nb], normalisation (1), K = 2.76e-4 (PDG 2026; ruling D25)
+columns: mass, UL(BR) from the scan, plain product UL x sigma0, folded with s_rel of sigma0; [x k]: with the PDG 2026 BR_dir uncertainty in s_X
+m_X 17.00 MeV: r_hat 0.0200; UL r 0.11431 -> BR 3.1550e-05 [x k: 3.1589e-05] (PDG 2020 frozen: 3.0636e-05); plain product with sigma0 = 0.429 mb: 13.54 nb [x k: 13.55 nb]
+   folded (adopted total before D40 38.3 %): UL = 15.49 nb [x k: 15.51 nb]  (x 1.144 of the plain product)
+   folded (with the D40 peak-tail term 39.2 %): UL = 15.59 nb [x k: 15.61 nb]  (x 1.152 of the plain product)
+   with sigma_eta x 1.0057 (C_vtx applied), folded 39.2 % (D40): UL = 15.68 nb [x k: 15.69 nb]
+   with sigma_eta x 1.0419 (C_vtx at its 95 % CL bound), folded 39.2 % (D40): UL = 16.24 nb [x k: 16.26 nb]
+m_X 16.85 MeV: r_hat 0.0200; UL r 0.11435 -> BR 3.1562e-05 [x k: 3.1603e-05] (PDG 2020 frozen: 3.0647e-05); plain product with sigma0 = 0.429 mb: 13.54 nb [x k: 13.56 nb]
+   folded (adopted total before D40 38.3 %): UL = 15.49 nb [x k: 15.51 nb]  (x 1.144 of the plain product)
+   folded (with the D40 peak-tail term 39.2 %): UL = 15.59 nb [x k: 15.61 nb]  (x 1.151 of the plain product)
+   with sigma_eta x 1.0057 (C_vtx applied), folded 39.2 % (D40): UL = 15.68 nb [x k: 15.70 nb]
+   with sigma_eta x 1.0419 (C_vtx at its 95 % CL bound), folded 39.2 % (D40): UL = 16.24 nb [x k: 16.26 nb]

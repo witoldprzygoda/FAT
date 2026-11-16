@@ -1,0 +1,26 @@
+% smp_cutflow_windows.tex -- written by plots/exp_report/smp_report.C (numbers: tables_exp/smp_cutflow.txt)
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{$e^+e^-$ rows in the data peak window (0.53364--0.55416~GeV/$c^2$) and the data bump window (0.4550--0.5225~GeV/$c^2$) of $M(\pi^+\pi^-e^+e^-)$ and the combinatorial-background share CB/$N$ (CB $=2\sqrt{N_{++}N_{--}}$ in 10~MeV bins, interpolated, $k=1$), for all combinations (isBest $\geq 0$), without and with OA$(e^+e^-)>2^\circ$. Steps as in Table~\ref{tab:smp_cutflow}.}
+\label{tab:smp_cutflow_windows}
+\begin{tabular}{l rr rr | rr rr}
+\toprule
+ & \multicolumn{4}{c|}{all OA} & \multicolumn{4}{c}{OA $>2^\circ$} \\
+Step & $N_\mathrm{peak}$ & CB/$N$ & $N_\mathrm{bump}$ & CB/$N$ & $N_\mathrm{peak}$ & CB/$N$ & $N_\mathrm{bump}$ & CB/$N$ \\
+\midrule
+cor\_ok $=1$ & 86011 & 0.134 & 170751 & 0.133 & 68378 & 0.165 & 136333 & 0.163 \\
+$v_z>-160$~mm (pre) & 77513 & 0.103 & 153183 & 0.101 & 60935 & 0.128 & 120839 & 0.126 \\
++ pions in vertex fit & 55947 & 0.059 & 111212 & 0.056 & 43060 & 0.074 & 85930 & 0.071 \\
++ $\Delta z_\pi<40$~mm & 53425 & 0.057 & 105642 & 0.055 & 41070 & 0.073 & 81518 & 0.069 \\
+\midrule
+DIRECT & 62969 & 0.076 & 124327 & 0.074 & 48873 & 0.096 & 96876 & 0.093 \\
+PEAK & 56532 & 0.072 & 111270 & 0.064 & 43648 & 0.091 & 86073 & 0.081 \\
+peak nominal & 61800 & 0.097 & 128715 & 0.095 & 47917 & 0.123 & 101101 & 0.119 \\
+peak nominal + vertex & 45433 & 0.055 & 94913 & 0.053 & 34510 & 0.071 & 73110 & 0.067 \\
+bump nominal & 33240 & 0.099 & 103922 & 0.090 & 24713 & 0.130 & 80262 & 0.115 \\
+bump nominal + vertex & 24568 & 0.058 & 77735 & 0.051 & 17835 & 0.078 & 58892 & 0.066 \\
+X17 region & 5258 & 0.019 & -- & -- & 5245 & 0.019 & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,2100 @@
+# e1_numbers.txt -- plots/all_report/e1_ana.py: key numbers (machine readable: sel key value)
+pre below_N 50387
+pre below_CB 4970.74 85.78
+pre below_dnb 7.58935 0.04136
+pre below_sim 7.47749 0.17007
+pre below_eta 2.63763
+pre below_bkg 4.83986
+pre below_ra 1.0150 0.0237
+pre below_rb 0.9654 0.0238
+pre B_N 153183
+pre B_CB 15506.98 163.65
+pre B_dnb 23.00654 0.07320
+pre B_sim 24.24355 0.32438
+pre B_eta 11.04190
+pre B_bkg 13.20165
+pre B_ra 0.9490 0.0131
+pre B_rb 1.0011 0.0139
+pre P_N 77513
+pre P_CB 7948.83 92.83
+pre P_dnb 11.62462 0.04974
+pre P_sim 9.59013 0.16627
+pre P_eta 2.85901
+pre P_bkg 6.73112
+pre P_ra 1.2121 0.0216
+pre P_rb 1.0957 0.0216
+pre r56_N 977031
+pre r56_CB 82508.16 394.60
+pre r56_dnb 149.48046 0.19108
+pre r56_sim 110.74307 0.60819
+pre r56_eta 7.03517
+pre r56_bkg 103.70790
+pre r56_ra 1.3498 0.0076
+pre r56_rb 1.0055 0.0058
+pre r70_N 2291790
+pre r70_CB 139592.34 451.76
+pre r70_dnb 359.64593 0.28598
+pre r70_sim 341.46775 0.97566
+pre r70_eta 11.18794
+pre r70_bkg 330.27982
+pre r70_ra 1.0532 0.0031
+pre r70_rb 0.7669 0.0023
+pre R2_N 33798
+pre R2_CB 3712.72 57.25
+pre R2_dnb 5.02744 0.03243
+pre R2_sim 3.90994 0.10936
+pre R2_eta 0.66166
+pre R2_bkg 3.24827
+pre R2_ra 1.2858 0.0369
+pre R2_rb 1.0403 0.0314
+pre post_N 23670
+pre post_CB 2525.06 34.42
+pre post_dnb 3.53345 0.02645
+pre post_sim 2.56237 0.08772
+pre post_eta 0.35266
+pre post_bkg 2.20971
+pre post_ra 1.3790 0.0483
+pre post_rb 1.0877 0.0398
+pre Fit_N 1308216
+pre Fit_CB 116490.85 516.90
+pre Fit_dnb 199.14486 0.23123
+pre Fit_sim 157.69706 0.76685
+pre Fit_eta 24.44338
+pre Fit_bkg 133.25368
+pre Fit_ra 1.2628 0.0063
+pre Fit_rb 1.0100 0.0051
+pre all_N 3607372
+pre all_CB 256764.83 720.13
+pre all_dnb 559.90779 0.38533
+pre all_sim 499.99429 1.28457
+pre all_eta 35.77597
+pre all_bkg 464.21832
+pre all_ra 1.1198 0.0030
+pre all_rb 0.8393 0.0022
+pre CR_N 910603
+pre CR_CB 75566.98 366.04
+pre CR_dnb 139.53983 0.18256
+pre CR_sim 103.80481 0.58698
+pre CR_eta 6.40015
+pre CR_bkg 97.40465
+pre CR_ra 1.3443 0.0078
+pre CR_rb 1.0000 0.0059
+pre PB_N 94568
+pre PB_CB 9784.52 107.26
+pre PB_dnb 14.16786 0.05536
+pre PB_sim 11.47789 0.18304
+pre PB_eta 3.12604
+pre PB_bkg 8.35186
+pre PB_ra 1.2344 0.0203
+pre PB_rb 1.0902 0.0196
+pre delta a=0.2856 b=0.0582 c=0.0559
+pre cb 1.4063 0.0085
+pre chi2a 4754.22 60
+pre chi2b 202.04 59
+pre k1 1.2782 chi2 766.14 59
+pre fit a 0.4180 0.0282 c 1.4198 0.0086 rho -0.562 chi2 192.23 58
+pre x17 N=9167 NV=9449 CB=556.35 CBe=12.238 c6=3738.6 c6pb=6061 NX=234.2 NXpb=379.69 model_b=7526.7 C5b=388.42 C4b=32.859 rat_lo=1.1496 rat_hi=0.84234 rat_win=1.1341 NX_share=0.028975 eps_rel=1.0747 eps_rel_pb=1.0738 B_rel=1.4436 proxy=1.118 proxy_cb=1.1228 Z=2.4264 SB_gain=0.74443
+pre_E1 below_N 8088
+pre_E1 below_CB 770.59 29.54
+pre_E1 below_dnb 1.22279 0.01593
+pre_E1 below_sim 1.05134 0.05658
+pre_E1 below_eta 0.27108
+pre_E1 below_bkg 0.78026
+pre_E1 below_ra 1.1631 0.0644
+pre_E1 below_rb 0.9863 0.0597
+pre_E1 B_N 98115
+pre_E1 B_CB 10946.80 133.49
+pre_E1 B_dnb 14.56636 0.05842
+pre_E1 B_sim 14.90364 0.24705
+pre_E1 B_eta 6.58133
+pre_E1 B_bkg 8.32231
+pre_E1 B_ra 0.9774 0.0167
+pre_E1 B_rb 0.9910 0.0170
+pre_E1 P_N 46001
+pre_E1 P_CB 5627.48 77.36
+pre_E1 P_dnb 6.74667 0.03850
+pre_E1 P_sim 5.70405 0.12138
+pre_E1 P_eta 1.75741
+pre_E1 P_bkg 3.94664
+pre_E1 P_ra 1.1828 0.0261
+pre_E1 P_rb 1.0500 0.0259
+pre_E1 r56_N 302760
+pre_E1 r56_CB 33090.01 243.34
+pre_E1 r56_dnb 45.06357 0.10480
+pre_E1 r56_sim 33.28631 0.30644
+pre_E1 r56_eta 3.23921
+pre_E1 r56_bkg 30.04710
+pre_E1 r56_ra 1.3538 0.0129
+pre_E1 r56_rb 1.0045 0.0098
+pre_E1 r70_N 77211
+pre_E1 r70_CB 5427.72 78.87
+pre_E1 r70_dnb 11.99544 0.04948
+pre_E1 r70_sim 9.65535 0.15759
+pre_E1 r70_eta 0.75423
+pre_E1 r70_bkg 8.90113
+pre_E1 r70_ra 1.2424 0.0209
+pre_E1 r70_rb 0.9082 0.0157
+pre_E1 R2_N 21288
+pre_E1 R2_CB 2776.03 49.42
+pre_E1 R2_dnb 3.09347 0.02592
+pre_E1 R2_sim 2.49807 0.08504
+pre_E1 R2_eta 0.47125
+pre_E1 R2_bkg 2.02682
+pre_E1 R2_ra 1.2383 0.0434
+pre_E1 R2_rb 0.9892 0.0366
+pre_E1 post_N 13216
+pre_E1 post_CB 1714.16 29.20
+pre_E1 post_dnb 1.92203 0.01988
+pre_E1 post_sim 1.42769 0.06272
+pre_E1 post_eta 0.20762
+pre_E1 post_bkg 1.22007
+pre_E1 post_ra 1.3463 0.0608
+pre_E1 post_rb 1.0378 0.0495
+pre_E1 Fit_N 489463
+pre_E1 Fit_CB 54925.08 319.88
+pre_E1 Fit_dnb 72.61405 0.13707
+pre_E1 Fit_sim 58.87107 0.43999
+pre_E1 Fit_eta 12.52787
+pre_E1 Fit_bkg 46.34320
+pre_E1 Fit_ra 1.2334 0.0095
+pre_E1 Fit_rb 1.0057 0.0079
+pre_E1 all_N 566679
+pre_E1 all_CB 60352.80 326.42
+pre_E1 all_dnb 84.61033 0.14661
+pre_E1 all_sim 68.52646 0.46914
+pre_E1 all_eta 13.28213
+pre_E1 all_bkg 55.24433
+pre_E1 all_ra 1.2347 0.0087
+pre_E1 all_rb 0.9906 0.0071
+pre_E1 CR_N 267995
+pre_E1 CR_CB 28514.27 218.55
+pre_E1 CR_dnb 40.01875 0.09752
+pre_E1 CR_sim 29.66903 0.28853
+pre_E1 CR_eta 2.85623
+pre_E1 CR_bkg 26.81280
+pre_E1 CR_ra 1.3488 0.0135
+pre_E1 CR_rb 1.0000 0.0103
+pre_E1 PB_N 55874
+pre_E1 PB_CB 6900.48 88.52
+pre_E1 PB_dnb 8.18379 0.04272
+pre_E1 PB_sim 6.78546 0.13359
+pre_E1 PB_eta 1.92412
+pre_E1 PB_bkg 4.86134
+pre_E1 PB_ra 1.2061 0.0246
+pre_E1 PB_rb 1.0468 0.0237
+pre_E1 delta a=0.3860 b=0.0982 c=0.0966
+pre_E1 cb 1.4499 0.0154
+pre_E1 chi2a 1769.33 60
+pre_E1 chi2b 122.22 59
+pre_E1 k1 1.2552 chi2 373.34 59
+pre_E1 fit a 0.4427 0.0429 c 1.4518 0.0159 rho -0.673 chi2 118.94 58
+pre_E1 x17 N=7295 NV=7449 CB=374.19 CBe=9.8497 c6=3221.6 c6pb=5040 NX=201.82 NXpb=315.73 model_b=6418.9 C5b=351.68 C4b=32.859 rat_lo=1.1672 rat_hi=0.78099 rat_win=1.0739 NX_share=0.029709 eps_rel=0.92607 eps_rel_pb=0.89292 B_rel=1.1488 proxy=1.1574 proxy_cb=1.1606 Z=2.3474 SB_gain=0.80611
+pre_E2 below_N 10435
+pre_E2 below_CB 796.26 30.20
+pre_E2 below_dnb 1.61070 0.01792
+pre_E2 below_sim 1.51992 0.07024
+pre_E2 below_eta 0.39051
+pre_E2 below_bkg 1.12941
+pre_E2 below_ra 1.0597 0.0504
+pre_E2 below_rb 0.9516 0.0492
+pre_E2 B_N 126699
+pre_E2 B_CB 11184.65 136.02
+pre_E2 B_dnb 19.30318 0.06537
+pre_E2 B_sim 20.62676 0.29376
+pre_E2 B_eta 9.21401
+pre_E2 B_bkg 11.41276
+pre_E2 B_ra 0.9358 0.0137
+pre_E2 B_rb 1.0048 0.0149
+pre_E2 P_N 59946
+pre_E2 P_CB 5743.37 77.43
+pre_E2 P_dnb 9.05760 0.04337
+pre_E2 P_sim 8.03186 0.15142
+pre_E2 P_eta 2.56362
+pre_E2 P_bkg 5.46824
+pre_E2 P_ra 1.1277 0.0219
+pre_E2 P_rb 1.0701 0.0230
+pre_E2 r56_N 419537
+pre_E2 r56_CB 33847.65 246.93
+pre_E2 r56_dnb 64.45115 0.12088
+pre_E2 r56_sim 50.12203 0.39554
+pre_E2 r56_eta 4.23163
+pre_E2 r56_bkg 45.89040
+pre_E2 r56_ra 1.2859 0.0104
+pre_E2 r56_rb 1.0051 0.0084
+pre_E2 r70_N 126972
+pre_E2 r70_CB 5749.05 81.25
+pre_E2 r70_dnb 20.25713 0.06268
+pre_E2 r70_sim 17.41191 0.22682
+pre_E2 r70_eta 1.06214
+pre_E2 r70_bkg 16.34977
+pre_E2 r70_ra 1.1634 0.0156
+pre_E2 r70_rb 0.8937 0.0122
+pre_E2 R2_N 27543
+pre_E2 R2_CB 2834.53 50.14
+pre_E2 R2_dnb 4.12894 0.02916
+pre_E2 R2_sim 3.36724 0.10113
+pre_E2 R2_eta 0.59550
+pre_E2 R2_bkg 2.77175
+pre_E2 R2_ra 1.2262 0.0378
+pre_E2 R2_rb 1.0300 0.0334
+pre_E2 post_N 17282
+pre_E2 post_CB 1749.36 29.23
+pre_E2 post_dnb 2.59560 0.02257
+pre_E2 post_sim 1.98217 0.07665
+pre_E2 post_eta 0.27740
+pre_E2 post_bkg 1.70477
+pre_E2 post_ra 1.3095 0.0519
+pre_E2 post_rb 1.0681 0.0444
+pre_E2 Fit_N 661436
+pre_E2 Fit_CB 56155.82 324.65
+pre_E2 Fit_dnb 101.14617 0.15616
+pre_E2 Fit_sim 85.64978 0.54828
+pre_E2 Fit_eta 17.27263
+pre_E2 Fit_bkg 68.37715
+pre_E2 Fit_ra 1.1809 0.0078
+pre_E2 Fit_rb 1.0122 0.0068
+pre_E2 all_N 788414
+pre_E2 all_CB 61904.87 330.31
+pre_E2 all_dnb 121.40430 0.16948
+pre_E2 all_sim 103.06189 0.59622
+pre_E2 all_eta 18.33481
+pre_E2 all_bkg 84.72709
+pre_E2 all_ra 1.1780 0.0070
+pre_E2 all_rb 0.9903 0.0060
+pre_E2 CR_N 373695
+pre_E2 CR_CB 29188.63 222.37
+pre_E2 CR_dnb 57.56921 0.11300
+pre_E2 CR_sim 44.94004 0.37361
+pre_E2 CR_eta 3.71340
+pre_E2 CR_bkg 41.22664
+pre_E2 CR_ra 1.2810 0.0109
+pre_E2 CR_rb 1.0000 0.0088
+pre_E2 PB_N 72742
+pre_E2 PB_CB 7044.28 88.73
+pre_E2 PB_dnb 10.97851 0.04807
+pre_E2 PB_sim 9.54156 0.16591
+pre_E2 PB_eta 2.78710
+pre_E2 PB_bkg 6.75447
+pre_E2 PB_ra 1.1506 0.0206
+pre_E2 PB_rb 1.0655 0.0209
+pre_E2 delta a=0.2942 b=0.0714 c=0.0691
+pre_E2 cb 1.3604 0.0122
+pre_E2 chi2a 1664.07 60
+pre_E2 chi2b 133.86 59
+pre_E2 k1 1.1977 chi2 487.16 59
+pre_E2 fit a 0.4370 0.0339 c 1.3717 0.0124 rho -0.639 chi2 126.04 58
+pre_E2 x17 N=7318 NV=7472 CB=372.55 CBe=9.8051 c6=3255.7 c6pb=5296.8 NX=203.95 NXpb=331.81 model_b=6074.6 C5b=353.78 C4b=32.859 rat_lo=1.1156 rat_hi=0.82178 rat_win=1.1351 NX_share=0.031635 eps_rel=0.93588 eps_rel_pb=0.93841 B_rel=1.1524 proxy=1.1471 proxy_cb=1.1502 Z=2.3687 SB_gain=0.81208
+pre_E3 below_N 10435
+pre_E3 below_CB 796.26 30.20
+pre_E3 below_dnb 1.61070 0.01792
+pre_E3 below_sim 1.51992 0.07024
+pre_E3 below_eta 0.39051
+pre_E3 below_bkg 1.12941
+pre_E3 below_ra 1.0597 0.0504
+pre_E3 below_rb 0.9794 0.0506
+pre_E3 B_N 124369
+pre_E3 B_CB 10916.12 134.91
+pre_E3 B_dnb 18.95870 0.06477
+pre_E3 B_sim 20.37457 0.29236
+pre_E3 B_eta 9.19937
+pre_E3 B_bkg 11.17520
+pre_E3 B_ra 0.9305 0.0137
+pre_E3 B_rb 1.0300 0.0154
+pre_E3 P_N 51605
+pre_E3 P_CB 4984.30 70.12
+pre_E3 P_dnb 7.79062 0.04014
+pre_E3 P_sim 6.86590 0.13895
+pre_E3 P_eta 2.14600
+pre_E3 P_bkg 4.71990
+pre_E3 P_ra 1.1347 0.0237
+pre_E3 P_rb 1.1006 0.0254
+pre_E3 r56_N 289284
+pre_E3 r56_CB 24658.60 203.89
+pre_E3 r56_dnb 44.22059 0.09967
+pre_E3 r56_sim 35.89323 0.33070
+pre_E3 r56_eta 3.77933
+pre_E3 r56_bkg 32.11390
+pre_E3 r56_ra 1.2320 0.0117
+pre_E3 r56_rb 1.0089 0.0099
+pre_E3 r70_N 82431
+pre_E3 r70_CB 3915.73 71.69
+pre_E3 r70_dnb 13.12040 0.05051
+pre_E3 r70_sim 11.75604 0.18562
+pre_E3 r70_eta 0.84905
+pre_E3 r70_bkg 10.90699
+pre_E3 r70_ra 1.1161 0.0181
+pre_E3 r70_rb 0.8917 0.0148
+pre_E3 R2_N 25130
+pre_E3 R2_CB 2598.85 46.90
+pre_E3 R2_dnb 3.76510 0.02780
+pre_E3 R2_sim 3.07327 0.09641
+pre_E3 R2_eta 0.55755
+pre_E3 R2_bkg 2.51571
+pre_E3 R2_ra 1.2251 0.0395
+pre_E3 R2_rb 1.0641 0.0361
+pre_E3 post_N 14148
+pre_E3 post_CB 1446.97 25.68
+pre_E3 post_dnb 2.12242 0.02039
+pre_E3 post_sim 1.64085 0.06941
+pre_E3 post_eta 0.24686
+pre_E3 post_bkg 1.39400
+pre_E3 post_ra 1.2935 0.0561
+pre_E3 post_rb 1.0964 0.0500
+pre_E3 Fit_N 514965
+pre_E3 Fit_CB 45401.09 285.50
+pre_E3 Fit_dnb 78.46712 0.13671
+pre_E3 Fit_sim 69.36754 0.49362
+pre_E3 Fit_eta 16.31959
+pre_E3 Fit_bkg 53.04795
+pre_E3 Fit_ra 1.1312 0.0083
+pre_E3 Fit_rb 1.0266 0.0077
+pre_E3 all_N 597402
+pre_E3 all_CB 49316.82 288.68
+pre_E3 all_dnb 91.58852 0.14637
+pre_E3 all_sim 81.12377 0.52923
+pre_E3 all_eta 17.16867
+pre_E3 all_bkg 63.95511
+pre_E3 all_ra 1.1290 0.0076
+pre_E3 all_rb 1.0048 0.0069
+pre_E3 CR_N 252976
+pre_E3 CR_CB 20944.78 177.92
+pre_E3 CR_dnb 38.77389 0.09215
+pre_E3 CR_sim 31.71797 0.30981
+pre_E3 CR_eta 3.29569
+pre_E3 CR_bkg 28.42228
+pre_E3 CR_ra 1.2225 0.0123
+pre_E3 CR_rb 1.0000 0.0104
+pre_E3 PB_N 62291
+pre_E3 PB_CB 6088.96 79.70
+pre_E3 PB_dnb 9.39172 0.04432
+pre_E3 PB_sim 8.13314 0.15189
+pre_E3 PB_eta 2.34200
+pre_E3 PB_bkg 5.79114
+pre_E3 PB_ra 1.1547 0.0222
+pre_E3 PB_rb 1.0961 0.0232
+pre_E3 delta a=0.2537 b=0.0843 c=0.0744
+pre_E3 cb 1.3178 0.0142
+pre_E3 chi2a 955.14 60
+pre_E3 chi2b 144.75 59
+pre_E3 k1 1.1494 chi2 388.11 59
+pre_E3 fit a 0.4752 0.0357 c 1.3359 0.0146 rho -0.689 chi2 122.04 58
+pre_E3 x17 N=6375 NV=6489 CB=287.12 CBe=8.5791 c6=2834.1 c6pb=4614.8 NX=177.54 NXpb=289.09 model_b=5064.6 C5b=295.56 C4b=32.859 rat_lo=1.1454 rat_hi=0.84977 rat_win=1.1912 NX_share=0.033174 eps_rel=0.81467 eps_rel_pb=0.81759 B_rel=1.0039 proxy=1.2299 proxy_cb=1.2323 Z=2.2109 SB_gain=0.81148
+pre_E3oa below_N 8088
+pre_E3oa below_CB 770.59 29.54
+pre_E3oa below_dnb 1.22279 0.01593
+pre_E3oa below_sim 1.05134 0.05658
+pre_E3oa below_eta 0.27108
+pre_E3oa below_bkg 0.78026
+pre_E3oa below_ra 1.1631 0.0644
+pre_E3oa below_rb 1.0087 0.0609
+pre_E3oa B_N 96261
+pre_E3oa B_CB 10689.85 132.29
+pre_E3oa B_dnb 14.29948 0.05787
+pre_E3oa B_sim 14.72215 0.24603
+pre_E3oa B_eta 6.57718
+pre_E3oa B_bkg 8.14496
+pre_E3oa B_ra 0.9713 0.0167
+pre_E3oa B_rb 1.0103 0.0175
+pre_E3oa P_N 39227
+pre_E3oa P_CB 4886.99 69.87
+pre_E3oa P_dnb 5.73843 0.03544
+pre_E3oa P_sim 4.79581 0.10979
+pre_E3oa P_eta 1.46591
+pre_E3oa P_bkg 3.32989
+pre_E3oa P_ra 1.1966 0.0284
+pre_E3oa P_rb 1.0833 0.0289
+pre_E3oa r56_N 205956
+pre_E3oa r56_CB 24104.76 200.74
+pre_E3oa r56_dnb 30.38850 0.08592
+pre_E3oa r56_sim 23.34889 0.25198
+pre_E3oa r56_eta 2.90774
+pre_E3oa r56_bkg 20.44116
+pre_E3oa r56_ra 1.3015 0.0145
+pre_E3oa r56_rb 1.0102 0.0117
+pre_E3oa r70_N 49790
+pre_E3oa r70_CB 3707.27 68.40
+pre_E3oa r70_dnb 7.70072 0.03983
+pre_E3oa r70_sim 6.51217 0.12881
+pre_E3oa r70_eta 0.58657
+pre_E3oa r70_bkg 5.92560
+pre_E3oa r70_ra 1.1825 0.0242
+pre_E3oa r70_rb 0.8936 0.0188
+pre_E3oa R2_N 19328
+pre_E3oa R2_CB 2550.68 46.29
+pre_E3oa R2_dnb 2.80360 0.02465
+pre_E3oa R2_sim 2.26834 0.08078
+pre_E3oa R2_eta 0.43592
+pre_E3oa R2_bkg 1.83242
+pre_E3oa R2_ra 1.2360 0.0453
+pre_E3oa R2_rb 1.0134 0.0393
+pre_E3oa post_N 10707
+pre_E3oa post_CB 1417.28 25.70
+pre_E3oa post_dnb 1.55237 0.01787
+pre_E3oa post_sim 1.16192 0.05616
+pre_E3oa post_eta 0.17985
+pre_E3oa post_bkg 0.98206
+pre_E3oa post_ra 1.3360 0.0664
+pre_E3oa post_rb 1.0624 0.0560
+pre_E3oa Fit_N 379562
+pre_E3oa Fit_CB 44420.16 280.56
+pre_E3oa Fit_dnb 56.00434 0.11976
+pre_E3oa Fit_sim 47.34841 0.39522
+pre_E3oa Fit_eta 11.83766
+pre_E3oa Fit_bkg 35.51075
+pre_E3oa Fit_ra 1.1828 0.0102
+pre_E3oa Fit_rb 1.0188 0.0089
+pre_E3oa all_N 429357
+pre_E3oa all_CB 48127.42 283.02
+pre_E3oa all_dnb 63.70589 0.12654
+pre_E3oa all_sim 53.86062 0.41684
+pre_E3oa all_eta 12.42426
+pre_E3oa all_bkg 41.43636
+pre_E3oa all_ra 1.1828 0.0095
+pre_E3oa all_rb 1.0018 0.0081
+pre_E3oa CR_N 178740
+pre_E3oa CR_CB 20457.03 175.23
+pre_E3oa CR_dnb 26.45009 0.07899
+pre_E3oa CR_sim 20.52454 0.23541
+pre_E3oa CR_eta 2.54818
+pre_E3oa CR_bkg 17.97636
+pre_E3oa CR_ra 1.2887 0.0153
+pre_E3oa CR_rb 1.0000 0.0123
+pre_E3oa PB_N 47421
+pre_E3oa PB_CB 5968.43 79.29
+pre_E3oa PB_dnb 6.92699 0.03919
+pre_E3oa PB_sim 5.68198 0.12043
+pre_E3oa PB_eta 1.60766
+pre_E3oa PB_bkg 4.07432
+pre_E3oa PB_ra 1.2191 0.0267
+pre_E3oa PB_rb 1.0812 0.0264
+pre_E3oa delta a=0.3471 b=0.1166 c=0.1066
+pre_E3oa cb 1.4147 0.0181
+pre_E3oa chi2a 1073.08 60
+pre_E3oa chi2b 133.64 59
+pre_E3oa k1 1.2074 chi2 309.13 59
+pre_E3oa fit a 0.4754 0.0459 c 1.4241 0.0193 rho -0.728 chi2 121.73 58
+pre_E3oa x17 N=6352 NV=6466 CB=287.93 CBe=8.5778 c6=2800 c6pb=4366.9 NX=175.41 NXpb=273.56 model_b=5383 C5b=293.47 C4b=32.859 rat_lo=1.2125 rat_hi=0.80305 rat_win=1.1201 NX_share=0.030931 eps_rel=0.80488 eps_rel_pb=0.77367 B_rel=1.0003 proxy=1.2426 proxy_cb=1.2451 Z=2.1882 SB_gain=0.80463
+pre_E4 below_N 10435
+pre_E4 below_CB 796.26 30.20
+pre_E4 below_dnb 1.61070 0.01792
+pre_E4 below_sim 1.51992 0.07024
+pre_E4 below_eta 0.39051
+pre_E4 below_bkg 1.12941
+pre_E4 below_ra 1.0597 0.0504
+pre_E4 below_rb 0.9751 0.0504
+pre_E4 B_N 126731
+pre_E4 B_CB 11196.06 135.64
+pre_E4 B_dnb 19.30662 0.06536
+pre_E4 B_sim 20.63268 0.29380
+pre_E4 B_eta 9.21406
+pre_E4 B_bkg 11.41863
+pre_E4 B_ra 0.9357 0.0137
+pre_E4 B_rb 1.0266 0.0152
+pre_E4 P_N 61066
+pre_E4 P_CB 5911.04 79.60
+pre_E4 P_dnb 9.21674 0.04385
+pre_E4 P_sim 8.17983 0.15276
+pre_E4 P_eta 2.59150
+pre_E4 P_bkg 5.58833
+pre_E4 P_ra 1.1268 0.0217
+pre_E4 P_rb 1.0925 0.0232
+pre_E4 r56_N 562703
+pre_E4 r56_CB 43236.09 288.46
+pre_E4 r56_dnb 86.80623 0.14093
+pre_E4 r56_sim 68.30552 0.47159
+pre_E4 r56_eta 4.50717
+pre_E4 r56_bkg 63.79834
+pre_E4 r56_ra 1.2709 0.0090
+pre_E4 r56_rb 1.0060 0.0073
+pre_E4 r70_N 288075
+pre_E4 r70_CB 12411.45 124.18
+pre_E4 r70_dnb 46.06513 0.09508
+pre_E4 r70_sim 41.52660 0.35209
+pre_E4 r70_eta 1.57842
+pre_E4 r70_bkg 39.94818
+pre_E4 r70_ra 1.1093 0.0097
+pre_E4 r70_rb 0.8605 0.0076
+pre_E4 R2_N 27668
+pre_E4 R2_CB 2862.05 50.07
+pre_E4 R2_dnb 4.14523 0.02921
+pre_E4 R2_sim 3.39094 0.10154
+pre_E4 R2_eta 0.59618
+pre_E4 R2_bkg 2.79476
+pre_E4 R2_ra 1.2224 0.0376
+pre_E4 R2_rb 1.0523 0.0340
+pre_E4 post_N 17935
+pre_E4 post_CB 1835.10 30.68
+pre_E4 post_dnb 2.69040 0.02303
+pre_E4 post_sim 2.06456 0.07831
+pre_E4 post_eta 0.28590
+pre_E4 post_bkg 1.77866
+pre_E4 post_ra 1.3031 0.0507
+pre_E4 post_rb 1.0894 0.0443
+pre_E4 Fit_N 806532
+pre_E4 Fit_CB 65836.60 361.11
+pre_E4 Fit_dnb 123.77492 0.17366
+pre_E4 Fit_sim 104.09326 0.60940
+pre_E4 Fit_eta 17.58529
+pre_E4 Fit_bkg 86.50796
+pre_E4 Fit_ra 1.1891 0.0072
+pre_E4 Fit_rb 1.0180 0.0062
+pre_E4 all_N 1094613
+pre_E4 all_CB 78248.05 376.48
+pre_E4 all_dnb 169.84105 0.20087
+pre_E4 all_sim 145.62005 0.71206
+pre_E4 all_eta 19.16374
+pre_E4 all_bkg 126.45631
+pre_E4 all_ra 1.1663 0.0059
+pre_E4 all_rb 0.9699 0.0050
+pre_E4 CR_N 513968
+pre_E4 CR_CB 38213.46 263.28
+pre_E4 CR_dnb 79.50161 0.13339
+pre_E4 CR_sim 62.81769 0.45148
+pre_E4 CR_eta 3.98404
+pre_E4 CR_bkg 58.83365
+pre_E4 CR_ra 1.2656 0.0093
+pre_E4 CR_rb 1.0000 0.0075
+pre_E4 PB_N 74224
+pre_E4 PB_CB 7262.36 91.58
+pre_E4 PB_dnb 11.18972 0.04866
+pre_E4 PB_sim 9.74360 0.16764
+pre_E4 PB_eta 2.81758
+pre_E4 PB_bkg 6.92602
+pre_E4 PB_ra 1.1484 0.0204
+pre_E4 PB_rb 1.0865 0.0211
+pre_E4 delta a=0.2847 b=0.0789 c=0.0700
+pre_E4 cb 1.3242 0.0102
+pre_E4 chi2a 1901.10 60
+pre_E4 chi2b 158.04 59
+pre_E4 k1 1.2020 chi2 471.20 59
+pre_E4 fit a 0.4888 0.0318 c 1.3342 0.0102 rho -0.581 chi2 136.55 58
+pre_E4 x17 N=7468 NV=7630 CB=404.28 CBe=10.513 c6=3323.7 c6pb=5405.3 NX=208.21 NXpb=338.61 model_b=6036.7 C5b=361.15 C4b=32.859 rat_lo=1.1376 rat_hi=0.83571 rat_win=1.1594 NX_share=0.032326 eps_rel=0.95541 eps_rel_pb=0.95764 B_rel=1.1761 proxy=1.1351 proxy_cb=1.1391 Z=2.3917 SB_gain=0.81238
+pre_E4oa below_N 8088
+pre_E4oa below_CB 770.59 29.54
+pre_E4oa below_dnb 1.22279 0.01593
+pre_E4oa below_sim 1.05134 0.05658
+pre_E4oa below_eta 0.27108
+pre_E4oa below_bkg 0.78026
+pre_E4oa below_ra 1.1631 0.0644
+pre_E4oa below_rb 1.0226 0.0617
+pre_E4oa B_N 98141
+pre_E4oa B_CB 10958.23 133.13
+pre_E4oa B_dnb 14.56880 0.05841
+pre_E4oa B_sim 14.90492 0.24705
+pre_E4oa B_eta 6.58137
+pre_E4oa B_bkg 8.32355
+pre_E4oa B_ra 0.9774 0.0167
+pre_E4oa B_rb 1.0237 0.0175
+pre_E4oa P_N 46897
+pre_E4oa P_CB 5790.59 79.42
+pre_E4oa P_dnb 6.86914 0.03895
+pre_E4oa P_sim 5.83893 0.12296
+pre_E4oa P_eta 1.78185
+pre_E4oa P_bkg 4.05708
+pre_E4oa P_ra 1.1764 0.0257
+pre_E4oa P_rb 1.0790 0.0263
+pre_E4oa r56_N 411778
+pre_E4oa r56_CB 42182.72 284.94
+pre_E4oa r56_dnb 61.76172 0.12298
+pre_E4oa r56_sim 46.51286 0.37363
+pre_E4oa r56_eta 3.45635
+pre_E4oa r56_bkg 43.05651
+pre_E4oa r56_ra 1.3278 0.0110
+pre_E4oa r56_rb 1.0062 0.0085
+pre_E4oa r70_N 183821
+pre_E4oa r70_CB 11714.95 120.30
+pre_E4oa r70_dnb 28.76002 0.07673
+pre_E4oa r70_sim 24.14374 0.25154
+pre_E4oa r70_eta 1.13873
+pre_E4oa r70_bkg 23.00501
+pre_E4oa r70_ra 1.1912 0.0128
+pre_E4oa r70_rb 0.8845 0.0097
+pre_E4oa R2_N 21389
+pre_E4oa R2_CB 2803.20 49.38
+pre_E4oa R2_dnb 3.10581 0.02597
+pre_E4oa R2_sim 2.50754 0.08516
+pre_E4oa R2_eta 0.47183
+pre_E4oa R2_bkg 2.03571
+pre_E4oa R2_ra 1.2386 0.0433
+pre_E4oa R2_rb 1.0265 0.0378
+pre_E4oa post_N 13752
+pre_E4oa post_CB 1796.59 30.70
+pre_E4oa post_dnb 1.99782 0.02032
+pre_E4oa post_sim 1.50220 0.06456
+pre_E4oa post_eta 0.21555
+pre_E4oa post_bkg 1.28665
+pre_E4oa post_ra 1.3299 0.0587
+pre_E4oa post_rb 1.0631 0.0494
+pre_E4oa Fit_N 600040
+pre_E4oa Fit_CB 64301.93 355.23
+pre_E4oa Fit_dnb 89.52524 0.15274
+pre_E4oa Fit_sim 72.31776 0.49314
+pre_E4oa Fit_eta 12.77800
+pre_E4oa Fit_bkg 59.53976
+pre_E4oa Fit_ra 1.2379 0.0087
+pre_E4oa Fit_rb 1.0164 0.0073
+pre_E4oa all_N 783866
+pre_E4oa all_CB 76016.87 371.17
+pre_E4oa all_dnb 118.28609 0.17316
+pre_E4oa all_sim 96.46153 0.55934
+pre_E4oa all_eta 13.91676
+pre_E4oa all_bkg 82.54477
+pre_E4oa all_ra 1.2263 0.0073
+pre_E4oa all_rb 0.9808 0.0059
+pre_E4oa CR_N 374644
+pre_E4oa CR_CB 37257.95 259.46
+pre_E4oa CR_dnb 56.37936 0.11600
+pre_E4oa CR_sim 42.64549 0.35715
+pre_E4oa CR_eta 3.06912
+pre_E4oa CR_bkg 39.57637
+pre_E4oa CR_ra 1.3220 0.0114
+pre_E4oa CR_rb 1.0000 0.0088
+pre_E4oa PB_N 57067
+pre_E4oa PB_CB 7112.17 91.19
+pre_E4oa PB_dnb 8.34777 0.04328
+pre_E4oa PB_sim 6.96790 0.13558
+pre_E4oa PB_eta 1.95074
+pre_E4oa PB_bkg 5.01716
+pre_E4oa PB_ra 1.1980 0.0241
+pre_E4oa PB_rb 1.0741 0.0239
+pre_E4oa delta a=0.3694 b=0.1150 c=0.0987
+pre_E4oa cb 1.3936 0.0126
+pre_E4oa chi2a 1991.75 60
+pre_E4oa chi2b 150.26 59
+pre_E4oa k1 1.2541 chi2 361.13 59
+pre_E4oa fit a 0.5132 0.0397 c 1.3977 0.0128 rho -0.610 chi2 131.50 58
+pre_E4oa x17 N=7445 NV=7607 CB=406.26 CBe=10.559 c6=3289.6 c6pb=5148 NX=206.07 NXpb=322.5 model_b=6305.3 C5b=359.05 C4b=32.859 rat_lo=1.1914 rat_hi=0.8026 rat_win=1.1093 NX_share=0.030705 eps_rel=0.94561 eps_rel_pb=0.91205 B_rel=1.1724 proxy=1.1451 proxy_cb=1.1492 Z=2.3706 SB_gain=0.80653
+pre_X1 below_N 7940
+pre_X1 below_CB 119.21 13.21
+pre_X1 below_dnb 1.30690 0.01514
+pre_X1 below_sim 1.22486 0.06517
+pre_X1 below_eta 0.31017
+pre_X1 below_bkg 0.91469
+pre_X1 below_ra 1.0670 0.0581
+pre_X1 below_rb 0.9441 0.0561
+pre_X1 B_N 91202
+pre_X1 B_CB 1018.27 49.20
+pre_X1 B_dnb 15.07028 0.05225
+pre_X1 B_sim 15.73381 0.26211
+pre_X1 B_eta 7.01959
+pre_X1 B_bkg 8.71422
+pre_X1 B_ra 0.9578 0.0163
+pre_X1 B_rb 1.0173 0.0178
+pre_X1 P_N 42958
+pre_X1 P_CB 393.06 26.10
+pre_X1 P_dnb 7.11287 0.03522
+pre_X1 P_sim 6.00956 0.13922
+pre_X1 P_eta 1.93998
+pre_X1 P_bkg 4.06958
+pre_X1 P_ra 1.1836 0.0280
+pre_X1 P_rb 1.1144 0.0288
+pre_X1 r56_N 314734
+pre_X1 r56_CB 2399.73 69.39
+pre_X1 r56_dnb 52.19304 0.09807
+pre_X1 r56_sim 39.54105 0.36833
+pre_X1 r56_eta 2.65653
+pre_X1 r56_bkg 36.88452
+pre_X1 r56_ra 1.3200 0.0125
+pre_X1 r56_rb 1.0060 0.0097
+pre_X1 r70_N 106288
+pre_X1 r70_CB 761.97 32.40
+pre_X1 r70_dnb 17.63407 0.05609
+pre_X1 r70_sim 14.99016 0.21711
+pre_X1 r70_eta 0.71869
+pre_X1 r70_bkg 14.27147
+pre_X1 r70_ra 1.1764 0.0174
+pre_X1 r70_rb 0.8839 0.0133
+pre_X1 R2_N 19517
+pre_X1 R2_CB 220.39 19.53
+pre_X1 R2_dnb 3.22459 0.02369
+pre_X1 R2_sim 2.46729 0.09061
+pre_X1 R2_eta 0.39475
+pre_X1 R2_bkg 2.07254
+pre_X1 R2_ra 1.3069 0.0489
+pre_X1 R2_rb 1.0701 0.0420
+pre_X1 post_N 12409
+pre_X1 post_CB 118.30 9.44
+pre_X1 post_dnb 2.05385 0.01872
+pre_X1 post_sim 1.49726 0.07034
+pre_X1 post_eta 0.19161
+pre_X1 post_bkg 1.30565
+pre_X1 post_ra 1.3717 0.0656
+pre_X1 post_rb 1.0951 0.0544
+pre_X1 Fit_N 488758
+pre_X1 Fit_CB 4268.95 99.22
+pre_X1 Fit_dnb 80.96120 0.12511
+pre_X1 Fit_sim 66.47364 0.50183
+pre_X1 Fit_eta 12.51259
+pre_X1 Fit_bkg 53.96104
+pre_X1 Fit_ra 1.2179 0.0094
+pre_X1 Fit_rb 1.0203 0.0080
+pre_X1 all_N 595048
+pre_X1 all_CB 5030.92 104.62
+pre_X1 all_dnb 98.59561 0.13835
+pre_X1 all_sim 81.46399 0.54954
+pre_X1 all_eta 13.23132
+pre_X1 all_bkg 68.23268
+pre_X1 all_ra 1.2103 0.0083
+pre_X1 all_rb 0.9929 0.0069
+pre_X1 CR_N 281886
+pre_X1 CR_CB 2090.72 62.85
+pre_X1 CR_dnb 46.75557 0.09243
+pre_X1 CR_sim 35.58295 0.34838
+pre_X1 CR_eta 2.32124
+pre_X1 CR_bkg 33.26171
+pre_X1 CR_ra 1.3140 0.0131
+pre_X1 CR_rb 1.0000 0.0101
+pre_X1 PB_N 52114
+pre_X1 PB_CB 483.72 30.27
+pre_X1 PB_dnb 8.62775 0.03889
+pre_X1 PB_sim 7.10356 0.15130
+pre_X1 PB_eta 2.07571
+pre_X1 PB_bkg 5.02784
+pre_X1 PB_ra 1.2146 0.0264
+pre_X1 PB_rb 1.1122 0.0263
+pre_X1 delta a=0.3387 b=0.0928 c=0.0860
+pre_X1 cb 1.3778 0.0143
+pre_X1 chi2a 1563.55 60
+pre_X1 chi2b 145.56 59
+pre_X1 k1 1.2332 chi2 392.93 59
+pre_X1 fit a 0.4715 0.0395 c 1.3939 0.0141 rho -0.595 chi2 130.87 58
+pre_X1 x17 N=4137 NV=4215 CB=56.429 CBe=4.3097 c6=2111.6 c6pb=3834 NX=132.28 NXpb=240.18 model_b=3290.6 C5b=216.22 C4b=32.859 rat_lo=1.1089 rat_hi=0.90127 rat_win=1.236 NX_share=0.039522 eps_rel=0.60699 eps_rel_pb=0.67925 B_rel=0.6515 proxy=1.3298 proxy_cb=1.3277 Z=2.052 SB_gain=0.93168
+pre_X2 below_N 5593
+pre_X2 below_CB 94.35 10.79
+pre_X2 below_dnb 0.91886 0.01269
+pre_X2 below_sim 0.75629 0.05016
+pre_X2 below_eta 0.19074
+pre_X2 below_bkg 0.56555
+pre_X2 below_ra 1.2150 0.0823
+pre_X2 below_rb 0.9827 0.0731
+pre_X2 B_N 62618
+pre_X2 B_CB 791.84 43.64
+pre_X2 B_dnb 10.33155 0.04339
+pre_X2 B_sim 10.01068 0.20842
+pre_X2 B_eta 4.38691
+pre_X2 B_bkg 5.62378
+pre_X2 B_ra 1.0321 0.0219
+pre_X2 B_rb 1.0036 0.0219
+pre_X2 P_N 29013
+pre_X2 P_CB 283.94 24.35
+pre_X2 P_dnb 4.80081 0.02900
+pre_X2 P_sim 3.68175 0.10577
+pre_X2 P_eta 1.13377
+pre_X2 P_bkg 2.54798
+pre_X2 P_ra 1.3039 0.0383
+pre_X2 P_rb 1.1107 0.0359
+pre_X2 r56_N 197957
+pre_X2 r56_CB 1643.35 62.84
+pre_X2 r56_dnb 32.80526 0.07791
+pre_X2 r56_sim 22.70534 0.27041
+pre_X2 r56_eta 1.66411
+pre_X2 r56_bkg 21.04123
+pre_X2 r56_ra 1.4448 0.0175
+pre_X2 r56_rb 1.0058 0.0124
+pre_X2 r70_N 56527
+pre_X2 r70_CB 414.24 26.59
+pre_X2 r70_dnb 9.37680 0.04095
+pre_X2 r70_sim 7.23360 0.14327
+pre_X2 r70_eta 0.41078
+pre_X2 r70_bkg 6.82282
+pre_X2 r70_ra 1.2963 0.0263
+pre_X2 r70_rb 0.8910 0.0183
+pre_X2 R2_N 13262
+pre_X2 R2_CB 164.96 16.12
+pre_X2 R2_dnb 2.18860 0.01953
+pre_X2 R2_sim 1.59812 0.07221
+pre_X2 R2_eta 0.27051
+pre_X2 R2_bkg 1.32761
+pre_X2 R2_ra 1.3695 0.0631
+pre_X2 R2_rb 1.0304 0.0499
+pre_X2 post_N 8343
+pre_X2 post_CB 84.76 8.78
+pre_X2 post_dnb 1.38001 0.01536
+pre_X2 post_sim 0.94279 0.05482
+pre_X2 post_eta 0.12183
+pre_X2 post_bkg 0.82096
+pre_X2 post_ra 1.4638 0.0867
+pre_X2 post_rb 1.0654 0.0657
+pre_X2 Fit_N 316785
+pre_X2 Fit_CB 3063.19 90.42
+pre_X2 Fit_dnb 52.42491 0.10102
+pre_X2 Fit_sim 39.69492 0.38055
+pre_X2 Fit_eta 7.76783
+pre_X2 Fit_bkg 31.92709
+pre_X2 Fit_ra 1.3207 0.0129
+pre_X2 Fit_rb 1.0162 0.0101
+pre_X2 all_N 373313
+pre_X2 all_CB 3477.43 93.55
+pre_X2 all_dnb 61.80188 0.10984
+pre_X2 all_sim 46.92856 0.40819
+pre_X2 all_eta 8.17864
+pre_X2 all_bkg 38.74992
+pre_X2 all_ra 1.3169 0.0117
+pre_X2 all_rb 0.9950 0.0089
+pre_X2 CR_N 176186
+pre_X2 CR_CB 1414.97 57.54
+pre_X2 CR_dnb 29.20535 0.07320
+pre_X2 CR_sim 20.31195 0.25503
+pre_X2 CR_eta 1.46407
+pre_X2 CR_bkg 18.84788
+pre_X2 CR_ra 1.4378 0.0184
+pre_X2 CR_rb 1.0000 0.0130
+pre_X2 PB_N 35246
+pre_X2 PB_CB 347.33 27.78
+pre_X2 PB_dnb 5.83179 0.03204
+pre_X2 PB_sim 4.34746 0.11495
+pre_X2 PB_eta 1.21274
+pre_X2 PB_bkg 3.13472
+pre_X2 PB_ra 1.3414 0.0362
+pre_X2 PB_rb 1.1119 0.0328
+pre_X2 delta a=0.5034 b=0.1629 c=0.1413
+pre_X2 cb 1.5185 0.0202
+pre_X2 chi2a 1765.13 60
+pre_X2 chi2b 133.21 59
+pre_X2 k1 1.3412 chi2 269.45 59
+pre_X2 fit a 0.5176 0.0555 c 1.5216 0.0199 rho -0.618 chi2 121.27 58
+pre_X2 x17 N=4114 NV=4192 CB=51.387 CBe=4.6496 c6=2077.5 c6pb=3577.2 NX=130.14 NXpb=224.09 model_b=3573.2 C5b=214.12 C4b=32.859 rat_lo=1.1294 rat_hi=0.82817 rat_win=1.135 NX_share=0.035906 eps_rel=0.59718 eps_rel_pb=0.63376 B_rel=0.64787 proxy=1.3478 proxy_cb=1.3463 Z=2.0237 SB_gain=0.92176
+pre_X2old below_N 5593
+pre_X2old below_CB 94.35 10.79
+pre_X2old below_dnb 0.91886 0.01269
+pre_X2old below_sim 0.75629 0.05016
+pre_X2old below_eta 0.19074
+pre_X2old below_bkg 0.56555
+pre_X2old below_ra 1.2150 0.0823
+pre_X2old below_rb 1.0124 0.0752
+pre_X2old B_N 61362
+pre_X2old B_CB 747.37 41.54
+pre_X2old B_dnb 10.12909 0.04289
+pre_X2old B_sim 9.89547 0.20755
+pre_X2old B_eta 4.38442
+pre_X2old B_bkg 5.51105
+pre_X2old B_ra 1.0236 0.0219
+pre_X2old B_rb 1.0279 0.0225
+pre_X2old P_N 24715
+pre_X2old P_CB 216.53 21.73
+pre_X2old P_dnb 4.09385 0.02672
+pre_X2old P_sim 3.05782 0.09507
+pre_X2old P_eta 0.91310
+pre_X2old P_bkg 2.14472
+pre_X2old P_ra 1.3388 0.0425
+pre_X2old P_rb 1.1638 0.0407
+pre_X2old r56_N 134003
+pre_X2old r56_CB 1097.27 48.16
+pre_X2old r56_dnb 22.20939 0.06358
+pre_X2old r56_sim 16.01419 0.22431
+pre_X2old r56_eta 1.50166
+pre_X2old r56_bkg 14.51253
+pre_X2old r56_ra 1.3869 0.0198
+pre_X2old r56_rb 1.0126 0.0148
+pre_X2old r70_N 36320
+pre_X2old r70_CB 258.37 21.61
+pre_X2old r70_dnb 6.02613 0.03268
+pre_X2old r70_sim 4.89943 0.11774
+pre_X2old r70_eta 0.30841
+pre_X2old r70_bkg 4.59102
+pre_X2old r70_ra 1.2300 0.0303
+pre_X2old r70_rb 0.8770 0.0219
+pre_X2old R2_N 12031
+pre_X2old R2_CB 138.34 14.71
+pre_X2old R2_dnb 1.98734 0.01859
+pre_X2old R2_sim 1.45521 0.06865
+pre_X2old R2_eta 0.24051
+pre_X2old R2_bkg 1.21470
+pre_X2old R2_ra 1.3657 0.0657
+pre_X2old R2_rb 1.0562 0.0534
+pre_X2old post_N 6757
+pre_X2old post_CB 62.03 7.58
+pre_X2old post_dnb 1.11877 0.01381
+pre_X2old post_sim 0.78735 0.05018
+pre_X2old post_eta 0.10885
+pre_X2old post_bkg 0.67851
+pre_X2old post_ra 1.4209 0.0922
+pre_X2old post_rb 1.0749 0.0727
+pre_X2old Fit_N 244460
+pre_X2old Fit_CB 2355.90 73.11
+pre_X2old Fit_dnb 40.45714 0.08777
+pre_X2old Fit_sim 31.96629 0.34224
+pre_X2old Fit_eta 7.33924
+pre_X2old Fit_bkg 24.62705
+pre_X2old Fit_ra 1.2656 0.0138
+pre_X2old Fit_rb 1.0338 0.0114
+pre_X2old all_N 280781
+pre_X2old all_CB 2614.27 77.10
+pre_X2old all_dnb 46.48343 0.09420
+pre_X2old all_sim 36.86575 0.36290
+pre_X2old all_eta 7.64768
+pre_X2old all_bkg 29.21807
+pre_X2old all_ra 1.2609 0.0127
+pre_X2old all_rb 1.0104 0.0103
+pre_X2old CR_N 116835
+pre_X2old CR_CB 942.82 44.64
+pre_X2old CR_dnb 19.36632 0.05918
+pre_X2old CR_sim 14.12886 0.20991
+pre_X2old CR_eta 1.30964
+pre_X2old CR_bkg 12.81922
+pre_X2old CR_ra 1.3707 0.0208
+pre_X2old CR_rb 1.0000 0.0155
+pre_X2old PB_N 29897
+pre_X2old PB_CB 265.00 24.77
+pre_X2old PB_dnb 4.95170 0.02945
+pre_X2old PB_sim 3.60587 0.10334
+pre_X2old PB_eta 0.98042
+pre_X2old PB_bkg 2.62545
+pre_X2old PB_ra 1.3732 0.0402
+pre_X2old PB_rb 1.1648 0.0373
+pre_X2old delta a=0.4662 b=0.2019 c=0.1610
+pre_X2old cb 1.4699 0.0234
+pre_X2old chi2a 1144.65 60
+pre_X2old chi2b 163.66 59
+pre_X2old k1 1.2893 chi2 247.32 59
+pre_X2old fit a 0.5629 0.0585 c 1.4826 0.0234 rho -0.668 chi2 137.27 58
+pre_X2old x17 N=3833 NV=3901 CB=46.339 CBe=4.6705 c6=1908.7 c6pb=3227.8 NX=119.57 NXpb=202.2 model_b=3154.8 C5b=190.57 C4b=32.859 rat_lo=1.1849 rat_hi=0.85673 rat_win=1.1974 NX_share=0.037353 eps_rel=0.54867 eps_rel_pb=0.57185 B_rel=0.60362 proxy=1.416 proxy_cb=1.4147 Z=1.9259 SB_gain=0.90897
+pre_O6 below_N 35984
+pre_O6 below_CB 602.45 37.38
+pre_O6 below_dnb 5.91248 0.03300
+pre_O6 below_sim 5.66835 0.15142
+pre_O6 below_eta 1.99895
+pre_O6 below_bkg 3.66940
+pre_O6 below_ra 1.0431 0.0285
+pre_O6 below_rb 0.9656 0.0282
+pre_O6 B_N 107205
+pre_O6 B_CB 1370.40 52.27
+pre_O6 B_dnb 17.68564 0.05686
+pre_O6 B_sim 18.12355 0.28630
+pre_O6 B_eta 8.26987
+pre_O6 B_bkg 9.85367
+pre_O6 B_ra 0.9758 0.0157
+pre_O6 B_rb 1.0046 0.0167
+pre_O6 P_N 54240
+pre_O6 P_CB 614.43 32.86
+pre_O6 P_dnb 8.96117 0.03976
+pre_O6 P_sim 7.05383 0.15158
+pre_O6 P_eta 2.13696
+pre_O6 P_bkg 4.91687
+pre_O6 P_ra 1.2704 0.0279
+pre_O6 P_rb 1.1218 0.0269
+pre_O6 r56_N 704711
+pre_O6 r56_CB 6457.48 128.48
+pre_O6 r56_dnb 116.68261 0.15156
+pre_O6 r56_sim 83.02444 0.55115
+pre_O6 r56_eta 4.26038
+pre_O6 r56_bkg 78.76405
+pre_O6 r56_ra 1.4054 0.0095
+pre_O6 r56_rb 1.0061 0.0069
+pre_O6 r70_N 1730293
+pre_O6 r70_CB 10872.80 129.20
+pre_O6 r70_dnb 287.32606 0.23801
+pre_O6 r70_sim 265.58371 0.91606
+pre_O6 r70_eta 6.27188
+pre_O6 r70_bkg 259.31183
+pre_O6 r70_ra 1.0819 0.0038
+pre_O6 r70_rb 0.7586 0.0027
+pre_O6 R2_N 23487
+pre_O6 R2_CB 321.72 20.20
+pre_O6 R2_dnb 3.87107 0.02599
+pre_O6 R2_sim 2.84405 0.09780
+pre_O6 R2_eta 0.43771
+pre_O6 R2_bkg 2.40634
+pre_O6 R2_ra 1.3611 0.0477
+pre_O6 R2_rb 1.0558 0.0389
+pre_O6 post_N 16572
+pre_O6 post_CB 204.83 11.63
+pre_O6 post_dnb 2.73506 0.02166
+pre_O6 post_sim 1.88914 0.07943
+pre_O6 post_eta 0.24562
+pre_O6 post_bkg 1.64352
+pre_O6 post_ra 1.4478 0.0619
+pre_O6 post_rb 1.1016 0.0490
+pre_O6 Fit_N 936910
+pre_O6 Fit_CB 9464.51 162.25
+pre_O6 Fit_dnb 154.98204 0.17991
+pre_O6 Fit_sim 117.98629 0.68970
+pre_O6 Fit_eta 17.24849
+pre_O6 Fit_bkg 100.73780
+pre_O6 Fit_ra 1.3136 0.0078
+pre_O6 Fit_rb 1.0126 0.0061
+pre_O6 all_N 2672492
+pre_O6 all_CB 20444.10 212.71
+pre_O6 all_dnb 443.17408 0.31143
+pre_O6 all_sim 384.18707 1.18502
+pre_O6 all_eta 23.62138
+pre_O6 all_bkg 360.56569
+pre_O6 all_ra 1.1535 0.0036
+pre_O6 all_rb 0.8321 0.0026
+pre_O6 CR_N 658246
+pre_O6 CR_CB 5913.53 120.11
+pre_O6 CR_dnb 109.00891 0.14562
+pre_O6 CR_sim 77.91224 0.53226
+pre_O6 CR_eta 3.83578
+pre_O6 CR_bkg 74.07645
+pre_O6 CR_ra 1.3991 0.0097
+pre_O6 CR_rb 1.0000 0.0071
+pre_O6 PB_N 66170
+pre_O6 PB_CB 764.95 37.70
+pre_O6 PB_dnb 10.92960 0.04405
+pre_O6 PB_sim 8.40399 0.16571
+pre_O6 PB_eta 2.29890
+pre_O6 PB_bkg 6.10509
+pre_O6 PB_ra 1.3005 0.0262
+pre_O6 PB_rb 1.1179 0.0244
+pre_O6 delta a=0.3331 b=0.0654 c=0.0620
+pre_O6 cb 1.4509 0.0104
+pre_O6 chi2a 4431.41 60
+pre_O6 chi2b 180.34 59
+pre_O6 k1 1.3277 chi2 604.67 59
+pre_O6 fit a 0.4294 0.0338 c 1.4670 0.0103 rho -0.524 chi2 169.79 58
+pre_O6 x17 N=4275 NV=4363 CB=70.473 CBe=4.6801 c6=2161.4 c6pb=4025.7 NX=135.4 NXpb=252.19 model_b=3573.7 C5b=218.71 C4b=32.859 rat_lo=1.1196 rat_hi=0.85915 rat_win=1.1731 NX_share=0.037156 eps_rel=0.62131 eps_rel_pb=0.71322 B_rel=0.67323 proxy=1.3206 proxy_cb=1.319 Z=2.0656 SB_gain=0.92289
+S0 below_N 36493
+S0 below_CB 1892.39 51.34
+S0 below_dnb 5.78198 0.03373
+S0 below_sim 6.30572 0.15619
+S0 below_eta 2.47091
+S0 below_bkg 3.83481
+S0 below_ra 0.9169 0.0233
+S0 below_rb 0.9551 0.0256
+S0 B_N 111212
+S0 B_CB 6236.84 90.83
+S0 B_dnb 17.54202 0.05916
+S0 B_sim 20.37883 0.29991
+S0 B_eta 10.08148
+S0 B_bkg 10.29735
+S0 B_ra 0.8608 0.0130
+S0 B_rb 0.9948 0.0151
+S0 P_N 55947
+S0 P_CB 3279.02 56.56
+S0 P_dnb 8.80115 0.04105
+S0 P_sim 7.99606 0.15185
+S0 P_eta 2.62922
+S0 P_bkg 5.36684
+S0 P_ra 1.1007 0.0215
+S0 P_rb 1.0811 0.0234
+S0 r56_N 737535
+S0 r56_CB 38019.82 249.37
+S0 r56_dnb 116.89344 0.15857
+S0 r56_sim 92.36743 0.55490
+S0 r56_eta 6.09943
+S0 r56_bkg 86.26800
+S0 r56_ra 1.2655 0.0078
+S0 r56_rb 1.0043 0.0063
+S0 r70_N 1874697
+S0 r70_CB 76443.05 322.05
+S0 r70_dnb 300.49968 0.25171
+S0 r70_sim 300.09785 0.91143
+S0 r70_eta 9.82448
+S0 r70_bkg 290.27337
+S0 r70_ra 1.0013 0.0032
+S0 r70_rb 0.7758 0.0025
+S0 R2_N 23773
+S0 R2_CB 1469.08 33.13
+S0 R2_dnb 3.72713 0.02649
+S0 R2_sim 3.14062 0.09804
+S0 R2_eta 0.58227
+S0 R2_bkg 2.55835
+S0 R2_ra 1.1867 0.0380
+S0 R2_rb 1.0318 0.0348
+S0 post_N 16959
+S0 post_CB 1036.86 23.08
+S0 post_dnb 2.66069 0.02216
+S0 post_sim 2.08297 0.07952
+S0 post_eta 0.30660
+S0 post_bkg 1.77638
+S0 post_ra 1.2774 0.0499
+S0 post_rb 1.0776 0.0440
+S0 Fit_N 976545
+S0 Fit_CB 51691.34 304.51
+S0 Fit_dnb 154.54893 0.18746
+S0 Fit_sim 131.58834 0.69879
+S0 Fit_eta 22.03098
+S0 Fit_bkg 109.55736
+S0 Fit_ra 1.1745 0.0064
+S0 Fit_rb 1.0067 0.0055
+S0 all_N 2856616
+S0 all_CB 128377.05 447.65
+S0 all_dnb 455.90609 0.32594
+S0 all_sim 432.36949 1.18556
+S0 all_eta 31.99439
+S0 all_bkg 400.37510
+S0 all_ra 1.0544 0.0030
+S0 all_rb 0.8417 0.0024
+S0 CR_N 689947
+S0 CR_CB 35053.75 231.54
+S0 CR_dnb 109.43683 0.15227
+S0 CR_sim 86.71807 0.53599
+S0 CR_eta 5.54617
+S0 CR_bkg 81.17190
+S0 CR_ra 1.2620 0.0080
+S0 CR_rb 1.0000 0.0065
+S0 PB_N 68111
+S0 PB_CB 4020.81 65.49
+S0 PB_dnb 10.70988 0.04551
+S0 PB_sim 9.55809 0.16729
+S0 PB_eta 2.86519
+S0 PB_bkg 6.69290
+S0 PB_ra 1.1205 0.0202
+S0 PB_rb 1.0724 0.0212
+S0 delta a=0.2292 b=0.0505 c=0.0489
+S0 cb 1.3209 0.0087
+S0 chi2a 2391.73 60
+S0 chi2b 150.69 59
+S0 k1 1.1905 chi2 724.40 59
+S0 fit a 0.3993 0.0253 c 1.3323 0.0088 rho -0.538 chi2 145.94 58
+S0 x17 N=6350 NV=6482 CB=207.91 CBe=6.9572 c6=3478.8 c6pb=5644.4 NX=217.93 NXpb=353.59 model_b=5638.2 C5b=362.65 C4b=32.859 rat_lo=1.1248 rat_hi=0.87677 rat_win=1.0862 NX_share=0.037278 eps_rel=1 eps_rel_pb=1 B_rel=1 proxy=1 proxy_cb=1 Z=2.7245 SB_gain=1
+S0_E1 below_N 5418
+S0_E1 below_CB 281.26 17.40
+S0_E1 below_dnb 0.85838 0.01267
+S0_E1 below_sim 0.82386 0.04975
+S0_E1 below_eta 0.24933
+S0_E1 below_bkg 0.57453
+S0_E1 below_ra 1.0419 0.0648
+S0_E1 below_rb 0.9755 0.0665
+S0_E1 B_N 70820
+S0_E1 B_CB 4495.32 84.17
+S0_E1 B_dnb 11.08328 0.04757
+S0_E1 B_sim 12.42885 0.22690
+S0_E1 B_eta 5.96176
+S0_E1 B_bkg 6.46710
+S0_E1 B_ra 0.8917 0.0167
+S0_E1 B_rb 0.9925 0.0187
+S0_E1 P_N 33317
+S0_E1 P_CB 2386.39 49.01
+S0_E1 P_dnb 5.16870 0.03183
+S0_E1 P_sim 4.80503 0.11145
+S0_E1 P_eta 1.62271
+S0_E1 P_bkg 3.18232
+S0_E1 P_ra 1.0757 0.0258
+S0_E1 P_rb 1.0398 0.0281
+S0_E1 r56_N 226453
+S0_E1 r56_CB 15753.90 152.07
+S0_E1 r56_dnb 35.20916 0.08634
+S0_E1 r56_sim 27.79936 0.28099
+S0_E1 r56_eta 2.78942
+S0_E1 r56_bkg 25.00994
+S0_E1 r56_ra 1.2665 0.0132
+S0_E1 r56_rb 1.0037 0.0108
+S0_E1 r70_N 59483
+S0_E1 r70_CB 2898.49 60.89
+S0_E1 r70_dnb 9.45563 0.04286
+S0_E1 r70_sim 7.99420 0.14487
+S0_E1 r70_eta 0.63640
+S0_E1 r70_bkg 7.35780
+S0_E1 r70_ra 1.1828 0.0221
+S0_E1 r70_rb 0.9228 0.0177
+S0_E1 R2_N 15039
+S0_E1 R2_CB 1118.32 29.29
+S0_E1 R2_dnb 2.32623 0.02116
+S0_E1 R2_sim 2.06330 0.07750
+S0_E1 R2_eta 0.41234
+S0_E1 R2_bkg 1.65096
+S0_E1 R2_ra 1.1274 0.0436
+S0_E1 R2_rb 0.9665 0.0395
+S0_E1 post_N 9401
+S0_E1 post_CB 717.79 19.49
+S0_E1 post_dnb 1.45102 0.01656
+S0_E1 post_sim 1.17640 0.05722
+S0_E1 post_eta 0.17718
+S0_E1 post_bkg 0.99922
+S0_E1 post_ra 1.2334 0.0616
+S0_E1 post_rb 1.0163 0.0536
+S0_E1 Fit_N 360446
+S0_E1 Fit_CB 24752.99 197.54
+S0_E1 Fit_dnb 56.09644 0.11120
+S0_E1 Fit_sim 49.09677 0.40277
+S0_E1 Fit_eta 11.21271
+S0_E1 Fit_bkg 37.88406
+S0_E1 Fit_ra 1.1426 0.0096
+S0_E1 Fit_rb 1.0029 0.0086
+S0_E1 all_N 419931
+S0_E1 all_CB 27651.47 204.35
+S0_E1 all_dnb 65.55241 0.11985
+S0_E1 all_sim 57.09101 0.42953
+S0_E1 all_eta 11.84914
+S0_E1 all_bkg 45.24187
+S0_E1 all_ra 1.1482 0.0089
+S0_E1 all_rb 0.9905 0.0078
+S0_E1 CR_N 201543
+S0_E1 CR_CB 13763.03 136.80
+S0_E1 CR_dnb 31.37923 0.08087
+S0_E1 CR_sim 24.84150 0.26495
+S0_E1 CR_eta 2.45885
+S0_E1 CR_bkg 22.38264
+S0_E1 CR_ra 1.2632 0.0139
+S0_E1 CR_rb 1.0000 0.0113
+S0_E1 PB_N 40316
+S0_E1 PB_CB 2912.24 56.55
+S0_E1 PB_dnb 6.25041 0.03518
+S0_E1 PB_sim 5.72186 0.12310
+S0_E1 PB_eta 1.77239
+S0_E1 PB_bkg 3.94947
+S0_E1 PB_ra 1.0924 0.0243
+S0_E1 PB_rb 1.0293 0.0255
+S0_E1 delta a=0.2482 b=0.0503 c=0.0494
+S0_E1 cb 1.3580 0.0159
+S0_E1 chi2a 851.26 60
+S0_E1 chi2b 81.79 59
+S0_E1 k1 1.1637 chi2 330.52 59
+S0_E1 fit a 0.4418 0.0381 c 1.3536 0.0160 rho -0.645 chi2 79.77 58
+S0_E1 x17 N=5221 NV=5295 CB=147.65 CBe=5.9012 c6=3020.1 c6pb=4725 NX=189.19 NXpb=296 model_b=4958 C5b=329.74 C4b=32.859 rat_lo=1.1434 rat_hi=0.80468 rat_win=1.0226 NX_share=0.037055 eps_rel=0.86813 eps_rel_pb=0.83711 B_rel=0.8222 proxy=1.0445 proxy_cb=1.044 Z=2.6096 SB_gain=1.0559
+S0_E2 below_N 7171
+S0_E2 below_CB 296.98 17.73
+S0_E2 below_dnb 1.14869 0.01450
+S0_E2 below_sim 1.21108 0.06244
+S0_E2 below_eta 0.35871
+S0_E2 below_bkg 0.85237
+S0_E2 below_ra 0.9485 0.0503
+S0_E2 below_rb 0.9266 0.0538
+S0_E2 B_N 93201
+S0_E2 B_CB 4627.37 85.62
+S0_E2 B_dnb 14.80122 0.05402
+S0_E2 B_sim 17.35923 0.27120
+S0_E2 B_eta 8.40451
+S0_E2 B_bkg 8.95472
+S0_E2 B_ra 0.8526 0.0137
+S0_E2 B_rb 0.9949 0.0162
+S0_E2 P_N 44333
+S0_E2 P_CB 2445.20 48.96
+S0_E2 P_dnb 6.99972 0.03641
+S0_E2 P_sim 6.84066 0.14028
+S0_E2 P_eta 2.37979
+S0_E2 P_bkg 4.46087
+S0_E2 P_ra 1.0233 0.0216
+S0_E2 P_rb 1.0465 0.0245
+S0_E2 r56_N 319228
+S0_E2 r56_CB 16172.30 153.03
+S0_E2 r56_dnb 50.64254 0.10129
+S0_E2 r56_sim 41.77859 0.36179
+S0_E2 r56_eta 3.68406
+S0_E2 r56_bkg 38.09454
+S0_E2 r56_ra 1.2122 0.0108
+S0_E2 r56_rb 1.0036 0.0091
+S0_E2 r70_N 98556
+S0_E2 r70_CB 3130.95 63.50
+S0_E2 r70_dnb 15.94613 0.05466
+S0_E2 r70_sim 14.37282 0.20753
+S0_E2 r70_eta 0.90233
+S0_E2 r70_bkg 13.47049
+S0_E2 r70_ra 1.1095 0.0165
+S0_E2 r70_rb 0.9017 0.0136
+S0_E2 R2_N 19886
+S0_E2 R2_CB 1145.67 29.77
+S0_E2 R2_dnb 3.13163 0.02419
+S0_E2 R2_sim 2.74386 0.09127
+S0_E2 R2_eta 0.52884
+S0_E2 R2_bkg 2.21502
+S0_E2 R2_ra 1.1413 0.0390
+S0_E2 R2_rb 1.0234 0.0368
+S0_E2 post_N 12612
+S0_E2 post_CB 736.42 19.61
+S0_E2 post_dnb 1.98449 0.01909
+S0_E2 post_sim 1.64074 0.07017
+S0_E2 post_eta 0.24015
+S0_E2 post_bkg 1.40059
+S0_E2 post_ra 1.2095 0.0530
+S0_E2 post_rb 1.0460 0.0480
+S0_E2 Fit_N 496428
+S0_E2 Fit_CB 25423.94 197.88
+S0_E2 Fit_dnb 78.70778 0.12891
+S0_E2 Fit_sim 71.57407 0.50162
+S0_E2 Fit_eta 15.59602
+S0_E2 Fit_bkg 55.97805
+S0_E2 Fit_ra 1.0997 0.0079
+S0_E2 Fit_rb 1.0062 0.0074
+S0_E2 all_N 594987
+S0_E2 all_CB 28554.89 203.24
+S0_E2 all_dnb 94.65441 0.14092
+S0_E2 all_sim 85.94698 0.54522
+S0_E2 all_eta 16.49838
+S0_E2 all_bkg 69.44860
+S0_E2 all_ra 1.1013 0.0072
+S0_E2 all_rb 0.9869 0.0065
+S0_E2 CR_N 285675
+S0_E2 CR_CB 14131.35 138.09
+S0_E2 CR_dnb 45.37667 0.09524
+S0_E2 CR_sim 37.51022 0.34177
+S0_E2 CR_eta 3.22925
+S0_E2 CR_bkg 34.28096
+S0_E2 CR_ra 1.2097 0.0113
+S0_E2 CR_rb 1.0000 0.0096
+S0_E2 PB_N 53634
+S0_E2 PB_CB 2985.06 56.46
+S0_E2 PB_dnb 8.46376 0.04021
+S0_E2 PB_sim 8.10548 0.15369
+S0_E2 PB_eta 2.58006
+S0_E2 PB_bkg 5.52542
+S0_E2 PB_ra 1.0442 0.0204
+S0_E2 PB_rb 1.0401 0.0223
+S0_E2 delta a=0.2108 b=0.0433 c=0.0431
+S0_E2 cb 1.2860 0.0127
+S0_E2 chi2a 855.15 60
+S0_E2 chi2b 88.43 59
+S0_E2 k1 1.1167 chi2 462.96 59
+S0_E2 fit a 0.4105 0.0305 c 1.2939 0.0127 rho -0.617 chi2 86.21 58
+S0_E2 x17 N=5237 NV=5311 CB=147.04 CBe=5.8563 c6=3053 c6pb=4969.4 NX=191.25 NXpb=311.31 model_b=4736.9 C5b=331.81 C4b=32.859 rat_lo=1.0898 rat_hi=0.84223 rat_win=1.0723 NX_share=0.03916 eps_rel=0.8776 eps_rel_pb=0.88041 B_rel=0.82472 proxy=1.0348 proxy_cb=1.0343 Z=2.6342 SB_gain=1.0641
+S0_E3 below_N 7171
+S0_E3 below_CB 296.98 17.73
+S0_E3 below_dnb 1.14869 0.01450
+S0_E3 below_sim 1.21108 0.06244
+S0_E3 below_eta 0.35871
+S0_E3 below_bkg 0.85237
+S0_E3 below_ra 0.9485 0.0503
+S0_E3 below_rb 0.9533 0.0553
+S0_E3 B_N 91410
+S0_E3 B_CB 4538.19 84.55
+S0_E3 B_dnb 14.51683 0.05349
+S0_E3 B_sim 17.12406 0.26972
+S0_E3 B_eta 8.39034
+S0_E3 B_bkg 8.73371
+S0_E3 B_ra 0.8477 0.0137
+S0_E3 B_rb 1.0200 0.0167
+S0_E3 P_N 37976
+S0_E3 P_CB 2136.07 43.44
+S0_E3 P_dnb 5.98908 0.03360
+S0_E3 P_sim 5.82487 0.12849
+S0_E3 P_eta 1.96946
+S0_E3 P_bkg 3.85542
+S0_E3 P_ra 1.0282 0.0234
+S0_E3 P_rb 1.0716 0.0270
+S0_E3 r56_N 218691
+S0_E3 r56_CB 11991.28 128.42
+S0_E3 r56_dnb 34.54084 0.08342
+S0_E3 r56_sim 29.75814 0.30162
+S0_E3 r56_eta 3.28859
+S0_E3 r56_bkg 26.46955
+S0_E3 r56_ra 1.1607 0.0121
+S0_E3 r56_rb 1.0077 0.0108
+S0_E3 r70_N 63820
+S0_E3 r70_CB 2160.24 55.15
+S0_E3 r70_dnb 10.30374 0.04394
+S0_E3 r70_sim 9.70167 0.16991
+S0_E3 r70_eta 0.72428
+S0_E3 r70_bkg 8.97738
+S0_E3 r70_ra 1.0621 0.0191
+S0_E3 r70_rb 0.8984 0.0165
+S0_E3 R2_N 18098
+S0_E3 R2_CB 1065.23 28.29
+S0_E3 R2_dnb 2.84628 0.02308
+S0_E3 R2_sim 2.49476 0.08682
+S0_E3 R2_eta 0.49199
+S0_E3 R2_bkg 2.00277
+S0_E3 R2_ra 1.1409 0.0408
+S0_E3 R2_rb 1.0578 0.0399
+S0_E3 post_N 10275
+S0_E3 post_CB 608.45 17.12
+S0_E3 post_dnb 1.61534 0.01722
+S0_E3 post_sim 1.34080 0.06300
+S0_E3 post_eta 0.21145
+S0_E3 post_bkg 1.12935
+S0_E3 post_ra 1.2048 0.0580
+S0_E3 post_rb 1.0835 0.0548
+S0_E3 Fit_N 383618
+S0_E3 Fit_CB 20636.20 173.70
+S0_E3 Fit_dnb 60.65657 0.11247
+S0_E3 Fit_sim 57.75362 0.45120
+S0_E3 Fit_eta 14.71050
+S0_E3 Fit_bkg 43.04311
+S0_E3 Fit_ra 1.0503 0.0084
+S0_E3 Fit_rb 1.0197 0.0083
+S0_E3 all_N 447441
+S0_E3 all_CB 22796.44 179.13
+S0_E3 all_dnb 70.96081 0.12131
+S0_E3 all_sim 67.45537 0.48372
+S0_E3 all_eta 15.43482
+S0_E3 all_bkg 52.02055
+S0_E3 all_ra 1.0520 0.0078
+S0_E3 all_rb 1.0001 0.0075
+S0_E3 CR_N 192233
+S0_E3 CR_CB 10365.64 113.20
+S0_E3 CR_dnb 30.39119 0.07770
+S0_E3 CR_sim 26.35034 0.28278
+S0_E3 CR_eta 2.86520
+S0_E3 CR_bkg 23.48514
+S0_E3 CR_ra 1.1534 0.0127
+S0_E3 CR_rb 1.0000 0.0114
+S0_E3 PB_N 45700
+S0_E3 PB_CB 2595.63 49.85
+S0_E3 PB_dnb 7.20301 0.03700
+S0_E3 PB_sim 6.86866 0.14022
+S0_E3 PB_eta 2.14370
+S0_E3 PB_bkg 4.72495
+S0_E3 PB_ra 1.0487 0.0221
+S0_E3 PB_rb 1.0685 0.0247
+S0_E3 delta a=0.1773 b=0.0521 c=0.0455
+S0_E3 cb 1.2453 0.0147
+S0_E3 chi2a 495.32 60
+S0_E3 chi2b 93.31 59
+S0_E3 k1 1.0691 chi2 366.30 59
+S0_E3 fit a 0.4408 0.0321 c 1.2609 0.0149 rho -0.667 chi2 82.93 58
+S0_E3 x17 N=4546 NV=4596 CB=114.99 CBe=4.9724 c6=2648 c6pb=4313.8 NX=165.88 NXpb=270.24 model_b=3974.9 C5b=275.77 C4b=32.859 rat_lo=1.1207 rat_hi=0.87351 rat_win=1.1115 NX_share=0.040559 eps_rel=0.76118 eps_rel_pb=0.76426 B_rel=0.71591 proxy=1.1116 proxy_cb=1.1104 Z=2.4536 SB_gain=1.0632
+S0_E3oa below_N 5418
+S0_E3oa below_CB 281.26 17.40
+S0_E3oa below_dnb 0.85838 0.01267
+S0_E3oa below_sim 0.82386 0.04975
+S0_E3oa below_eta 0.24933
+S0_E3oa below_bkg 0.57453
+S0_E3oa below_ra 1.0419 0.0648
+S0_E3oa below_rb 0.9984 0.0680
+S0_E3oa B_N 69417
+S0_E3oa B_CB 4413.28 83.15
+S0_E3oa B_dnb 10.86254 0.04709
+S0_E3oa B_sim 12.26230 0.22584
+S0_E3oa B_eta 5.95804
+S0_E3oa B_bkg 6.30425
+S0_E3oa B_ra 0.8858 0.0168
+S0_E3oa B_rb 1.0130 0.0192
+S0_E3oa P_N 28239
+S0_E3oa P_CB 2088.60 43.76
+S0_E3oa P_dnb 4.36990 0.02921
+S0_E3oa P_sim 4.02182 0.10057
+S0_E3oa P_eta 1.33739
+S0_E3oa P_bkg 2.68443
+S0_E3oa P_ra 1.0865 0.0281
+S0_E3oa P_rb 1.0694 0.0312
+S0_E3oa r56_N 153113
+S0_E3oa r56_CB 11671.72 127.15
+S0_E3oa r56_dnb 23.63574 0.07069
+S0_E3oa r56_sim 19.43696 0.23086
+S0_E3oa r56_eta 2.50715
+S0_E3oa r56_bkg 16.92981
+S0_E3oa r56_ra 1.2160 0.0149
+S0_E3oa r56_rb 1.0101 0.0128
+S0_E3oa r70_N 38306
+S0_E3oa r70_CB 2009.18 52.15
+S0_E3oa r70_dnb 6.06543 0.03440
+S0_E3oa r70_sim 5.39986 0.11854
+S0_E3oa r70_eta 0.49555
+S0_E3oa r70_bkg 4.90431
+S0_E3oa r70_ra 1.1233 0.0255
+S0_E3oa r70_rb 0.9072 0.0211
+S0_E3oa R2_N 13615
+S0_E3oa R2_CB 1042.61 27.87
+S0_E3oa R2_dnb 2.10093 0.02014
+S0_E3oa R2_sim 1.86731 0.07348
+S0_E3oa R2_eta 0.37785
+S0_E3oa R2_bkg 1.48946
+S0_E3oa R2_ra 1.1251 0.0456
+S0_E3oa R2_rb 0.9903 0.0425
+S0_E3oa post_N 7582
+S0_E3oa post_CB 592.69 16.99
+S0_E3oa post_dnb 1.16796 0.01486
+S0_E3oa post_sim 0.94963 0.05095
+S0_E3oa post_eta 0.15096
+S0_E3oa post_bkg 0.79867
+S0_E3oa post_ra 1.2299 0.0678
+S0_E3oa post_rb 1.0457 0.0612
+S0_E3oa Fit_N 277382
+S0_E3oa Fit_CB 20090.17 172.51
+S0_E3oa Fit_dnb 42.99510 0.09678
+S0_E3oa Fit_sim 39.36184 0.36153
+S0_E3oa Fit_eta 10.58069
+S0_E3oa Fit_bkg 28.78115
+S0_E3oa Fit_ra 1.0923 0.0103
+S0_E3oa Fit_rb 1.0163 0.0097
+S0_E3oa all_N 315690
+S0_E3oa all_CB 22099.34 177.44
+S0_E3oa all_dnb 49.06087 0.10309
+S0_E3oa all_sim 44.76173 0.38144
+S0_E3oa all_eta 11.07627
+S0_E3oa all_bkg 33.68546
+S0_E3oa all_ra 1.0960 0.0096
+S0_E3oa all_rb 1.0014 0.0089
+S0_E3oa CR_N 133701
+S0_E3oa CR_CB 10087.60 111.82
+S0_E3oa CR_dnb 20.65659 0.06554
+S0_E3oa CR_sim 17.14758 0.21625
+S0_E3oa CR_eta 2.19722
+S0_E3oa CR_bkg 14.95036
+S0_E3oa CR_ra 1.2046 0.0157
+S0_E3oa CR_rb 1.0000 0.0135
+S0_E3oa PB_N 34014
+S0_E3oa PB_CB 2536.61 50.18
+S0_E3oa PB_dnb 5.26007 0.03220
+S0_E3oa PB_sim 4.76318 0.11057
+S0_E3oa PB_eta 1.46329
+S0_E3oa PB_bkg 3.29989
+S0_E3oa PB_ra 1.1043 0.0265
+S0_E3oa PB_rb 1.0625 0.0285
+S0_E3oa delta a=0.2100 b=0.0604 c=0.0515
+S0_E3oa cb 1.3229 0.0186
+S0_E3oa chi2a 487.59 60
+S0_E3oa chi2b 86.04 59
+S0_E3oa k1 1.1162 chi2 262.26 59
+S0_E3oa fit a 0.4699 0.0406 c 1.3252 0.0192 rho -0.700 chi2 77.73 58
+S0_E3oa x17 N=4530 NV=4580 CB=115.25 CBe=5.0086 c6=2615.1 c6pb=4078 NX=163.82 NXpb=255.47 model_b=4180.2 C5b=273.72 C4b=32.859 rat_lo=1.1889 rat_hi=0.83071 rat_win=1.0546 NX_share=0.038139 eps_rel=0.75172 eps_rel_pb=0.72249 B_rel=0.71339 proxy=1.1236 proxy_cb=1.1224 Z=2.4273 SB_gain=1.0537
+S0_E4 below_N 7171
+S0_E4 below_CB 296.98 17.73
+S0_E4 below_dnb 1.14869 0.01450
+S0_E4 below_sim 1.21108 0.06244
+S0_E4 below_eta 0.35871
+S0_E4 below_bkg 0.85237
+S0_E4 below_ra 0.9485 0.0503
+S0_E4 below_rb 0.9499 0.0551
+S0_E4 B_N 93223
+S0_E4 B_CB 4629.83 85.62
+S0_E4 B_dnb 14.80448 0.05403
+S0_E4 B_sim 17.36499 0.27124
+S0_E4 B_eta 8.40456
+S0_E4 B_bkg 8.96043
+S0_E4 B_ra 0.8525 0.0137
+S0_E4 B_rb 1.0164 0.0165
+S0_E4 P_N 45209
+S0_E4 P_CB 2506.62 50.28
+S0_E4 P_dnb 7.13584 0.03680
+S0_E4 P_sim 6.96956 0.14151
+S0_E4 P_eta 2.40714
+S0_E4 P_bkg 4.56241
+S0_E4 P_ra 1.0239 0.0214
+S0_E4 P_rb 1.0703 0.0248
+S0_E4 r56_N 431879
+S0_E4 r56_CB 20355.94 177.62
+S0_E4 r56_dnb 68.76812 0.11847
+S0_E4 r56_sim 57.39954 0.43305
+S0_E4 r56_eta 3.92779
+S0_E4 r56_bkg 53.47175
+S0_E4 r56_ra 1.1981 0.0093
+S0_E4 r56_rb 1.0050 0.0079
+S0_E4 r70_N 228305
+S0_E4 r70_CB 6711.93 94.67
+S0_E4 r70_dnb 37.02961 0.08356
+S0_E4 r70_sim 35.26686 0.32626
+S0_E4 r70_eta 1.33911
+S0_E4 r70_bkg 33.92775
+S0_E4 r70_ra 1.0500 0.0100
+S0_E4 r70_rb 0.8620 0.0083
+S0_E4 R2_N 19980
+S0_E4 R2_CB 1151.79 29.86
+S0_E4 R2_dnb 3.14631 0.02425
+S0_E4 R2_sim 2.76710 0.09172
+S0_E4 R2_eta 0.52949
+S0_E4 R2_bkg 2.23762
+S0_E4 R2_ra 1.1370 0.0387
+S0_E4 R2_rb 1.0454 0.0374
+S0_E4 post_N 13106
+S0_E4 post_CB 767.76 20.34
+S0_E4 post_dnb 2.06180 0.01947
+S0_E4 post_sim 1.71045 0.07169
+S0_E4 post_eta 0.24842
+S0_E4 post_bkg 1.46203
+S0_E4 post_ra 1.2054 0.0518
+S0_E4 post_rb 1.0697 0.0481
+S0_E4 Fit_N 610565
+S0_E4 Fit_CB 29708.91 221.24
+S0_E4 Fit_dnb 97.06475 0.14393
+S0_E4 Fit_sim 87.42263 0.55869
+S0_E4 Fit_eta 15.87607
+S0_E4 Fit_bkg 71.54656
+S0_E4 Fit_ra 1.1103 0.0073
+S0_E4 Fit_rb 1.0131 0.0068
+S0_E4 all_N 838873
+S0_E4 all_CB 36420.84 236.57
+S0_E4 all_dnb 134.09486 0.16866
+S0_E4 all_sim 122.68958 0.65381
+S0_E4 all_eta 17.21521
+S0_E4 all_bkg 105.47436
+S0_E4 all_ra 1.0930 0.0060
+S0_E4 all_rb 0.9664 0.0054
+S0_E4 CR_N 396103
+S0_E4 CR_CB 18183.59 161.98
+S0_E4 CR_dnb 63.15274 0.11272
+S0_E4 CR_sim 52.86828 0.41469
+S0_E4 CR_eta 3.46898
+S0_E4 CR_bkg 49.39930
+S0_E4 CR_ra 1.1945 0.0096
+S0_E4 CR_rb 1.0000 0.0082
+S0_E4 PB_N 54774
+S0_E4 PB_CB 3064.47 57.99
+S0_E4 PB_dnb 8.64099 0.04068
+S0_E4 PB_sim 8.28173 0.15530
+S0_E4 PB_eta 2.60989
+S0_E4 PB_bkg 5.67183
+S0_E4 PB_ra 1.0434 0.0202
+S0_E4 PB_rb 1.0621 0.0225
+S0_E4 delta a=0.2035 b=0.0532 c=0.0485
+S0_E4 cb 1.2503 0.0105
+S0_E4 chi2a 954.32 60
+S0_E4 chi2b 109.53 59
+S0_E4 k1 1.1233 chi2 456.06 59
+S0_E4 fit a 0.4523 0.0288 c 1.2586 0.0104 rho -0.558 chi2 99.65 58
+S0_E4 x17 N=5341 NV=5419 CB=158.25 CBe=6.0634 c6=3119 c6pb=5075.1 NX=195.39 NXpb=317.93 model_b=4682.1 C5b=339.06 C4b=32.859 rat_lo=1.111 rat_hi=0.8587 rat_win=1.1034 NX_share=0.040366 eps_rel=0.89657 eps_rel_pb=0.89913 B_rel=0.8411 proxy=1.0229 proxy_cb=1.0225 Z=2.6644 SB_gain=1.0659
+S0_E4oa below_N 5418
+S0_E4oa below_CB 281.26 17.40
+S0_E4oa below_dnb 0.85838 0.01267
+S0_E4oa below_sim 0.82386 0.04975
+S0_E4oa below_eta 0.24933
+S0_E4oa below_bkg 0.57453
+S0_E4oa below_ra 1.0419 0.0648
+S0_E4oa below_rb 1.0099 0.0687
+S0_E4oa B_N 70838
+S0_E4oa B_CB 4497.80 84.18
+S0_E4oa B_dnb 11.08587 0.04758
+S0_E4oa B_sim 12.42997 0.22690
+S0_E4oa B_eta 5.96180
+S0_E4oa B_bkg 6.46818
+S0_E4oa B_ra 0.8919 0.0167
+S0_E4oa B_rb 1.0235 0.0192
+S0_E4oa P_N 33997
+S0_E4oa P_CB 2444.72 50.29
+S0_E4oa P_dnb 5.27259 0.03218
+S0_E4oa P_sim 4.92162 0.11291
+S0_E4oa P_eta 1.64669
+S0_E4oa P_bkg 3.27493
+S0_E4oa P_ra 1.0713 0.0254
+S0_E4oa P_rb 1.0684 0.0284
+S0_E4oa r56_N 310876
+S0_E4oa r56_CB 19774.53 175.97
+S0_E4oa r56_dnb 48.64491 0.10163
+S0_E4oa r56_sim 39.11333 0.34375
+S0_E4oa r56_eta 2.98027
+S0_E4oa r56_bkg 36.13306
+S0_E4oa r56_ra 1.2437 0.0112
+S0_E4oa r56_rb 1.0056 0.0093
+S0_E4oa r70_N 144209
+S0_E4oa r70_CB 6224.69 89.11
+S0_E4oa r70_dnb 23.05806 0.06680
+S0_E4oa r70_sim 20.46414 0.23332
+S0_E4oa r70_eta 0.95909
+S0_E4oa r70_bkg 19.50504
+S0_E4oa r70_ra 1.1268 0.0133
+S0_E4oa r70_rb 0.8919 0.0107
+S0_E4oa R2_N 15114
+S0_E4oa R2_CB 1124.21 29.37
+S0_E4oa R2_dnb 2.33778 0.02122
+S0_E4oa R2_sim 2.07238 0.07764
+S0_E4oa R2_eta 0.41289
+S0_E4oa R2_bkg 1.65950
+S0_E4oa R2_ra 1.1281 0.0435
+S0_E4oa R2_rb 1.0024 0.0407
+S0_E4oa post_N 9799
+S0_E4oa post_CB 746.63 20.25
+S0_E4oa post_dnb 1.51271 0.01692
+S0_E4oa post_sim 1.23859 0.05888
+S0_E4oa post_eta 0.18491
+S0_E4oa post_bkg 1.05368
+S0_E4oa post_ra 1.2213 0.0596
+S0_E4oa post_rb 1.0433 0.0537
+S0_E4oa Fit_N 446040
+S0_E4oa Fit_CB 28869.16 218.88
+S0_E4oa Fit_dnb 69.71190 0.12441
+S0_E4oa Fit_sim 60.59973 0.45217
+S0_E4oa Fit_eta 11.43585
+S0_E4oa Fit_bkg 49.16388
+S0_E4oa Fit_ra 1.1504 0.0088
+S0_E4oa Fit_rb 1.0136 0.0079
+S0_E4oa all_N 590251
+S0_E4oa all_CB 35093.85 233.31
+S0_E4oa all_dnb 92.77029 0.14292
+S0_E4oa all_sim 81.06390 0.51379
+S0_E4oa all_eta 12.39497
+S0_E4oa all_bkg 68.66893
+S0_E4oa all_ra 1.1444 0.0075
+S0_E4oa all_rb 0.9804 0.0065
+S0_E4oa CR_N 284181
+S0_E4oa CR_CB 17661.01 160.55
+S0_E4oa CR_dnb 44.53719 0.09647
+S0_E4oa CR_sim 35.94222 0.32895
+S0_E4oa CR_eta 2.64618
+S0_E4oa CR_bkg 33.29604
+S0_E4oa CR_ra 1.2391 0.0117
+S0_E4oa CR_rb 1.0000 0.0096
+S0_E4oa PB_N 41207
+S0_E4oa PB_CB 2987.13 58.01
+S0_E4oa PB_dnb 6.38678 0.03561
+S0_E4oa PB_sim 5.87943 0.12494
+S0_E4oa PB_eta 1.79843
+S0_E4oa PB_bkg 4.08099
+S0_E4oa PB_ra 1.0863 0.0239
+S0_E4oa PB_rb 1.0559 0.0257
+S0_E4oa delta a=0.2342 b=0.0649 c=0.0532
+S0_E4oa cb 1.3058 0.0129
+S0_E4oa chi2a 945.57 60
+S0_E4oa chi2b 101.94 59
+S0_E4oa k1 1.1658 chi2 323.18 59
+S0_E4oa fit a 0.4932 0.0356 c 1.3064 0.0129 rho -0.581 chi2 88.84 58
+S0_E4oa x17 N=5325 NV=5403 CB=159.01 CBe=6.1082 c6=3086.1 c6pb=4830.1 NX=193.33 NXpb=302.58 model_b=4852.1 C5b=336.99 C4b=32.859 rat_lo=1.1635 rat_hi=0.82817 rat_win=1.0626 NX_share=0.038579 eps_rel=0.8871 eps_rel_pb=0.85573 B_rel=0.83858 proxy=1.0323 proxy_cb=1.032 Z=2.6401 SB_gain=1.0579
+S0_X1 below_N 5588
+S0_X1 below_CB 35.11 7.84
+S0_X1 below_dnb 0.92792 0.01259
+S0_X1 below_sim 0.99124 0.05839
+S0_X1 below_eta 0.28841
+S0_X1 below_bkg 0.70282
+S0_X1 below_ra 0.9361 0.0566
+S0_X1 below_rb 0.9041 0.0600
+S0_X1 B_N 69156
+S0_X1 B_CB 453.74 31.76
+S0_X1 B_dnb 11.48058 0.04503
+S0_X1 B_sim 13.37260 0.24337
+S0_X1 B_eta 6.48242
+S0_X1 B_bkg 6.89018
+S0_X1 B_ra 0.8585 0.0160
+S0_X1 B_rb 0.9963 0.0191
+S0_X1 P_N 32918
+S0_X1 P_CB 178.86 18.09
+S0_X1 P_dnb 5.47092 0.03069
+S0_X1 P_sim 5.15492 0.12955
+S0_X1 P_eta 1.80623
+S0_X1 P_bkg 3.34869
+S0_X1 P_ra 1.0613 0.0273
+S0_X1 P_rb 1.0806 0.0304
+S0_X1 r56_N 245273
+S0_X1 r56_CB 1189.37 50.15
+S0_X1 r56_dnb 40.78793 0.08586
+S0_X1 r56_sim 32.95306 0.33650
+S0_X1 r56_eta 2.34529
+S0_X1 r56_bkg 30.60778
+S0_X1 r56_ra 1.2378 0.0129
+S0_X1 r56_rb 1.0044 0.0106
+S0_X1 r70_N 83075
+S0_X1 r70_CB 479.63 23.64
+S0_X1 r70_dnb 13.80221 0.04932
+S0_X1 r70_sim 12.37303 0.19851
+S0_X1 r70_eta 0.61554
+S0_X1 r70_bkg 11.75750
+S0_X1 r70_ra 1.1155 0.0183
+S0_X1 r70_rb 0.8913 0.0148
+S0_X1 R2_N 14630
+S0_X1 R2_CB 81.32 12.45
+S0_X1 R2_dnb 2.43118 0.02040
+S0_X1 R2_sim 1.99224 0.08127
+S0_X1 R2_eta 0.35590
+S0_X1 R2_bkg 1.63634
+S0_X1 R2_ra 1.2203 0.0508
+S0_X1 R2_rb 1.0742 0.0469
+S0_X1 post_N 9430
+S0_X1 post_CB 59.56 6.47
+S0_X1 post_dnb 1.56586 0.01629
+S0_X1 post_sim 1.23924 0.06438
+S0_X1 post_eta 0.16374
+S0_X1 post_bkg 1.07550
+S0_X1 post_ra 1.2636 0.0669
+S0_X1 post_rb 1.0729 0.0589
+S0_X1 Fit_N 376994
+S0_X1 Fit_CB 1997.97 68.05
+S0_X1 Fit_dnb 62.66422 0.10841
+S0_X1 Fit_sim 55.70321 0.45966
+S0_X1 Fit_eta 11.44196
+S0_X1 Fit_bkg 44.26124
+S0_X1 Fit_ra 1.1250 0.0095
+S0_X1 Fit_rb 1.0116 0.0087
+S0_X1 all_N 460070
+S0_X1 all_CB 2477.60 72.90
+S0_X1 all_dnb 76.46660 0.12006
+S0_X1 all_sim 68.07633 0.50299
+S0_X1 all_eta 12.05753
+S0_X1 all_bkg 56.01880
+S0_X1 all_ra 1.1232 0.0085
+S0_X1 all_rb 0.9875 0.0076
+S0_X1 CR_N 220312
+S0_X1 CR_CB 1042.95 45.54
+S0_X1 CR_dnb 36.64125 0.08111
+S0_X1 CR_sim 29.68225 0.31816
+S0_X1 CR_eta 2.04319
+S0_X1 CR_bkg 27.63907
+S0_X1 CR_ra 1.2344 0.0135
+S0_X1 CR_rb 1.0000 0.0111
+S0_X1 PB_N 39843
+S0_X1 PB_CB 221.17 20.58
+S0_X1 PB_dnb 6.62106 0.03382
+S0_X1 PB_sim 6.07208 0.14060
+S0_X1 PB_eta 1.92624
+S0_X1 PB_bkg 4.14583
+S0_X1 PB_ra 1.0904 0.0259
+S0_X1 PB_rb 1.0776 0.0278
+S0_X1 delta a=0.2378 b=0.0597 c=0.0577
+S0_X1 cb 1.2961 0.0147
+S0_X1 chi2a 793.86 60
+S0_X1 chi2b 98.30 59
+S0_X1 k1 1.1409 chi2 385.71 59
+S0_X1 fit a 0.4156 0.0353 c 1.3107 0.0144 rho -0.577 chi2 93.76 58
+S0_X1 x17 N=3027 NV=3069 CB=24.356 CBe=2.8118 c6=1978.3 c6pb=3594.7 NX=123.93 NXpb=225.19 model_b=2631.4 C5b=203.22 C4b=32.859 rat_lo=1.0834 rat_hi=0.8438 rat_win=1.1398 NX_share=0.046665 eps_rel=0.56868 eps_rel_pb=0.63686 B_rel=0.47669 proxy=1.2141 proxy_cb=1.2111 Z=2.2496 SB_gain=1.193
+S0_X2 below_N 3835
+S0_X2 below_CB 20.44 7.16
+S0_X2 below_dnb 0.63744 0.01043
+S0_X2 below_sim 0.60402 0.04457
+S0_X2 below_eta 0.17904
+S0_X2 below_bkg 0.42498
+S0_X2 below_ra 1.0553 0.0798
+S0_X2 below_rb 0.9523 0.0794
+S0_X2 B_N 46775
+S0_X2 B_CB 315.30 30.46
+S0_X2 B_dnb 7.76371 0.03714
+S0_X2 B_sim 8.44222 0.19278
+S0_X2 B_eta 4.03967
+S0_X2 B_bkg 4.40256
+S0_X2 B_ra 0.9196 0.0215
+S0_X2 B_rb 0.9943 0.0238
+S0_X2 P_N 21902
+S0_X2 P_CB 118.15 17.73
+S0_X2 P_dnb 3.64022 0.02509
+S0_X2 P_sim 3.11928 0.09760
+S0_X2 P_eta 1.04915
+S0_X2 P_bkg 2.07013
+S0_X2 P_ra 1.1670 0.0374
+S0_X2 P_rb 1.0927 0.0387
+S0_X2 r56_N 152498
+S0_X2 r56_CB 738.07 44.29
+S0_X2 r56_dnb 25.36005 0.06774
+S0_X2 r56_sim 18.97383 0.24759
+S0_X2 r56_eta 1.45065
+S0_X2 r56_bkg 17.52318
+S0_X2 r56_ra 1.3366 0.0178
+S0_X2 r56_rb 1.0053 0.0136
+S0_X2 r70_N 44002
+S0_X2 r70_CB 244.28 20.80
+S0_X2 r70_dnb 7.31219 0.03593
+S0_X2 r70_sim 5.99441 0.13163
+S0_X2 r70_eta 0.34961
+S0_X2 r70_bkg 5.64480
+S0_X2 r70_ra 1.2198 0.0274
+S0_X2 r70_rb 0.9051 0.0206
+S0_X2 R2_N 9783
+S0_X2 R2_CB 53.28 11.27
+S0_X2 R2_dnb 1.62590 0.01670
+S0_X2 R2_sim 1.31169 0.06542
+S0_X2 R2_eta 0.23941
+S0_X2 R2_bkg 1.07228
+S0_X2 R2_ra 1.2395 0.0631
+S0_X2 R2_rb 1.0137 0.0542
+S0_X2 post_N 6219
+S0_X2 post_CB 40.57 5.72
+S0_X2 post_dnb 1.03246 0.01323
+S0_X2 post_sim 0.77490 0.04995
+S0_X2 post_eta 0.10078
+S0_X2 post_bkg 0.67412
+S0_X2 post_ra 1.3324 0.0876
+S0_X2 post_rb 1.0445 0.0715
+S0_X2 Fit_N 241012
+S0_X2 Fit_CB 1285.80 62.55
+S0_X2 Fit_dnb 40.05977 0.08681
+S0_X2 Fit_sim 33.22591 0.34912
+S0_X2 Fit_eta 7.05865
+S0_X2 Fit_bkg 26.16725
+S0_X2 Fit_ra 1.2057 0.0129
+S0_X2 Fit_rb 1.0109 0.0110
+S0_X2 all_N 285014
+S0_X2 all_CB 1530.08 65.64
+S0_X2 all_dnb 47.37197 0.09460
+S0_X2 all_sim 39.22035 0.37446
+S0_X2 all_eta 7.40829
+S0_X2 all_bkg 31.81206
+S0_X2 all_ra 1.2078 0.0118
+S0_X2 all_rb 0.9930 0.0098
+S0_X2 CR_N 136180
+S0_X2 CR_CB 646.51 39.64
+S0_X2 CR_dnb 22.64851 0.06378
+S0_X2 CR_sim 17.01353 0.23371
+S0_X2 CR_eta 1.27278
+S0_X2 CR_bkg 15.74075
+S0_X2 CR_ra 1.3312 0.0187
+S0_X2 CR_rb 1.0000 0.0142
+S0_X2 PB_N 26525
+S0_X2 PB_CB 145.78 20.09
+S0_X2 PB_dnb 4.40814 0.02766
+S0_X2 PB_sim 3.68845 0.10631
+S0_X2 PB_eta 1.11857
+S0_X2 PB_bkg 2.56989
+S0_X2 PB_ra 1.1951 0.0353
+S0_X2 PB_rb 1.0852 0.0351
+S0_X2 delta a=0.3119 b=0.0768 c=0.0686
+S0_X2 cb 1.4065 0.0205
+S0_X2 chi2a 829.84 60
+S0_X2 chi2b 87.50 59
+S0_X2 k1 1.2259 chi2 241.48 59
+S0_X2 fit a 0.4760 0.0486 c 1.4068 0.0199 rho -0.593 chi2 81.57 58
+S0_X2 x17 N=3011 NV=3053 CB=21.022 CBe=3.1261 c6=1945.4 c6pb=3350.3 NX=121.87 NXpb=209.88 model_b=2813.9 C5b=201.15 C4b=32.859 rat_lo=1.1111 rat_hi=0.78674 rat_win=1.0621 NX_share=0.042987 eps_rel=0.55921 eps_rel_pb=0.59355 B_rel=0.47417 proxy=1.2314 proxy_cb=1.2287 Z=2.2173 SB_gain=1.1793
+S0_X2old below_N 3835
+S0_X2old below_CB 20.44 7.16
+S0_X2old below_dnb 0.63744 0.01043
+S0_X2old below_sim 0.60402 0.04457
+S0_X2old below_eta 0.17904
+S0_X2old below_bkg 0.42498
+S0_X2old below_ra 1.0553 0.0798
+S0_X2old below_rb 0.9809 0.0816
+S0_X2old B_N 45771
+S0_X2old B_CB 303.01 29.52
+S0_X2old B_dnb 7.59799 0.03672
+S0_X2old B_sim 8.33717 0.19190
+S0_X2old B_eta 4.03744
+S0_X2old B_bkg 4.29973
+S0_X2old B_ra 0.9113 0.0214
+S0_X2old B_rb 1.0178 0.0245
+S0_X2old P_N 18541
+S0_X2old P_CB 75.67 17.92
+S0_X2old P_dnb 3.08567 0.02309
+S0_X2old P_sim 2.57537 0.08743
+S0_X2old P_eta 0.83175
+S0_X2old P_bkg 1.74362
+S0_X2old P_ra 1.1981 0.0417
+S0_X2old P_rb 1.1407 0.0438
+S0_X2old r56_N 102692
+S0_X2old r56_CB 514.43 35.47
+S0_X2old r56_dnb 17.07452 0.05523
+S0_X2old r56_sim 13.32907 0.20524
+S0_X2old r56_eta 1.30733
+S0_X2old r56_bkg 12.02173
+S0_X2old r56_ra 1.2810 0.0202
+S0_X2old r56_rb 1.0116 0.0162
+S0_X2old r70_N 28282
+S0_X2old r70_CB 151.80 15.65
+S0_X2old r70_dnb 4.70074 0.02868
+S0_X2old r70_sim 4.05663 0.10810
+S0_X2old r70_eta 0.26002
+S0_X2old r70_bkg 3.79661
+S0_X2old r70_ra 1.1588 0.0317
+S0_X2old r70_rb 0.8921 0.0247
+S0_X2old R2_N 8839
+S0_X2old R2_CB 43.18 10.95
+S0_X2old R2_dnb 1.46984 0.01588
+S0_X2old R2_sim 1.18698 0.06197
+S0_X2old R2_eta 0.20993
+S0_X2old R2_bkg 0.97705
+S0_X2old R2_ra 1.2383 0.0660
+S0_X2old R2_rb 1.0400 0.0583
+S0_X2old post_N 5005
+S0_X2old post_CB 30.44 5.09
+S0_X2old post_dnb 0.83128 0.01187
+S0_X2old post_sim 0.64568 0.04571
+S0_X2old post_eta 0.08858
+S0_X2old post_bkg 0.55710
+S0_X2old post_ra 1.2874 0.0930
+S0_X2old post_rb 1.0477 0.0788
+S0_X2old Fit_N 184683
+S0_X2old Fit_CB 987.16 54.39
+S0_X2old Fit_dnb 30.69674 0.07533
+S0_X2old Fit_sim 26.67826 0.31395
+S0_X2old Fit_eta 6.65404
+S0_X2old Fit_bkg 20.02422
+S0_X2old Fit_ra 1.1506 0.0138
+S0_X2old Fit_rb 1.0265 0.0125
+S0_X2old all_N 212965
+S0_X2old all_CB 1138.96 57.27
+S0_X2old all_dnb 35.39748 0.08103
+S0_X2old all_sim 30.73492 0.33294
+S0_X2old all_eta 6.91409
+S0_X2old all_bkg 23.82083
+S0_X2old all_ra 1.1517 0.0128
+S0_X2old all_rb 1.0063 0.0112
+S0_X2old CR_N 89914
+S0_X2old CR_CB 450.41 32.46
+S0_X2old CR_dnb 14.94993 0.05153
+S0_X2old CR_sim 11.79008 0.19232
+S0_X2old CR_eta 1.13595
+S0_X2old CR_bkg 10.65414
+S0_X2old CR_ra 1.2680 0.0211
+S0_X2old CR_rb 1.0000 0.0170
+S0_X2old PB_N 22360
+S0_X2old PB_CB 96.80 19.92
+S0_X2old PB_dnb 3.72032 0.02540
+S0_X2old PB_sim 3.04068 0.09527
+S0_X2old PB_eta 0.89012
+S0_X2old PB_bkg 2.15056
+S0_X2old PB_ra 1.2235 0.0392
+S0_X2old PB_rb 1.1336 0.0398
+S0_X2old delta a=0.2754 b=0.1086 c=0.0882
+S0_X2old cb 1.3606 0.0238
+S0_X2old chi2a 511.96 60
+S0_X2old chi2b 107.19 59
+S0_X2old k1 1.1741 chi2 212.56 59
+S0_X2old fit a 0.5133 0.0510 c 1.3683 0.0234 rho -0.642 chi2 92.36 58
+S0_X2old x17 N=2789 NV=2823 CB=16.547 CBe=3.3446 c6=1781.4 c6pb=3011.8 NX=111.6 NXpb=188.68 model_b=2495 C5b=178.22 C4b=32.859 rat_lo=1.1652 rat_hi=0.81569 rat_win=1.1105 NX_share=0.044433 eps_rel=0.51207 eps_rel_pb=0.53359 B_rel=0.43921 proxy=1.2942 proxy_cb=1.2919 Z=2.1089 SB_gain=1.1659
+S0_O6 below_N 27121
+S0_O6 below_CB 236.10 26.11
+S0_O6 below_dnb 4.49264 0.02829
+S0_O6 below_sim 4.81383 0.13957
+S0_O6 below_eta 1.88765
+S0_O6 below_bkg 2.92618
+S0_O6 below_ra 0.9333 0.0277
+S0_O6 below_rb 0.9495 0.0302
+S0_O6 B_N 80785
+S0_O6 B_CB 590.51 34.24
+S0_O6 B_dnb 13.40101 0.04883
+S0_O6 B_sim 15.36518 0.26580
+S0_O6 B_eta 7.64476
+S0_O6 B_bkg 7.72043
+S0_O6 B_ra 0.8722 0.0154
+S0_O6 B_rb 0.9890 0.0179
+S0_O6 P_N 40689
+S0_O6 P_CB 256.97 22.74
+S0_O6 P_dnb 6.75645 0.03423
+S0_O6 P_sim 5.92067 0.13903
+S0_O6 P_eta 1.97343
+S0_O6 P_bkg 3.94724
+S0_O6 P_ra 1.1412 0.0274
+S0_O6 P_rb 1.0980 0.0289
+S0_O6 r56_N 546501
+S0_O6 r56_CB 3067.34 80.56
+S0_O6 r56_dnb 90.81122 0.13144
+S0_O6 r56_sim 69.16032 0.50214
+S0_O6 r56_eta 3.74376
+S0_O6 r56_bkg 65.41656
+S0_O6 r56_ra 1.3131 0.0097
+S0_O6 r56_rb 1.0046 0.0075
+S0_O6 r70_N 1436198
+S0_O6 r70_CB 6225.84 96.56
+S0_O6 r70_dnb 238.95745 0.21450
+S0_O6 r70_sim 233.31385 0.85516
+S0_O6 r70_eta 5.54852
+S0_O6 r70_bkg 227.76533
+S0_O6 r70_ra 1.0242 0.0039
+S0_O6 r70_rb 0.7665 0.0029
+S0_O6 R2_N 17236
+S0_O6 R2_CB 125.85 12.91
+S0_O6 R2_dnb 2.85921 0.02215
+S0_O6 R2_sim 2.27355 0.08737
+S0_O6 R2_eta 0.39286
+S0_O6 R2_bkg 1.88069
+S0_O6 R2_ra 1.2576 0.0493
+S0_O6 R2_rb 1.0539 0.0435
+S0_O6 post_N 12382
+S0_O6 post_CB 97.29 7.45
+S0_O6 post_dnb 2.05285 0.01868
+S0_O6 post_sim 1.55190 0.07246
+S0_O6 post_eta 0.21099
+S0_O6 post_bkg 1.34091
+S0_O6 post_ra 1.3228 0.0629
+S0_O6 post_rb 1.0767 0.0533
+S0_O6 Fit_N 720697
+S0_O6 Fit_CB 4327.66 105.06
+S0_O6 Fit_dnb 119.70988 0.15452
+S0_O6 Fit_sim 98.57332 0.62851
+S0_O6 Fit_eta 15.75511
+S0_O6 Fit_bkg 82.81822
+S0_O6 Fit_ra 1.2144 0.0079
+S0_O6 Fit_rb 1.0072 0.0066
+S0_O6 all_N 2160912
+S0_O6 all_CB 10599.91 145.29
+S0_O6 all_dnb 359.33084 0.27448
+S0_O6 all_sim 332.39930 1.09372
+S0_O6 all_eta 21.40197
+S0_O6 all_bkg 310.99733
+S0_O6 all_ra 1.0810 0.0037
+S0_O6 all_rb 0.8333 0.0028
+S0_O6 CR_N 511913
+S0_O6 CR_CB 2828.90 76.30
+S0_O6 CR_dnb 85.07119 0.12663
+S0_O6 CR_sim 64.97134 0.48522
+S0_O6 CR_eta 3.36289
+S0_O6 CR_bkg 61.60845
+S0_O6 CR_ra 1.3094 0.0100
+S0_O6 CR_rb 1.0000 0.0077
+S0_O6 PB_N 49550
+S0_O6 PB_CB 324.43 25.89
+S0_O6 PB_dnb 8.22591 0.03785
+S0_O6 PB_sim 7.04707 0.15197
+S0_O6 PB_eta 2.11335
+S0_O6 PB_bkg 4.93372
+S0_O6 PB_ra 1.1673 0.0257
+S0_O6 PB_rb 1.0895 0.0261
+S0_O6 delta a=0.2642 b=0.0545 c=0.0524
+S0_O6 cb 1.3590 0.0107
+S0_O6 chi2a 2257.21 60
+S0_O6 chi2b 130.93 59
+S0_O6 k1 1.2295 chi2 586.87 59
+S0_O6 fit a 0.3905 0.0301 c 1.3730 0.0105 rho -0.504 chi2 126.61 58
+S0_O6 x17 N=3100 NV=3142 CB=28.842 CBe=2.9981 c6=2020.7 c6pb=3761.7 NX=126.59 NXpb=235.65 model_b=2779.5 C5b=205.52 C4b=32.859 rat_lo=1.0966 rat_hi=0.80859 rat_win=1.1039 NX_share=0.045076 eps_rel=0.58087 eps_rel_pb=0.66645 B_rel=0.48819 proxy=1.2029 proxy_cb=1.2 Z=2.2703 SB_gain=1.1898
+OA C6_peak_band lt2=0.0436 lt6=0.6664 b26=0.6228 gt2=0.9564 gt6=0.3336 mean=5.3214 over40=0.0000
+OA C6_X17_window lt2=0.0095 lt6=0.5809 b26=0.5714 gt2=0.9905 gt6=0.4191 mean=5.8796 over40=0.0000
+OA C5_peak_band lt2=0.1910 lt6=0.5916 b26=0.4007 gt2=0.8090 gt6=0.4084 mean=7.7018 over40=0.0358
+OA C5_X17_window lt2=0.0057 lt6=0.5667 b26=0.5610 gt2=0.9943 gt6=0.4333 mean=6.0167 over40=0.0000
+OA data_N-CB_peak_band lt2=0.2422 lt6=0.7649 b26=0.5228 gt2=0.7578 gt6=0.2351 mean=5.2872 over40=0.0167
+OA data_N-CB_X17_window lt2=0.0026 lt6=0.4972 b26=0.4947 gt2=0.9974 gt6=0.5028 mean=6.4654 over40=0.0000
+PEE C6 median=414.0 share_above_325=0.7386
+C6_X2D_S0 6257.525
+repro_rows_differing 0

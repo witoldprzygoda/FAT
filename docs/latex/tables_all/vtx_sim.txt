@@ -1,0 +1,39 @@
+# vv_sim: eps_vtx = rows with vz > -500 / all rows (isBest >= 0, PT3 bit, cor_ok), own truth tagging, unweighted
+# windows: sim-centred peak 0.5333-0.5587, bump 0.4576-0.5255, data peak window x 1.0057 = 0.5367-0.5573
+C5 eta->pi+pi-e+e- (eta set)
+   all M4               rows   572822  eps(vz>-500) 0.99970 +- 0.00002  (lost 171; 95%CL lower 0.9997)  eps(vz>-160) 0.99725
+   peak(sim)            rows   484140  eps(vz>-500) 0.99975 +- 0.00002  (lost 120; 95%CL lower 0.9997)  eps(vz>-160) 0.99774
+   bump(sim)            rows    27706  eps(vz>-500) 0.99942 +- 0.00014  (lost 16; 95%CL lower 0.9992)  eps(vz>-160) 0.99368
+   peak(data x1.0057)   rows   445275  eps(vz>-500) 0.99975 +- 0.00002  (lost 111; 95%CL lower 0.9997)  eps(vz>-160) 0.99799
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C4 eta->pi+pi-gamma conv (std)
+   all M4               rows      307  eps(vz>-500) 1.00000 +- 0.00326  (lost 0; 95%CL lower 0.9903)  eps(vz>-160) 1.00000
+   peak(sim)            rows      252  eps(vz>-500) 1.00000 +- 0.00397  (lost 0; 95%CL lower 0.9882)  eps(vz>-160) 1.00000
+   bump(sim)            rows       16  eps(vz>-500) 1.00000 +- 0.06250  (lost 0; 95%CL lower 0.8293)  eps(vz>-160) 1.00000
+   peak(data x1.0057)   rows      235  eps(vz>-500) 1.00000 +- 0.00426  (lost 0; 95%CL lower 0.9873)  eps(vz>-160) 1.00000
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C2 bump pi0 Dalitz (std)
+   all M4               rows     1660  eps(vz>-500) 0.99940 +- 0.00060  (lost 1; 95%CL lower 0.9984)  eps(vz>-160) 0.99337
+   peak(sim)            rows        7  eps(vz>-500) 1.00000 +- 0.14286  (lost 0; 95%CL lower 0.6518)  eps(vz>-160) 1.00000
+   bump(sim)            rows     1264  eps(vz>-500) 0.99921 +- 0.00079  (lost 1; 95%CL lower 0.9979)  eps(vz>-160) 0.99288
+   peak(data x1.0057)   rows        3  eps(vz>-500) 1.00000 +- 0.33333  (lost 0; 95%CL lower 0.3684)  eps(vz>-160) 1.00000
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C3 bump conversion (std)
+   all M4               rows     1192  eps(vz>-500) 0.99748 +- 0.00145  (lost 3; 95%CL lower 0.9951)  eps(vz>-160) 0.99581
+   peak(sim)            rows        3  eps(vz>-500) 1.00000 +- 0.33333  (lost 0; 95%CL lower 0.3684)  eps(vz>-160) 1.00000
+   bump(sim)            rows      888  eps(vz>-500) 0.99662 +- 0.00195  (lost 3; 95%CL lower 0.9934)  eps(vz>-160) 0.99550
+   peak(data x1.0057)   rows        3  eps(vz>-500) 1.00000 +- 0.33333  (lost 0; 95%CL lower 0.3684)  eps(vz>-160) 1.00000
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C4+C5
+   all M4               rows   573129  eps(vz>-500) 0.99970 +- 0.00002  (lost 171; 95%CL lower 0.9997)  eps(vz>-160) 0.99725
+   peak(sim)            rows   484392  eps(vz>-500) 0.99975 +- 0.00002  (lost 120; 95%CL lower 0.9997)  eps(vz>-160) 0.99774
+   bump(sim)            rows    27722  eps(vz>-500) 0.99942 +- 0.00014  (lost 16; 95%CL lower 0.9992)  eps(vz>-160) 0.99369
+   peak(data x1.0057)   rows   445510  eps(vz>-500) 0.99975 +- 0.00002  (lost 111; 95%CL lower 0.9997)  eps(vz>-160) 0.99799
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C2+C3
+   all M4               rows     2852  eps(vz>-500) 0.99860 +- 0.00070  (lost 4; 95%CL lower 0.9974)  eps(vz>-160) 0.99439
+   peak(sim)            rows       10  eps(vz>-500) 1.00000 +- 0.10000  (lost 0; 95%CL lower 0.7411)  eps(vz>-160) 1.00000
+   bump(sim)            rows     2152  eps(vz>-500) 0.99814 +- 0.00093  (lost 4; 95%CL lower 0.9966)  eps(vz>-160) 0.99396
+   peak(data x1.0057)   rows        6  eps(vz>-500) 1.00000 +- 0.16667  (lost 0; 95%CL lower 0.6070)  eps(vz>-160) 1.00000
+   rows with cor_ok == 0: 0 (vz>-500: 0)
+C5 rows without vertex, own tracks in the finder window (0..4): 1 167 3 0 0

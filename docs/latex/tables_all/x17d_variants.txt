@@ -1,0 +1,22 @@
+# x17d_variants.txt -- INFORMATION ONLY (x17d_variants.C): observed 90 % CLs UL at m_X = 17.00 MeV/c2, normalisation (1), under the model
+# variants that X-c used to size the frozen nuisances (N5-bias, sX). The frozen limit already contains them; this is not a second limit.
+# Data S0, isBest >= 0, all 1050 X2D cells, L = 6079.2 nb^-1. Pearson chi2/ndf of the r = 0 fit; N5 of the r = 0 fit.
+variant      chi2/ndf        N5       UL(1)   UL/nom   r_hat(BR)        err  description
+nominal        0.9930    3659.1  3.0636e-05    1.000  +5.507e-06  1.166e-05  frozen nominal (WP5 background shapes, bkgMode 4, 2 classes, spread-rule CB)
+Bsim2          0.9922    3649.0  3.0770e-05    1.004  +5.581e-06  1.170e-05  background shape: simulated G_D + G_C, exp(pol2)
+Bsim1          0.9923    3644.9  3.0805e-05    1.006  +5.613e-06  1.172e-05  background shape: simulated, exp(pol1)
+Bsim3          1.0389    4405.8  2.6450e-05    0.863  +6.793e-06  9.966e-06  background shape: simulated, exp(pol3)
+BkappaB        0.9921    3648.7  3.0798e-05    1.005  +5.560e-06  1.171e-05  background shape: simulated G_D + kappa_B G_C, exp(pol2)
+flatPol2       0.9988    3415.1  3.5731e-05    1.166  +1.035e-05  1.275e-05  background flat x (1 + b t + c t^2) per class
+3class         0.9893    3922.7  2.2801e-05    0.744  +1.926e-06  1.014e-05  three background classes, simulated exp(pol2)
+tiltOnly       0.9978    3459.3  3.5340e-05    1.154  +1.047e-05  1.260e-05  WP5 shapes x (1 + b t) per class
+noMeeDep       0.9989    3458.5  3.5423e-05    1.156  +1.040e-05  1.261e-05  WP5 shapes x (1 + b t + c t^2), no M(ee) dependence
+CBfact         0.9932    3705.0  3.0116e-05    0.983  +5.404e-06  1.149e-05  CB factorised (sum rule)
+CBgeo          0.9930    3720.0  3.0388e-05    0.992  +5.748e-06  1.153e-05  CB per-row geometric mean
+kE1free        0.9922    3640.7  3.1193e-05    1.018  +5.809e-06  1.180e-05  k_E1 free
+sim_V2         0.9928    3570.8  3.6283e-05    1.184  +6.471e-06  1.384e-05  peak/direct templates of S0__V2
+sim_GS         0.9930    3658.9  3.0804e-05    1.006  +5.548e-06  1.172e-05  peak/direct templates of S0__GS
+sim_r089       0.9932    3323.2  2.9904e-05    0.976  +4.307e-06  1.166e-05  peak/direct templates of S0__r089
+sim_r110       0.9944    3948.8  3.1497e-05    1.028  +6.601e-06  1.173e-05  peak/direct templates of S0__r110
+sim_sUp        0.9967    3622.9  3.2629e-05    1.065  +6.695e-06  1.214e-05  peak/direct templates of S0__sUp
+sim_sDn        0.9910    3668.7  2.9046e-05    0.948  +4.459e-06  1.130e-05  peak/direct templates of S0__sDn

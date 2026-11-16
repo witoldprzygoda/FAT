@@ -1,0 +1,14 @@
+# wp2_lumi.py: luminosity per group of days [nb^-1], START-free chain N
+# L6_an = analysed runs (sum = 6079.2 = alldefs::kL); stat = Poisson of the elastic count (per-run L6_stat in quadrature)
+# unc_sec, unc_hades = per-period 'Sectors (+ sector-2 correction)' and total HADES syst of sf_luminosity_perperiod.csv
+#   (all runs; NOT independent between periods; given only for the four periods and 'all')
+# LwS2 = L-weighted mean of S2fac6; Lw_w6 = L-weighted w6; LwLF = L-weighted LF3/LF2 x 64/63
+group,ndays,nrun_an,L6_all,L6_an,stat,unc_sec,unc_hades,LwS2,Lw_w6,LwLF
+I,13,7893,2810.669,2809.453,1.345,78.356,152.739,1.06576,0.00702,0.93797
+IIA,2,1317,372.610,372.610,0.475,10.412,20.806,1.00000,0.00806,0.92813
+IIB,5,3423,1078.134,1078.022,0.804,33.475,62.896,1.00000,0.00806,0.94043
+III,9,4924,1819.110,1819.110,1.064,46.280,103.867,1.00000,0.00883,0.92336
+early_034_044,11,6777,2450.440,2449.224,1.262,nan,nan,1.07544,0.00702,0.93948
+late_045_067,18,10780,3630.084,3629.972,1.490,nan,nan,1.00000,0.00834,0.92935
+I_late_045_046,2,1116,360.229,360.229,0.465,nan,nan,1.00000,0.00702,0.92768
+all,29,17557,6080.524,6079.195,1.953,167.478,337.942,1.03039,0.00781,0.93343

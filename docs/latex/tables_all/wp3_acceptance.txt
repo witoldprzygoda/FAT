@@ -1,0 +1,11 @@
+# WP3 stage A acceptance tests (SPEC WP3) on the configuration they refer to
+chi2/ndf<=1.5 adopted (MC template covariance included): 129.8/118 = 1.100 -> PASS (error scale 1.000); data-only Pearson 326.4/118 = 2.766 -> FAIL
+A1 spec CRs: max raw share 0.0771 (8/151 bins > 1%), smoothed 0.0646 (7; 4 with Neff>2), fitted-model 0.0221 (1) -> FAIL
+A2 spec CRs: h(0.43-0.46) 19.165 +- 1.901, h(0.46-0.55) -0.150 +- 0.969, tag T -2.11 +- 3.97, template h -0.348 +- 0.136 (gm -2.370 +- 0.474) -> FAIL
+A1 fall-back 1: max raw share 0.0632 (5/136 bins > 1%), smoothed 0.0352 (3; 2 with Neff>2), fitted-model 0.0112 (1) -> FAIL
+A2 fall-back 1: h(0.44-0.46) 10.046 +- 1.301, h(0.46-0.55) -0.150 +- 0.969, tag T -2.11 +- 3.97, template h -0.175 +- 0.128 (gm -0.818 +- 0.422) -> FAIL
+A1 fall-back 2: max raw share 0.0277 (1/125 bins > 1%), smoothed 0.0311 (1; 0 with Neff>2), fitted-model 0.0088 (0) -> FAIL
+A3 signal C2-C5 injected x{0,1,2}: max shift 0.045 sigma -> PASS; with G_eta: 0.678 sigma (information)
+A4 per-slice tilts: dchi2 2.38 / 4 dof, p = 0.666 -> PASS; CR-U split 0.42: -0.02 sigma -> PASS (S4 inside: 0.06 sigma)
+A5 K0s veto: max shift 0.685 sigma -> PASS
+k_E1 step 0: 13.194 +- 0.610 -> fall-back drop E1

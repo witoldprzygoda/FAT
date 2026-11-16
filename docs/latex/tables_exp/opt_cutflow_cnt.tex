@@ -1,0 +1,42 @@
+% opt_cutflow_cnt.tex: copy of opt_cutflow.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% opt_cutflow.tex -- written by plots/exp_report/opt_scans.C (numbers: tables_exp/opt_scans.txt)
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Cut flows on the data, all stored combinations (isBest $\geq 0$), corrected momenta, PT3, FAT vertex $z>-500$~mm; cuts added from top to bottom inside each block, rows marked ``no'' are not applied (each added to the last applied step). $N$, CB in the data peak window 0.53364--0.55416~GeV/$c^2$; $S\pm$stat$\pm$model spread from $P_\mathrm{main}$; $F=S/\sigma_S^\mathrm{stat}$; $E\pm$stat$\pm$spread = edge-step visibility of the bump (not a yield); $T$ = ECAL-tagged $\eta$. CB $=2\sqrt{N_{++}N_{--}}$, $k=1$. Counts, not normalised to luminosity.}
+\label{tab:opt_cutflow}
+\begin{tabular}{llrrrrrrr}
+\toprule
+Step & applied & $N$ & CB & $S\pm$stat$\pm$spread & $S/B$ & $F$ & $E\pm$stat$\pm$spread & $T\pm$stat \\
+\midrule
+\multicolumn{9}{l}{\textbf{$\eta$ peak, data-optimised}} \\
+pre without vz cut & yes & 86011 & 11488 & $4657\pm390\pm1233$ & 0.054 & 11.9 & $1241\pm76\pm319$ & $3300\pm108$ \\
+vz > -160 mm & yes & 77513 & 7949 & $4671\pm367\pm958$ & 0.060 & 12.7 & $1199\pm71\pm287$ & $3312\pm105$ \\
+$\alpha_\mathrm{lab}$ < 55$^\circ$ & yes & 65749 & 6408 & $4444\pm337\pm1031$ & 0.068 & 13.2 & $1169\pm68\pm301$ & $3285\pm103$ \\
+M($\pi\pi$) > 0.30 & yes & 61800 & 5996 & $4330\pm327\pm981$ & 0.071 & 13.2 & $1169\pm68\pm301$ & $3184\pm98$ \\
+both $\pi$ in vertex fit & yes & 45433 & 2510 & $3949\pm276\pm936$ & 0.089 & 14.3 & $1089\pm57\pm262$ & $2968\pm89$ \\
++ OA > 2$^\circ$ & no & 34510 & 2446 & $3076\pm242\pm715$ & 0.092 & 12.7 & $811\pm50\pm204$ & $2242\pm78$ \\
+$\Delta z_\pi$<40 instead of vtx & no & 50604 & 3600 & $4182\pm293\pm837$ & 0.084 & 14.3 & $1139\pm60\pm253$ & $3050\pm91$ \\
++ MM$_4$ < 2.85 & no & 41169 & 2117 & $3797\pm262\pm722$ & 0.095 & 14.5 & $1025\pm54\pm237$ & $2800\pm85$ \\
++ M($\pi\pi$) < 0.46 & no & 44557 & 2449 & $3704\pm272\pm821$ & 0.085 & 13.6 & $1089\pm57\pm262$ & $2961\pm89$ \\
+\midrule
+\multicolumn{9}{l}{\textbf{bump, data-optimised}} \\
+pre without vz cut & yes & 86011 & 11488 & $4657\pm390\pm1233$ & 0.054 & 11.9 & $1241\pm76\pm319$ & $3300\pm108$ \\
+vz > -160 mm & yes & 77513 & 7949 & $4671\pm367\pm958$ & 0.060 & 12.7 & $1199\pm71\pm287$ & $3312\pm105$ \\
+$\alpha_\mathrm{lab}$ < 40$^\circ$ & yes & 47677 & 4634 & $3629\pm287\pm702$ & 0.077 & 12.7 & $1082\pm60\pm326$ & $3126\pm98$ \\
+M($\pi\pi$) > 0.30 & yes & 45856 & 4424 & $3605\pm281\pm672$ & 0.080 & 12.8 & $1082\pm60\pm326$ & $3024\pm93$ \\
+M($\pi\pi$) < 0.41 & yes & 33240 & 3278 & $2635\pm237\pm431$ & 0.081 & 11.1 & $1082\pm60\pm326$ & $3014\pm93$ \\
+both $\pi$ in vertex fit & yes & 24568 & 1418 & $2405\pm200\pm456$ & 0.102 & 12.0 & $1004\pm51\pm244$ & $2820\pm84$ \\
++ OA > 2$^\circ$ & no & 17835 & 1386 & $1745\pm172\pm335$ & 0.101 & 10.1 & $746\pm44\pm220$ & $2117\pm73$ \\
+$\Delta z_\pi$<40 instead of vtx & no & 27289 & 1985 & $2600\pm212\pm477$ & 0.099 & 12.3 & $1040\pm54\pm265$ & $2895\pm87$ \\
++ OA < 20$^\circ$ & no & 22396 & 324 & $2197\pm188\pm387$ & 0.102 & 11.7 & $987\pm48\pm222$ & $2674\pm81$ \\
+\midrule
+\multicolumn{9}{l}{\textbf{frozen simulation selections}} \\
+pre & yes & 77513 & 7949 & $4671\pm367\pm958$ & 0.060 & 12.7 & $1199\pm71\pm287$ & $3312\pm105$ \\
+$\Delta z_\pi$ < 40 mm & yes & 62969 & 4784 & $4492\pm327\pm907$ & 0.072 & 13.7 & $1183\pm63\pm226$ & $3191\pm97$ \\
+MM$_4$ < 2.85 & yes & 56532 & 4066 & $4364\pm310\pm867$ & 0.078 & 14.1 & $1120\pm59\pm243$ & $2972\pm92$ \\
++ OA > 2$^\circ$ & no & 43648 & 3981 & $3302\pm274\pm681$ & 0.077 & 12.0 & $827\pm52\pm200$ & $2218\pm81$ \\
+isBest == 1 & no & 46617 & 3288 & $4061\pm281\pm782$ & 0.089 & 14.4 & $983\pm54\pm236$ & $2574\pm85$ \\
+\bottomrule
+\end{tabular}
+\end{table}

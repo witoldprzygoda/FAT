@@ -1,0 +1,28 @@
+% Table C2 (wp3_stageA.C): nested stage-A models (chi2_P/ndf, dchi2 against the next simpler model)
+% entries: chi2/ndf with the data variance only (in brackets: with the MC covariance of the templates, GLS); bold = adopted by D11
+\begin{tabular}{lrrrr}
+\toprule
+model & spec CRs, E1+E2 & spec CRs, E2 & fall-back 1, E2 & fall-back 2, E2 \\
+\midrule
+M0 scale $c_j$ only & 1742/303 & 521/149 (191) & 499/134 (162) & 443/119 (139) \\
+M1 + common tilt $b$ & 1523/302 & \textbf{403/148 (180)} & \textbf{375/133 (155)} & \textbf{326/118 (130)} \\
+M2 + quadratic $q$ & 1026/301 & 314/147 (180) & 287/132 (155) & 252/117 (128) \\
+M3 per-slice tilts $b_j$ & 1418/298 & 359/144 (180) & 312/129 (152) & 272/114 (127) \\
+M4 per-slice tilts + $q$ & \textbf{760/297} & 250/143 (180) & 216/128 (153) & 186/113 (127) \\
+\bottomrule
+\end{tabular}
+
+\begin{tabular}{lrrrrr}
+\toprule
+parameter & value & stat & MC & total & $\partial/\partial a_\eta$ \\
+\midrule
+$c_1$ & 0.9878 & 0.0426 & 0.1929 & 0.1976 & -0.0621 \\
+$c_2$ & 1.0012 & 0.0440 & 0.1991 & 0.2039 & -0.0970 \\
+$c_3$ & 0.9751 & 0.0445 & 0.2066 & 0.2113 & -0.0920 \\
+$c_4$ & 1.0552 & 0.0429 & 0.1866 & 0.1915 & -0.0543 \\
+$c_5$ & 0.9091 & 0.0335 & 0.1425 & 0.1464 & -0.0044 \\
+$b$ & -0.0683 & 0.0057 & 0.0242 & 0.0249 & +0.0027 \\
+$\kappa_B$ & 3.0627 & 0.2853 & 1.4195 & 1.4479 & -0.1656 \\
+$k_{E2}$ & 0.9543 & 0.0485 & 0.0238 & 0.0540 & +0.0113 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,133 @@
+# res_bump.txt -- written by plots/exp_report/res_bump.C (2026-11-14 06:29:05)
+# EXPERIMENTAL DATA, p+p 4.53 GeV (feb22, 29 days). Rows = stored combinations; cor_ok == 1; FAT: vertex z > -500 mm, PT3 (trigbit 8192).
+# Selections: pre (= BUMP of the simulation study) = cor_ok && isBest >= 0 && vz > -160 mm; bump nominal = pre + oa_lab < 40 + 0.30 < M(pipi) < 0.41;
+#   bump nominal+vertex = bump nominal + both pions in the vertex fit. Variants isBest >= 0 / == 1, without / with OA(e+e-) > 2 deg.
+# Edge step: N - CB in M(pipi) slices = pol2 [+ eta Gaussian 0.5439 / 5.4 MeV] + h x smeared step at the FIXED predicted edge
+#   (M4 scale 0.99277, M(pipi) scale 0.9970, smearing 5.4 MeV; fit range edge -+ 45 MeV, -+ 35 MeV for 0.39-0.40 and 0.40-0.41).
+#   h in rows per 2.5 MeV; E = sum of h over 0.30-0.34, 0.34-0.37, 0.37-0.39, 0.39-0.40 (a visibility measure, NOT a yield).
+#   spread = half range of h over 18 variations (order 2, 3; half range 35, 45, 55 MeV; smearing 4.4, 5.4, 6.4 MeV; p > 0.05), added linearly.
+#   control slice 0.42-0.46 (above m_eta - m_pi0): edge set by hand at 0.5150; there the M(pipi) cut of the bump-nominal selections is dropped.
+# W = N - CB in the bump window 0.4550-0.5225 (bump + physical background; CB = 2 sqrt(N++ N--), k = 1).
+
+A. EDGE STEPS
+selection            variant          | E +- stat +- spread (chi2/ndf)        | 0.30-0.34   0.34-0.37   0.37-0.39   0.39-0.40   | 0.40-0.41   | ctrl        |  W = N-CB
+pre (= BUMP)         isBest>=0        |  1199 +-  71 +- 287 (126.1/120)        |  330+-45    380+-40    355+-28    134+-25   |   14+-17   |   17+-18   |  137676+-435 
+bump nominal         isBest>=0        |  1082 +-  60 +- 326 (122.0/120)        |  231+-33    390+-35    342+-26    118+-24   |    2+-17   |  -22+-18   |   94520+-352 
+bump nominal+vertex  isBest>=0        |  1004 +-  51 +- 244 (136.9/120)        |  196+-28    365+-29    321+-22    122+-21   |   10+-15   |  -15+-15   |   73770+-294 
+pre (= BUMP)         isBest==1        |  1050 +-  64 +- 217 (121.2/120)        |  280+-40    339+-36    313+-25    118+-23   |   18+-15   |    3+-16   |  111310+-374 
+bump nominal         isBest==1        |   938 +-  54 +- 257 (114.1/120)        |  189+-30    335+-31    307+-24    107+-22   |    6+-15   |  -27+-16   |   77094+-308 
+bump nominal+vertex  isBest==1        |   884 +-  46 +- 247 (119.8/120)        |  166+-26    326+-27    285+-20    108+-19   |   12+-13   |  -19+-14   |   61371+-263 
+pre (= BUMP)         isBest>=0, OA>2  |   898 +-  64 +- 160 (117.3/120)        |  258+-40    293+-36    261+-25     86+-23   |   -7+-15   |    7+-16   |  105634+-392 
+bump nominal         isBest>=0, OA>2  |   812 +-  53 +- 239 (109.4/120)        |  176+-29    304+-31    257+-23     75+-22   |  -17+-15   |  -26+-16   |   71037+-314 
+bump nominal+vertex  isBest>=0, OA>2  |   746 +-  44 +- 220 (119.5/120)        |  156+-24    272+-25    241+-20     76+-19   |   -9+-13   |  -20+-13   |   55020+-259 
+pre (= BUMP)         isBest==1, OA>2  |   791 +-  57 +- 122 (115.0/120)        |  218+-36    268+-32    228+-23     78+-20   |   -2+-14   |   -5+-15   |   84920+-336 
+bump nominal         isBest==1, OA>2  |   700 +-  48 +- 192 (106.0/120)        |  139+-26    261+-28    230+-21     70+-20   |  -12+-14   |  -30+-15   |   57704+-274 
+bump nominal+vertex  isBest==1, OA>2  |   659 +-  40 +- 189 (111.6/120)        |  127+-22    250+-23    213+-18     68+-17   |   -6+-12   |  -22+-12   |   45698+-231 
+
+A2. Per slice (isBest >= 0, no OA cut): edge, fit range, eta term, h, err, spread, background at the edge, chi2/ndf, p, dchi2 (step)
+  pre (= BUMP)
+    0.30-0.34   edge 0.5166  range 0.4725-0.5625 eta 1 | h  329.6 +-  45.2 spread  80.3 | bkg   1754 h/bkg 0.188 |  18.2/31  p 0.967 dchi2   53.2
+    0.34-0.37   edge 0.5113  range 0.4675-0.5600 eta 1 | h  380.0 +-  40.2 spread  63.4 | bkg   1482 h/bkg 0.256 |  43.5/32  p 0.085 dchi2   89.4
+    0.37-0.39   edge 0.5048  range 0.4600-0.5600 eta 1 | h  354.8 +-  28.0 spread  84.0 | bkg    739 h/bkg 0.480 |  32.5/35  p 0.588 dchi2  160.4
+    0.39-0.40   edge 0.4981  range 0.4625-0.5275 eta 0 | h  134.4 +-  25.0 spread  59.4 | bkg    262 h/bkg 0.514 |  31.9/22  p 0.079 dchi2   28.9
+    0.40-0.41   edge 0.4901  range 0.4550-0.5250 eta 0 | h   14.3 +-  17.0 spread   0.0 | bkg    166 h/bkg 0.086 |  37.5/24  p 0.039 dchi2    0.7  (not in E)
+    0.42-0.46   edge 0.5150  range 0.4700-0.5600 eta 1 | h   16.6 +-  18.0 spread   0.0 | bkg    268 h/bkg 0.062 |  39.6/31  p 0.139 dchi2    0.9  (control)
+    window: N 153183, CB 15507 (CB/N 0.101), N - CB 137676 +- 435
+  bump nominal
+    0.30-0.34   edge 0.5166  range 0.4725-0.5625 eta 1 | h  231.5 +-  33.3 spread  75.2 | bkg    932 h/bkg 0.248 |  17.4/31  p 0.976 dchi2   48.4
+    0.34-0.37   edge 0.5113  range 0.4675-0.5600 eta 1 | h  390.0 +-  34.7 spread 106.7 | bkg   1065 h/bkg 0.366 |  32.7/32  p 0.430 dchi2  126.5
+    0.37-0.39   edge 0.5048  range 0.4600-0.5600 eta 1 | h  342.2 +-  26.2 spread  88.5 | bkg    665 h/bkg 0.515 |  36.8/35  p 0.384 dchi2  170.2
+    0.39-0.40   edge 0.4981  range 0.4625-0.5275 eta 0 | h  118.2 +-  24.4 spread  55.6 | bkg    265 h/bkg 0.447 |  35.0/22  p 0.039 dchi2   23.5
+    0.40-0.41   edge 0.4901  range 0.4550-0.5250 eta 0 | h    2.1 +-  16.9 spread   0.0 | bkg    173 h/bkg 0.012 |  36.3/24  p 0.051 dchi2    0.0  (not in E)
+    0.42-0.46   edge 0.5150  range 0.4700-0.5600 eta 1 | h  -22.2 +-  17.7 spread   0.0 | bkg    287 h/bkg -0.077 |  30.9/31  p 0.472 dchi2    1.6  (control)
+    window: N 103922, CB 9402 (CB/N 0.090), N - CB 94520 +- 352
+  bump nominal+vertex
+    0.30-0.34   edge 0.5166  range 0.4725-0.5625 eta 1 | h  195.9 +-  28.0 spread  66.9 | bkg    704 h/bkg 0.278 |  22.3/31  p 0.875 dchi2   49.1
+    0.34-0.37   edge 0.5113  range 0.4675-0.5600 eta 1 | h  364.5 +-  29.2 spread  97.9 | bkg    783 h/bkg 0.465 |  28.5/32  p 0.644 dchi2  155.8
+    0.37-0.39   edge 0.5048  range 0.4600-0.5600 eta 1 | h  321.1 +-  22.4 spread  79.6 | bkg    494 h/bkg 0.649 |  43.4/35  p 0.156 dchi2  205.6
+    0.39-0.40   edge 0.4981  range 0.4625-0.5275 eta 0 | h  122.2 +-  21.0 spread   0.0 | bkg    202 h/bkg 0.605 |  42.8/22  p 0.005 dchi2   33.8
+    0.40-0.41   edge 0.4901  range 0.4550-0.5250 eta 0 | h    9.7 +-  14.6 spread   0.0 | bkg    141 h/bkg 0.069 |  32.8/24  p 0.109 dchi2    0.4  (not in E)
+    0.42-0.46   edge 0.5150  range 0.4700-0.5600 eta 1 | h  -15.4 +-  14.8 spread   0.0 | bkg    228 h/bkg -0.068 |  18.6/31  p 0.962 dchi2    1.1  (control)
+    window: N 77735, CB 3965 (CB/N 0.051), N - CB 73770 +- 294
+
+   ratios (isBest >= 0, no OA cut): E(bump nominal)/E(pre) = 0.902, E(bump nominal+vertex)/E(pre) = 0.837; isBest == 1 / >= 0 for pre: 0.876
+   OA > 2 pass fraction of E: pre 0.749, bump nominal 0.751, bump nominal+vertex 0.743
+
+B. EDGE POSITION FITTED FREE (factor between the true limit and the measured edge; nominal 0.99277 from the eta peak +- 0.0009)
+  pre, isBest >= 0
+    0.30-0.34  factor 0.9912 -0.0030 +0.0027 | edge fit 0.5158 predicted 0.5166 diff -0.0008 | chi2 min 17.9 nominal 18.2 ndf 31 | h 329.8 +- 45.1
+    0.34-0.37  factor 0.9917 -0.0022 +0.0025 | edge fit 0.5108 predicted 0.5113 diff -0.0005 | chi2 min 43.3 nominal 43.5 ndf 32 | h 381.1 +- 40.3
+    0.37-0.39  factor 0.9927 -0.0020 +0.0020 | edge fit 0.5048 predicted 0.5048 diff -0.0000 | chi2 min 32.5 nominal 32.5 ndf 35 | h 354.8 +- 28.0
+    0.39-0.40  factor 0.9967 -0.0037 +0.0035 | edge fit 0.5001 predicted 0.4981 diff +0.0020 | chi2 min 30.7 nominal 31.9 ndf 22 | h 148.2 +- 26.8
+    weighted mean factor 0.9927 +- 0.0013 (eta peak 0.9928 +- 0.0009; difference -0.0001)
+  bump nominal+vertex, isBest >= 0
+    0.30-0.34  factor 0.9902 -0.0032 +0.0032 | edge fit 0.5153 predicted 0.5166 diff -0.0013 | chi2 min 21.6 nominal 22.3 ndf 31 | h 198.3 +- 28.1
+    0.34-0.37  factor 0.9942 -0.0020 +0.0020 | edge fit 0.5121 predicted 0.5113 diff +0.0008 | chi2 min 27.9 nominal 28.5 ndf 32 | h 363.3 +- 29.0
+    0.37-0.39  factor 0.9947 -0.0017 +0.0020 | edge fit 0.5058 predicted 0.5048 diff +0.0010 | chi2 min 42.1 nominal 43.4 ndf 35 | h 320.0 +- 22.2
+    0.39-0.40  factor 0.9980 -0.0037 +0.0030 | edge fit 0.5008 predicted 0.4981 diff +0.0026 | chi2 min 40.6 nominal 42.8 ndf 22 | h 138.5 +- 22.9
+    weighted mean factor 0.9944 +- 0.0012 (eta peak 0.9928 +- 0.0009; difference +0.0016)
+
+C. ECAL-TAGGED ETA (pi0 window 0.119 <= M(e+e-gamma) < 0.173, m_ee < 0.10; m5c with the photon energy rescaled to M(e+e-gamma) = m_pi0;
+   P_main with the frozen eta shape 0.5463 / 6.2 MeV + pol2 in 0.49-0.62, CB in 20 MeV bins; spread over 18 variations; free = position and width free)
+selection            variant          |    rows  N win    CB |      T  stat  sprd fit |    S/B S/err  chi2/ndf | Y_T [nb]   stat  model | free fit: position, width [MeV], S
+pre (= BUMP)         isBest>=0        |  683381   7420   253 |   3314   105   124  18 |  0.725  31.6  37.7/48  |   0.5537 0.0175 0.0207 | 0.5463 +- 0.0002, 6.19 +- 0.24, 3309 +- 134
+bump nominal         isBest>=0        |   60129   5943   161 |   3014    93   132  14 |  0.913  32.5  54.1/48  |   0.5037 0.0155 0.0220 | 0.5465 +- 0.0002, 6.17 +- 0.23, 3011 +- 117
+bump nominal+vertex  isBest>=0        |   47503   5005    88 |   2820    84    91  13 |  1.122  33.5  60.7/48  |   0.4712 0.0141 0.0153 | 0.5466 +- 0.0002, 5.85 +- 0.21, 2735 +- 100
+pre (= BUMP)         isBest==1        |  595959   6213   205 |   2850    96   116  18 |  0.760  29.8  31.1/48  |   0.4762 0.0160 0.0194 | 0.5461 +- 0.0002, 6.26 +- 0.26, 2867 +- 124
+bump nominal         isBest==1        |   51178   5015   135 |   2593    85   122  14 |  0.945  30.5  52.7/48  |   0.4334 0.0142 0.0204 | 0.5464 +- 0.0002, 6.19 +- 0.26, 2592 +- 108
+bump nominal+vertex  isBest==1        |   40981   4281    77 |   2448    78    98  15 |  1.158  31.5  53.5/48  |   0.4091 0.0130 0.0164 | 0.5464 +- 0.0002, 5.91 +- 0.23, 2386 +- 93
+pre (= BUMP)         isBest>=0, OA>2  |  485359   5743   246 |   2506    93    98  18 |  0.698  27.1  34.8/48  |   0.4188 0.0155 0.0164 | 0.5461 +- 0.0003, 6.25 +- 0.29, 2518 +- 121
+bump nominal         isBest>=0, OA>2  |   41264   4528   158 |   2255    81   105  15 |  0.883  27.7  52.9/48  |   0.3769 0.0136 0.0175 | 0.5463 +- 0.0003, 6.24 +- 0.28, 2265 +- 104
+bump nominal+vertex  isBest>=0, OA>2  |   32321   3781    87 |   2117    73    83  15 |  1.108  28.9  54.9/48  |   0.3537 0.0123 0.0138 | 0.5463 +- 0.0002, 5.85 +- 0.25, 2048 +- 87
+pre (= BUMP)         isBest==1, OA>2  |  421906   4809   199 |   2182    85    95  18 |  0.746  25.8  30.9/48  |   0.3646 0.0141 0.0159 | 0.5460 +- 0.0003, 6.37 +- 0.31, 2218 +- 111
+bump nominal         isBest==1, OA>2  |   34928   3827   133 |   1959    75    96  15 |  0.927  26.3  45.5/48  |   0.3274 0.0125 0.0160 | 0.5462 +- 0.0003, 6.25 +- 0.30, 1969 +- 96
+bump nominal+vertex  isBest==1, OA>2  |   27777   3242    75 |   1856    68    77  16 |  1.159  27.3  49.0/48  |   0.3101 0.0113 0.0129 | 0.5462 +- 0.0002, 5.89 +- 0.27, 1802 +- 81
+   tagged eta with M4 in the bump window 0.4550-0.5225: 3111 +- 88, share 0.939; with M4 < 0.5225: 3481 +- 102, share 1.050 (pre, isBest >= 0;
+   errors of the shares are not given: the samples are nested)
+   efficiency of the cuts for the tagged eta (isBest >= 0): bump nominal 0.910, bump nominal+vertex 0.851; isBest == 1 / >= 0 (pre) 0.860
+   model spread of a slice = 0 means that no variation (and not the nominal fit) passed p > 0.05 there, see A2.
+   pi0 of the tagged eta (eta content in 5 MeV bins of M(e+e-gamma), Gaussian fit 0.095-0.200): position 0.1460 +- 0.0005, width 13.68 +- 0.53 MeV,
+   content 3534 +- 114, chi2/ndf 38.3/18 (m_pi0 = 0.1350: the ECAL photon energy is not calibrated; frozen window 0.119-0.173 = +-2 sigma)
+     M(eeg) 0.060-0.065:    -2.9 +-   3.9
+     M(eeg) 0.065-0.070:    -1.4 +-   5.6
+     M(eeg) 0.070-0.075:     2.8 +-   5.4
+     M(eeg) 0.075-0.080:    -6.5 +-   6.1
+     M(eeg) 0.080-0.085:     2.8 +-   7.8
+     M(eeg) 0.085-0.090:     0.4 +-   8.4
+     M(eeg) 0.090-0.095:     3.1 +-   9.5
+     M(eeg) 0.095-0.100:    11.2 +-  10.7
+     M(eeg) 0.100-0.105:    11.4 +-  12.0
+     M(eeg) 0.105-0.110:    38.0 +-  14.3
+     M(eeg) 0.110-0.115:    48.1 +-  15.9
+     M(eeg) 0.115-0.120:    80.5 +-  19.5
+     M(eeg) 0.120-0.125:    58.8 +-  21.4
+     M(eeg) 0.125-0.130:   170.7 +-  27.0
+     M(eeg) 0.130-0.135:   328.2 +-  32.0
+     M(eeg) 0.135-0.140:   455.0 +-  37.0
+     M(eeg) 0.140-0.145:   555.2 +-  39.7
+     M(eeg) 0.145-0.150:   520.4 +-  39.1
+     M(eeg) 0.150-0.155:   456.3 +-  36.7
+     M(eeg) 0.155-0.160:   342.9 +-  32.5
+     M(eeg) 0.160-0.165:   201.7 +-  28.1
+     M(eeg) 0.165-0.170:   145.5 +-  25.8
+     M(eeg) 0.170-0.175:   101.2 +-  23.4
+     M(eeg) 0.175-0.180:    89.6 +-  22.0
+     M(eeg) 0.180-0.185:    25.5 +-  19.7
+     M(eeg) 0.185-0.190:    35.6 +-  19.7
+     M(eeg) 0.190-0.195:    44.2 +-  19.2
+     M(eeg) 0.195-0.200:     5.7 +-  18.2
+     M(eeg) 0.200-0.205:    35.5 +-  18.6
+     M(eeg) 0.205-0.210:    23.8 +-  18.6
+     M(eeg) 0.210-0.215:    26.8 +-  18.8
+     M(eeg) 0.215-0.220:    18.7 +-  18.1
+
+WHY NO MODEL-FREE BUMP YIELD: the bump (eta -> pi+pi-pi0 with an e+e- pair from the pi0 and the photon lost) has no shape of its own in M4:
+it is a broad distribution from about 0.40 up to the kinematic edge (0.49-0.52), lying on a multi-pion background whose shape under the
+bump is not known (no side band below the bump; above the edge lies the eta peak; at the edge the drop h is only 0.2-0.5 of the level of
+N - CB). A smooth polynomial absorbs most of the bump,
+so N - CB - background in the bump window depends entirely on the background model. Only the sharp drop at the predicted edge is
+model-independent: h measures the bump density just below the edge, per M(pipi) slice. Turning E (or W) into a number of eta -> pi+pi-pi0
+decays needs the bump shape below the edge (Dalitz-plot matrix element, pi0 Dalitz / conversion mix, acceptance): this comes from the
+simulation and is done in the next report. The ECAL-tagged eta T is a clean peak but counts only the events with a detected photon.
+
+run time 8 s

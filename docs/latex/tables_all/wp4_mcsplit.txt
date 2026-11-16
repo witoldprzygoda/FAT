@@ -1,0 +1,16 @@
+# wp4_mcsplit.txt -- plots/all_report/wp4_mcsplit.C; scenario (a), Asimov data (truth = full sample), S0, L = 6079.2 nb^-1
+# full-sample templates with ONE part replaced by a bootstrap replica (100 replicas of WP0): mean shift and RMS [% of true]
+replaced part                              FM_a             FM_Ybump             FM_Ypeak               FM_rho               FG_BRG             B4_Ybump            PSB_Ypeak
+signal (C2-C5, G_eta)         -10.2 (rms   3.4)    -11.5 (rms   1.6)     -7.2 (rms   2.0)     +8.0 (rms   5.9)    +14.1 (rms   6.2)     -1.4 (rms   0.6)     -0.5 (rms   3.3)
+background (G_D, G_C)          +0.7 (rms   9.9)     +0.2 (rms   6.0)     +0.8 (rms   9.3)     +1.4 (rms  16.6)     +0.9 (rms  18.7)     -0.9 (rms   9.1)     -0.0 (rms   1.0)
+both                          -10.1 (rms   8.8)    -11.5 (rms   5.6)     -6.6 (rms   9.2)     +9.3 (rms  19.4)    +15.0 (rms  23.7)     -2.4 (rms   9.2)     -0.6 (rms   3.7)
+
+# half samples (x2): truth half / signal templates half / background templates half -> bias [% of true]
+truth A signal A background A:  FM_a   -0.0  FM_Ybump   -0.0  FM_Ypeak   +0.0  FM_rho   +0.0  FG_BRG   +0.0  B4_Ybump   -0.0  PSB_Ypeak   -0.0
+truth A signal A background B:  FM_a  -34.5  FM_Ybump  -21.0  FM_Ypeak   -1.0  FM_rho  +53.1  FG_BRG  +49.4  B4_Ybump  -30.6  PSB_Ypeak   -3.6
+truth A signal B background A:  FM_a   +1.2  FM_Ybump  -11.0  FM_Ypeak   -7.7  FM_rho  +14.0  FG_BRG  +14.6  B4_Ybump   -0.4  PSB_Ypeak   -4.9
+truth A signal B background B:  FM_a  -36.6  FM_Ybump  -33.3  FM_Ypeak   -8.1  FM_rho  +79.6  FG_BRG  +93.9  B4_Ybump  -31.0  PSB_Ypeak   -8.1
+truth B signal A background A:  FM_a  +32.2  FM_Ybump   +8.0  FM_Ypeak   +0.6  FM_rho  -12.5  FG_BRG  -25.6  B4_Ybump  +27.1  PSB_Ypeak  +10.4
+truth B signal A background B:  FM_a  -18.6  FM_Ybump  -20.4  FM_Ypeak   -9.0  FM_rho  +21.4  FG_BRG  +14.4  B4_Ybump   -5.5  PSB_Ypeak   +5.5
+truth B signal B background A:  FM_a  +52.4  FM_Ybump  +30.8  FM_Ypeak  +11.7  FM_rho  -21.5  FG_BRG  -17.9  B4_Ybump  +31.4  PSB_Ypeak   +3.1
+truth B signal B background B:  FM_a   -0.0  FM_Ybump   -0.0  FM_Ypeak   +0.0  FM_rho   +0.0  FG_BRG   +0.0  B4_Ybump   -0.0  PSB_Ypeak   -0.0

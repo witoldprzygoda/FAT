@@ -1,0 +1,16 @@
+% flex_scales.tex -- plots/all_report/flex_tables.py
+\begin{tabular}{lrrrrlrll rr}
+\toprule
+scale & value & stat & MC & $\sigma/s$ & verdict & bias [\%] & bias test & degenerate with & Part III & alt.\ F7bj \\
+\midrule
+\texttt{s\_C2} & 0.412 & 0.021 & 0.065 & 17\% & constrained & -20 & FAIL & \texttt{--} & 0.38 & 0.48 \\
+\texttt{s\_C3} & -0.087 & 0.067 & 0.228 & 273\% & not constrained & -163 & FAIL & \texttt{--} & 0.32 & -0.06 \\
+\texttt{s\_C4} & 0.335 & 0.158 & 0.155 & 66\% & not constrained & -58 & FAIL & \texttt{--} & 0.32 & 0.37 \\
+\texttt{s\_C5} & 0.626 & 0.064 & 0.099 & 19\% & constrained & +1 & PASS & \texttt{--} & 0.50 & 0.66 \\
+\texttt{s\_Geta} & 2.102 & 0.072 & 0.584 & 28\% & constrained & -15 & FAIL & \texttt{s\_GC} & 0.66 & 1.39 \\
+\texttt{s\_GD\_om} & 0.788 & 0.050 & 0.275 & 35\% & weak & -15 & FAIL & \texttt{s\_GC} & 1.06 & 1.07 \\
+\texttt{s\_GD\_nom} & 1.109 & 0.030 & 0.107 & 10\% & constrained & +4 & FAIL(marginal) & \texttt{s\_GC} & 1.06 & 1.07 \\
+\texttt{s\_GC} & 1.596 & 0.122 & 0.674 & 43\% & weak & +5 & PASS & \texttt{s\_Geta, s\_GD\_om, s\_GD\_nom} & 2.07 & 1.80 \\
+\texttt{k\_E2} & 0.907 & 0.045 & 0.043 & 7\% & constrained & -1 & PASS & \texttt{--} & 0.98 & 0.93 \\
+\bottomrule
+\end{tabular}

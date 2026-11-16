@@ -1,0 +1,13 @@
+# wp2_vzfit.C: F(z) = a S(z; delta, sigma) + b E(z), unlike-sign rows, base + pion vertex, all M4, 2 mm bins
+# S = simulated LH2 (T12) reconstructed vz; E = empty-target vz of the same day; b = material scale (flux ratio full/empty)
+# f_fit = b E(vz>-160)/F(vz>-160) (these rows); b_U = normaliser-window value ch[-200,-170) from wp2_win.txt for comparison
+# variant  day  range  b +- err  a  delta[mm]  sigma[mm]  chi2/ndf  f_fit[%]  F(vz>-160)  E(vz>-160)
+  nominal  034 [-250, -60)  b   8.757 +-  0.548  a 0.9909  delta  -1.09  sigma  5.69  chi2/ndf   244.9/91  f_fit  11.22 +-  0.81     59077     757
+  narrow   034 [-220, -70)  b   8.860 +-  0.549  a 0.9894  delta  -1.09  sigma  5.60  chi2/ndf   225.0/71  f_fit  11.35 +-  0.82     59077     757
+  sigma0   034 [-250, -60)  b  11.699 +-  0.513  a 0.9495  delta  -0.67  sigma  0.00  chi2/ndf   309.0/92  f_fit  14.99 +-  0.85     59077     757
+  nominal  047 [-250, -60)  b  13.871 +-  0.565  a 0.9710  delta  -1.03  sigma  2.96  chi2/ndf   222.6/91  f_fit  12.61 +-  0.64    115696    1052
+  narrow   047 [-220, -70)  b  13.891 +-  0.564  a 0.9708  delta  -1.05  sigma  2.95  chi2/ndf   196.2/71  f_fit  12.63 +-  0.64    115696    1052
+  sigma0   047 [-250, -60)  b  14.925 +-  0.535  a 0.9596  delta  -0.91  sigma  0.00  chi2/ndf   233.7/92  f_fit  13.57 +-  0.64    115696    1052
+  nominal  065 [-250, -60)  b   0.816 +-  0.023  a 0.9741  delta  -0.65  sigma  2.46  chi2/ndf   147.2/91  f_fit   9.68 +-  0.29     94721   11245
+  narrow   065 [-220, -70)  b   0.813 +-  0.023  a 0.9741  delta  -0.65  sigma  2.47  chi2/ndf   134.8/71  f_fit   9.66 +-  0.29     94721   11245
+  sigma0   065 [-250, -60)  b   0.884 +-  0.018  a 0.9643  delta  -0.60  sigma  0.00  chi2/ndf   164.6/92  f_fit  10.50 +-  0.24     94721   11245

@@ -1,0 +1,18 @@
+% written by plots/exp_report/spec_vz500.C -- row cut flow from the PAT input to pre, three hypotheses
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Rows (stored particle combinations, $\mathrm{isBest}\ge0$) of the three PAT hypotheses of the 29 day files, from the PAT input to the selection \emph{pre}. In brackets: the fraction kept by the stage. The event-vertex cut $z>-500$~mm removes the rows without a fitted event vertex (PAT default $z=-1000$~mm). CB/$N$ $=2\sqrt{N_{++}N_{--}}/N$ of the totals (not M4-binned).}
+\label{tab:spec_cutflow}
+\begin{tabular}{lrrrr}
+\toprule
+stage & $e^+e^-$ & $e^+e^+$ & $e^-e^-$ & CB/$N$ \\
+\midrule
+PAT rows & 7186155 (1.000) & 423230 (1.000) & 1569416 (1.000) & 0.2268 \\
++ event vertex $z>-500$~mm (FAT) & 4868213 (0.677) & 124890 (0.295) & 377646 (0.241) & 0.0892 \\
++ PT3, trigbit $=8192$ (FAT) & 4783467 (0.983) & 122875 (0.984) & 371524 (0.984) & 0.0893 \\
++ $\mathrm{cor\_ok}=1$ & 4753629 (0.994) & 121789 (0.991) & 367954 (0.990) & 0.0891 \\
++ $v_z>-160$~mm (= \emph{pre}) & 4423338 (0.931) & 85921 (0.705) & 267362 (0.727) & 0.0685 \\
+\bottomrule
+\end{tabular}
+\end{table}

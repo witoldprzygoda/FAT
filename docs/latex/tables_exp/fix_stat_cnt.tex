@@ -1,0 +1,19 @@
+% fix_stat_cnt.tex: copy of fix_stat.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% written by plots/exp_report/fix_checks.C (review fixes)
+\begin{table}[H]\centering\small
+\caption{Calibration of the statistical errors on the data with independent halves of the event groups, all combinations (isBest $\geq0$). For each halving both halves are fitted alone; pull $z=(X_A-X_B)/\sqrt{\sigma_A^2+\sigma_B^2}$ with the fit errors as quoted ($S$: \Pmain; $E$: sum of the four edge steps). Fold: parity of the group index; 40 random halvings with the hash of the bias study (seeds 1--40). If the errors are right, $\sqrt{\langle z^2\rangle}=1$ (uncertainty about 0.11). CB with $k=1$; counts.}
+\label{tab:fix_stat}
+\begin{tabular}{@{}l l r r r r@{}}
+\toprule
+selection & $X$ & $z$ (fold) & $\langle z\rangle$ (40) & $\sqrt{\langle z^2\rangle}$ (40) & $|z|>2$ \\
+\midrule
+pre & $S$ & $-1.06$ & $-0.00$ & 0.95 & 0 \\
+pre + vertex & $S$ & $-1.79$ & $-0.02$ & 0.96 & 2 \\
+peak nominal + vertex & $S$ & $-1.02$ & $-0.02$ & 0.91 & 0 \\
+DIRECT & $S$ & $-1.62$ & $-0.05$ & 0.95 & 2 \\
+PEAK & $S$ & $-1.26$ & $+0.00$ & 1.02 & 1 \\
+pre & $E$ & $-2.35$ & $-0.22$ & 1.20 & 4 \\
+bump nominal + vertex & $E$ & $-2.20$ & $-0.23$ & 1.17 & 4 \\
+\bottomrule
+\end{tabular}
+\end{table}

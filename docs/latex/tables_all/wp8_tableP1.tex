@@ -1,0 +1,21 @@
+% wp8_tableP1.tex -- plots/all_report/wp8_physics.py (WP8)
+\begin{table}[H]
+\centering
+\caption{Acceptance $\times$ efficiency $\varepsilon=\sigma_{\mathrm{vis}}/\sigma_{\mathrm{prod}}$ of the signal classes in selection S0 ($\mathrm{isBest}\geq0$), in per cent. $\sigma_{\mathrm{prod}}$ = SMASH $\sigma(pp\to\eta X)=1.0665$\,mb $\times$ PDG BR (C3: per $\eta\to\pipi\piz$, conversion probability inside $\varepsilon$; C6: per unit BR, $m_X=17$\,\MeVcc). Windows: C2, C3 in B; C4, C5 in P; C6 in X17c ($M_4$ 0.5312--0.5566, \Mee 15.5--24.5\,\MeVcc). Physics weights V3 (code 108) and none; \Mee classes reconstructed. Simulation errors: event groups. Mass transfer $M_4'=0.99615\,M_4$.}
+\label{tab:P1}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}l r r r r r r r@{}}
+\toprule
+class & $\sigma_{\mathrm{prod}}$ [nb] & all $M_4$ & window & $E1$ ($<10$) & $E2$ ($\geq10$) & $\geq20$\,\MeVcc & window, no wts \\
+\midrule
+C2 bump, \piz Dalitz & 2870 & 0.2253 (2.9) & 0.1791 (3.3) & 0.06407 & 0.115 & 0.06733 & 0.1934 \\
+C3 bump, conversion & 244442 & 0.001988 (3.4) & 0.001583 (3.9) & 0.001244 & 0.0003387 & 7.283e-06 & 0.001663 \\
+C4 peak, $\eta\to\pipi\gamma$ conv. & 45006 & 0.00259 (6.3) & 0.002122 (7.0) & 0.001782 & 0.0003393 & 0 & 0.001996 \\
+C5 direct $\eta\to\ppee$ & 286 & 0.4573 (0.3) & 0.366 (0.3) & 0.123 & 0.243 & 0.1515 & 0.3525 \\
+C6 X17 (per unit BR) & 1066500 & 0.6172 (0.1) & 0.3283 (0.2) & -- & -- & -- & 0.3283 \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Numbers in brackets: relative MC error in per cent (window and all-$M_4$ columns); pion-vertex errors in units of the last digit (nested-sample error).\\
+Pion-vertex efficiency S0/pre: $\eta$ peak data 0.941(52), simulation 0.940; ECAL-tagged $\eta$ data 0.933(13), simulation 0.933 (emulated tag), 0.947 (truth).
+\end{table}

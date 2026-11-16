@@ -1,0 +1,13 @@
+ECAL coverage in the simulation (gen4 parameter file allParam_feb22_sim_run_17000_gen4_10032026.root, EmcGeomPar + EmcCellStatusPar)
+module front face 92.0 x 92.0 mm, pitch 94.0 mm, depth 420.0 mm; per sector one plane (rms 0.0030 mm); 978 modules, 807 active
+sector | modules | active | theta range from z = 0 / -60 / -120 mm [deg] | phi range from z = 0 [deg] (width) | plane distance [mm] | tilt [deg]
+0 | 163 | 0 | 11.58-47.56 / 11.30-46.59 / 11.04-45.65 | 62.81-117.12 (54.31) | 2357.1 | 2.31
+1 | 163 | 161 | 11.98-47.26 / 11.71-46.30 / 11.45-45.37 | 123.33-176.98 (53.65) | 2410.9 | 0.95
+2 | 163 | 163 | 11.69-47.14 / 11.41-46.20 / 11.15-45.28 | 183.47-236.97 (53.50) | 2397.8 | 4.77
+3 | 163 | 161 | 11.71-47.08 / 11.43-46.14 / 11.17-45.22 | 242.89-296.45 (53.56) | 2400.6 | 3.99
+4 | 163 | 161 | 11.61-46.99 / 11.34-46.06 / 11.08-45.15 | 302.62-356.37 (53.75) | 2402.0 | 4.11
+5 | 163 | 161 | 11.44-46.98 / 11.17-46.04 / 10.92-45.12 | 2.62-56.73 (54.11) | 2394.5 | 3.93
+status-0 modules (simulation): s1/c24, s1/c195, s3/c160, s3/c237, s4/c129, s4/c157, s5/c240, s5/c244; and all 163 of sector 0
+data (real) parameters, 8 runs of the four periods: identical status map: True
+solid angle of the active modules seen from z = 0 mm: 0.0920 of 4 pi (all six sectors, any status: 0.1120); band 11.5-47.6 deg = 0.1531 of 4 pi, of which 0.601 covered
+solid angle of the active modules seen from z = -60 mm: 0.0884 of 4 pi (all six sectors, any status: 0.1077); band 11.5-47.6 deg = 0.1531 of 4 pi, of which 0.577 covered

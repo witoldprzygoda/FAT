@@ -1,0 +1,43 @@
+# x17d_checks.txt -- X17 unblinding checks (x17d_figs.C)
+toy CLs vs asymptotic (data):
+  m 16.70 norm 1: UL asym 3.0631e-05 toy 2.9335e-05 ratio 0.9577 
+  m 16.70 norm 2: UL asym 3.2938e-05 toy 3.3216e-05 ratio 1.0085 
+  m 16.70 norm 3: UL asym 2.7636e-05 toy 2.7932e-05 ratio 1.0107 
+  m 16.85 norm 1: UL asym 3.0646e-05 toy 3.0717e-05 ratio 1.0023 
+  m 16.85 norm 2: UL asym 3.2861e-05 toy 3.3981e-05 ratio 1.0341 
+  m 16.85 norm 3: UL asym 2.7559e-05 toy 2.8050e-05 ratio 1.0178 
+  m 17.00 norm 1: UL asym 3.0636e-05 toy 3.0128e-05 ratio 0.9834 
+  m 17.00 norm 2: UL asym 3.2758e-05 toy 3.4106e-05 ratio 1.0412 
+  m 17.00 norm 3: UL asym 2.7465e-05 toy 2.7825e-05 ratio 1.0131 
+FC at 17 MeV/c2 (norm 1): r, BR, t_obs, t68, t90, t95, p(t >= t_obs), toys
+  0.0000 0.0000e+00 0.2434 0.2171 1.5561 2.5478 0.3130 2000/2000
+  0.0100 2.6800e-06 0.0602 0.5881 1.5702 2.6367 0.8030 2000/2000
+  0.0200 5.3600e-06 0.0001 0.8447 1.8228 2.9057 0.9930 2000/2000
+  0.0300 8.0400e-06 0.0420 0.9372 2.2080 3.2230 0.8290 2000/2000
+  0.0400 1.0720e-05 0.1652 1.0231 2.4871 3.3729 0.7060 2000/2000
+  0.0500 1.3400e-05 0.3520 0.9681 2.3995 3.3614 0.5550 2000/2000
+  0.0600 1.6080e-05 0.5877 0.9349 2.6765 3.6015 0.4325 2000/2000
+  0.0700 1.8760e-05 0.8603 1.0358 2.7865 3.6624 0.3660 2000/2000
+  0.0800 2.1440e-05 1.1605 1.0329 2.8263 3.7511 0.2955 2000/2000
+  0.0900 2.4120e-05 1.4808 1.0446 2.7209 4.0041 0.2345 2000/2000
+  0.1000 2.6800e-05 1.8157 0.9903 2.6539 3.5893 0.1680 2000/2000
+  0.1100 2.9480e-05 2.1605 1.0442 2.8000 3.7285 0.1430 2000/2000
+  0.1200 3.2160e-05 2.5117 1.0342 2.8462 4.2530 0.1245 2000/2000
+  0.1400 3.7520e-05 3.2229 0.9820 2.7803 4.0364 0.0750 2000/2000
+FC 90 % CL interval: [0.0000e+00, 3.4467e-05]
+MC m 16.70 norm 1: nominal UL 3.0631e-05; CB replicas 200: UL mean 3.0695e-05 RMS 1.887e-06, r_hat RMS 1.188e-06; C4 replicas 100: UL mean 2.8837e-05 RMS 2.726e-06, r_hat RMS 1.725e-06; combined RMS 3.315e-06 (10.8 %)
+MC m 16.70 norm 2: nominal UL 3.2938e-05; CB replicas 200: UL mean 3.2925e-05 RMS 1.309e-06, r_hat RMS 1.328e-06; C4 replicas 100: UL mean 3.1876e-05 RMS 2.097e-06, r_hat RMS 2.025e-06; combined RMS 2.472e-06 (7.5 %)
+MC m 16.70 norm 3: nominal UL 2.7636e-05; CB replicas 200: UL mean 2.7624e-05 RMS 1.048e-06, r_hat RMS 1.224e-06; C4 replicas 100: UL mean 2.6782e-05 RMS 1.684e-06, r_hat RMS 1.866e-06; combined RMS 1.984e-06 (7.2 %)
+MC m 16.85 norm 1: nominal UL 3.0646e-05; CB replicas 200: UL mean 3.0708e-05 RMS 1.904e-06, r_hat RMS 1.194e-06; C4 replicas 100: UL mean 2.8822e-05 RMS 2.744e-06, r_hat RMS 1.720e-06; combined RMS 3.340e-06 (10.9 %)
+MC m 16.85 norm 2: nominal UL 3.2861e-05; CB replicas 200: UL mean 3.2842e-05 RMS 1.316e-06, r_hat RMS 1.327e-06; C4 replicas 100: UL mean 3.1778e-05 RMS 2.091e-06, r_hat RMS 2.008e-06; combined RMS 2.470e-06 (7.5 %)
+MC m 16.85 norm 3: nominal UL 2.7559e-05; CB replicas 200: UL mean 2.7546e-05 RMS 1.054e-06, r_hat RMS 1.223e-06; C4 replicas 100: UL mean 2.6691e-05 RMS 1.680e-06, r_hat RMS 1.851e-06; combined RMS 1.983e-06 (7.2 %)
+MC m 17.00 norm 1: nominal UL 3.0636e-05; CB replicas 200: UL mean 3.0692e-05 RMS 1.919e-06, r_hat RMS 1.199e-06; C4 replicas 100: UL mean 2.8782e-05 RMS 2.761e-06, r_hat RMS 1.715e-06; combined RMS 3.362e-06 (11.0 %)
+MC m 17.00 norm 2: nominal UL 3.2758e-05; CB replicas 200: UL mean 3.2735e-05 RMS 1.321e-06, r_hat RMS 1.325e-06; C4 replicas 100: UL mean 3.1657e-05 RMS 2.084e-06, r_hat RMS 1.991e-06; combined RMS 2.468e-06 (7.5 %)
+MC m 17.00 norm 3: nominal UL 2.7465e-05; CB replicas 200: UL mean 2.7447e-05 RMS 1.058e-06, r_hat RMS 1.221e-06; C4 replicas 100: UL mean 2.6581e-05 RMS 1.674e-06, r_hat RMS 1.835e-06; combined RMS 1.981e-06 (7.2 %)
+observed UL(1) at 17 MeV/c2 percentile in the frozen toys: 0.614; empirical p of r_hat/sigma: 0.295
+frozen toys m 16.70: 2000 toys; observed UL(1) 3.063e-05 at percentile 0.605 (median 2.636e-05); r_hat/sigma 0.441, empirical p 0.307, asymptotic p0 0.323
+frozen toys m 16.85: 2000 toys; observed UL(1) 3.065e-05 at percentile 0.606 (median 2.617e-05); r_hat/sigma 0.457, empirical p 0.302, asymptotic p0 0.317
+frozen toys m 17.00: 2000 toys; observed UL(1) 3.064e-05 at percentile 0.614 (median 2.604e-05); r_hat/sigma 0.472, empirical p 0.295, asymptotic p0 0.311
+frozen toys m 10.00: 500 toys; observed UL(1) 3.892e-05 at percentile 0.312 (median 4.910e-05); r_hat/sigma -0.393, empirical p 0.646, asymptotic p0 0.500
+frozen toys m 25.00: 500 toys; observed UL(1) 2.286e-05 at percentile 0.668 (median 1.771e-05); r_hat/sigma 0.746, empirical p 0.202, asymptotic p0 0.205
+frozen toys m 40.00: 500 toys; observed UL(1) 8.529e-06 at percentile 0.360 (median 1.014e-05); r_hat/sigma -0.116, empirical p 0.570, asymptotic p0 0.500

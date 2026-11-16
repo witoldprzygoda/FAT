@@ -1,0 +1,20 @@
+# res_oldnew.txt -- old (LGAD-based) against new (beta_new) production, written by hand from the measurements of 2026-11-13
+# (scratchpad oldnew/ and simold/; macros oldnew_fig.C, lgadsplit.C, simcmp.C there). Numbers are copied as measured, NOT recomputed here.
+# EXPERIMENTAL DATA (and one simulation line, marked), p+p 4.53 GeV, the same 29 days, the same FAT configuration and ScanEngine.
+# Peak: P_main (N - CB, frozen Gaussian 0.5439 / 5.4 MeV + pol2, 0.5225-0.6100), selection oa_lab < 50 deg, cor_ok == 1, vertex z > -500 mm, PT3,
+# NO vz > -160 cut (selection of the first study). Old production: duplicated like-sign rows removed (52 % of the like-sign rows, 2.7 % of the
+# unlike-sign rows); without this removal its CB would be x 2.1 too large.
+# The two productions are built from the same DSTs: the errors of the ratios are not independent and are not given.
+#
+# quantity                                              old             new             new/old
+eta peak S, isBest >= 0                                 3123 +- 278     4319 +- 346     1.38
+eta peak S, isBest == 1 (figure res_oldnew_peak)        2713 +- 256     3899 +- 311     1.44
+eta peak S, isBest >= 0, events with LGAD start         3023 +- 270     4012 +- 330     1.33   (evtStart == 1)
+eta peak S, isBest == 1, events with LGAD start         2629 +- 249     3641 +- 297     1.38
+share of the new eta signal with an LGAD start time     -               0.929 +- 0.024  -      (elastic pass fraction 0.933)
+SIMULATION: SMASH eta set through both PAT versions     503311          523844          1.04   (pure eta -> pi+pi-e+e-, isBest >= 0, oa_lab < 50;
+                                                                                               isBest == 1: 424949 / 443768 = 1.044; same DSTs, ideal START)
+#
+# Interpretation: raw 1.38 = about 1.07 (new-production events without an LGAD time: a luminosity effect, the same fraction as in the
+# elastic events) x about 1.29-1.33 (more eta signal in the same events with an LGAD time: a data-only loss of the START-based method of the old
+# production; the simulation with an ideal START shows only 1.04).

@@ -1,0 +1,11 @@
+# e- in the pi- slot (no RICH ring) vs e- in the e- slot (ring), PipPimEpEm of the lepton PID sample without PID cut
+# (LEP_merged, first 25 of 101 files), isBest==1, eVertReco_z>-500; macro macros/norich.C and macros/norich_zr.C (run on vae25, 2026-11-13)
+e- in pim slot (no ring): 18011   e- in em slot (ring): 113135
+process: conversion 86.6 / 35.2 ; Compton 9.3 / 0.3 ; delta ray 1.8 / 0.2 ; decay 2.3 / 64.4   [% pim-slot / em-slot]
+parent: photon 96.0 / 35.4 ; pi0 1.6 / 46.5 ; eta 0.7 / 17.9 ; e+- 1.7 / 0.1
+vertex: target region 4.1 / 91.5 ; off axis r>20 mm 95.8 / 7.7 ; z 200..500 mm 73.9 / 0.1 ; z 500..1000 mm 8.5 / 0.0
+isring 8.7 / 100 ; kIsLepton 4.2 / 99.6 ; isghost 29.2 / 8.9 ; theta<18 deg 19.0 / 3.8
+ring-less e- (16439): 28.2 % of the creation vertices within +-6 mm of a sphere of radius 872 mm centred at z = -625 mm (RICH mirror:
+radius 871-873 mm, centre z = -532.2 - 88.5 = -620.7 mm in the HGeant geometry rich.geo); most others at z 350-500 mm, r 150-350 mm
+banana_lep.root, slot pim: e- 72769 of 456971 tracks (15.9 %); inside the pi- cut (v6, 3 sigma) 0.228
+most probable beta_new in the pim slot at p = 0.1 / 0.2 / 0.4 GeV/c: pi- 0.614 / 0.821 / 0.944 ; e- 0.759 / 0.896 / 0.971 (expected 0.736 / 0.901 / 0.971) ; mu- etc. 0.639 / 0.846 / 0.951 (expected 0.631 / 0.851 / 0.955)

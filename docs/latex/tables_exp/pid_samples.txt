@@ -1,0 +1,18 @@
+# Samples and fractions inside the data PID polygons (betanew_v1). Columns: sample | hypothesis | slot | track entries | unique tracks |
+#   inside p 3sig | inside pi(same charge) 3sig | inside e(same charge) 5sig | own species 1sig | own 2sig | own 3sig
+# banana samples: bin centres (10 MeV/c x 0.0025), denominator = all entries incl. under/overflow (fixed by the verifier); final sample: exact test on each track; '-' = not applicable
+H: hadrons, no ring                           $\pi^+\pi^-$           $\pi^+$      132507414   123621013     2.6   44.6   22.8    32.5   40.8   44.6
+"                                                                    $\pi^-$      132344212    74106493       -   47.6   34.4    34.3   43.1   47.6
+"                                             pp                     p (both)     242827462    82557975    20.2    0.4    0.3    11.1   16.9   20.2
+L: lepton slots                               $e^+e^-$               $e^+$          7507351     7294777     0.1   15.4   97.3    69.4   88.9   94.6
+"                                                                    $e^-$          7507351     7371464       -    7.6   97.8    71.3   89.7   95.2
+L: all slots                                  $\pi^+\pi^-e^+e^-$     $\pi^+$       17041610    15185109     2.3   32.4   15.0    21.8   29.1   32.4
+"                                                                    $\pi^-$       17041610     9631910       -   80.9   38.1    55.8   74.8   80.9
+"                                                                    $e^+$         17041610     9241614     0.1   11.4   95.9    67.3   87.2   93.1
+"                                                                    $e^-$         17041610     9307702       -    2.8   54.7    24.4   35.8   43.6
+betanew, PID applied                          $e^+e^-$               $e^+$          7434683     7227788     0.0   15.3  100.0    71.4   91.6   97.5
+"                                                                    $e^-$          7434683     7310862       -    7.8  100.0    73.1   92.2   97.8
+final sample, betanew prod. after PID         $\pi^+\pi^-e^+e^-$     $\pi^+$        4783467     4536300    0.00 100.00  43.70    69.2   90.9 100.00   (1sig at bin centres 67.8)
+"                                                                    $\pi^-$        4783467     4184617       - 100.00  45.85    72.1   94.1 100.00   (1sig at bin centres 70.8)
+"                                                                    $e^+$          4783467     4090253    0.00  11.27 100.00    72.1   92.5  98.13   (1sig at bin centres 72.1)
+"                                                                    $e^-$          4783467     4111456       -   5.00 100.00    75.1   95.2  99.33   (1sig at bin centres 75.1)

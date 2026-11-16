@@ -1,0 +1,17 @@
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.toc
+# ACLiC build products of macros (if any are kept next to the reports)
+macros/*.so
+macros/*.d
+macros/*.pcm
+macros/*_ACLiC_*
+*_C.so
+*_C.d
+*_C_ACLiC_dict_rdict.pcm
+# preview images (the reports use the vector PDF figures)
+figs*/*.png
+# pdflatex console logs of the build checks
+pass*.txt

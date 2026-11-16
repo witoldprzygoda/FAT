@@ -1,0 +1,32 @@
+% smp_cutflow_cnt.tex: copy of smp_cutflow.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% smp_cutflow.tex -- written by plots/exp_report/smp_report.C (numbers: tables_exp/smp_cutflow.txt)
+\begin{table}[H]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Cut flow of the three hypotheses, all 29 days. Entries = stored particle combinations (all combinations, isBest $\geq 0$), events = event groups; the column isBest $=1$ counts the best combinations (= events of that variant). The steps above the line are cumulative; each named selection below it is defined from pre: DIRECT = pre + $\Delta z_\pi<40$~mm, PEAK = DIRECT + $MM_4<2.85$~GeV/$c^2$ (frozen selections of the simulation study; pre is also the frozen BUMP selection), peak nominal = pre + $\alpha_\mathrm{lab}<55^\circ$ + $M_{\pi\pi}>0.30$~GeV/$c^2$, bump nominal = pre + $\alpha_\mathrm{lab}<40^\circ$ + $0.30<M_{\pi\pi}<0.41$~GeV/$c^2$, vertex = both pions in the event-vertex fit, $\Delta z_\pi=\max(|z_{\pi^+}-v_z|,|z_{\pi^-}-v_z|)$. The first four lines are counted in the PAT files, the others in the FAT output. Corrected momenta (cor\_ok $=1$) from that step on. The frozen windows of the simulation study are used for the X17 region (0.5333--0.5587~GeV/$c^2$, $15.5\leq M_{ee}<24.5$~MeV/$c^2$); with the data peak window 0.53364--0.55416~GeV/$c^2$ the numbers are 5258, 14 and 223 entries. Not normalised to luminosity.}
+\label{tab:smp_cutflow}
+\begin{tabular}{l rrr rrr rrr}
+\toprule
+ & \multicolumn{3}{c}{$\pi^+\pi^-e^+e^-$} & \multicolumn{3}{c}{$\pi^+\pi^-e^+e^+$} & \multicolumn{3}{c}{$\pi^+\pi^-e^-e^-$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Step & entries & events & isBest$=1$ & entries & events & isBest$=1$ & entries & events & isBest$=1$ \\
+\midrule
+PAT entries & 7186155 & 6042727 & 6042727 & 423230 & 363618 & 363618 & 1569416 & 1323546 & 1323546 \\
+isBest $\geq 0$ & 7186155 & 6042727 & 6042727 & 423230 & 363618 & 363618 & 1569416 & 1323546 & 1323546 \\
+$v_z>-500$~mm & 4868213 & 4131190 & 4131190 & 124890 & 104255 & 104255 & 377646 & 307705 & 307705 \\
+PT3 = FAT entries & 4783467 & 4058586 & 4058586 & 122875 & 102559 & 102559 & 371524 & 302701 & 302701 \\
+cor\_ok $=1$ & 4753629 & 4035344 & 4034170 & 121789 & 101744 & 101669 & 367954 & 300060 & 299873 \\
+$v_z>-160$~mm (pre) & 4423338 & 3783447 & 3782512 & 85921 & 72360 & 72317 & 267362 & 220285 & 220168 \\
++ pions in vertex fit & 3551526 & 3115863 & 3084387 & 44316 & 39610 & 38549 & 137408 & 121025 & 117997 \\
++ $\Delta z_\pi<40$~mm & 3454715 & 3039040 & 3004778 & 42225 & 37809 & 36798 & 131346 & 116023 & 113037 \\
+\midrule
+DIRECT & 3838094 & 3338898 & 3313729 & 59606 & 51735 & 50793 & 174525 & 150154 & 147272 \\
+PEAK & 3800262 & 3313830 & 3283551 & 59143 & 51398 & 50414 & 166144 & 144210 & 140602 \\
+peak nominal & 2776853 & 2457493 & 2376008 & 52199 & 46055 & 44338 & 207586 & 176096 & 171721 \\
+peak nominal + vertex & 2252756 & 2030720 & 1955642 & 27278 & 25138 & 23928 & 108176 & 96896 & 93108 \\
+bump nominal & 395737 & 374126 & 328087 & 9986 & 9405 & 8329 & 42139 & 38338 & 34107 \\
+bump nominal + vertex & 296726 & 284846 & 251410 & 4681 & 4542 & 4063 & 19664 & 18634 & 16660 \\
+X17 region & 6507 & 6438 & 5422 & 16 & 16 & 13 & 285 & 280 & 234 \\
+\bottomrule
+\end{tabular}
+\end{table}

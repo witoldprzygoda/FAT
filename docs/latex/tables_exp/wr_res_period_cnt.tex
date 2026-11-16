@@ -1,0 +1,22 @@
+% wr_res_period_cnt.tex: copy of wr_res_period.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% wr_res_period.tex -- copy of res_period.tex (identical since the review fix of 2026-11-14); original written by plots/exp_report/res_peak.C (numbers: tables_exp/res_peak.txt)
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{ECAL-tagged $\eta$ content $T$ (counts with a photon, $0.119\leq M(e^+e^-\gamma)<0.173$~GeV/$c^2$, $m_{ee}<0.10$; frozen $m_{5c}$ peak 0.5463~GeV/$c^2$, 6.2~MeV/$c^2$, pol2) and the ratio of the $\eta$-peak content $S$ ($P_\mathrm{main}$) to $T$ per period of the beam time, selection pre, isBest $\geq0$; $Y_T=T\times\frac{64}{63}/L_\mathrm{period}$ in visible counts per nb$^{-1}$; statistical errors only (the model spread is common). $S$ per period is identical to Table~\ref{tab:smp_peak_periods}, where the peak yield per period is given. Last rows: weighted mean and $\chi^2$/ndf of a constant. Sector 2 had a trigger deficit on days 034--044 (period I) that is not in $L$; its measured loss of counts, 3\,\%, is too small to explain the low $Y_T$ of period I.}
+\label{tab:res_period}
+\begin{tabular}{lrrccc}
+\toprule
+Period & $L$ [nb$^{-1}$] & $S$ & $T$ & $Y_T$ [counts/nb$^{-1}$] & $S/T$ \\
+\midrule
+I & 2809.5 & $2287\pm251$ & $1415\pm70$ & $0.5115\pm0.0253$ & $1.62\pm0.19$ \\
+IIA & 372.6 & $310\pm94$ & $193\pm27$ & $0.5267\pm0.0730$ & $1.60\pm0.54$ \\
+IIB & 1078.0 & $870\pm159$ & $660\pm46$ & $0.6220\pm0.0438$ & $1.32\pm0.26$ \\
+III & 1819.1 & $1203\pm193$ & $1046\pm57$ & $0.5844\pm0.0317$ & $1.15\pm0.19$ \\
+\midrule
+all & 6079.2 & $4671\pm367$ & $3314\pm105$ & $0.5537\pm0.0175$ & $1.41\pm0.12$ \\
+weighted mean & & & & $0.5522\pm0.0175$ & $1.38\pm0.12$ \\
+$\chi^2$/ndf ($p$) & & & & 6.3/3 (0.10) & 3.1/3 (0.37) \\
+\bottomrule
+\end{tabular}
+\end{table}

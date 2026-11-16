@@ -1,0 +1,21 @@
+# PDG 2026 (analyst ruling D25, 15 November 2026): BR(eta -> pi+pi-e+e-) = (2.76 +- 0.16) e-4 (S = 1.5) instead of the frozen PDG 2020
+# (2.68 +- 0.11) e-4. Normalisation (1): frozen code rerun with ONLY BR_dir changed (r -> BR x 2.76e-4; BR_dir part of the X17 yield
+# nuisance 4.10 % -> 5.80 %, sX1 0.2467 -> 0.2501; x17p26_limit.C); r_UL changes by +0.11..+0.14 %. (2): x 1.00436, (3): x 1.0224 (WP5 eta
+# scales a_eta, a_P fitted with PDG 2020 BRs; rerun with the rescaled scales). Toy-based numbers: frozen toys x 2.76/2.68 x k (k = rerun ratio).
+# Written by plots/all_report/x17p26_tables.py from the frozen PDG 2020 table of the same name without _pdg26.
+# x17d_D1_pdg26.txt -- Table D1 in PDG 2026 units (same columns as x17d_D1.txt).
+# UL_asym, r_hat: rerun; UL_toy, MC_RMS: frozen x factor; exp: frozen toys x factor (x17c_expected_pdg26.txt); N_X_UL rows unchanged;
+# sBRBR column dropped (superseded: use x17_fold_pdg26.txt).
+m      norm    UL_asym     UL_toy  toy/as      exp median [16%, 84%]     r_hat(BR)            Z     p0   N_X_UL    MC_RMS    UL_cos2
+ 16.70    1  3.1587e-05  3.0250e-05   0.958  2.7177e-05 [1.569e-05, 4.990e-05] +5.353e-06+-1.213e-05   0.46  0.323    393.9 3.418e-06  3.7846e-05
+ 16.70    2  3.3081e-05  3.3361e-05   1.008  2.6475e-05 [1.571e-05, 4.581e-05] +6.359e-06+-1.377e-05   0.46  0.323    393.9 2.483e-06         nan
+ 16.70    3  2.8255e-05  2.8558e-05   1.011  2.2922e-05 [1.447e-05, 3.628e-05] +5.967e-06+-1.282e-05   0.46  0.323    393.9 2.028e-06         nan
+ 16.85    1  3.1602e-05  3.1676e-05   1.002  2.6983e-05 [1.555e-05, 4.967e-05] +5.519e-06+-1.207e-05   0.48  0.317    393.0 3.444e-06  3.7865e-05
+ 16.85    2  3.3005e-05  3.4129e-05   1.034  2.6224e-05 [1.557e-05, 4.527e-05] +6.540e-06+-1.365e-05   0.48  0.317    393.0 2.481e-06         nan
+ 16.85    3  2.8177e-05  2.8678e-05   1.018  2.2759e-05 [1.432e-05, 3.597e-05] +6.138e-06+-1.270e-05   0.48  0.317    393.0 2.027e-06         nan
+ 17.00    1  3.1589e-05  3.1066e-05   0.983  2.6849e-05 [1.542e-05, 4.922e-05] +5.671e-06+-1.201e-05   0.49  0.311    391.9 3.467e-06  3.7854e-05
+ 17.00    2  3.2901e-05  3.4255e-05   1.041  2.5993e-05 [1.549e-05, 4.470e-05] +6.706e-06+-1.353e-05   0.49  0.311    391.9 2.479e-06         nan
+ 17.00    3  2.8080e-05  2.8448e-05   1.013  2.2493e-05 [1.418e-05, 3.560e-05] +6.293e-06+-1.258e-05   0.49  0.311    391.9 2.025e-06         nan
+counting X17c: excess +153.9 +- 1198.2 rows, BR = excess / (a_eta s1) = +1.93e-05 +- 1.51e-04 (a_eta / 1.00436; frozen +1.92e-05 +- 1.50e-04)
+Feldman-Cousins 90 % CL interval at 17 MeV/c2 (normalisation 1): [0.000e+00, 3.554e-05] (frozen 3.4467e-05 x 2.76/2.68 x 1.00124)
+simulation expectation of Part I (comparison only, no BR_dir; SMASH background with PDG 2026 changes it by < 0.5 %): 1.9e-5 / 5.7e-6 (unchanged)

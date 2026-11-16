@@ -1,0 +1,67 @@
+# wp8_tableP2.txt -- plots/all_report/wp8_physics.py (WP8, 2026-11-14): Table P2, physics quantities
+# S0, isBest >= 0, L = 6079.2 nb^-1; yields raw rows x 64/63. syst = WP7 Table S1 total with S12 completed by WP8 (wp8_S12.txt, spec rule);
+# MC = template statistics (100 replicas); N = normalisation (absolute quantities only: L 6.9 %, C_sec (1 - f_eta) +3.1/-4.1 %, PDG BRs);
+# live time +7.3/-0 % on cross sections, separate (not applied, D17). MAIN = estimators that passed WP4 (peak side bands; B4 marginal,
+# EXTRAPOLATED); CROSS-CHECK = F-main / F-gold / F-free (WP4 FAIL).
+
+1. BR(eta -> pi+pi-e+e-)   [PDG 2.68 +- 0.11 e-4]
+BR_G = 2.68e-4 alpha_5/alpha_2 (F-gold, M(ee) >= 20)   0.00026546  stat  3.683e-05  syst  0.0003369  MC  6.635e-05  N +8.548e-06/-8.548e-06  CROSS-CHECK (primary BR method of D15)  pull vs PDG -0.01 (total)
+BR_A = 2.68e-4 rho_d (F-main)                    0.00035247  stat  3.084e-05  syst  0.0003238  MC  6.068e-05  N +1.135e-05/-1.135e-05  CROSS-CHECK  pull vs PDG +0.26 (total)
+BR_C = 2.68e-4 alpha_5 (alpha_3/alpha_2)/alpha_4 (F-free)   0.00036214  stat  9.488e-05  MC(mc68)  0.0003634  [E1 + E2 fit, k_E1 = 7.6; WITHDRAWN in the nominal E2 configuration]
+   BR_G with the QED decay angle of C2 (variant, not applied): 0.000243 (toy), 0.000247 (closure)  [-8.6 %, -6.8 %]
+   BR_A with the QED decay angle of C2 (variant, not applied): 0.00031 (toy), 0.000319 (closure)  [-12.1 %, -9.5 %]
+
+2. R_34 = alpha_4/alpha_3 (conversion closure, 1 expected)
+   F-free E2 (nominal configuration): -4.23 +- 4.64 (stat) +- 3.10 (MC) -> undetermined
+   F-free E1 + E2 (as specified, k_E1 = 7.6): 0.917 +- 0.185 (stat) +- 0.287 (MC); consistent with 1 (fall-back 'R_34 off by > 2 sigma' not fired)
+
+3. kappa (twice): conversion scale of the signal (kappa) and of the non-eta background (kappa_B)
+kappa (F-main, constraint 1 +- 0.2)                 0.83233  stat     0.1449  syst     0.4404  MC      0.267  CROSS-CHECK, constraint dominated
+   kappa free (no constraint): 0.334 +- 0.150 (stat) +- 0.494 (MC); kappa_B = 1.90 +- 0.17 +- 0.92
+   kappa_B (F-main nominal): 1.95 +- 0.17 (stat) +- 0.91 (MC)
+   E1 + E2 fit (k_E1 = 7.6): kappa = 0.504 +- 0.046 +- 0.155, kappa_B = 1.112 +- 0.019 +- 0.050 (difference 0.61; E1 carries an unmodelled component)
+   F-free E1 + E2: alpha_3/alpha_2 = 0.514 (bump conversion), alpha_4/alpha_2 = 0.471 (peak conversion)
+
+4. DR = (Y_peak/Y_bump)_data / (Y_peak/Y_bump)_SMASH
+DR, side bands / B4 (bump EXTRAPOLATED)              1.3974  stat      0.152  syst     0.9375  MC     0.5333  N +0.05553/-0.05553  MAIN (B4 marginal)
+DR, F-main                                            1.169  stat    0.06465  syst     0.6644  MC     0.1337  N +0.04645/-0.04645  CROSS-CHECK
+   with the QED decay angle of C2 (variant): DR 1.255 / 1.286, DR_F 1.087 / 1.105 (toy / closure)
+
+5. sigma(pp -> eta X) = a x 1.0665 mb x C_sec (1 - f_eta), C_sec (1 - f_eta) = 0.981 +0.03/-0.04  [SMASH: 1.0665 mb]
+sigma(pp -> eta X), peak side bands (a_P)           0.43744  stat    0.03711  syst    0.07003  MC    0.02595  N +0.03462/-0.03656  [mb]  MAIN  live time +0.032/-0
+   = 0.437 +- 0.037 (stat) +- 0.070 (syst) +- 0.026 (MC) +0.035/-0.037 (norm.) mb; total 0.091 mb (20.7 %); data/SMASH = 0.410 +- 0.085
+   production-model extrapolation (not in the total, analyst's decision): pT-only reweighting +21.0 % (Barlow 18.9 %), y-only -8.0 % (6.7 %);
+   the specified 3 x 3 variant: +6.2 % +- 16.1 % (noise) -> 0 after the Barlow subtraction
+sigma(pp -> eta X), F-main a_eta                    0.39982  stat     0.0177  syst     0.2198  MC    0.04145  N +0.03287/-0.03458  [mb]  CROSS-CHECK
+   F-main with the QED decay angle of C2 (variant): 0.449 / 0.437 mb (toy / closure)
+   f_eta(edge) = 0.392 +- 0.024 (stat, x 1.2 calibrated) +- 0.039 (MC) +- 0.021 (model) -> sigma = 0.410 mb (bump classes; with the QED angle of C2 about +7 %)
+   f_eta(tag) = 0.454 +- 0.014 +- 0.040 (emulated simulated tag, UNVERIFIED) -> 0.475 mb
+   P_main (S0): S = 4388 +- 307 (stat) +- 420 (model, rms of the edge-safe grid, report_exp) ; / sim frozen fit 10881 = 0.403 +- 0.028 +- 0.039 -> 0.422 mb
+   SMASH sigma check: 40 converted standard-set files give 0.023629 eta per collision = 1.0690 +- 0.0035 mb (200 files: 1.0665 mb)
+
+6. sigma x BR [nb] (sigma from this analysis; BR as stated)
+   sigma(pp -> eta X) x BR_PDG(eta -> pi+pi-e+e-) = 117.2 nb (+- 20.7 % from sigma, +- 4.1 % from the BR)
+   sigma x BR(eta -> pi+pi-e+e-) measured (F-main a_eta rho_d, CROSS-CHECK): 140.9 nb (stat 9.8 %, syst 92 %, MC 17 %)
+   sigma x BR(eta -> pi+pi-pi0) from B4 (a_B, EXTRAPOLATED): 74714 nb (syst 168 %)
+   sigma x BR_PDG(eta -> pi+pi-gamma) = 18460 nb; F-main a kappa x SMASH x BR: 14044 nb (kappa constraint dominated)
+
+7. VISIBLE CROSS SECTIONS sigma_vis = Y x 64/63 / L (selection S0, no efficiency correction, C_sec (1 - f_eta) NOT applied) [nb]
+sigma_vis peak window P, side bands, all M(ee)      0.83695  stat      0.071  syst    0.09571  MC    0.04032  N +0.05775/-0.05775  [nb]  MAIN
+sigma_vis bump window B, B4, all M(ee)                2.696  stat     0.1857  syst      4.239  MC      0.676  N +0.186/-0.186  [nb]  MAIN (EXTRAPOLATED)
+   peak E1 (M(ee) < 10): 0.391 +- 0.048 (stat) +- 0.027 (MC); E2: 0.457 +- 0.054 +- 0.029; bump E2 (B4, not extrapolated): 1.287 +- 0.075 +- 0.316
+   F-main Y2_B / L = 1.965 +- 0.087 (stat) +- 0.205 (MC) nb (CROSS-CHECK)
+   F-main Y3_B / L = 1.231 +- 0.183 (stat) +- 0.333 (MC) nb (CROSS-CHECK)
+   F-main Y4_P / L = 0.304 +- 0.045 (stat) +- 0.082 (MC) nb (CROSS-CHECK)
+   F-main Y5_P / L = 0.526 +- 0.048 (stat) +- 0.094 (MC) nb (CROSS-CHECK)
+   SMASH visible (S0, V3): C4 + C5 in P = 2.0011 nb, C2 + C3 in B = 9.0076 nb
+
+8. (pT4, y4) REWEIGHTING VARIANT (3 x 3 cells; wp8_pty.txt)
+   a_P, sigma_eta: +6.2 % +- 16.1 % (noise); DR, BR ratios: -1.8 % +- 2.5 %; a_eta (refit) +8.1 %; a_B +8.3 %
+   information: pT only +21.0 % +- 9.1 %, y only -8.0 % +- 4.4 % (absolute scales); ratios change by < 2 %
+
+9. LITERATURE (published inclusive sigma(pp -> eta X) near p_lab = 5.4 GeV/c: none found -> no independent comparison)
+   pp -> pp eta, HADES, T = 3.5 GeV (sqrt(s) = 3.16 GeV), preliminary: 0.2110 +- 0.0470 mb  [K. Teilab (HADES), Int. J. Mod. Phys. A 26 (2011) 694, arXiv:1009.3442]
+   pp -> pp eta, HADES, T = 3.5 GeV, PhD thesis: 0.1369 +- 0.0101 mb  [K. Teilab, PhD thesis, Goethe University Frankfurt (2011)]
+   pp -> pp eta at sqrt(s) = 3.46 GeV (this energy), models 3 / 2 / 1: 0.0808 / 0.1162 / 0.1369 mb  [P. Lebiedowicz, arXiv:2501.14952 [hep-ph] (2025), Table 1]
+   SMASH: 'too many eta mesons are produced from pp -> pp eta for sqrt(s) > 3.25 GeV' [J. Staudenmaier et al., Phys. Rev. C 98 (2018) 054908]
+   These are EXCLUSIVE pp -> pp eta values (a lower bound of the inclusive cross section), at T = 3.5 GeV or model predictions; not comparable directly.

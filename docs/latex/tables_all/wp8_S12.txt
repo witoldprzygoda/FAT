@@ -1,0 +1,25 @@
+# wp8_S12.txt -- plots/all_report/wp8_physics.py (WP8, 2026-11-14): S12 (efficiency model) completed by WP8; per cent of the value
+# items: pion vertex (WP7: 2.5 % absolute / 2.0 % ratios); eps2 = C2 decay angle (max of the toy and the closure refit, wp8_syst.C;
+# sign known: see wp8_eps2.txt E); pT4,y4 = 3 x 3 reweighting (wp8_pty.py + wp8_syst.C refit), Barlow-subtracted with its toy noise
+# (16.1 % absolute scales, 2.5 % ratios). S12 = max over the items (spec rule); 'quad' = items in quadrature. New total = old total with S12 replaced.
+# NOT in the total (one decision for the analyst): the one-dimensional (pT4 only / y4 only) reweightings, which are significant:
+#   pT only +21.0 % +- 9.1 % (Barlow 18.9 %), y only -8.0 % +- 4.4 % (Barlow 6.7 %) on the absolute eta scales (sigma_eta, a_P, a_eta, a_B).
+
+quantity       S12 old     pivtx      eps2    pT4,y4   S12 new  S12 quad  syst old   syst new  syst quad eps2 sign
+Y_bump            0.00      0.00      3.36      0.00      3.36      3.36    157.21     157.25     157.25         +
+Y_peak            0.00      0.00      0.09      0.00      0.09      0.09     11.43      11.44      11.44         -
+Y5                0.00      0.00      1.32      0.00      1.32      1.32     88.70      88.71      88.71         -
+Y4                0.00      0.00      8.42      0.00      8.42      8.42     57.06      57.68      57.68         +
+a_eta             2.50      2.50     12.23      0.00     12.23     12.48     53.66      54.98      55.04         +
+BR_G              2.00      2.00      8.58      0.00      8.58      8.81    126.63     126.91     126.92         -
+BR_A              2.00      2.00     12.07      0.00     12.07     12.23     91.08      91.86      91.88         -
+kappa             2.00      2.00      3.40      0.00      3.40      3.94     52.84      52.92      52.95         -
+DR                2.00      2.00     10.20      0.00     10.20     10.40     66.34      67.09      67.12         -
+sigma_eta         2.50      2.50      0.09      0.00      2.50      2.50     16.01      16.01      16.01         -
+Y_bump_E2         0.00      0.00      0.46      0.00      0.46      0.46    164.59     164.59     164.59         +
+a_P               2.50      2.50      0.09      0.00      2.50      2.50     16.01      16.01      16.01         -
+a_B               2.50      2.50     12.36      0.00     12.36     12.61    167.75     168.19     168.20         +
+DR_F              2.00      2.00      7.03      0.00      7.03      7.31     56.44      56.84      56.87         -
+sigma_eta_F       2.50      2.50     12.23      0.00     12.23     12.48     53.66      54.98      55.04         +
+rho_d             2.00      2.00     12.07      0.00     12.07     12.23     91.08      91.86      91.88         -
+g                 0.00      0.00      4.86      0.00      4.86      4.86    120.78     120.88     120.88         -

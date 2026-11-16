@@ -1,0 +1,11 @@
+# x17ab_toycls.txt -- asymptotic against toy-based 90 % CLs limits (x17ab_toycls.C, x17ab_clsfig.C); 1000 toys per r value and hypothesis;
+# toy limit from a weighted quadratic fit of ln CLs(r). Limits in BR_X BR_ee = r x 2.68e-4. Criterion of the spec: |toy/asymptotic - 1| <= 0.10.
+set data set                                                                        UL asympt.     UL toys   ratio
+0   smooth parent, background-only Asimov set (CB nominal)                          9.2152e-06  9.6046e-06   1.042
+1   smooth-parent toy at BR = 0e+00 (CB replica 1)                                  9.5839e-06  9.7039e-06   1.013
+2   smooth-parent toy at BR = 0e+00 (CB replica 2)                                  6.5436e-06  6.5135e-06   0.995
+3   smooth-parent toy at BR = 1e-05 (CB replica 3)                                  1.4728e-05  1.4800e-05   1.005
+4   smooth-parent toy at BR = 1e-05 (CB replica 4)                                  9.4852e-06  9.3891e-06   0.990
+5   simulation-study toy 106647 at BR = 0 (+ CB-like)                               1.5793e-06           -       -  (toy CLs undefined: q_obs above every toy under r and under 0, CL_b = 0)
+6   simulation-study toy 661789 at BR = 0 (+ CB-like)                               1.9696e-06  1.9039e-06   0.967
+7   data-scale X2D, pre-data projection Asimov set (a_eta 0.40)                     2.8289e-05  2.9584e-05   1.046

@@ -1,0 +1,3 @@
+
+2-track events: target (vertex, zbar -160..-90) 2723368, upstream (no vertex, zbar < -170) 1054027
+elastic excess: target 53966 +- 324 (0.0198 per event), upstream 593 +- 72 (0.0006 per event); ratio upstream/target 0.028 +- 0.003

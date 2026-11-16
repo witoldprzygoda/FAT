@@ -1,0 +1,31 @@
+# flex_scales.txt -- plots/all_report/flex_tables.py (from flex_fit.C, flex_toys.C)
+# flexible SMASH description of the data, nominal model F8: N = k_E2 CB + sum_i s_i T_i, F10 E2 (M(ee) >= 10 MeV), M4 0.40-0.70,
+# 5 M(pi+pi-) slices, 350 bins; S0, isBest >= 0, L = 6079.2 nb^-1; s = 1 is SMASH sigma x PDG BR x V3 (M4' = 0.99615 M4).
+# errors: stat = sandwich (event groups + CB replicas + k_E2 constraint), MC = spread of 100 simulation-replica refits.
+# constrained: sigma_tot/|s| < 30 %; weak 30-50 %; degenerate: |corr(stat+MC)| > 0.8 with another scale.
+# bias test (flex_toys.C, 500 pseudo-experiments each): truth = full simulation x the fitted scales (scen 0) or x 1 (scen 1);
+# realistic fit with bootstrap-replica templates; PASS = |bias| < max(0.5 sigma_stat, 10 % truth) and 68 % coverage in 0.60-0.76.
+# attenuation-corrected = s / (1 + RF bias of scen 0): INFORMATION only (WP4: the corrected estimator under-covers).
+# goodness of fit: Pearson 1119.0, hybrid GLS 603.6, ndf 342; pseudo-data (scen 0): gof scenario 0 ndf 342 RF Pearson mean 485.9 rms 55.4 | RF hybrid GLS mean 363.4 rms 42.5 | method Pearson mean 163.3 rms 16.7
+
+scale        value   stat     MC    tot   rel  verdict          bias0[%]  cov0 test0           test1           att.corr  Part III equiv.  alt F7bj           E2 split         +E1 k_E1          degenerate with
+s_C2         0.412  0.021  0.065  0.068   17%  constrained         -20.1  0.14 FAIL            FAIL               0.515  0.382 +- 0.043   0.479 +- 0.076     0.305 +- 0.043   0.260 +- 0.037    -
+s_C3        -0.087  0.067  0.228  0.238  273%  not constrained    -162.9  0.25 FAIL            PASS                 nan  0.318 +- 0.097   -0.060 +- 0.269    0.264 +- 0.096   0.315 +- 0.046    -
+s_C4         0.335  0.158  0.155  0.221   66%  not constrained     -58.5  0.33 FAIL            FAIL               0.808  0.318 +- 0.097   0.367 +- 0.197     0.383 +- 0.115   0.339 +- 0.061    -
+s_C5         0.626  0.064  0.099  0.118   19%  constrained           1.2  0.70 PASS            FAIL(marginal)     0.619  0.503 +- 0.101   0.655 +- 0.115     0.545 +- 0.090   0.515 +- 0.109    -
+s_Geta       2.102  0.072  0.584  0.588   28%  constrained         -14.9  0.31 FAIL            FAIL               2.470  0.656 +- 0.117   1.394 +- 0.415     1.853 +- 0.210   1.926 +- 0.214    s_GC (-0.88)
+s_GD_om      0.788  0.050  0.275  0.279   35%  weak                -15.1  0.59 FAIL            FAIL               0.928  1.061 +- 0.160   1.074 +- 0.132     0.601 +- 0.134   0.634 +- 0.151    s_GC (-0.82)
+s_GD_nom     1.109  0.030  0.107  0.111   10%  constrained           3.5  0.59 FAIL(marginal)  FAIL(marginal)     1.071  1.061 +- 0.160   1.074 +- 0.132     1.208 +- 0.059   1.246 +- 0.060    s_GC (-0.85)
+s_GC         1.596  0.122  0.674  0.685   43%  weak                  5.2  0.68 PASS            FAIL(marginal)     1.517  2.074 +- 0.672   1.803 +- 0.672     1.661 +- 0.070   1.384 +- 0.043    s_Geta (-0.88), s_GD_om (-0.82), s_GD_nom (-0.85)
+k_E2         0.907  0.045  0.043  0.063    7%  constrained          -0.9  0.63 PASS            PASS                 nan  0.982 +- 0.068   0.926 +- 0.068     0.757 +- 0.082   0.830 +- 0.077    -
+
+meaning of the scales:
+  s_C2       C2 bump, eta->pi+pi-pi0, pi0 Dalitz
+  s_C3       C3 bump, pi0 -> gamma gamma, conversion
+  s_C4       C4 peak, eta->pi+pi-gamma, conversion
+  s_C5       C5 peak, direct eta->pi+pi-e+e-
+  s_Geta     G_eta other eta (pair not C2-C5)
+  s_GD_om    G_D non-eta Dalitz pair, omega/rho0 pions
+  s_GD_nom   G_D non-eta Dalitz pair, other pions
+  s_GC       G_C non-eta conversion pair
+  k_E2       k_E2 CB scale (constraint 1 +- 0.05)

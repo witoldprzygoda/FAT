@@ -1,0 +1,28 @@
+# A. smooth like-sign CB: N++ and N-- fitted with pol(ord) in [lo, hi); CB = 2 sqrt(f++ f--) per fine bin; P_main on N - CB
+#    (no CB covariance: the smooth CB carries no bin-to-bin noise; its overall error is absorbed by pol2)
+  ord 3 range 0.45-0.66: S_V   4663 +-  370   S_Nv    252 +-  324   eps 0.949 +- 0.063
+  ord 3 range 0.45-0.70: S_V   4663 +-  370   S_Nv    233 +-  324   eps 0.952 +- 0.063
+  ord 3 range 0.48-0.66: S_V   4678 +-  370   S_Nv    260 +-  324   eps 0.947 +- 0.062
+  ord 3 range 0.48-0.70: S_V   4669 +-  370   S_Nv    227 +-  324   eps 0.954 +- 0.063
+  ord 4 range 0.45-0.66: S_V   4675 +-  370   S_Nv    250 +-  324   eps 0.949 +- 0.063
+    (Nv, pol4 0.45-0.70: like-sign smooth fits chi2 94.9/95 (++), 100.5/95 (--))
+  ord 4 range 0.45-0.70: S_V   4662 +-  370   S_Nv    240 +-  324   eps 0.951 +- 0.063
+  ord 4 range 0.48-0.66: S_V   4674 +-  370   S_Nv    262 +-  324   eps 0.947 +- 0.062
+  ord 4 range 0.48-0.70: S_V   4671 +-  370   S_Nv    265 +-  324   eps 0.946 +- 0.062
+  ord 5 range 0.45-0.66: S_V   4661 +-  370   S_Nv    275 +-  324   eps 0.944 +- 0.062
+  ord 5 range 0.45-0.70: S_V   4675 +-  370   S_Nv    266 +-  324   eps 0.946 +- 0.062
+  ord 5 range 0.48-0.66: S_V   4668 +-  370   S_Nv    352 +-  324   eps 0.930 +- 0.060
+  ord 5 range 0.48-0.70: S_V   4681 +-  370   S_Nv    269 +-  324   eps 0.946 +- 0.062
+  mean over 12 smooth-CB variants: S_V 4670, S_Nv 263 (rms 30)
+
+# B. CB in 20 MeV bins (8 fine bins), linear interpolation, P_main
+  V: S = 4625 +- 380
+  Nv: S = 557 +- 365
+
+# C. N-only fits (no CB; pol2 / pol3 in 0.5225-0.61) with wider Gaussians at 0.5439: a smeared eta component?
+  sigma  5.4 MeV pol2: N only: S_V   4646 +-  370  S_Nv    165 +-  324 | N - CB: S_V   4657 +-  390  S_Nv    902 +-  401
+  sigma  5.4 MeV pol3: N only: S_V   4668 +-  476  S_Nv    393 +-  416 | N - CB: S_V   4734 +-  498  S_Nv   1147 +-  500
+  sigma  8.0 MeV pol2: N only: S_V   6527 +-  536  S_Nv     70 +-  471 | N - CB: S_V   6530 +-  567  S_Nv   1040 +-  592
+  sigma  8.0 MeV pol3: N only: S_V   7734 +-  812  S_Nv    446 +-  709 | N - CB: S_V   7845 +-  854  S_Nv   1593 +-  867
+  sigma 12.0 MeV pol2: N only: S_V  10189 +-  922  S_Nv   -150 +-  812 | N - CB: S_V  10117 +-  978  S_Nv   1258 +- 1027
+  sigma 12.0 MeV pol3: N only: S_V  15674 +- 1856  S_Nv    401 +- 1613 | N - CB: S_V  15790 +- 1954  S_Nv   2424 +- 1983

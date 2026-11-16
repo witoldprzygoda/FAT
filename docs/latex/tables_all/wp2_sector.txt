@@ -1,0 +1,544 @@
+# wp2_sector.C: sector-2 trigger deficit (days 034-044) in the pi+pi-e+e- rows; data scan_v2 compact
+# sector = (floor(phi/60) + 5) mod 6; rates = rows / L6_an [nb^-1] (wp2_lumi_perday.txt); errors = event-group variance
+# early = 034-044 (L 2449.224), late = 045-067 (L 3629.972), lateI = 045-046 (L 360.229)
+
+[phi gaps] S0 e+e- rows, all tracks, 0.5 deg bins: content around the sector boundaries k x 60 deg
+# boundary  min position within +-6 deg  content(+-1 deg)/mean content(+-10..20 deg)
+      0 deg  +0.25 deg  0.001   (sectors 4 | 5)
+     60 deg  +0.25 deg  0.001   (sectors 5 | 0)
+    120 deg  +0.25 deg  0.001   (sectors 0 | 1)
+    180 deg  +0.25 deg  0.001   (sectors 1 | 2)
+    240 deg  +0.25 deg  0.001   (sectors 2 | 3)
+    300 deg  -0.25 deg  0.001   (sectors 3 | 4)
+
+[sector use] early/late rate ratios, all M4 (N = unlike-sign rows; N-CB with the like-sign estimate)
+# sel  category            N_early   N_late   R_early   R_late   ratio_early/late (stat)   ratio/ratio(no s2)
+  S0      total                  1422633   2128893 580.8506 586.4765   0.9904 +- 0.0012   0.9695
+  S0      uses s0                 629392    937791 256.9761 258.3466   0.9947 +- 0.0018   0.9737
+  S0      uses s1                 678727    998840 277.1192 275.1647   1.0071 +- 0.0017   0.9858
+  S0      uses s2                 630010    978950 257.2284 269.6853   0.9538 +- 0.0017   0.9337
+  S0      uses s3                 667074    981178 272.3614 270.2991   1.0076 +- 0.0018   0.9864
+  S0      uses s4                 653598    981165 266.8593 270.2955   0.9873 +- 0.0017   0.9664
+  S0      uses s5                 620701    928376 253.4276 255.7530   0.9909 +- 0.0018   0.9700
+  S0      no s2 track             792623   1149943 323.6221 316.7912   1.0216 +- 0.0016   1.0000
+  S0      one s2 track            373522    572798 152.5063 157.7968   0.9665 +- 0.0022   0.9461
+  S0      >=2 s2 tracks           256488    406152 104.7222 111.8885   0.9360 +- 0.0026   0.9162
+  S0      s2: pion(s) only        377042    579709 153.9435 159.7007   0.9639 +- 0.0022   0.9436
+  S0      s2: lepton(s) only      203589    320071  83.1239  88.1745   0.9427 +- 0.0030   0.9228
+  S0      s2: pion and lepton      49379     79170  20.1611  21.8101   0.9244 +- 0.0058   0.9049
+  S0      s0 not s2               395221    573356 161.3658 157.9505   1.0216 +- 0.0023   1.0001
+  S0      s1 not s2               463863    669523 189.3918 184.4430   1.0268 +- 0.0021   1.0052
+  S0      s3 not s2               456578    657983 186.4174 181.2640   1.0284 +- 0.0022   1.0067
+  S0      s4 not s2               408880    599943 166.9427 165.2748   1.0101 +- 0.0022   0.9888
+  S0      s5 not s2               374088    543541 152.7374 149.7370   1.0200 +- 0.0023   0.9985
+  S0      A1 no s2, 1 sector        6455      9616   2.6355   2.6491   0.9949 +- 0.0162   0.9739
+  S0      A2 no s2, 2 sectors     279410    405431 114.0810 111.6899   1.0214 +- 0.0027   0.9998
+  S0      A3 no s2, 3 sectors     493677    715716 201.5647 197.1685   1.0223 +- 0.0020   1.0007
+  S0      A4 no s2, 4 sectors      13081     19180   5.3409   5.2838   1.0108 +- 0.0120   0.9895
+  S0      A34 no s2, >=3 sectors    506758    734896 206.9056 202.4523   1.0220 +- 0.0020   1.0004
+  S0      B0 s2 only                1202      2121   0.4908   0.5843   0.8399 +- 0.0306   0.8222
+  S0      B1 s2 + 1 other         132144    209447  53.9534  57.6993   0.9351 +- 0.0034   0.9153
+  S0      B2 s2 + 2 others        471274    728589 192.4177 200.7148   0.9587 +- 0.0019   0.9384
+  S0      B3 s2 + 3 others         25390     38793  10.3666  10.6869   0.9700 +- 0.0083   0.9496
+  S0      Imm >=3 non-2 sectors    532148    773689 217.2721 213.1391   1.0194 +- 0.0020   0.9979
+  S0      NImm <3 non-2 sectors    890485   1355204 363.5785 373.3374   0.9739 +- 0.0015   0.9533
+  pre     total                  1773730   2649608 724.2009 729.9253   0.9922 +- 0.0011   0.9699
+  pre     uses s0                 781566   1164221 319.1076 320.7245   0.9950 +- 0.0016   0.9726
+  pre     uses s1                 844548   1239594 344.8227 341.4886   1.0098 +- 0.0016   0.9871
+  pre     uses s2                 789029   1223002 322.1547 336.9178   0.9562 +- 0.0016   0.9347
+  pre     uses s3                 833521   1221908 340.3205 336.6164   1.0110 +- 0.0016   0.9883
+  pre     uses s4                 815471   1221755 332.9508 336.5743   0.9892 +- 0.0016   0.9670
+  pre     uses s5                 774344   1159413 316.1590 319.4000   0.9899 +- 0.0016   0.9676
+  pre     no s2 track             984701   1426606 402.0462 393.0075   1.0230 +- 0.0015   1.0000
+  pre     one s2 track            469896    717244 191.8551 197.5894   0.9710 +- 0.0020   0.9491
+  pre     >=2 s2 tracks           319133    505758 130.2997 139.3284   0.9352 +- 0.0024   0.9142
+  pre     s2: pion(s) only        470558    719103 192.1254 198.1015   0.9698 +- 0.0020   0.9480
+  pre     s2: lepton(s) only      254026    400858 103.7169 110.4301   0.9392 +- 0.0027   0.9181
+  pre     s2: pion and lepton      64445    103041  26.3124  28.3862   0.9269 +- 0.0052   0.9061
+  pre     s0 not s2               489966    710957 200.0495 195.8575   1.0214 +- 0.0021   0.9984
+  pre     s1 not s2               573051    825255 233.9725 227.3448   1.0292 +- 0.0020   1.0060
+  pre     s3 not s2               566029    812909 231.1055 223.9436   1.0320 +- 0.0020   1.0088
+  pre     s4 not s2               509450    746007 208.0047 205.5132   1.0121 +- 0.0020   0.9894
+  pre     s5 not s2               467194    679784 190.7519 187.2698   1.0186 +- 0.0021   0.9957
+  pre     A1 no s2, 1 sector        8675     12798   3.5419   3.5256   1.0046 +- 0.0142   0.9820
+  pre     A2 no s2, 2 sectors     349773    506586 142.8097 139.5565   1.0233 +- 0.0024   1.0003
+  pre     A3 no s2, 3 sectors     607543    879946 248.0553 242.4113   1.0233 +- 0.0019   1.0003
+  pre     A4 no s2, 4 sectors      18710     27276   7.6392   7.5141   1.0166 +- 0.0103   0.9938
+  pre     A34 no s2, >=3 sectors    626253    907222 255.6945 249.9254   1.0231 +- 0.0018   1.0001
+  pre     B0 s2 only                1697      2856   0.6929   0.7868   0.8806 +- 0.0274   0.8608
+  pre     B1 s2 + 1 other         167377    263953  68.3388  72.7149   0.9398 +- 0.0031   0.9187
+  pre     B2 s2 + 2 others        583482    900553 238.2314 248.0882   0.9603 +- 0.0017   0.9387
+  pre     B3 s2 + 3 others         36473     55640  14.8917  15.3279   0.9715 +- 0.0070   0.9497
+  pre     Imm >=3 non-2 sectors    662726    962862 270.5861 265.2533   1.0201 +- 0.0018   0.9972
+  pre     NImm <3 non-2 sectors   1111004   1686746 453.6148 464.6720   0.9762 +- 0.0013   0.9543
+  none    total                  1909909   2843720 779.8018 783.4001   0.9954 +- 0.0011   0.9670
+  none    uses s0                 846654   1254916 345.6826 345.7096   0.9999 +- 0.0016   0.9713
+  none    uses s1                 911671   1335060 372.2286 367.7880   1.0121 +- 0.0016   0.9831
+  none    uses s2                 847540   1314193 346.0443 362.0395   0.9558 +- 0.0015   0.9285
+  none    uses s3                 894187   1309686 365.0900 360.7979   1.0119 +- 0.0016   0.9830
+  none    uses s4                 877125   1308028 358.1237 360.3411   0.9938 +- 0.0016   0.9654
+  none    uses s5                 836016   1243344 341.3392 342.5217   0.9965 +- 0.0016   0.9681
+  none    no s2 track            1062369   1529527 433.7574 421.3606   1.0294 +- 0.0015   1.0000
+  none    one s2 track            506996    773356 207.0027 213.0474   0.9716 +- 0.0019   0.9439
+  none    >=2 s2 tracks           340544    540837 139.0416 148.9921   0.9332 +- 0.0023   0.9065
+  none    s2: pion(s) only        503547    769182 205.5945 211.8975   0.9703 +- 0.0019   0.9425
+  none    s2: lepton(s) only      273212    431240 111.5504 118.7998   0.9390 +- 0.0026   0.9121
+  none    s2: pion and lepton      70781    113771  28.8994  31.3421   0.9221 +- 0.0049   0.8957
+  none    s0 not s2               531903    766467 217.1721 211.1496   1.0285 +- 0.0020   0.9991
+  none    s1 not s2               617054    884483 251.9386 243.6611   1.0340 +- 0.0019   1.0044
+  none    s3 not s2               606088    867310 247.4613 238.9302   1.0357 +- 0.0019   1.0061
+  none    s4 not s2               549494    798596 224.3544 220.0006   1.0198 +- 0.0020   0.9906
+  none    s5 not s2               506364    730122 206.7447 201.1371   1.0279 +- 0.0021   0.9985
+  none    A1 no s2, 1 sector        9939     14396   4.0580   3.9659   1.0232 +- 0.0136   0.9940
+  none    A2 no s2, 2 sectors     378966    545359 154.7290 150.2378   1.0299 +- 0.0023   1.0005
+  none    A3 no s2, 3 sectors     650824    937224 265.7266 258.1904   1.0292 +- 0.0018   0.9998
+  none    A4 no s2, 4 sectors      22640     32548   9.2437   8.9665   1.0309 +- 0.0096   1.0015
+  none    A34 no s2, >=3 sectors    673464    969772 274.9704 267.1569   1.0292 +- 0.0018   0.9998
+  none    B0 s2 only                1893      3232   0.7729   0.8904   0.8681 +- 0.0256   0.8433
+  none    B1 s2 + 1 other         180152    284376  73.5547  78.3411   0.9389 +- 0.0030   0.9121
+  none    B2 s2 + 2 others        621887    960075 253.9119 264.4855   0.9600 +- 0.0017   0.9326
+  none    B3 s2 + 3 others         43608     66510  17.8048  18.3225   0.9717 +- 0.0065   0.9440
+  none    Imm >=3 non-2 sectors    717072   1036282 292.7752 285.4794   1.0256 +- 0.0017   0.9962
+  none    NImm <3 non-2 sectors   1192837   1807438 487.0266 497.9207   0.9781 +- 0.0013   0.9502
+  S0_best total                  1237069   1847318 505.0862 508.9070   0.9925 +- 0.0012   0.9691
+  S0_best uses s0                 547498    814021 223.5394 224.2500   0.9968 +- 0.0017   0.9734
+  S0_best uses s1                 590727    867173 241.1895 238.8925   1.0096 +- 0.0017   0.9859
+  S0_best uses s2                 548445    850720 223.9261 234.3600   0.9555 +- 0.0017   0.9330
+  S0_best uses s3                 580473    850441 237.0029 234.2831   1.0116 +- 0.0017   0.9878
+  S0_best uses s4                 568191    852162 231.9882 234.7572   0.9882 +- 0.0017   0.9650
+  S0_best uses s5                 540844    807424 220.8226 222.4326   0.9928 +- 0.0017   0.9694
+  S0_best no s2 track             688624    996598 281.1601 274.5471   1.0241 +- 0.0016   1.0000
+  S0_best one s2 track            325270    497565 132.8053 137.0713   0.9689 +- 0.0022   0.9461
+  S0_best >=2 s2 tracks           223175    353155  91.1207  97.2886   0.9366 +- 0.0025   0.9146
+  S0_best s2: pion(s) only        329020    504680 134.3364 139.0314   0.9662 +- 0.0022   0.9435
+  S0_best s2: lepton(s) only      177341    278225  72.4070  76.6466   0.9447 +- 0.0029   0.9225
+  S0_best s2: pion and lepton      42084     67815  17.1826  18.6820   0.9197 +- 0.0057   0.8981
+  S0_best s0 not s2               343516    497037 140.2551 136.9259   1.0243 +- 0.0023   1.0002
+  S0_best s1 not s2               403755    581472 164.8502 160.1864   1.0291 +- 0.0021   1.0049
+  S0_best s3 not s2               397460    570525 162.2800 157.1707   1.0325 +- 0.0021   1.0082
+  S0_best s4 not s2               355039    520218 144.9598 143.3119   1.0115 +- 0.0022   0.9877
+  S0_best s5 not s2               325648    472288 132.9597 130.1079   1.0219 +- 0.0023   0.9979
+  S0_best A1 no s2, 1 sector        5256      7819   2.1460   2.1540   0.9963 +- 0.0178   0.9728
+  S0_best A2 no s2, 2 sectors     240826    348707  98.3275  96.0633   1.0236 +- 0.0027   0.9995
+  S0_best A3 no s2, 3 sectors     431658    623981 176.2428 171.8969   1.0253 +- 0.0020   1.0012
+  S0_best A4 no s2, 4 sectors      10884     16091   4.4439   4.4328   1.0025 +- 0.0124   0.9789
+  S0_best A34 no s2, >=3 sectors    442542    640072 180.6866 176.3298   1.0247 +- 0.0020   1.0006
+  S0_best B0 s2 only                 995      1730   0.4063   0.4766   0.8524 +- 0.0339   0.8324
+  S0_best B1 s2 + 1 other         113856    180718  46.4866  49.7850   0.9337 +- 0.0035   0.9118
+  S0_best B2 s2 + 2 others        412323    635853 168.3484 175.1675   0.9611 +- 0.0019   0.9385
+  S0_best B3 s2 + 3 others         21271     32419   8.6848   8.9309   0.9724 +- 0.0086   0.9496
+  S0_best Imm >=3 non-2 sectors    463813    672491 189.3714 185.2607   1.0222 +- 0.0020   0.9981
+  S0_best NImm <3 non-2 sectors    773256   1174827 315.7147 323.6463   0.9755 +- 0.0014   0.9525
+
+[eps] efficiency of rows with a sector-2 track in days 034-044
+# eps_single = R_2(early)/R_2(late); eps_double = eps_single / [R_no2(early)/R_no2(late)]
+# sel     window              quantity  late-ref  eps_single (stat)    ref ratio no-s2 (stat)   eps_double (stat)   f_2(late) = share with s2
+  S0      all M4             N        045-067  0.9538 +- 0.0017     1.0216 +- 0.0016     0.9337 +- 0.0022    0.4598
+  S0      all M4             N        045-046  0.9369 +- 0.0035     0.9655 +- 0.0033     0.9704 +- 0.0049    0.4503
+  S0      all M4             N        047-053  0.9143 +- 0.0020     0.9835 +- 0.0020     0.9297 +- 0.0028    0.4609
+  S0      all M4             N        059-067  0.9915 +- 0.0021     1.0668 +- 0.0021     0.9294 +- 0.0027    0.4610
+  S0      all M4             N-CB     045-067  0.9524 +- 0.0018     1.0200 +- 0.0018     0.9337 +- 0.0024    0.4570
+  S0      B 0.455-0.5225     N        045-067  0.9510 +- 0.0096     1.0192 +- 0.0081     0.9331 +- 0.0120    0.3970
+  S0      B 0.455-0.5225     N-CB     045-067  0.9523 +- 0.0107     1.0154 +- 0.0089     0.9379 +- 0.0134    0.3934
+  S0      P 0.5336-0.5542    N        045-067  0.9627 +- 0.0129     1.0267 +- 0.0117     0.9376 +- 0.0165    0.4314
+  S0      P 0.5336-0.5542    N-CB     045-067  0.9579 +- 0.0144     1.0203 +- 0.0128     0.9388 +- 0.0184    0.4280
+  S0      CR-U 0.565-0.70    N        045-067  0.9563 +- 0.0036     1.0163 +- 0.0035     0.9410 +- 0.0048    0.4557
+  S0      CR-U 0.565-0.70    N-CB     045-067  0.9558 +- 0.0040     1.0128 +- 0.0037     0.9437 +- 0.0052    0.4520
+  S0      M4 < 0.455         N        045-067  0.8883 +- 0.0169     1.0234 +- 0.0136     0.8680 +- 0.0201    0.3472
+  S0      M4 < 0.455         N-CB     045-067  0.8975 +- 0.0189     1.0197 +- 0.0148     0.8801 +- 0.0225    0.3437
+  S0      M4 >= 0.70         N        045-067  0.9535 +- 0.0019     1.0223 +- 0.0019     0.9327 +- 0.0026    0.4665
+  S0      M4 >= 0.70         N-CB     045-067  0.9517 +- 0.0021     1.0217 +- 0.0020     0.9315 +- 0.0027    0.4639
+  pre     all M4             N        045-067  0.9562 +- 0.0016     1.0230 +- 0.0015     0.9347 +- 0.0021    0.4616
+  pre     all M4             N        045-046  0.9297 +- 0.0032     0.9582 +- 0.0030     0.9703 +- 0.0045    0.4523
+  pre     all M4             N        047-053  0.8992 +- 0.0018     0.9685 +- 0.0018     0.9284 +- 0.0025    0.4633
+  pre     all M4             N        059-067  1.0131 +- 0.0020     1.0863 +- 0.0019     0.9326 +- 0.0025    0.4621
+  pre     all M4             N-CB     045-067  0.9539 +- 0.0018     1.0215 +- 0.0017     0.9338 +- 0.0023    0.4572
+  pre     B 0.455-0.5225     N        045-067  0.9513 +- 0.0082     1.0193 +- 0.0071     0.9333 +- 0.0103    0.4046
+  pre     B 0.455-0.5225     N-CB     045-067  0.9492 +- 0.0100     1.0133 +- 0.0082     0.9367 +- 0.0125    0.3978
+  pre     P 0.5336-0.5542    N        045-067  0.9670 +- 0.0110     1.0241 +- 0.0100     0.9442 +- 0.0142    0.4367
+  pre     P 0.5336-0.5542    N-CB     045-067  0.9575 +- 0.0133     1.0146 +- 0.0117     0.9437 +- 0.0170    0.4307
+  pre     CR-U 0.565-0.70    N        045-067  0.9596 +- 0.0032     1.0192 +- 0.0031     0.9416 +- 0.0042    0.4588
+  pre     CR-U 0.565-0.70    N-CB     045-067  0.9598 +- 0.0037     1.0171 +- 0.0035     0.9436 +- 0.0049    0.4528
+  pre     M4 < 0.455         N        045-067  0.9077 +- 0.0147     1.0316 +- 0.0118     0.8799 +- 0.0175    0.3509
+  pre     M4 < 0.455         N-CB     045-067  0.9160 +- 0.0180     1.0356 +- 0.0140     0.8846 +- 0.0211    0.3464
+  pre     M4 >= 0.70         N        045-067  0.9555 +- 0.0018     1.0234 +- 0.0017     0.9336 +- 0.0024    0.4682
+  pre     M4 >= 0.70         N-CB     045-067  0.9527 +- 0.0020     1.0225 +- 0.0019     0.9318 +- 0.0026    0.4642
+  none    all M4             N        045-067  0.9558 +- 0.0015     1.0294 +- 0.0015     0.9285 +- 0.0020    0.4621
+  none    all M4             N        045-046  0.9237 +- 0.0031     0.9565 +- 0.0029     0.9657 +- 0.0043    0.4524
+  none    all M4             N        047-053  0.8855 +- 0.0017     0.9611 +- 0.0017     0.9213 +- 0.0024    0.4641
+  none    all M4             N        059-067  1.0280 +- 0.0019     1.1090 +- 0.0019     0.9269 +- 0.0024    0.4626
+  none    all M4             N-CB     045-067  0.9538 +- 0.0018     1.0273 +- 0.0017     0.9285 +- 0.0023    0.4565
+  none    B 0.455-0.5225     N        045-067  0.9432 +- 0.0077     1.0341 +- 0.0068     0.9121 +- 0.0096    0.4064
+  none    B 0.455-0.5225     N-CB     045-067  0.9409 +- 0.0101     1.0293 +- 0.0083     0.9141 +- 0.0123    0.3978
+  none    P 0.5336-0.5542    N        045-067  0.9609 +- 0.0104     1.0343 +- 0.0096     0.9290 +- 0.0133    0.4371
+  none    P 0.5336-0.5542    N-CB     045-067  0.9565 +- 0.0134     1.0227 +- 0.0117     0.9353 +- 0.0169    0.4284
+  none    CR-U 0.565-0.70    N        045-067  0.9568 +- 0.0031     1.0268 +- 0.0030     0.9318 +- 0.0040    0.4595
+  none    CR-U 0.565-0.70    N-CB     045-067  0.9569 +- 0.0038     1.0244 +- 0.0035     0.9341 +- 0.0049    0.4523
+  none    M4 < 0.455         N        045-067  0.8993 +- 0.0138     1.0407 +- 0.0112     0.8642 +- 0.0162    0.3522
+  none    M4 < 0.455         N-CB     045-067  0.9088 +- 0.0179     1.0400 +- 0.0139     0.8738 +- 0.0209    0.3456
+  none    M4 >= 0.70         N        045-067  0.9566 +- 0.0017     1.0287 +- 0.0017     0.9299 +- 0.0023    0.4689
+  none    M4 >= 0.70         N-CB     045-067  0.9537 +- 0.0020     1.0271 +- 0.0019     0.9286 +- 0.0026    0.4638
+  S0_best all M4             N        045-067  0.9555 +- 0.0017     1.0241 +- 0.0016     0.9330 +- 0.0022    0.4605
+  S0_best all M4             N        045-046  0.9398 +- 0.0034     0.9693 +- 0.0032     0.9695 +- 0.0048    0.4510
+  S0_best all M4             N        047-053  0.9172 +- 0.0020     0.9880 +- 0.0019     0.9284 +- 0.0027    0.4618
+  S0_best all M4             N        059-067  0.9918 +- 0.0020     1.0672 +- 0.0020     0.9294 +- 0.0026    0.4615
+  S0_best all M4             N-CB     045-067  0.9544 +- 0.0018     1.0228 +- 0.0017     0.9331 +- 0.0023    0.4576
+  S0_best B 0.455-0.5225     N        045-067  0.9549 +- 0.0103     1.0129 +- 0.0087     0.9427 +- 0.0130    0.3960
+  S0_best B 0.455-0.5225     N-CB     045-067  0.9597 +- 0.0116     1.0093 +- 0.0095     0.9509 +- 0.0146    0.3921
+  S0_best P 0.5336-0.5542    N        045-067  0.9594 +- 0.0140     1.0254 +- 0.0127     0.9356 +- 0.0179    0.4307
+  S0_best P 0.5336-0.5542    N-CB     045-067  0.9551 +- 0.0156     1.0189 +- 0.0139     0.9374 +- 0.0200    0.4269
+  S0_best CR-U 0.565-0.70    N        045-067  0.9603 +- 0.0038     1.0217 +- 0.0036     0.9399 +- 0.0049    0.4561
+  S0_best CR-U 0.565-0.70    N-CB     045-067  0.9603 +- 0.0041     1.0191 +- 0.0039     0.9423 +- 0.0054    0.4524
+  S0_best M4 < 0.455         N        045-067  0.8912 +- 0.0184     1.0116 +- 0.0147     0.8810 +- 0.0222    0.3474
+  S0_best M4 < 0.455         N-CB     045-067  0.8993 +- 0.0206     1.0080 +- 0.0159     0.8922 +- 0.0248    0.3441
+  S0_best M4 >= 0.70         N        045-067  0.9544 +- 0.0019     1.0248 +- 0.0019     0.9313 +- 0.0025    0.4670
+  S0_best M4 >= 0.70         N-CB     045-067  0.9529 +- 0.0021     1.0243 +- 0.0020     0.9303 +- 0.0027    0.4644
+
+[eps by kind] S0, all M4, N: eps_double for rows by the kind of their sector-2 track(s)
+  one s2 track           N_early   373522  eps_double 0.9461 +- 0.0026   share of s2 rows (late) 0.5851
+  >=2 s2 tracks          N_early   256488  eps_double 0.9162 +- 0.0030   share of s2 rows (late) 0.4149
+  s2: pion(s) only       N_early   377042  eps_double 0.9436 +- 0.0026   share of s2 rows (late) 0.5922
+  s2: lepton(s) only     N_early   203589  eps_double 0.9228 +- 0.0033   share of s2 rows (late) 0.3270
+  s2: pion and lepton    N_early    49379  eps_double 0.9049 +- 0.0058   share of s2 rows (late) 0.0809
+
+[trigger model] eps_c = (n_c/n_ref)(early)/(n_c/n_ref)(late), early 034-045 and 034-044, late 046-067 / 047-067, reference A34
+# (no sector-2 track, >= 3 distinct sectors); share = n_c/n_tot in the late days; also the reference rate ratio per nb^-1
+  S0      all M4           N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0285 +- 0.0020
+      A1 no s2, 1 sector       share(late) 0.0045   eps 0.9710 +- 0.0157
+      A2 no s2, 2 sectors      share(late) 0.1901   eps 0.9984 +- 0.0032
+      A3 no s2, 3 sectors      share(late) 0.3354   eps 1.0001 +- 0.0028
+      A4 no s2, 4 sectors      share(late) 0.0090   eps 0.9967 +- 0.0119
+      B0 s2 only               share(late) 0.0010   eps 0.8252 +- 0.0297
+      B1 s2 + 1 other          share(late) 0.0988   eps 0.9063 +- 0.0037
+      B2 s2 + 2 others         share(late) 0.3430   eps 0.9318 +- 0.0026
+      B3 s2 + 3 others         share(late) 0.0183   eps 0.9436 +- 0.0082
+      Imm >=3 non-2 sectors    share(late) 0.3626   eps 0.9972 +- 0.0027
+      NImm <3 non-2 sectors    share(late) 0.6374   eps 0.9478 +- 0.0023
+      uses s2                  share(late) 0.4611   eps 0.9266 +- 0.0024
+      one s2 track             share(late) 0.2694   eps 0.9407 +- 0.0028
+      >=2 s2 tracks            share(late) 0.1916   eps 0.9067 +- 0.0031
+  S0      all M4           N    034-044 vs 047-067: reference A34 rate ratio early/late 1.0288 +- 0.0021
+      A1 no s2, 1 sector       share(late) 0.0045   eps 0.9723 +- 0.0163
+      A2 no s2, 2 sectors      share(late) 0.1901   eps 0.9990 +- 0.0033
+      A3 no s2, 3 sectors      share(late) 0.3355   eps 1.0001 +- 0.0029
+      A4 no s2, 4 sectors      share(late) 0.0089   eps 0.9966 +- 0.0123
+      B0 s2 only               share(late) 0.0010   eps 0.8275 +- 0.0309
+      B1 s2 + 1 other          share(late) 0.0987   eps 0.9103 +- 0.0039
+      B2 s2 + 2 others         share(late) 0.3430   eps 0.9338 +- 0.0027
+      B3 s2 + 3 others         share(late) 0.0182   eps 0.9458 +- 0.0085
+      Imm >=3 non-2 sectors    share(late) 0.3627   eps 0.9973 +- 0.0028
+      NImm <3 non-2 sectors    share(late) 0.6373   eps 0.9497 +- 0.0024
+      uses s2                  share(late) 0.4609   eps 0.9290 +- 0.0025
+      one s2 track             share(late) 0.2695   eps 0.9420 +- 0.0029
+      >=2 s2 tracks            share(late) 0.1914   eps 0.9107 +- 0.0032
+  S0      all M4           N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0267 +- 0.0022
+      A1 no s2, 1 sector       share(late) 0.0046   eps 0.9717 +- 0.0163
+      A2 no s2, 2 sectors      share(late) 0.1939   eps 0.9986 +- 0.0034
+      A3 no s2, 3 sectors      share(late) 0.3378   eps 1.0003 +- 0.0030
+      A4 no s2, 4 sectors      share(late) 0.0055   eps 0.9794 +- 0.0243
+      B0 s2 only               share(late) 0.0010   eps 0.8280 +- 0.0312
+      B1 s2 + 1 other          share(late) 0.1008   eps 0.9069 +- 0.0039
+      B2 s2 + 2 others         share(late) 0.3453   eps 0.9328 +- 0.0028
+      B3 s2 + 3 others         share(late) 0.0111   eps 0.9288 +- 0.0168
+      Imm >=3 non-2 sectors    share(late) 0.3544   eps 0.9978 +- 0.0030
+      NImm <3 non-2 sectors    share(late) 0.6456   eps 0.9486 +- 0.0025
+      uses s2                  share(late) 0.4582   eps 0.9268 +- 0.0026
+      one s2 track             share(late) 0.2643   eps 0.9406 +- 0.0030
+      >=2 s2 tracks            share(late) 0.1939   eps 0.9079 +- 0.0033
+  S0      B 0.455-0.5225   N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0223 +- 0.0181
+      A1 no s2, 1 sector       share(late) 0.0465   eps 0.9817 +- 0.0326
+      A2 no s2, 2 sectors      share(late) 0.4361   eps 1.0063 +- 0.0201
+      A3 no s2, 3 sectors      share(late) 0.1166   eps 0.9965 +- 0.0251
+      A4 no s2, 4 sectors      share(late) 0.0022   eps 1.1881 +- 0.1502
+      B0 s2 only               share(late) 0.0105   eps 0.8084 +- 0.0529
+      B1 s2 + 1 other          share(late) 0.2499   eps 0.9217 +- 0.0200
+      B2 s2 + 2 others         share(late) 0.1338   eps 0.9412 +- 0.0232
+      B3 s2 + 3 others         share(late) 0.0044   eps 1.0251 +- 0.0953
+      Imm >=3 non-2 sectors    share(late) 0.1232   eps 1.0009 +- 0.0249
+      NImm <3 non-2 sectors    share(late) 0.8768   eps 0.9686 +- 0.0183
+      uses s2                  share(late) 0.3986   eps 0.9264 +- 0.0188
+      one s2 track             share(late) 0.1764   eps 0.9615 +- 0.0222
+      >=2 s2 tracks            share(late) 0.2222   eps 0.8985 +- 0.0200
+  S0      B 0.455-0.5225   N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0026 +- 0.0221
+      A1 no s2, 1 sector       share(late) 0.0485   eps 0.9945 +- 0.0362
+      A2 no s2, 2 sectors      share(late) 0.4458   eps 1.0246 +- 0.0247
+      A3 no s2, 3 sectors      share(late) 0.1111   eps 0.9921 +- 0.0308
+      A4 no s2, 4 sectors      share(late) 0.0004   eps 3.2237 +- 2.4344
+      B0 s2 only               share(late) 0.0109   eps 0.8293 +- 0.0571
+      B1 s2 + 1 other          share(late) 0.2554   eps 0.9405 +- 0.0242
+      B2 s2 + 2 others         share(late) 0.1274   eps 0.9666 +- 0.0290
+      B3 s2 + 3 others         share(late) 0.0016   eps 0.8871 +- 0.4037
+      Imm >=3 non-2 sectors    share(late) 0.1130   eps 0.9986 +- 0.0315
+      NImm <3 non-2 sectors    share(late) 0.8874   eps 0.9880 +- 0.0229
+      uses s2                  share(late) 0.3948   eps 0.9459 +- 0.0234
+      one s2 track             share(late) 0.1717   eps 0.9796 +- 0.0273
+      >=2 s2 tracks            share(late) 0.2232   eps 0.9198 +- 0.0243
+  S0      P 0.5336-0.5542  N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0253 +- 0.0189
+      A1 no s2, 1 sector       share(late) 0.0154   eps 0.8517 +- 0.0631
+      A2 no s2, 2 sectors      share(late) 0.3370   eps 1.0253 +- 0.0241
+      A3 no s2, 3 sectors      share(late) 0.2091   eps 1.0008 +- 0.0263
+      A4 no s2, 4 sectors      share(late) 0.0056   eps 0.9715 +- 0.1126
+      B0 s2 only               share(late) 0.0030   eps 0.9356 +- 0.1490
+      B1 s2 + 1 other          share(late) 0.1893   eps 0.9322 +- 0.0254
+      B2 s2 + 2 others         share(late) 0.2294   eps 0.9424 +- 0.0244
+      B3 s2 + 3 others         share(late) 0.0112   eps 0.9878 +- 0.0819
+      Imm >=3 non-2 sectors    share(late) 0.2259   eps 0.9994 +- 0.0258
+      NImm <3 non-2 sectors    share(late) 0.7741   eps 0.9742 +- 0.0204
+      uses s2                  share(late) 0.4329   eps 0.9391 +- 0.0213
+      one s2 track             share(late) 0.2204   eps 0.9626 +- 0.0251
+      >=2 s2 tracks            share(late) 0.2125   eps 0.9147 +- 0.0243
+  S0      P 0.5336-0.5542  N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0118 +- 0.0219
+      A1 no s2, 1 sector       share(late) 0.0160   eps 0.8639 +- 0.0668
+      A2 no s2, 2 sectors      share(late) 0.3469   eps 1.0331 +- 0.0274
+      A3 no s2, 3 sectors      share(late) 0.2050   eps 1.0030 +- 0.0306
+      A4 no s2, 4 sectors      share(late) 0.0030   eps 0.7900 +- 0.2799
+      B0 s2 only               share(late) 0.0031   eps 0.9370 +- 0.1580
+      B1 s2 + 1 other          share(late) 0.1941   eps 0.9469 +- 0.0286
+      B2 s2 + 2 others         share(late) 0.2255   eps 0.9484 +- 0.0284
+      B3 s2 + 3 others         share(late) 0.0068   eps 0.8242 +- 0.1733
+      Imm >=3 non-2 sectors    share(late) 0.2148   eps 0.9947 +- 0.0306
+      NImm <3 non-2 sectors    share(late) 0.7853   eps 0.9837 +- 0.0237
+      uses s2                  share(late) 0.4293   eps 0.9459 +- 0.0248
+      one s2 track             share(late) 0.2147   eps 0.9644 +- 0.0293
+      >=2 s2 tracks            share(late) 0.2147   eps 0.9272 +- 0.0277
+  pre     all M4           N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0290 +- 0.0018
+      A1 no s2, 1 sector       share(late) 0.0048   eps 0.9811 +- 0.0138
+      A2 no s2, 2 sectors      share(late) 0.1908   eps 0.9995 +- 0.0029
+      A3 no s2, 3 sectors      share(late) 0.3313   eps 1.0001 +- 0.0025
+      A4 no s2, 4 sectors      share(late) 0.0103   eps 0.9973 +- 0.0102
+      B0 s2 only               share(late) 0.0011   eps 0.8649 +- 0.0266
+      B1 s2 + 1 other          share(late) 0.1000   eps 0.9103 +- 0.0034
+      B2 s2 + 2 others         share(late) 0.3407   eps 0.9321 +- 0.0024
+      B3 s2 + 3 others         share(late) 0.0210   eps 0.9444 +- 0.0070
+      Imm >=3 non-2 sectors    share(late) 0.3626   eps 0.9968 +- 0.0025
+      NImm <3 non-2 sectors    share(late) 0.6374   eps 0.9491 +- 0.0021
+      uses s2                  share(late) 0.4628   eps 0.9278 +- 0.0022
+      one s2 track             share(late) 0.2711   eps 0.9442 +- 0.0025
+      >=2 s2 tracks            share(late) 0.1918   eps 0.9046 +- 0.0028
+  pre     all M4           N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0273 +- 0.0021
+      A1 no s2, 1 sector       share(late) 0.0050   eps 0.9794 +- 0.0148
+      A2 no s2, 2 sectors      share(late) 0.1966   eps 0.9995 +- 0.0032
+      A3 no s2, 3 sectors      share(late) 0.3351   eps 1.0002 +- 0.0028
+      A4 no s2, 4 sectors      share(late) 0.0050   eps 0.9878 +- 0.0284
+      B0 s2 only               share(late) 0.0011   eps 0.8708 +- 0.0288
+      B1 s2 + 1 other          share(late) 0.1030   eps 0.9104 +- 0.0037
+      B2 s2 + 2 others         share(late) 0.3442   eps 0.9322 +- 0.0026
+      B3 s2 + 3 others         share(late) 0.0100   eps 0.9319 +- 0.0196
+      Imm >=3 non-2 sectors    share(late) 0.3501   eps 0.9980 +- 0.0029
+      NImm <3 non-2 sectors    share(late) 0.6499   eps 0.9493 +- 0.0024
+      uses s2                  share(late) 0.4584   eps 0.9271 +- 0.0025
+      one s2 track             share(late) 0.2632   eps 0.9440 +- 0.0029
+      >=2 s2 tracks            share(late) 0.1952   eps 0.9045 +- 0.0031
+  pre     B 0.455-0.5225   N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0162 +- 0.0147
+      A1 no s2, 1 sector       share(late) 0.0441   eps 0.9915 +- 0.0283
+      A2 no s2, 2 sectors      share(late) 0.4167   eps 1.0120 +- 0.0168
+      A3 no s2, 3 sectors      share(late) 0.1297   eps 0.9993 +- 0.0205
+      A4 no s2, 4 sectors      share(late) 0.0036   eps 1.0265 +- 0.0901
+      B0 s2 only               share(late) 0.0101   eps 0.8403 +- 0.0472
+      B1 s2 + 1 other          share(late) 0.2426   eps 0.9272 +- 0.0168
+      B2 s2 + 2 others         share(late) 0.1461   eps 0.9470 +- 0.0190
+      B3 s2 + 3 others         share(late) 0.0072   eps 0.9597 +- 0.0619
+      Imm >=3 non-2 sectors    share(late) 0.1404   eps 0.9979 +- 0.0201
+      NImm <3 non-2 sectors    share(late) 0.8596   eps 0.9740 +- 0.0151
+      uses s2                  share(late) 0.4059   eps 0.9327 +- 0.0156
+      one s2 track             share(late) 0.1843   eps 0.9727 +- 0.0185
+      >=2 s2 tracks            share(late) 0.2216   eps 0.8995 +- 0.0166
+  pre     B 0.455-0.5225   N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 0.9964 +- 0.0207
+      A1 no s2, 1 sector       share(late) 0.0473   eps 1.0022 +- 0.0335
+      A2 no s2, 2 sectors      share(late) 0.4349   eps 1.0290 +- 0.0233
+      A3 no s2, 3 sectors      share(late) 0.1191   eps 0.9954 +- 0.0290
+      A4 no s2, 4 sectors      share(late) 0.0005   eps 2.2876 +- 1.7098
+      B0 s2 only               share(late) 0.0108   eps 0.8543 +- 0.0524
+      B1 s2 + 1 other          share(late) 0.2531   eps 0.9472 +- 0.0228
+      B2 s2 + 2 others         share(late) 0.1344   eps 0.9670 +- 0.0273
+      B3 s2 + 3 others         share(late) 0.0014   eps 0.5035 +- 0.4771
+      Imm >=3 non-2 sectors    share(late) 0.1209   eps 0.9936 +- 0.0299
+      NImm <3 non-2 sectors    share(late) 0.8799   eps 0.9921 +- 0.0217
+      uses s2                  share(late) 0.3989   eps 0.9496 +- 0.0221
+      one s2 track             share(late) 0.1752   eps 0.9915 +- 0.0261
+      >=2 s2 tracks            share(late) 0.2239   eps 0.9177 +- 0.0228
+  pre     P 0.5336-0.5542  N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0239 +- 0.0158
+      A1 no s2, 1 sector       share(late) 0.0145   eps 0.9043 +- 0.0575
+      A2 no s2, 2 sectors      share(late) 0.3229   eps 1.0189 +- 0.0204
+      A3 no s2, 3 sectors      share(late) 0.2160   eps 1.0034 +- 0.0221
+      A4 no s2, 4 sectors      share(late) 0.0082   eps 0.9100 +- 0.0767
+      B0 s2 only               share(late) 0.0030   eps 0.9185 +- 0.1248
+      B1 s2 + 1 other          share(late) 0.1812   eps 0.9399 +- 0.0218
+      B2 s2 + 2 others         share(late) 0.2394   eps 0.9336 +- 0.0202
+      B3 s2 + 3 others         share(late) 0.0148   eps 1.0508 +- 0.0641
+      Imm >=3 non-2 sectors    share(late) 0.2390   eps 1.0032 +- 0.0215
+      NImm <3 non-2 sectors    share(late) 0.7610   eps 0.9707 +- 0.0171
+      uses s2                  share(late) 0.4384   eps 0.9401 +- 0.0179
+      one s2 track             share(late) 0.2284   eps 0.9595 +- 0.0209
+      >=2 s2 tracks            share(late) 0.2100   eps 0.9190 +- 0.0206
+  pre     P 0.5336-0.5542  N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0118 +- 0.0204
+      A1 no s2, 1 sector       share(late) 0.0156   eps 0.9051 +- 0.0620
+      A2 no s2, 2 sectors      share(late) 0.3402   eps 1.0224 +- 0.0250
+      A3 no s2, 3 sectors      share(late) 0.2091   eps 1.0053 +- 0.0283
+      A4 no s2, 4 sectors      share(late) 0.0031   eps 0.6230 +- 0.2871
+      B0 s2 only               share(late) 0.0031   eps 0.9510 +- 0.1392
+      B1 s2 + 1 other          share(late) 0.1906   eps 0.9501 +- 0.0263
+      B2 s2 + 2 others         share(late) 0.2334   eps 0.9369 +- 0.0258
+      B3 s2 + 3 others         share(late) 0.0052   eps 1.0107 +- 0.2791
+      Imm >=3 non-2 sectors    share(late) 0.2173   eps 1.0003 +- 0.0289
+      NImm <3 non-2 sectors    share(late) 0.7828   eps 0.9765 +- 0.0218
+      uses s2                  share(late) 0.4322   eps 0.9434 +- 0.0230
+      one s2 track             share(late) 0.2182   eps 0.9556 +- 0.0270
+      >=2 s2 tracks            share(late) 0.2140   eps 0.9308 +- 0.0256
+  S0_best all M4           N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0308 +- 0.0020
+      A1 no s2, 1 sector       share(late) 0.0042   eps 0.9692 +- 0.0172
+      A2 no s2, 2 sectors      share(late) 0.1884   eps 0.9983 +- 0.0033
+      A3 no s2, 3 sectors      share(late) 0.3370   eps 1.0004 +- 0.0028
+      A4 no s2, 4 sectors      share(late) 0.0087   eps 0.9851 +- 0.0122
+      B0 s2 only               share(late) 0.0009   eps 0.8296 +- 0.0326
+      B1 s2 + 1 other          share(late) 0.0982   eps 0.9034 +- 0.0038
+      B2 s2 + 2 others         share(late) 0.3450   eps 0.9320 +- 0.0026
+      B3 s2 + 3 others         share(late) 0.0176   eps 0.9447 +- 0.0084
+      Imm >=3 non-2 sectors    share(late) 0.3633   eps 0.9973 +- 0.0027
+      NImm <3 non-2 sectors    share(late) 0.6367   eps 0.9473 +- 0.0023
+      uses s2                  share(late) 0.4617   eps 0.9262 +- 0.0024
+      one s2 track             share(late) 0.2697   eps 0.9409 +- 0.0028
+      >=2 s2 tracks            share(late) 0.1920   eps 0.9056 +- 0.0030
+  S0_best all M4           N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0293 +- 0.0021
+      A1 no s2, 1 sector       share(late) 0.0043   eps 0.9685 +- 0.0178
+      A2 no s2, 2 sectors      share(late) 0.1922   eps 0.9986 +- 0.0034
+      A3 no s2, 3 sectors      share(late) 0.3395   eps 1.0006 +- 0.0029
+      A4 no s2, 4 sectors      share(late) 0.0052   eps 0.9643 +- 0.0258
+      B0 s2 only               share(late) 0.0010   eps 0.8321 +- 0.0342
+      B1 s2 + 1 other          share(late) 0.1002   eps 0.9036 +- 0.0040
+      B2 s2 + 2 others         share(late) 0.3473   eps 0.9330 +- 0.0028
+      B3 s2 + 3 others         share(late) 0.0104   eps 0.9331 +- 0.0180
+      Imm >=3 non-2 sectors    share(late) 0.3550   eps 0.9980 +- 0.0030
+      NImm <3 non-2 sectors    share(late) 0.6450   eps 0.9481 +- 0.0024
+      uses s2                  share(late) 0.4588   eps 0.9264 +- 0.0026
+      one s2 track             share(late) 0.2646   eps 0.9409 +- 0.0030
+      >=2 s2 tracks            share(late) 0.1943   eps 0.9067 +- 0.0032
+  S0_best B 0.455-0.5225   N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0287 +- 0.0199
+      A1 no s2, 1 sector       share(late) 0.0463   eps 0.9757 +- 0.0356
+      A2 no s2, 2 sectors      share(late) 0.4400   eps 0.9904 +- 0.0216
+      A3 no s2, 3 sectors      share(late) 0.1144   eps 0.9953 +- 0.0274
+      A4 no s2, 4 sectors      share(late) 0.0019   eps 1.2838 +- 0.1842
+      B0 s2 only               share(late) 0.0106   eps 0.8044 +- 0.0571
+      B1 s2 + 1 other          share(late) 0.2514   eps 0.9216 +- 0.0217
+      B2 s2 + 2 others         share(late) 0.1316   eps 0.9360 +- 0.0251
+      B3 s2 + 3 others         share(late) 0.0038   eps 1.0977 +- 0.1163
+      Imm >=3 non-2 sectors    share(late) 0.1201   eps 1.0031 +- 0.0272
+      NImm <3 non-2 sectors    share(late) 0.8799   eps 0.9596 +- 0.0198
+      uses s2                  share(late) 0.3974   eps 0.9250 +- 0.0204
+      one s2 track             share(late) 0.1758   eps 0.9577 +- 0.0240
+      >=2 s2 tracks            share(late) 0.2216   eps 0.8990 +- 0.0217
+  S0_best B 0.455-0.5225   N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0114 +- 0.0244
+      A1 no s2, 1 sector       share(late) 0.0483   eps 0.9846 +- 0.0393
+      A2 no s2, 2 sectors      share(late) 0.4498   eps 1.0054 +- 0.0265
+      A3 no s2, 3 sectors      share(late) 0.1089   eps 0.9911 +- 0.0336
+      A4 no s2, 4 sectors      share(late) 0.0003   eps 5.1650 +- 6.6233
+      B0 s2 only               share(late) 0.0110   eps 0.8180 +- 0.0612
+      B1 s2 + 1 other          share(late) 0.2568   eps 0.9385 +- 0.0263
+      B2 s2 + 2 others         share(late) 0.1252   eps 0.9620 +- 0.0314
+      B3 s2 + 3 others         share(late) 0.0009   eps 1.9407 +- 1.1058
+      Imm >=3 non-2 sectors    share(late) 0.1101   eps 1.0071 +- 0.0347
+      NImm <3 non-2 sectors    share(late) 0.8905   eps 0.9764 +- 0.0247
+      uses s2                  share(late) 0.3934   eps 0.9450 +- 0.0254
+      one s2 track             share(late) 0.1712   eps 0.9771 +- 0.0296
+      >=2 s2 tracks            share(late) 0.2223   eps 0.9200 +- 0.0265
+  S0_best P 0.5336-0.5542  N    034-045 vs 046-067: reference A34 rate ratio early/late 1.0218 +- 0.0207
+      A1 no s2, 1 sector       share(late) 0.0150   eps 0.8888 +- 0.0722
+      A2 no s2, 2 sectors      share(late) 0.3414   eps 1.0280 +- 0.0264
+      A3 no s2, 3 sectors      share(late) 0.2062   eps 1.0003 +- 0.0288
+      A4 no s2, 4 sectors      share(late) 0.0051   eps 0.9883 +- 0.1303
+      B0 s2 only               share(late) 0.0031   eps 0.9966 +- 0.1670
+      B1 s2 + 1 other          share(late) 0.1921   eps 0.9243 +- 0.0275
+      B2 s2 + 2 others         share(late) 0.2264   eps 0.9475 +- 0.0269
+      B3 s2 + 3 others         share(late) 0.0106   eps 1.0063 +- 0.0931
+      Imm >=3 non-2 sectors    share(late) 0.2220   eps 1.0003 +- 0.0283
+      NImm <3 non-2 sectors    share(late) 0.7780   eps 0.9761 +- 0.0223
+      uses s2                  share(late) 0.4322   eps 0.9390 +- 0.0234
+      one s2 track             share(late) 0.2192   eps 0.9611 +- 0.0274
+      >=2 s2 tracks            share(late) 0.2130   eps 0.9162 +- 0.0265
+  S0_best P 0.5336-0.5542  N-CB 034-045 vs 046-067: reference A34 rate ratio early/late 1.0110 +- 0.0241
+      A1 no s2, 1 sector       share(late) 0.0155   eps 0.9046 +- 0.0768
+      A2 no s2, 2 sectors      share(late) 0.3521   eps 1.0320 +- 0.0300
+      A3 no s2, 3 sectors      share(late) 0.2017   eps 1.0010 +- 0.0336
+      A4 no s2, 4 sectors      share(late) 0.0025   eps 0.9143 +- 0.3806
+      B0 s2 only               share(late) 0.0032   eps 1.0428 +- 0.1793
+      B1 s2 + 1 other          share(late) 0.1971   eps 0.9361 +- 0.0309
+      B2 s2 + 2 others         share(late) 0.2224   eps 0.9497 +- 0.0312
+      B3 s2 + 3 others         share(late) 0.0060   eps 0.8859 +- 0.2173
+      Imm >=3 non-2 sectors    share(late) 0.2101   eps 0.9969 +- 0.0338
+      NImm <3 non-2 sectors    share(late) 0.7899   eps 0.9825 +- 0.0260
+      uses s2                  share(late) 0.4285   eps 0.9431 +- 0.0272
+      one s2 track             share(late) 0.2134   eps 0.9589 +- 0.0320
+      >=2 s2 tracks            share(late) 0.2151   eps 0.9272 +- 0.0303
+
+[per day] S0, all M4, N (unlike-sign rows): rates per nb^-1 and eps_day = [R_2(day)/R_2(late)] / [R_no2(day)/R_no2(late)]
+# day  L6_an   N_tot   R_tot   R_s0 R_s1 R_s2 R_s3 R_s4 R_s5   R_no2   eps_day (stat)
+  034   99.777    59077  592.09  265.74 283.69 248.01 285.35 266.30 263.74   344.08   0.8467 +- 0.0079
+  035  134.489    79017  587.53  262.01 277.78 263.22 275.75 264.88 259.10   324.32   0.9534 +- 0.0076
+  036  281.524   159044  564.94  250.85 272.55 246.39 267.72 255.63 247.68   318.55   0.9086 +- 0.0053
+  037  301.105   177004  587.85  262.08 280.65 261.80 277.65 265.24 257.72   326.05   0.9432 +- 0.0052
+  038  188.732   109088  578.01  256.45 276.57 254.75 274.82 260.65 254.27   323.26   0.9257 +- 0.0064
+  039  145.940    82821  567.50  250.92 271.48 249.51 266.65 262.14 245.75   317.99   0.9217 +- 0.0072
+  040  262.103   154474  589.36  257.65 278.29 269.01 273.39 273.38 255.07   320.35   0.9864 +- 0.0057
+  041  232.940   135240  580.58  258.36 279.88 249.09 271.24 270.69 252.85   331.49   0.8827 +- 0.0055
+  042  260.514   155918  598.50  262.93 284.02 273.56 275.87 277.66 258.71   324.94   0.9889 +- 0.0057
+  043  252.423   141069  558.86  247.34 268.09 244.81 261.57 260.08 242.22   314.05   0.9157 +- 0.0056
+  044  289.678   169881  586.45  256.98 276.91 260.93 272.82 274.19 255.69   325.51   0.9416 +- 0.0053
+  045  170.398   101827  597.58  265.93 283.68 260.34 281.26 278.87 260.37   337.24   0.9068 +- 0.0065
+  046  189.831   117821  620.66  271.22 291.04 287.29 287.56 287.43 267.54   333.37   1.0123 +- 0.0067
+  047  185.037   115697  625.26  277.35 290.46 290.20 289.65 287.16 269.59   335.07   1.0174 +- 0.0068
+  048  187.573   112605  600.33  265.17 277.13 276.92 277.97 277.82 261.89   323.40   1.0058 +- 0.0068
+  049  223.294   136354  610.65  271.44 284.69 280.98 281.37 282.12 264.71   329.66   1.0012 +- 0.0062
+  050  275.772   168368  610.53  269.99 284.75 281.13 280.73 280.70 268.02   329.40   1.0026 +- 0.0056
+  051  269.967   162903  603.42  266.28 283.00 277.74 278.76 277.00 263.30   325.67   1.0018 +- 0.0057
+  052  231.522   143401  619.38  273.80 290.05 284.76 284.53 284.53 272.13   334.62   0.9996 +- 0.0061
+  053   77.466    46131  595.50  263.96 278.42 274.83 274.00 272.65 261.75   320.67   1.0068 +- 0.0105
+  059   90.020    51755  574.93  253.34 269.53 263.85 264.47 264.61 251.83   311.08   0.9963 +- 0.0098
+  060  212.818   122175  574.08  251.84 270.03 265.84 262.97 264.31 250.35   308.24   1.0131 +- 0.0066
+  061  247.910   139955  564.54  248.78 266.34 259.93 259.32 259.55 244.88   304.61   1.0023 +- 0.0061
+  062  197.376   113463  574.86  253.65 268.94 265.33 264.39 264.16 251.09   309.53   1.0069 +- 0.0068
+  063  208.553   117402  562.94  248.04 264.69 260.32 257.78 257.94 247.84   302.61   1.0105 +- 0.0067
+  064  240.644   134999  560.99  244.44 264.95 259.37 257.37 260.33 243.69   301.62   1.0101 +- 0.0063
+  065  170.022    94721  557.11  244.80 263.91 256.30 256.77 255.83 242.09   300.81   1.0008 +- 0.0074
+  066  267.039   146428  548.34  239.09 259.58 250.36 252.73 253.48 240.20   297.98   0.9870 +- 0.0059
+  067  184.729   102888  556.97  243.48 261.53 258.04 255.73 256.98 243.49   298.93   1.0140 +- 0.0071
+
+[phi profile] S0 e+e- tracks: (034-045 / 046-067 track rate per nb^-1) per 10-deg phi bin, normalised to the mean of the bins outside 180-240
+    0- 10 deg (sector 5): 0.9687 +- 0.0051
+   10- 20 deg (sector 5): 0.9946 +- 0.0029
+   20- 30 deg (sector 5): 0.9941 +- 0.0029
+   30- 40 deg (sector 5): 0.9883 +- 0.0029
+   40- 50 deg (sector 5): 0.9950 +- 0.0030
+   50- 60 deg (sector 5): 0.9553 +- 0.0053
+   60- 70 deg (sector 0): 1.0438 +- 0.0052
+   70- 80 deg (sector 0): 0.9965 +- 0.0029
+   80- 90 deg (sector 0): 0.9995 +- 0.0029
+   90-100 deg (sector 0): 1.0020 +- 0.0029
+  100-110 deg (sector 0): 0.9869 +- 0.0029
+  110-120 deg (sector 0): 0.9095 +- 0.0051
+  120-130 deg (sector 1): 1.0800 +- 0.0053
+  130-140 deg (sector 1): 1.0178 +- 0.0028
+  140-150 deg (sector 1): 1.0132 +- 0.0027
+  150-160 deg (sector 1): 1.0081 +- 0.0027
+  160-170 deg (sector 1): 1.0096 +- 0.0028
+  170-180 deg (sector 1): 0.9668 +- 0.0050
+  180-190 deg (sector 2): 0.9673 +- 0.0050
+  190-200 deg (sector 2): 0.9385 +- 0.0027
+  200-210 deg (sector 2): 0.9399 +- 0.0027
+  210-220 deg (sector 2): 0.9386 +- 0.0026
+  220-230 deg (sector 2): 0.9433 +- 0.0026
+  230-240 deg (sector 2): 0.9663 +- 0.0047
+  240-250 deg (sector 3): 0.9685 +- 0.0049
+  250-260 deg (sector 3): 1.0068 +- 0.0028
+  260-270 deg (sector 3): 0.9993 +- 0.0027
+  270-280 deg (sector 3): 1.0020 +- 0.0027
+  280-290 deg (sector 3): 1.0249 +- 0.0028
+  290-300 deg (sector 3): 1.1093 +- 0.0057
+  300-310 deg (sector 4): 0.9504 +- 0.0046
+  310-320 deg (sector 4): 1.0346 +- 0.0029
+  320-330 deg (sector 4): 1.0159 +- 0.0028
+  330-340 deg (sector 4): 0.9940 +- 0.0028
+  340-350 deg (sector 4): 0.9543 +- 0.0027
+  350-360 deg (sector 4): 1.0107 +- 0.0055
+# reference = mean early/late ratio of the 30 bins outside 180-240 deg: 1.0016
+
+# wp2_sector.C finished in 8.1 s

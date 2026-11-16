@@ -1,0 +1,19 @@
+# bedge_angle.txt -- plots/all_report/bedge_angle_toy.py (prefix bedge, 2026-11-14). TOY (generator copied from wp8_toy_angle.py).
+# R_edge = sum over the 4 slices of h(QED weights) / h(isotropic), h from the frozen edge-step fit (pol2 + step, 5.4 MeV);
+# R_all = acceptance ratio over all M4 and all M(pipi) (= the WP8 toy quantity); classes in TRUE M(ee); 12000000 decays
+
+variant                                cls     R_all   R_edge       +-    R_sl1    R_sl2    R_sl3   R_sl4
+nominal (p_e > 0.06, smear 5.4 MeV)    all    0.8802   0.8826   0.0006   0.8957   0.8883   0.8753   0.8709
+nominal (p_e > 0.06, smear 5.4 MeV)    E1     0.8886   0.8983   0.0005   0.9076   0.8998   0.8898   0.8827
+nominal (p_e > 0.06, smear 5.4 MeV)    E2     0.8679   0.8628   0.0011   0.8797   0.8728   0.8513   0.8457
+p_e > 0.04                             all    0.8995   0.9044   0.0005   0.9174   0.9106   0.8965   0.8939
+p_e > 0.04                             E1     0.9055   0.9092   0.0006   0.9278   0.9201   0.9104   0.9025
+p_e > 0.04                             E2     0.8909   0.8875   0.0009   0.9036   0.8980   0.8734   0.8742
+p_e > 0.10                             all    0.8578   0.8586   0.0007   0.8699   0.8612   0.8526   0.8460
+p_e > 0.10                             E1     0.8700   0.8830   0.0007   0.8844   0.8758   0.8669   0.8615
+p_e > 0.10                             E2     0.8399   0.8366   0.0013   0.8498   0.8405   0.8313   0.8153
+smear 6.1 MeV                          all    0.8802   0.8820   0.0006   0.8955   0.8882   0.8725   0.8708
+smear 6.1 MeV                          E1     0.8886   0.8858   0.0009   0.9075   0.8996   0.8899   0.8824
+smear 6.1 MeV                          E2     0.8679   0.8621   0.0011   0.8794   0.8726   0.8465   0.8477
+
+WP8 factors for comparison (all M4): toy all 0.880, E1 0.889, E2 0.868; closure all 0.891, E1 0.869, E2 0.896

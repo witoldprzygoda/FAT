@@ -1,0 +1,59 @@
+# fix2_numbers.txt -- plots/all_report/fix2_numbers.py (final review, 2026-11-14); inputs: verifier ve_verify, ve_data, ve_sim_cause,
+# tables_all/vtx_*.txt, vtx_numbers.txt, fix_numbers.txt, Part II (period normalisation +-5 %)
+
+## 1. eps_vtx(eta) = X_V/(X_V + X_Nv) with the edge-step statistical error x 1.2 (Part II calibration)
+E(V) = 1241 +- 91, E(Nv) = 21 +- 96 (fit errors 76 / 80 x 1.2)
+S nominal CB      : 0.838 +- 0.063 (stat_g); model 0.060 -> total 0.087
+S smooth CB       : 0.947 +- 0.062
+S N only (no CB)  : 0.966 +- 0.065
+T (ECAL-tagged)   : 1.001 +- 0.023
+E (edge step)     : 0.983 +- 0.075 (stat, x1.2) +- 0.028 (model) = 0.080 total   [before: +- 0.062 stat, 0.068 total]
+combined S(smooth)+T+E : 0.9937 +- 0.0211, chi2 0.69/2; one-sided 95 % CL lower bound 0.9589   [before, E without x1.2: 0.9934 +- 0.0209]
+combined S(nominal CB, stat_g (+) model)+T+E: 0.9897 +- 0.0218, chi2 3.30/2
+combined S(smooth)+E (no ECAL): 0.9606 +- 0.0491, chi2 0.13/1
+bump scale, T + E: 0.9998 +- 0.0225 (chi2 0.05/1); simulation C2+C3 0.9986 -> C_vtx(bump) = 0.999 +- 0.022
+adopted (rounded, unchanged): eps_vtx = 0.994 +- 0.021; C_vtx = 0.99970/0.994 = 1.0057 +- 0.0212; 95 % CL: C_vtx < 1.0419
+V contains 'pre' (vz > -160): S(pre) 4671 +- 367 in the verifier's code; the extra rows -500 < vz <= -160 hold S = -19 +- 133;
+   S(V) = 4657 against S(pre) + S(slice) = 4652; T(V) = 3297 (verifier) against T(pre) = 3314 +- 105 (Part II code, ve_data V: 3301)
+
+## 2. efficiency needed for 0.93 / 1.14 mb (sigma scales as eps_sim/eps_data) and its distance from every measure
+sigma = 0.93 mb needs eps = 0.46: T 23.1 sigma, E 6.6 sigma (stat x1.2 (+) model; 7.0 with stat only), S(smooth) 7.8 sigma, S(nominal) 4.3 sigma, combined 25 sigma
+sigma = 1.14 mb needs eps = 0.38: T 26.5 sigma, E 7.6 sigma (stat x1.2 (+) model; 8.1 with stat only), S(smooth) 9.1 sigma, S(nominal) 5.3 sigma, combined 29 sigma
+
+## 3. normalisation of sigma(pp -> eta X) with the period normalisation of Part II (+-5 %, steps of the per-day rates)
+syst 35.51 % (composition 31.78 %); N before +8.20/-8.64 % -> with the period term +9.60/-9.98 %
+sigma = 0.429 +- 0.036 (stat) +- 0.152 (syst) +- 0.025 (MC) +0.041/-0.043 (norm.) mb
+total: before 37.93 % (+37.88/-37.98); now 38.26 % (+38.21/-38.31)
+sigma/sigma_SMASH = 0.401 +- 0.153 (before +- 0.152)
+sigma_vis(peak) = Y_peak/L = 0.837 visible rows per nb^-1: normalisation L 6.9 % -> +-0.058; with the period term sqrt(6.9^2 + 5^2) = 8.52 % -> +-0.071
+sigma x BR (eta -> pi+pi-e+e-) 118.5 nb and (eta -> pi+pi-gamma) 18.4 ub keep +-38 % (now 38.3 %)
+X17 sigma x BR x BR: refolded with s_rel = 0.383 in fix2_x17_fold.py (tables_all/fix2_x17_fold.txt)
+
+## 4. sigma with the one-sided items (live time x sorter x cor_ok), direct-decay route split by its two values
+product 1.1088 - 1.1273; C_vtx 95 % bound x1.0419
+  adopted                              0.429 mb -> one-sided items 0.476 - 0.484; + pT (x1.21) 0.576 - 0.585; + C_vtx 95 % 0.496 - 0.504
+  direct route, weighted               0.522 mb -> one-sided items 0.579 - 0.588; + pT (x1.21) 0.700 - 0.712; + C_vtx 95 % 0.603 - 0.613
+  direct route, per-class side bands   0.621 mb -> one-sided items 0.689 - 0.700; + pT (x1.21) 0.833 - 0.847; + C_vtx 95 % 0.717 - 0.729
+known-sign items that lower sigma: r_res = 0.89 x0.892, f_eta = 12 % x0.907, y-only reweighting x0.920 -> -8 to -11 %
+one-sided items that raise it: live time x sorter x cor_ok +10.9 to +12.7 %; C_vtx at most +4.2 % more
+HADES 3.5 GeV UrQMD 0.93 +- 0.14 mb against 0.847 mb (side bands + one-sided + pT): 0.6 sigma (error of the published value only)
+
+## 5. vertex loss of like-sign and unlike-sign rows; position of the crossing point
+rows removed by vz > -500: e+e- 32.3 %, e+e+ 70.5 %, e-e- 75.9 % -> ratio of the loss fractions 2.18 / 2.35
+   (other definitions: loss odds 5.0 / 6.6)
+crossing z of Nv, mode -197.5 mm: 4.9 cm in front of the upstream end of the LH2 cell (-148.4 mm), 7.4 cm from its centre (-123.5 mm)
+crossing z of Nv, mean -207.1 mm: 5.9 cm in front of the upstream end of the LH2 cell (-148.4 mm), 8.4 cm from its centre (-123.5 mm)
+no-vertex share of the e+e- rows by day span (ve_sim_cause): days 034-045 0.31, 046-053 0.37, 059-067 0.275
+target box (ve_data): pion pairs crossing at -170 <= z < -85 mm, r < 8 mm: V 2 182 631 rows, Nv 3339 -> 0.15 % without a vertex
+resolution estimate (ve_sim_cause): rows of target events with at most one own track in the finder window 0.0219 (data), 0.0009 (sim);
+   conditional vertex loss of such a row 0.33-0.38 (simulation) -> data loss 0.0077 (upper estimate), simulation 0.0003
+
+## 6. close-pair reading (D32), inputs and their status
+direct-decay route a = 0.497 +- 0.059 (stat; weights: X17 fit N5 82 %, side bands per class 18 %)
+   systematics of its main input N5 (x17ab): half spread over the background and CB variants 10.9 %; three background classes +22 %;
+   on the simulation-study toys of the specification N5 came out +55 % (normalisation (1) failed the slope test there)
+conversion route a = 0.237 +- 0.049 (stat)
+bump: a_B(all) 0.299, a_B(E2) 0.312 NOT DETERMINED (syst 157-165 %); f_eta(edge) 0.392 +- 0.050 (determined): 1.4 sigma below the direct route
+f_eta(tag) = 0.454 +- 0.043 (pi0 Dalitz pairs of the same bump decay, M(ee) < 0.10; emulated simulated tag, UNVERIFIED): 0.6 sigma from the direct route
+F-main rho_d x a_eta = 1.3152 x 0.3823 = 0.503 (PDG 2020), 0.488 (PDG 2026): cross-check (closure failed)
+E2 share of the peak: data 0.546 +- 0.053 against SMASH 0.425 (C4/C5 shapes of the side-band fit; WP8: 0.423): +2.3 sigma

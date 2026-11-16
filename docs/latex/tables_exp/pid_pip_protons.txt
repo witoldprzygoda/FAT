@@ -1,0 +1,27 @@
+# Protons in the pi+ slot (they pass the pi+ polygon at high momentum, where beta_new of a proton measured with the pion mass lies
+# inside the pi+ band). Estimate from the DST beta: f(pi+) = share below the pion/proton midpoint, f(pi-) the same for pi- (reference);
+# proton share = (f(pi+) - f(pi-)) / (1 - f(pi-)). Columns: selection, p bin [MeV/c], pi+ tracks, share of all pi+, f(pi+), f(pi-), proton share, protons, protons / all pi+
+fat    500-1000    1415918  0.2960  f(pi+) 0.0536  f(pi-) 0.0531 (1457719 pi-)  proton share 0.001  protons      720  of all pi+ 0.00015
+fat   1000-1500     260237  0.0544  f(pi+) 0.1006  f(pi-) 0.0947 (274967 pi-)  proton share 0.007  protons     1706  of all pi+ 0.00036
+fat   1500-1900      53854  0.0113  f(pi+) 0.3664  f(pi-) 0.1336 ( 39950 pi-)  proton share 0.269  protons    14471  of all pi+ 0.00303
+fat   1900-2200      67362  0.0141  f(pi+) 0.8151  f(pi-) 0.1757 (  6552 pi-)  proton share 0.776  protons    52255  of all pi+ 0.01092
+fat   2200-2500     100054  0.0209  f(pi+) 0.8623  f(pi-) 0.2516 (  1566 pi-)  proton share 0.816  protons    81648  of all pi+ 0.01707
+fat   total protons 150800 of 4783467 pi+ slot tracks = 0.0315
+pre    500-1000    1321943  0.2989  f(pi+) 0.0490  f(pi-) 0.0486 (1373806 pi-)  proton share 0.000  protons      567  of all pi+ 0.00013
+pre   1000-1500     244629  0.0553  f(pi+) 0.0948  f(pi-) 0.0898 (262806 pi-)  proton share 0.006  protons     1348  of all pi+ 0.00030
+pre   1500-1900      49899  0.0113  f(pi+) 0.3578  f(pi-) 0.1287 ( 38337 pi-)  proton share 0.263  protons    13121  of all pi+ 0.00297
+pre   1900-2200      63268  0.0143  f(pi+) 0.8169  f(pi-) 0.1700 (  6240 pi-)  proton share 0.779  protons    49307  of all pi+ 0.01115
+pre   2200-2500      94708  0.0214  f(pi+) 0.8645  f(pi-) 0.2461 (  1475 pi-)  proton share 0.820  protons    77687  of all pi+ 0.01756
+pre   total protons 142030 of 4423338 pi+ slot tracks = 0.0321
+peak   500-1000      12389  0.2005  f(pi+) 0.0504  f(pi-) 0.0468 ( 11339 pi-)  proton share 0.004  protons       46  of all pi+ 0.00074
+peak  1000-1500        864  0.0140  f(pi+) 0.0995  f(pi-) 0.0933 (   729 pi-)  proton share 0.007  protons        6  of all pi+ 0.00010
+peak  1500-1900         60  0.0010  f(pi+) 0.2167  f(pi-) 0.1000 (    30 pi-)  proton share 0.130  protons        8  of all pi+ 0.00013
+peak  1900-2200         20  0.0003  f(pi+) 0.9000  f(pi-) 0.0000 (     5 pi-)  proton share 0.900  protons       18  of all pi+ 0.00029
+peak  2200-2500         17  0.0003  f(pi+) 0.8824  f(pi-) 0.0000 (     2 pi-)  proton share 0.882  protons       15  of all pi+ 0.00024
+peak  total protons 93 of 61800 pi+ slot tracks = 0.0015
+bump   500-1000      22199  0.2136  f(pi+) 0.0492  f(pi-) 0.0477 ( 19474 pi-)  proton share 0.002  protons       37  of all pi+ 0.00036
+bump  1000-1500       1376  0.0132  f(pi+) 0.0749  f(pi-) 0.0792 (  1061 pi-)  proton share -0.005  protons       -6  of all pi+ -0.00006
+bump  1500-1900         61  0.0006  f(pi+) 0.2951  f(pi-) 0.0938 (    32 pi-)  proton share 0.222  protons       14  of all pi+ 0.00013
+bump  1900-2200         18  0.0002  f(pi+) 0.7222  f(pi-) 0.0000 (     2 pi-)  proton share 0.722  protons       13  of all pi+ 0.00013
+bump  2200-2500          9  0.0001  f(pi+) 0.8889  f(pi-) 0.0000 (     0 pi-)  proton share 0.889  protons        8  of all pi+ 0.00008
+bump  total protons 65 of 103922 pi+ slot tracks = 0.0006

@@ -1,0 +1,56 @@
+# Table E3 -- side-band estimators and cross-checks (WP6; plots/all_report/wp6_ana.C, wp6_fill.C), 2026-11-14
+# data S0 (pre + both pions in the vertex fit), isBest >= 0, L = 6079.2 nb^-1; yields = raw rows x 64/63, not efficiency corrected
+# errors: stat = data N (event groups) + CB (200 like-sign replicas) + stage A (sandwich) + F-main 'other eta' (sandwich);
+#         MC = RMS over 100 simulation replica chains (F-main -> stage A -> estimator); bias-corr = 2 v - replica mean (WP4 'RB')
+quantity                                                   value      stat        MC     total   bias-corr status / note
+Y_bump B4, M(ee) >= 10 MeV [rows]                         7822.2       456  1.92e+03  1.97e+03      8638.0 MAIN (bump); WP4 FAIL marginal, PASS with bias correction; EXTRAPOLATED (CR-U only)
+Y_bump B4, all M(ee) (E2 / f_E2) [rows]                  16389.3  1.13e+03  4.11e+03  4.26e+03     18385.4 f_E2 = 0.4773 from the simulation (kappa 0.83)
+Y_peak side bands, all M(ee) [rows]                       5088.0       432       245       496      5123.8 MAIN (peak); WP4 PASS; + sigma_tr 239
+Y_peak side bands, M(ee) < 10 MeV [rows]                  2379.7       291       164       334      2415.9 per class
+Y_peak side bands, M(ee) >= 10 MeV [rows]                 2779.6       326       179       372      2766.8 per class
+sigma_vis bump (B4 all M(ee)) [nb]                        2.6960     0.186     0.676     0.701      3.0243 Y/L
+sigma_vis peak (side bands) [nb]                          0.8369     0.071    0.0403    0.0817      0.8428 Y/L
+bump/SMASH, M(ee) >= 10 MeV (B4)                          0.3117    0.0182    0.0763    0.0785      0.3443 Y_B4 / (C2 + C3 at SMASH x PDG BR)
+peak/SMASH, all M(ee) (side bands)                        0.4182    0.0355    0.0248    0.0433      0.4229 Y_SB / (C4 + C5 at SMASH x PDG BR)
+DR (side bands, all M(ee))                                1.3974     0.152     0.533     0.555      1.0890 (Y_peak/Y_bump)_data / (..)_sim; bump extrapolated
+DR (side bands, both M(ee) >= 10 MeV)                     1.7312     0.227     0.613     0.653      1.3808 no M(ee) extrapolation
+peak share M(ee) >= 10 MeV (side bands)                   0.5463    0.0455    0.0274    0.0531      0.5397 
+# closure
+displaced windows 0.575-0.695                              1.143   rms of 13 pulls (mean 0.514); sigma_tr = 239.3 rows (4.7 % of Y_peak) -> S10 (peak)
+CR-L (0.5225-0.5300, E2)                                   -1.88   pull; N 7519, pred 8018.0 +- 251.1; S10 term 499 rows (7.7 % of B_A) -> 2931 rows = 37.5 % of Y_bump(E2)
+CR-K (S5, 0.400-0.5225, E2)                                -1.98   pull; N 331, pred 441.2 +- 52.4; S10 term 110 rows (37.8 % of B_A) -> 14436 rows = 184.6 % of Y_bump(E2)
+0.400-0.455, E2 (below B)                                  -2.78   pull; N 13786, pred 16086.2 +- 819.5; S10 term 2300 rows (18.4 % of B_A) -> 7025 rows = 89.8 % of Y_bump(E2)
+# cross-checks (not combined, D14)
+f_eta(edge) = E_data/E_sim (T1+T2)                        0.3916    0.0203    0.0386    0.0485           - model 0.0212
+f_eta(tag) = T_data/T_sim                                 0.4542    0.0139    0.0402    0.0426           - sim tag emulated (UNVERIFIED); matched pi0 window 0.4132
+P_main S_data/S_sim (same fit)                            0.4033    0.0282    0.0000    0.1030           - P_main 4388 +- 307 +- 1078 (spread) vs sim 10881 (r = 1)
+a_eta (F-main)                                            0.3823    0.0169    0.0396    0.0431           - WP5, F10 E2 (CROSS-CHECK, WP4 FAIL)
+Y_bump F-main [rows]                                     19426.1         -         -    2478.0           - WP5 (CROSS-CHECK)
+Y_peak F-main [rows]                                      5044.8         -         -     804.4           - WP5 (CROSS-CHECK)
+P_main in P x 64/63 [rows]                                4201.5     293.6         -    1073.4           - whole Gaussian 4388; model spread 1078
+# variants
+PSB per class (E1 + E2 separately)                        5159.2       438       250       504      5182.7
+PSB background-only normalisation                         5111.8       432       273       511      5160.1
+PSB leakage shape kappa C4 + rho C5                       5100.1       433       240       495      5134.3
+PSB no leakage correction (f = 0)                         4156.5       353       192       402      4186.2
+PSB narrow side bands (5.6 MeV)                           4732.7       510       301       592      4747.1
+PSB wide side bands (11.6 MeV)                            4745.2       388       225       448      4761.4
+PSB flat background (R' = width ratio)                    4732.5       433         0       433           - (no MC)
+B4 E2 without the eta_U subtraction (spec literal)        5959.3       482  2.08e+03  2.13e+03      6162.6
+B4 E2 with CB x k_E2 (stage A)                            7891.1       447  1.93e+03  1.98e+03      8734.7
+B4 E2 per-slice transfer                                  7810.1       461  1.92e+03  1.97e+03      8624.4
+B4 E2 normalised on U 0.565-0.700 (same stage A)          7866.8       449  1.89e+03  1.95e+03      8666.8
+B4 E1 + E2 direct (E1 shape predicted)                   12256.4       884  3.74e+03  3.84e+03     12975.7
+B4 E2 slice S1 alone                                      1566.9       264  1.15e+03  1.18e+03      1748.7
+B4 E2 slice S2 alone                                      3426.4       170       673       694      3710.6
+B4 E2 slice S3 alone                                      2055.2       112       424       439      2242.7
+B4 E2 slice S4 alone                                       878.2      96.7       387       399      1012.8
+B4 E2 slice S5 alone                                      -116.6        21      51.8      55.9       -90.5
+B4 E2, stage A + quadratic                               19525.9  1.43e+03  3.92e+03  4.17e+03     17496.8
+PSB, stage A + quadratic                                  5262.8       431       293       522      5267.5
+B4 E2, stage A with the WP4 smoothing                     8181.9       460  2.06e+03  2.11e+03      9050.0
+PSB, stage A with the WP4 smoothing                       5067.8       432       244       496      5105.3
+B4 E2, stage A and U on 0.565-0.700                       8213.3       424  1.72e+03  1.77e+03      8943.9
+PSB, stage A on 0.565-0.700                               5093.5       432       245       496      5127.1
+B4 E2, WP3 frozen stage A (eta 0.4, g = 1)                7388.9       452   1.6e+03  1.66e+03           - (MC from the WP3 parameter covariance)
+PSB, WP3 frozen stage A                                   5072.6       432      28.7       433           - (MC from the WP3 parameter covariance)

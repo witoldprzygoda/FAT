@@ -1,0 +1,23 @@
+# v5: independent verification of WP5 (F-main nominal: F10 E2, kappa = 1 +- 0.2, g = 1 +- 0.3, k_E2 = 1 +- 0.05; S0, isBest >= 0,
+# L = 6079.2 nb^-1, yields = raw rows x 64/63). CROSS-CHECK numbers (F-main failed WP4). Own code: plots/all_report/v5_*.py / v5_*.C.
+# Columns: WP5 value | v5 E-IRLS (same estimator, own code: smoothing, trust-region IRLS, sandwich, 100 replicas) | stat WP5 / v5 |
+#          MC WP5 / v5 | v5 E-BBL (Poisson likelihood + Conway BB-lite nuisance, variance fixed at the fit) | v5 E-POIS (plain Poisson,
+#          no template variance) | v5 GLS-rep min (WP5's own GLS, minimised; parameters not reported by WP5) | v5 GLS-hyb min (exact
+#          diagonal signal-template variance + replica covariance of the smoothed background, minimised)
+quantity      WP5        v5-IRLS    statWP5   statv5    MCWP5     MCv5      E-BBL      E-POIS     GLS-rep-min  GLS-hyb-min
+a_eta         0.38228    0.38228    0.01692   0.01693   0.03963   0.03963   0.3813     0.3349     0.4853       0.5126
+kappa         0.83233    0.83234    0.1449    0.1449    0.2670    0.2670    0.813      1.014      0.794        0.856
+rho_d         1.31520    1.31521    0.1150    0.1151    0.2264    0.2264    1.330      1.352      1.070        1.118
+g             1.71677    1.71676    0.1632    0.1632    0.3658    0.3658    1.751      1.856      0.503        0.465
+Y_bump        19426.1    19426.1    984.4     984.4     2274      2274      19205      18444      24228        26335
+Y_peak        5044.8     5044.8     359.0     359.1     719.8     719.8     5025       4849       5541         6193
+DR            1.16896    1.16896    0.0646    0.0647    0.1337    0.1337    1.178      1.183      1.029        1.059
+BR_A [1e-4]   3.5247     3.5248     0.308     0.308     0.607     0.607     3.563      3.622      --           --
+BR_G [1e-4]   2.6546     2.6546     0.368     0.368     0.664     0.658     2.692      2.315      --           --
+#
+# goodness of fit of the nominal F-main (ndf 341): Pearson (BB-lite V) 1158.96 (WP5 1159.0); Baker-Cousins 2221.3 (WP5 2221.3);
+#   GLS-rep at the fit 883.6 (WP5 883.7) but 1136.3 with 50 replicas (rank-99 replica covariance, not converged);
+#   GLS-hyb at the fit 648.4 (1.90/ndf; 683-687 with 50 replicas); GLS-hyb minimised 567.8 (1.67/ndf); quad variant GLS-hyb minimised 566.6/340.
+# free s (fixed-weight chi2 parabola): whole fit 0.99653 +- 0.00019 (+1.95 sigma) = WP5; peak region 0.99500 +- 0.00057 (-2.01 sigma) = WP5,
+#   4-point parabola 0.99503 (-1.98 sigma); minimum NOT bracketed (lowest template s = 0.99521 has chi2 +0.09 above s = 0.99525).
+# r test (fixed-weight chi2 relative to r = 1): whole fit r089 +9.4, r110 -31.0; peak region r089 -2.9, r110 -1.8.

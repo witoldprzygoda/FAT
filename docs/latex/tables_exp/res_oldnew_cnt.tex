@@ -1,0 +1,25 @@
+% res_oldnew_cnt.tex: copy of res_oldnew.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% res_oldnew.tex -- written by hand (numbers: tables_exp/res_oldnew.txt, measured 2026-11-13 with the macros of the old/new comparison)
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{Old (LGAD start time) against new ($\beta_\mathrm{new}$, relative times) PAT production, the same 29 days, the same FAT configuration and fit.
+$\eta$ peak content $S$ from $P_\mathrm{main}$ for $\alpha_\mathrm{lab}<50^\circ$ (no $v_z>-160$~mm cut; selection of the first study).
+In the old production the duplicated like-sign entries (52\,\% of the like-sign and 2.7\,\% of the unlike-sign entries) are removed; without this the CB would be 2.1 times too large.
+LGAD start: events with evtStart $=1$. The two productions share the DSTs, so the errors of the ratios are not independent and are not quoted.
+Last row: SMASH $\eta$ simulation (pure $\eta\to\pi^+\pi^-e^+e^-$ entries) processed with both PAT versions (simulation, ideal START).}
+\label{tab:res_oldnew}
+\begin{tabular}{lccc}
+\toprule
+Quantity & old & new & new/old \\
+\midrule
+$S$, isBest $\geq0$ & $3123\pm278$ & $4319\pm346$ & 1.38 \\
+$S$, isBest $=1$ & $2713\pm256$ & $3899\pm311$ & 1.44 \\
+$S$, isBest $\geq0$, events with LGAD start & $3023\pm270$ & $4012\pm330$ & 1.33 \\
+$S$, isBest $=1$, events with LGAD start & $2629\pm249$ & $3641\pm297$ & 1.38 \\
+share of the new $\eta$ signal with LGAD start & -- & $0.929\pm0.024$ & (elastic: 0.933) \\
+\midrule
+simulation, pure $\eta\to\pi^+\pi^-e^+e^-$ entries, isBest $\geq0$ & 503\,311 & 523\,844 & 1.04 \\
+\bottomrule
+\end{tabular}
+\end{table}

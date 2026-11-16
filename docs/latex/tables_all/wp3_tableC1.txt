@@ -1,0 +1,15 @@
+# Table C1: candidate control regions, data S0 (isBest >= 0), raw rows; simulation SMASH (mode A, w x V3, sigma_prod x PDG BR)
+# C2-C5 %, Geta % = share in the raw simulated sum T12; (N-CB)/T12 = data/sim at SMASH scale (L = 6079.2 nb^-1, x 63/64 in T12)
+CR-U 0.565-0.700, all slices, all M(ee)      |     722506 |  0.051 |     0.04 |    6.5 |    1.266 | spec; E1 part dropped (k_E1 fall-back), first 10 MeV dropped (A1 fall-back)
+CR-U 0.565-0.700, E1 (M(ee) < 10 MeV)        |     364565 |  0.007 |     0.02 |    4.4 |    1.335 | rejected (fall-back): k_E1 = 13.2, 8.1 with ghost variant (a); outside 0.8-3
+CR-U 0.575-0.700, E2 (adopted)               |     342098 |  0.096 |     0.02 |    8.5 |    1.196 | ADOPTED (normalisation and tilt)
+CR-K S5 (M(pipi) >= 0.43), 0.400-0.5225      |        964 |  0.207 |     1.15 |    0.5 |    0.997 | rejected by the A1/A2 fall-back (C5 radiative tail, S5 threshold, CB N++ = 2)
+CR-L 0.5225-0.5300                           |      15604 |  0.062 |    11.11 |    7.6 |    1.161 | test only (closure term S10)
+below the bump 0.400-0.455                   |      31119 |  0.053 |    36.35 |    5.1 |    0.876 | rejected: bump tail (C2/C3 at q > 0)
+0.60-0.65 (part of 0.60-0.80)                |     254818 |  0.053 |     0.02 |    6.9 |    1.283 | 
+0.65-0.70                                    |     340326 |  0.047 |     0.00 |    5.3 |    1.225 | 
+0.70-0.75                                    |     401835 |  0.042 |     0.00 |    3.9 |    1.128 | 
+0.75-0.80                                    |     356688 |  0.044 |     0.00 |    4.0 |    1.149 | rejected 0.60-0.80: data/sim drifts, long extrapolation
+vz < -160 mm (none - pre), CR-U range        |      85631 |  0.391 |      n/a |    n/a |   no sim | rejected: no simulation (0.15 % of sim rows), CB/N 0.42 in P; no eta (A1 notes: S = -15 +- 118)
+like-sign e+e+, e-e- (CR-U range)            | 9111 + 37966 |     -- |        0 |      0 |       -- | not a background CR: it is the CB estimate (k_E2 constrained)
+ECAL-tagged eta (all M4)                     |     571891 |     -- | T = 3090 +- 94 |     -- | S/B 0.90 | signal-enriched: cross-check of a_eta only (D14); in CR-K T = -2.1 +- 4.0

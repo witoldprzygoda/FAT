@@ -1,0 +1,15 @@
+# x17c_inject.txt -- X17 injected at 17 MeV/c2 into the background-only truth of the frozen procedure (normalisation (1): rows = BR/2.68e-4 x N5 R_X),
+# 500 toys per BR; fitted with the frozen model in the three normalisations. cov = fraction of toys with UL >= injected BR (90 % CLs: >= 0.90 expected).
+BR_inj    norm  mean_rhat   med_rhat        RMS   pull_m pull_rms      cov
+ 1.00e-05    1  1.106e-05  9.272e-06  1.363e-05   -0.224    0.967    0.990
+ 1.00e-05    2  1.146e-05  1.021e-05  1.469e-05   -0.048    0.866    0.990
+ 1.00e-05    3  1.023e-05  9.888e-06  1.238e-05   -0.057    0.903    0.994
+ 3.00e-05    1  3.177e-05  2.883e-05  1.929e-05   -0.347    1.186    0.888
+ 3.00e-05    2  3.648e-05  3.308e-05  2.028e-05   -0.005    1.010    0.944
+ 3.00e-05    3  3.227e-05  3.100e-05  1.512e-05   -0.055    1.004    0.918
+ 6.00e-05    1  6.363e-05  6.016e-05  2.866e-05   -0.332    1.219    0.876
+ 6.00e-05    2  7.426e-05  6.931e-05  3.137e-05   +0.117    0.993    0.950
+ 6.00e-05    3  6.609e-05  6.305e-05  2.083e-05   +0.037    1.020    0.916
+norm 1: offset (background-only mean r_hat) 1.045e-06, slope of (mean r_hat - offset) vs BR_inj = 1.0385
+norm 2: offset (background-only mean r_hat) -6.044e-07, slope of (mean r_hat - offset) vs BR_inj = 1.2445
+norm 3: offset (background-only mean r_hat) -5.368e-07, slope of (mean r_hat - offset) vs BR_inj = 1.1064

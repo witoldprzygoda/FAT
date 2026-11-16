@@ -1,0 +1,32 @@
+% wr_prep_dzpi_cnt.tex: copy of wr_prep_dzpi.tex with "rows" -> "counts" (analyst, 15 Nov 2026; Part II writer, integ4)
+% wr_prep_dzpi.tex -- copy of prep_dzpi.tex, tabular scaled to the text width by the report writer; original written by plots/exp_report/prep_dzpi.C (numbers: tables_exp/prep_dzpi.txt)
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{Pion-vertex distance $\Delta z_\pi=\max(|z_{\pi^+}-v_z|,|z_{\pi^-}-v_z|)$ in the data: pass fraction of $\Delta z_\pi<40$~mm. Counts: all stored combinations (isBest $\geq 0$) unless stated, corrected momenta, PT3, $v_z>-160$~mm. Fractions of the counts: data peak window 0.53364--0.55416, side bands 0.5225--0.53364 and 0.55416--0.56530~GeV/$c^2$, errors with the event-group correlation. Signal: $\varepsilon_S=S_\mathrm{pass}/(S_\mathrm{pass}+S_\mathrm{fail})$ from $P_\mathrm{main}$ fits (stat $\pm$ model). Not normalised to luminosity. Simulation: values copied from the simulation study (no combinatorial background there).}
+\label{tab:prep_dzpi}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llc}
+\toprule
+Sample & Selection & pass fraction $\Delta z_\pi<40$~mm \\
+\midrule
+$e^+e^-$ counts, all $M_4$ & pre & $0.860\pm0.000$ \\
+$e^+e^-$ counts, peak window & pre & $0.812\pm0.001$ \\
+$e^+e^-$ counts, lower side band & pre & $0.798\pm0.002$ \\
+$e^+e^-$ counts, upper side band & pre & $0.811\pm0.002$ \\
+$e^\pm e^\pm$ counts, 0.5225--0.5653 & pre & $0.580\pm0.003$ \\
+$e^+e^-$ counts, bump window & pre & $0.812\pm0.001$ \\
+\midrule
+$\eta$ peak signal $\varepsilon_S$ & pre & $0.961\pm0.034\pm0.019$ \\
+$\eta$ peak signal $\varepsilon_S$ & pre + OA$>2^\circ$ & $0.952\pm0.040\pm0.014$ \\
+$\eta$ peak signal $\varepsilon_S$ & pre, isBest $=1$ & $0.978\pm0.034\pm0.011$ \\
+$\eta$ peak signal $\varepsilon_S$ & peak nominal & $0.965\pm0.033\pm0.021$ \\
+$\eta$ peak signal $\varepsilon_S$ & bump nominal & $0.984\pm0.039\pm0.051$ \\
+$\eta$ peak signal $\varepsilon_S$ & no $v_z$ cut + $\alpha_\mathrm{lab}<55^\circ$, $M_{\pi\pi}>0.30$ & $0.968\pm0.036\pm0.025$ \\
+\midrule
+Simulation, $\eta\to\pi^+\pi^-e^+e^-$ (sim window) & pre (DIRECT) & $0.9625\pm0.0005$ \\
+Simulation, direct / conversion / total (all $M_4$) & pre & $0.955$ / $0.954$ / $0.955\pm0.006$ \\
+Simulation, physical background in the peak window & pre & $0.827\pm0.007$ \\
+\bottomrule
+\end{tabular}}
+\end{table}

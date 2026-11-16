@@ -1,0 +1,22 @@
+# flex_bias_F8.txt -- plots/all_report/flex_toys.C: bias test of the flexible fit F8 on pseudo-data
+# truth = full simulation x known scales + data CB (k truth); RF = templates from the 100 WP0 bootstrap replicas (the MC noise of
+# the analysis); method = full-sample templates. Toy N Poisson, measured CB = data CB replica. Error = sandwich (+) sigma_MC.
+# pass rule: |RF bias| < max(0.5 sigma_stat, 10% |truth|) and coverage(68%) in 0.60-0.76 (marginal within 2 sigma of a limit)
+scen 0 s_C2       truth 0.4116 s_stat 0.0156 s_MC 0.0357 MCshift -20.3% RFbias -20.1% (-2.12 s_tot, +- 0.0040) pull -2.13 width 1.05 cover 0.144 | method -0.2% width 1.02 | FAIL
+scen 0 s_C3       truth -0.0872 s_stat 0.0456 s_MC 0.0742 MCshift -163.7% RFbias -162.9% (1.63 s_tot, +- 0.0084) pull 1.63 width 1.00 cover 0.252 | method -7.9% width 1.00 | FAIL
+scen 0 s_C4       truth 0.3353 s_stat 0.1110 s_MC 0.0964 MCshift -58.4% RFbias -58.5% (-1.33 s_tot, +- 0.0116) pull -1.37 width 0.98 cover 0.330 | method -0.4% width 0.98 | FAIL
+scen 0 s_C5       truth 0.6263 s_stat 0.0572 s_MC 0.0802 MCshift 1.6% RFbias 1.2% (0.08 s_tot, +- 0.0091) pull 0.08 width 0.99 cover 0.700 | method -0.3% width 1.02 | PASS
+scen 0 s_Geta     truth 2.1019 s_stat 0.0511 s_MC 0.2383 MCshift -14.8% RFbias -14.9% (-1.28 s_tot, +- 0.0262) pull -1.28 width 1.00 cover 0.314 | method -0.1% width 1.01 | FAIL
+scen 0 s_GD_om    truth 0.7883 s_stat 0.0426 s_MC 0.1627 MCshift -15.1% RFbias -15.1% (-0.71 s_tot, +- 0.0179) pull -0.71 width 0.99 cover 0.586 | method -0.0% width 1.00 | FAIL
+scen 0 s_GD_nom   truth 1.1085 s_stat 0.0251 s_MC 0.0590 MCshift 3.4% RFbias 3.5% (0.61 s_tot, +- 0.0066) pull 0.61 width 1.03 cover 0.588 | method 0.2% width 0.97 | FAIL(marginal)
+scen 0 s_GC       truth 1.5961 s_stat 0.0897 s_MC 0.2966 MCshift 5.3% RFbias 5.2% (0.27 s_tot, +- 0.0328) pull 0.27 width 1.02 cover 0.678 | method -0.1% width 0.92 | PASS
+scen 0 k_E2       truth 0.9070 s_stat 0.0445 s_MC 0.0358 MCshift -0.3% RFbias -0.9% (-0.14 s_tot, +- 0.0045) pull -0.14 width 1.08 cover 0.628 | method -0.5% width 1.07 | (nuisance)
+scen 1 s_C2       truth 1.0000 s_stat 0.0200 s_MC 0.0620 MCshift -10.4% RFbias -10.6% (-1.63 s_tot, +- 0.0069) pull -1.63 width 1.04 cover 0.272 | method -0.3% width 0.95 | FAIL
+scen 1 s_C3       truth 1.0000 s_stat 0.0593 s_MC 0.2344 MCshift -5.6% RFbias -5.3% (-0.22 s_tot, +- 0.0259) pull -0.22 width 1.01 cover 0.640 | method 0.9% width 0.92 | PASS
+scen 1 s_C4       truth 1.0000 s_stat 0.1015 s_MC 0.1262 MCshift -51.3% RFbias -50.9% (-3.14 s_tot, +- 0.0147) pull -3.19 width 1.14 cover 0.050 | method 0.4% width 0.98 | FAIL
+scen 1 s_C5       truth 1.0000 s_stat 0.0513 s_MC 0.0773 MCshift 7.1% RFbias 6.6% (0.71 s_tot, +- 0.0087) pull 0.71 width 0.98 cover 0.564 | method -0.6% width 0.96 | FAIL(marginal)
+scen 1 s_Geta     truth 1.0000 s_stat 0.0395 s_MC 0.1382 MCshift -20.4% RFbias -20.5% (-1.42 s_tot, +- 0.0152) pull -1.43 width 1.00 cover 0.278 | method 0.2% width 1.01 | FAIL
+scen 1 s_GD_om    truth 1.0000 s_stat 0.0396 s_MC 0.1313 MCshift -12.9% RFbias -13.3% (-0.97 s_tot, +- 0.0144) pull -0.97 width 0.98 cover 0.486 | method -0.2% width 1.00 | FAIL
+scen 1 s_GD_nom   truth 1.0000 s_stat 0.0235 s_MC 0.0494 MCshift 2.4% RFbias 2.6% (0.48 s_tot, +- 0.0055) pull 0.48 width 1.01 cover 0.592 | method 0.3% width 1.02 | FAIL(marginal)
+scen 1 s_GC       truth 1.0000 s_stat 0.0774 s_MC 0.2194 MCshift 12.2% RFbias 12.2% (0.53 s_tot, +- 0.0242) pull 0.52 width 0.98 cover 0.628 | method -0.5% width 1.03 | FAIL(marginal)
+scen 1 k_E2       truth 1.0000 s_stat 0.0442 s_MC 0.0330 MCshift -0.7% RFbias -1.3% (-0.24 s_tot, +- 0.0041) pull -0.24 width 1.00 cover 0.674 | method -0.6% width 1.02 | (nuisance)

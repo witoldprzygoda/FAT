@@ -1,0 +1,28 @@
+# PID polygons, data betanew_v1 (PAT of the analysed production) and simulation betanew_v6
+# plane (p [MeV/c] uncorrected, beta_new); levels 1/2/2.5/3/3.5/5 sigma in both files; PAT uses p, pi+-: 3 sigma, e+-: 5 sigma
+# per species: number of points, p range; at p = 200/500/1000/1500 MeV/c: centre of the 1 sigma polygon and its half width (data | simulation), half width of the PAT-level polygon
+p   PAT level 3sig  points v1 1963 v6 1963  p range 100-5000 MeV/c
+    p= 200  centre 0.2161 | 0.2287   1sig half width 0.0091 | 0.0100   3sig half width 0.0271 | 0.0286
+    p= 500  centre 0.4726 | 0.4772   1sig half width 0.0087 | 0.0097   3sig half width 0.0261 | 0.0280
+    p=1000  centre 0.7295 | 0.7303   1sig half width 0.0078 | 0.0068   3sig half width 0.0234 | 0.0205
+    p=1500  centre 0.8469 | 0.8483   1sig half width 0.0077 | 0.0082   3sig half width 0.0230 | 0.0246
+pip PAT level 3sig  points v1 979 v6 979  p range 60-2500 MeV/c
+    p= 200  centre 0.8205 | 0.8223   1sig half width 0.0118 | 0.0087   3sig half width 0.0335 | 0.0261
+    p= 500  centre 0.9614 | 0.9638   1sig half width 0.0130 | 0.0099   3sig half width 0.0369 | 0.0298
+    p=1000  centre 0.9884 | 0.9909   1sig half width 0.0126 | 0.0094   3sig half width 0.0349 | 0.0282
+    p=1500  centre 0.9936 | 0.9962   1sig half width 0.0131 | 0.0094   3sig half width 0.0358 | 0.0282
+pim PAT level 3sig  points v1 979 v6 979  p range 60-2500 MeV/c
+    p= 200  centre 0.8224 | 0.8222   1sig half width 0.0134 | 0.0090   3sig half width 0.0402 | 0.0268
+    p= 500  centre 0.9619 | 0.9637   1sig half width 0.0141 | 0.0103   3sig half width 0.0410 | 0.0310
+    p=1000  centre 0.9879 | 0.9909   1sig half width 0.0134 | 0.0095   3sig half width 0.0374 | 0.0285
+    p=1500  centre 0.9930 | 0.9963   1sig half width 0.0134 | 0.0093   3sig half width 0.0371 | 0.0280
+ep  PAT level 5sig  points v1 469 v6 759  p range 10-1900 MeV/c
+    p= 200  centre 0.9983 | 1.0000   1sig half width 0.0134 | 0.0103   5sig half width 0.0619 | 0.0508
+    p= 500  centre 0.9997 | 1.0002   1sig half width 0.0098 | 0.0089   5sig half width 0.0466 | 0.0447
+    p=1000  centre 1.0004 | 1.0001   1sig half width 0.0082 | 0.0087   5sig half width 0.0400 | 0.0434
+    p=1500  centre 1.0004 | 1.0001   1sig half width 0.0082 | 0.0087   5sig half width 0.0400 | 0.0434
+em  PAT level 5sig  points v1 469 v6 759  p range 10-1900 MeV/c
+    p= 200  centre 0.9983 | 1.0000   1sig half width 0.0134 | 0.0103   5sig half width 0.0619 | 0.0508
+    p= 500  centre 0.9997 | 1.0002   1sig half width 0.0098 | 0.0089   5sig half width 0.0466 | 0.0447
+    p=1000  centre 1.0004 | 1.0001   1sig half width 0.0082 | 0.0087   5sig half width 0.0400 | 0.0434
+    p=1500  centre 1.0004 | 1.0001   1sig half width 0.0082 | 0.0087   5sig half width 0.0400 | 0.0434

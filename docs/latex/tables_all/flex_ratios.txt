@@ -1,0 +1,28 @@
+# flex_ratios.txt -- plots/all_report/flex_tables.py: ratios of scales (Part III-like parameters) and content-weighted sums over the fit bins
+ratio F8 s_C3/s_C2 (kappa-like) -0.211751 stat 0.156999 mc 0.891996 tot 0.905707
+ratio F8 s_C4/s_C2 (kappa-like) 0.814531 stat 0.386222 mc 0.540972 tot 0.664694
+ratio F8 s_C5/s_C2 (rho_d-like) 1.521651 stat 0.164887 mc 0.493927 tot 0.520722
+ratio F8 s_Geta/s_C2 (g-like) 5.106670 stat 0.319199 mc 2.754834 tot 2.773265
+ratio F8 s_GC/s_GD_nom (kappa_B-like) 1.439825 stat 0.143013 mc 0.783050 tot 0.796003
+ratio F8 s_GD_om/s_GD_nom 0.711092 stat 0.046467 mc 0.225291 tot 0.230033
+ratio F7bj s_C3/s_C2 (kappa-like) -0.124555 stat 0.142980 mc 0.826101 tot 0.838383
+ratio F7bj s_C4/s_C2 (kappa-like) 0.766212 stat 0.314172 mc 0.368084 tot 0.483932
+ratio F7bj s_C5/s_C2 (rho_d-like) 1.368601 stat 0.133209 mc 0.387321 tot 0.409588
+ratio F7bj s_Geta/s_C2 (g-like) 2.910659 stat 0.211224 mc 1.272176 tot 1.289592
+ratio F7bj s_GC/s_GD (kappa_B-like) 1.679312 stat 0.154635 mc 0.933508 tot 0.946229
+sumscale F8 bump_C2+C3 0.317768 stat 0.012873 mc 0.040865 tot 0.042845  # content-weighted mean scale over the fit bins
+sumscale F8 peak_C4+C5 0.566574 stat 0.040686 mc 0.075315 tot 0.085602  # content-weighted mean scale over the fit bins
+sumscale F8 conv_C3+C4 -0.005767 stat 0.062725 mc 0.187241 tot 0.197468  # content-weighted mean scale over the fit bins
+sumscale F8 eta_all 1.163631 stat 0.033607 mc 0.263421 tot 0.265556  # content-weighted mean scale over the fit bins
+sumscale F7bj bump_C2+C3 0.377499 stat 0.012986 mc 0.039743 tot 0.041811  # content-weighted mean scale over the fit bins
+sumscale F7bj peak_C4+C5 0.596082 stat 0.038413 mc 0.078306 tot 0.087220  # content-weighted mean scale over the fit bins
+sumscale F7bj conv_C3+C4 0.022539 stat 0.063822 mc 0.212796 tot 0.222161  # content-weighted mean scale over the fit bins
+sumscale F7bj eta_all 0.866683 stat 0.032423 mc 0.185019 tot 0.187838  # content-weighted mean scale over the fit bins
+
+# Part III equivalents (flex_fit.C, from the reproduced Part III F-main): value stat mc total
+p3equiv C2     0.3823 stat 0.0169 mc 0.0396 tot 0.0431
+p3equiv C3C4   0.3182 stat 0.0474 mc 0.0850 tot 0.0973
+p3equiv C5     0.5028 stat 0.0457 mc 0.0897 tot 0.1007
+p3equiv Geta   0.6563 stat 0.0580 mc 0.1016 tot 0.1170
+p3equiv GD     1.0613 stat 0.0313 mc 0.1569 tot 0.1600
+p3equiv GC     2.0741 stat 0.1252 mc 0.6604 tot 0.6722
