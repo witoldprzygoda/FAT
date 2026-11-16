@@ -10,3 +10,5 @@ macros/*.pcm
 macros/*_ACLiC_*
 # preview images (the report uses the PDF figures)
 figs/*.png
+# pdflatex console logs of the build checks
+pass*.txt

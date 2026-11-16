@@ -900,15 +900,15 @@ void s5_spec() {
         o0.phys = 0;
         const std::vector<WSum> r0 = SumMany(d, SelPreset(kPre), {CompSim(), CompSigCls(2), CompSigCls(3), CompSigCls(4), CompSigCls(5)}, o0);
         Check("no physics weights: sigma(T1+T2) [nb] (README key numbers 701.8 +- 1.5)", r0[0].Xsec(), 701.8, 0.0005);
-        // classes 2-4: rules v2 (2026-11-13) values of report.tex tab:cls (rules v1: 8.05, 5.93, 1.18 and 7.16, 5.29, 1.20)
-        Check("no physics weights: sigma class 2 [nb] (report.tex 7.92)", r0[1].Xsec(), 7.92, 0.001);
-        Check("no physics weights: sigma class 3 [nb] (report.tex 5.82)", r0[2].Xsec(), 5.82, 0.001);
-        Check("no physics weights: sigma class 4 [nb] (report.tex 1.23)", r0[3].Xsec(), 1.23, 0.005);
-        Check("no physics weights: sigma class 5 [nb] (report.tex 1.385)", r0[4].Xsec(), 1.385, 0.0005);
-        Check("V3: sigma class 2 [nb] (report.tex 7.05)", A.Xs(0, wAll, lS2), 7.05, 0.001);
-        Check("V3: sigma class 3 [nb] (report.tex 5.19)", A.Xs(0, wAll, lS3), 5.19, 0.001);
-        Check("V3: sigma class 4 [nb] (report.tex 1.24)", A.Xs(0, wAll, lS4), 1.24, 0.005);
-        Check("V3: sigma class 5 [nb] (report.tex 1.417)", A.Xs(0, wAll, lS5), 1.417, 0.0005);
+        // classes 2-4: rules v2 (2026-11-13) values of report_sim.tex tab:cls (rules v1: 8.05, 5.93, 1.18 and 7.16, 5.29, 1.20)
+        Check("no physics weights: sigma class 2 [nb] (report_sim.tex 7.92)", r0[1].Xsec(), 7.92, 0.001);
+        Check("no physics weights: sigma class 3 [nb] (report_sim.tex 5.82)", r0[2].Xsec(), 5.82, 0.001);
+        Check("no physics weights: sigma class 4 [nb] (report_sim.tex 1.23)", r0[3].Xsec(), 1.23, 0.005);
+        Check("no physics weights: sigma class 5 [nb] (report_sim.tex 1.385)", r0[4].Xsec(), 1.385, 0.0005);
+        Check("V3: sigma class 2 [nb] (report_sim.tex 7.05)", A.Xs(0, wAll, lS2), 7.05, 0.001);
+        Check("V3: sigma class 3 [nb] (report_sim.tex 5.19)", A.Xs(0, wAll, lS3), 5.19, 0.001);
+        Check("V3: sigma class 4 [nb] (report_sim.tex 1.24)", A.Xs(0, wAll, lS4), 1.24, 0.005);
+        Check("V3: sigma class 5 [nb] (report_sim.tex 1.417)", A.Xs(0, wAll, lS5), 1.417, 0.0005);
         Check("V3 / no weights: T1+T2 all M4 (README x 0.999)", A.Xs(0, wAll, cT12) / r0[0].Xsec(), 0.999, 0.0006);
         Check("X17 BR 1e-5, pre, all M4 [nb] (README 0.0713)", A.Xs(0, wAll, lX17), 0.0713, 0.001);
         // group consistency

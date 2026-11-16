@@ -299,7 +299,7 @@ a wersja 2 różni się od niej tylko stosunkami rozgałęzień rozpadów π⁰ 
 wykonywanych przez HGeant). Te stosunki rozgałęzień pochodzą teraz wprost z karty
 `ETA 37.30 30.20 21.00 4.75 6.0 7.1e-2` w plikach wejściowych HGeant tej produkcji
 (dla π⁰ z wartości domyślnych HGeant), a nie z pomiaru producentów na 10⁶
-zdarzeniach (raport `docs/latex/report.tex`, rozdział „The HGeant decay table of
+zdarzeniach (raport `docs/latex/report_sim.tex`, rozdział „The HGeant decay table of
 the eta”). Plik nie zależy od ROOT, więc
 można go dołączyć w makrze i przeliczyć wagi z innymi stosunkami rozgałęzień.
 

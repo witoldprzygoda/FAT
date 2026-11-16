@@ -1,18 +1,26 @@
-% sec5_sim.tex -- Section "Simulation study: from the signal to the selection" of report.tex
+% sec5_sim.tex -- Section "Simulation study: from the signal to the selection" of report_sim.tex
 % (to be \input in place of the planned section 5). Simulation only. Macros: plots/eta_sim/s5_*.C,
 % tables: plots/eta_sim/tables/s5_*.txt, figures: plots/eta_sim/figs/s5_*.pdf (copied to figs/).
 %======================================================================
 \section{Simulation study: from the signal to the selection}
 \label{sec:simres}
 %======================================================================
+\inshort{on simulation alone the usual $\eta$ cuts do not raise the purity of the $\eta$ windows; the frozen selections
+gain 4--5\,\% in $F$ over ``pre'' (bump: no cut); the template fit and the calibrated Gaussian fit recover the peak within
+a few per cent, linear side bands lose 13--46\,\% (about 30\,\% on average); the expected X17 limit is
+$1.9\times10^{-5}$ (preliminary), set by the simulation
+statistics of the background. Later (Part~III): with realistic template noise the template fits come out about 10\,\% low
+(\S\ref{sec:s5blind}); the X17 limit measured in the data is $3.16\times10^{-5}$ (PDG 2026; the frozen PDG 2020 value:
+footnote~\ref{fn:x17pdg}; \S\ref{sec:s5x17}); in the simulation one third of the lost bump photons hit an active ECAL module
+(\S\ref{sec:s5acc}).}
 This section follows the order planned for the study (signal, acceptance, cuts, backgrounds,
 optimisation, test of the extraction). It uses \textbf{simulation only}: no measured data were
 read. The simulation contains no combinatorial background (CB), and none was added. All
 statements about cuts therefore concern the physical background of SMASH, not the CB of the data.
 
-\textbf{Common settings.} Every number of this section uses the same rows and weights:
+\textbf{Common settings.} Every number of this section uses the same counts and weights:
 \begin{itemize}
-\item rows of the \ppee trees of the three sets (std, lep, $\eta$), owned in mode~A
+\item counts of the \ppee trees of the three sets (std, lep, $\eta$), owned in mode~A
       (Sect.~\ref{sec:weights});
 \item the weight $W$ of Sect.~\ref{sec:weights} (PDG branching ratios) times the physics
       weights of the $\eta$ decays, main variant V3 (Sect.~\ref{sec:etagen}); for the bump the
@@ -21,16 +29,16 @@ statements about cuts therefore concern the physical background of SMASH, not th
 \item the base selection ``pre'' (Sect.~\ref{sec:sel}); all cut variables from the corrected momenta;
 \item cross section $\sigma = \sum W/\Lsim$ with $\Lsim = 221.05\,\nbinv$;
 \item statistical errors from event groups: the variance of a sum is the sum over events of
-      the squared sum of the weights of their rows. The effective number of rows,
+      the squared sum of the weights of their counts. The effective number of simulated entries,
       $N_{\mathrm{eff}} = (\sum W)^2/\mathrm{Var}$, is quoted where it is small;
-\item where a number of rows in data is needed (significance, expected limits), the
+\item where a number of counts in the data is needed (significance, expected limits), the
       luminosity $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED) is used as a scale only: one unit of
-      $\sum W$ corresponds to 27.51 expected rows.
+      $\sum W$ corresponds to 27.51 expected counts.
 \end{itemize}
 The simulated sum is template T1 (signal classes 2--5) plus template T2 (physical background).
 Templates T3 (fake lepton) and T4 (leptons from two sources) are never added; they are
-shown separately and enter a background only as a stated variant. X17 rows (class~6) carry
-$W = 2\,\mathrm{BR}$ per row, BR is a free parameter, and they are never added to the sum.
+shown separately and enter a background only as a stated variant. X17 counts (class~6) carry
+$W = 2\,\mathrm{BR}$ per count, BR is a free parameter, and they are never added to the sum.
 The windows in \Mfour and the background groups are the same in all parts
 (Table~\ref{tab:s5defs}).
 
@@ -40,7 +48,7 @@ The windows in \Mfour and the background groups are the same in all parts
 centred on the simulated peak ($0.5460\pm1.9\times0.0067$\,\GeVcc); the bump window is the
 data bump window scaled by the simulated mass scale 1.0057. The groups split template~2 by the
 lepton-pair class (L) and the pion-pair class (P) of \code{src/sim_truth.h} (all classes and the
-templates T1--T4 are defined in Table~\ref{tab:classes}); a row goes to the first group in the order
+templates T1--T4 are defined in Table~\ref{tab:classes}); a count goes to the first group in the order
 given whose condition it fulfils.}
 \label{tab:s5defs}
 \small
@@ -55,12 +63,12 @@ other regions & below 0.4576; gap 0.5255--0.5333; 0.5587--0.70; 0.70--1.00; abov
 classes 2, 3, 4, 5 & the signal classes (Table~\ref{tab:cls}): bump Dalitz, bump conversion,
    peak conversion, direct decay \\
 $G_\eta$   & template 2 with both pions from one $\eta$ (P2) or an $\eta$ Dalitz pair (L2):
-   an $\eta$ is produced, but the row is not a signal combination \\
-$G_{\pi^0\mathrm{D}}$ & remaining template-2 rows with a \piz Dalitz pair (L1) \\
-$G_{\mathrm{conv}}$ & remaining template-2 rows with a conversion pair (L3) \\
-$G_{\mathrm{vec}}$  & remaining template-2 rows with $\rho^0,\omega,\phi\to\ee$, $\omega\to\piz\ee$
+   an $\eta$ is produced, but the count is not a signal combination \\
+$G_{\pi^0\mathrm{D}}$ & remaining template-2 counts with a \piz Dalitz pair (L1) \\
+$G_{\mathrm{conv}}$ & remaining template-2 counts with a conversion pair (L3) \\
+$G_{\mathrm{vec}}$  & remaining template-2 counts with $\rho^0,\omega,\phi\to\ee$, $\omega\to\piz\ee$
    or a second-decay pair (L4--L6) \\
-$G_{\mathrm{oth}}$  & all other template-2 rows (in practice the \ee pair of a direct
+$G_{\mathrm{oth}}$  & all other template-2 counts (in practice the \ee pair of a direct
    $\eta\to\ppee$ decay with pions from elsewhere) \\
 $G_{\mathrm{fake}}$, $G_{\mathrm{diff}}$ & template 3 and template 4 (variants only) \\
 multi-pion & $G_{\pi^0\mathrm{D}} + G_{\mathrm{conv}} + G_{\mathrm{vec}}$ \\
@@ -72,6 +80,9 @@ multi-pion & $G_{\pi^0\mathrm{D}} + G_{\mathrm{conv}} + G_{\mathrm{vec}}$ \\
 \subsection{The full spectrum and the cut sequence}
 \label{sec:s5spec}
 %----------------------------------------------------------------------
+\inshort{the simulated sum after ``pre'' is $701.1\pm1.5$\,nb, 94\,\% of it multi-pion background; the four ``slides''
+cuts remove background outside the $\eta$ windows, but inside them the purity does not rise and $F$ falls (peak
+$52.1\to41.0$, bump $152.7\to112.5$).}
 \textbf{The spectrum after ``pre''} (Fig.~\ref{fig:s5full}). The simulated sum is
 $\sigma(\mathrm{T1+T2}) = 701.1\pm1.5$\,nb over all \Mfour. Of this, the four signal classes
 are $14.89\pm0.27$\,nb and the multi-pion background $659.9\pm1.4$\,nb (94\,\%):
@@ -81,11 +92,11 @@ $1.967\pm0.005$\,nb. Not in the sum: T3 $125.0\pm0.7$\,nb, T4 $12.51\pm0.25$\,nb
 kinematic limit $\Mfour = \sqrt{s}-2m_p = 1.591$\,\GeVcc there are 2.87\,nb (0.4\,\%); 2.58\,nb
 of them contain a misidentified track.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_spec_full_pre.pdf}
 \caption{Simulated $d\sigma/d\Mfour$ after ``pre'', stacked by group (signal classes warm,
-background groups cold or grey). Dashed and not stacked: T3, T4 and X17 at
+background groups cold or grey). Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); no further cut; all \Mee and \Mpipi; (a) $0.28\le\Mfour<2.50$\,\GeVcc, (b) $0.40\le\Mfour<0.70$\,\GeVcc; stacked: the signal classes 2--5 and the physical background (T1+T2); windows on the simulation mass scale: peak window $0.5333\le\Mfour<0.5587$\,\GeVcc, bump window $0.4576\le\Mfour<0.5255$\,\GeVcc. Dashed and not stacked: T3, T4 and X17 at
 $\mathrm{BR} = 10^{-5}$. (a) Log scale, 10\,\MeVcc bins; the dashed blue line is the kinematic
 limit. (b) Linear zoom, 2.5\,\MeVcc bins, with the bump and peak windows (dotted).}
 \label{fig:s5full}
@@ -95,7 +106,7 @@ limit. (b) Linear zoom, 2.5\,\MeVcc bins, with the bump and peak windows (dotted
 the other: $\mathrm{OA}>2^\circ$, $\alpha_{\mathrm{lab}}<50^\circ$, $\Mpipi<0.46$\,\GeVcc,
 $\alpha_\eta>140^\circ$. All four together are the selection ``slides''.
 Table~\ref{tab:s5flow} gives the cross sections, the purity $P$ = (signal in the window)/(T1+T2 in
-the window) and $F = S/\sqrt{S+B}$, with $S$ the signal rows and $B$ the other T1+T2 rows of the
+the window) and $F = S/\sqrt{S+B}$, with $S$ the signal counts and $B$ the other T1+T2 counts of the
 window at \Ldata. Figure~\ref{fig:s5steps} shows the spectrum after each step.
 
 \begin{table}[H]
@@ -129,11 +140,11 @@ peak: $F$              & $52.1\pm1.5$ & $42.0\pm1.3$ & $41.5\pm1.4$ & $41.0\pm1.
 \end{tabular}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_spec_steps_log.pdf}
 \caption{Simulated $d\sigma/d\Mfour$ after each step of the cut sequence (same axes in all
-panels; legend as in Fig.~\ref{fig:s5full}). (a) pre; (b)--(e) the four cuts added one by one;
+panels; legend as in Fig.~\ref{fig:s5full}). Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); $0.28\le\Mfour<2.50$\,\GeVcc in 10\,\MeVcc bins, all \Mee; (a) ``pre''; (b) (a) plus \ee opening angle above $2^\circ$ (OA); (c) (b) plus angle between the \pipi and \ee momenta in the laboratory below $50^\circ$ ($\alpha_{\mathrm{lab}}$); (d) (c) plus $\Mpipi<0.46$\,\GeVcc; (e) (d) plus the same angle in the rest frame of a hypothetical $\eta$ above $140^\circ$ ($\alpha_\eta$), i.e.\ ``slides''; (f) as (e) but with $\Mpipi<0.42$\,\GeVcc instead of 0.46 (``old code'' plus $\mathrm{OA}>2^\circ$). (a) pre; (b)--(e) the four cuts added one by one;
 (e) is ``slides''; (f) the final selection with $\Mpipi<0.42$\,\GeVcc.}
 \label{fig:s5steps}
 \end{figure}
@@ -191,12 +202,16 @@ raise the purity of either window (bump $0.396\to0.371$, peak $0.198\to0.202$), 
 every step (peak $52.1\to41.0$, bump $152.7\to112.5$). What the cuts do is remove the multi-pion
 background outside the windows. A gain from these cuts in data can only come from what the
 simulation does not contain: the CB, or a data/SMASH difference of the multi-pion background.
-This must be checked with data.}
+This must be checked with data. \emph{Later (Parts~II, III):} checked; the cuts do not help in the data either
+(\S\ref{sec:s5data}, item~1).}
 
 %----------------------------------------------------------------------
 \subsection{The signal at generator level}
 \label{sec:s5gen}
 %----------------------------------------------------------------------
+\inshort{the $\eta$ set holds $1.18\times10^{8}$ direct decays, i.e.\ $\sigma(pp\to\eta X) = 1.069$\,mb in SMASH; with
+the physics weights the \Mee spectrum of the direct decay becomes much harder (31\,\% of the decays above 20\,\MeVcc
+instead of 4.7\,\%).}
 \textbf{Number of produced decays.} The PLUTO generator file of the $\eta$ set holds the true
 kinematics of $N = 1\,181\,801$ direct decays from 1000 of the 100\,000 files. Assuming these
 files are representative, the set contains $N_{\mathrm{direct}} = 100\,N = 1.1818\times10^{8}$
@@ -204,14 +219,16 @@ direct decays. Every $\eta$ of the set is forced, half into the direct decay, so
 $N_\eta = 2N_{\mathrm{direct}} = 2.364\times10^{8}$ $\eta$ mesons, i.e.
 $\sigma(pp\to\eta X) = N_\eta/\Lsim = 1.069$\,mb in SMASH. The decays of the other channels
 are $N_\eta$ times the PDG branching ratio (Table~\ref{tab:s5prod}). The statistical error of
-this scale is 0.09\,\%; whether the 1000 files are representative is UNVERIFIED.
+this scale is 0.09\,\%; whether the 1000 files are representative is UNVERIFIED. \emph{Later (Part~III):} an independent
+count in 40 files gives $1.0690\pm0.0035$\,mb, a partial check; Part~III uses $N_\eta=2.364\times10^{8}$ (1.0694\,mb) for
+the whole sample.
 
 \begin{table}[H]
 \centering
 \caption{Produced decays per set ($10^{10}$ events) and production cross sections, from
 $N_\eta$ and PDG branching ratios. Class 3 is counted per $\eta\to\pipi\piz$ decay with any \piz
 decay (the conversion happens in the detector), class 4 per $\eta\to\pipi\gamma$ decay. Scale
-error 0.09\,\% for every row.}
+error 0.09\,\% for every class.}
 \label{tab:s5prod}
 \small
 \begin{tabular}{@{}l l r r@{}}
@@ -251,10 +268,10 @@ contributes under any X17 line. With V3, the produced direct decays within $|\Me
 4.04, 7.95, 15.9 and 32.4\,nb for $d = 0.5$, 1, 2 and 4\,\MeVcc; X17 with
 $\mathrm{BR}=10^{-5}$ is 10.69\,nb (Fig.~\ref{fig:s5gen}d).
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_acc_gen.pdf}
-\caption{Generator level, absolute scale ($\sigma_{\mathrm{prod}}$). (a) \Mee of the direct decay
+\caption{Generator level, absolute scale ($\sigma_{\mathrm{prod}}$). Selection: none: all produced decays, before the detector simulation and before any cut; direct decays from the PLUTO generator sample of the $\eta$ set (1\,181\,801 decays in 1000 of the 100\,000 files, times 100), the other channels from their production densities (bump: HGeant phase space $\times$ KLOE-2 Dalitz plot; conversion peak: phase space $\times\,|F_V|^2p^{*2}k^2$; \piz Dalitz pair: Kroll--Wada; X17: three-body phase space, assumed); normalised with $N_\eta=2.364\times10^{8}$ $\eta$ mesons at $\Lsim=221.05\,\nbinv$. (a) \Mee of the direct decay
 (V3 and generator), of the \piz Dalitz pair of the bump, and the X17 line. (b) \Mpipi of all
 channels: physics models (solid) against the phase space of HGeant (dotted). (c) Fraction of
 decays above a given \Mee. (d) Direct decays in a window $\pm d$ around 17\,\MeVcc against X17 at
@@ -266,8 +283,11 @@ $\mathrm{BR}=10^{-5}$.}
 \subsection{Acceptance and resolution}
 \label{sec:s5acc}
 %----------------------------------------------------------------------
-\textbf{Acceptance $\times$ efficiency} $\varepsilon$ = (rows of the class after ``pre'', weighted)
-/ (produced decays). Every accepted decay gives exactly one row of its class.
+\inshort{$\varepsilon$ of ``pre'' is 0.494\,\% for the direct decay, 0.667\,\% for X17, 0.245\,\% for the bump with a
+\piz Dalitz pair and 0.002--0.003\,\% for the conversion classes; \Mfour is measured with a core width of
+5.5--6.4\,\MeVcc and 0.22--0.39\,\% too low; the fixed peak window holds 0.851 of the simulated peak.}
+\textbf{Acceptance $\times$ efficiency} $\varepsilon$ = (counts of the class after ``pre'', weighted)
+/ (produced decays). Every accepted decay gives exactly one count of its class.
 Table~\ref{tab:s5eps} gives the totals.
 
 \begin{table}[H]
@@ -281,7 +301,7 @@ X17: at $\mathrm{BR}=10^{-5}$.}
 \begin{tabular}{@{}l rr r rr rr@{}}
 \toprule
  & & & & \multicolumn{2}{c}{$\varepsilon$, all $M_4$} & \multicolumn{2}{c}{$\varepsilon$ (V3), window} \\
-class & rows & $N_{\mathrm{eff}}$ & $\sigma_{\mathrm{acc}}$ [nb] & V3 & no weights & peak & bump \\
+class & entries & $N_{\mathrm{eff}}$ & $\sigma_{\mathrm{acc}}$ [nb] & V3 & no weights & peak & bump \\
 \midrule
 5 direct    & 571\,246 & 171\,004 & $1.4168\pm0.0034$ & $0.4944\pm0.0013$ & 0.4834 & 0.4213 & 0.0249 \\
 6 X17       & 787\,659 & 787\,653 & 0.0713 & $0.6665\pm0.0010$ & 0.6665 & 0.5714 & 0.0352 \\
@@ -291,6 +311,13 @@ class & rows & $N_{\mathrm{eff}}$ & $\sigma_{\mathrm{acc}}$ [nb] & V3 & no weigh
 \bottomrule
 \end{tabular}
 \end{table}
+
+\textbf{Later finding (Part~III).} The class-2 efficiency of Table~\ref{tab:s5eps} is too high: HGeant decays the
+virtual photon of the \piz Dalitz decay isotropically instead of as $1+\cos^2\theta^*$ (see the notes in
+Sect.~\ref{sec:weights}; Part~III, \code{report_all.pdf}). For the bump the full simulation gives the QED factor 0.86, so the
+simulated efficiency is about 16\,\% too high (the toys and the closure of prompt \piz Dalitz pairs gave 12--14\,\%). It is
+not corrected here; Part~III weights every simulated class-2 count of its bump-edge fits with the QED angle (its D38,
+approved by the analyst on 15 November 2026).
 
 Figure~\ref{fig:s5acc} shows $\varepsilon$ against the true \Mee and \Mpipi.
 \begin{itemize}
@@ -312,10 +339,10 @@ Figure~\ref{fig:s5acc} shows $\varepsilon$ against the true \Mee and \Mpipi.
       for X17.
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_acc_eff_mass.pdf}
-\caption{Acceptance $\times$ efficiency of ``pre'' per produced decay. (a) Against the true \Mee:
+\caption{Acceptance $\times$ efficiency of ``pre'' per produced decay. Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); numerator: weighted counts of each signal class after ``pre'' at all \Mfour, \Mee and \Mpipi (no window); denominator: produced decays of the same class at generator level (direct decay: generator sample $\times100$; class~2 per $\eta\to\pipi\piz$, $\piz\to\ee\gamma$ decay; class~3 per $\eta\to\pipi\piz$ decay; class~4 per $\eta\to\pipi\gamma$ decay); ``no weights'' = without the $\eta$-decay physics weights; (d) direct decays with true $14\le\Mee<20$\,\MeVcc, X17 all counts. (a) Against the true \Mee:
 direct decay (V3 and without physics weights), bump \piz Dalitz pair, X17. (b) Against the true
 \Mpipi for all classes. (c) Ratio V3/no weights and V2/no weights at fixed \Mee: the effect of the
 decay angles. (d) X17 against the direct decay at true \Mee 14--20\,\MeVcc.}
@@ -324,11 +351,11 @@ decay angles. (d) X17 against the direct decay at true \Mee 14--20\,\MeVcc.}
 
 \textbf{Resolution and scale} (Table~\ref{tab:s5res}, Fig.~\ref{fig:s5res}). The difference
 reconstructed minus true is fitted with a Gaussian core (iterated in $\pm2\sigma$); the tails are
-counted outside $\pm3\sigma$. The reconstructed \Mfour is low by 0.25--0.39\,\% (median ratio)
+counted outside $\pm3\sigma$. The reconstructed \Mfour is low by 0.22--0.39\,\% (median ratio)
 and has a low-side tail from energy loss and radiation: 6\,\% of the direct decays lie more than
 $3\sigma$ below the core. The \Mee resolution comes from the opening-angle measurement (OA
 resolution 1.0--1.4$^\circ$): at 17\,\MeVcc the core width is $4.21\pm0.01$\,\MeVcc with a median
-shift of $+0.10$\,\MeVcc; 90\,\% of the X17 rows lie in 9.7--24.3\,\MeVcc.
+shift of $+0.10$\,\MeVcc; 90\,\% of the X17 counts lie in 9.7--24.3\,\MeVcc.
 
 \begin{table}[H]
 \centering
@@ -350,11 +377,11 @@ class & median & core $\sigma$ & below / above $3\sigma$ & $M_4/M_{4,\mathrm{tru
 \end{tabular}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figs/s5_acc_res.pdf}
-\caption{Resolution after ``pre''. (a) $\Mfour-M_{4,\mathrm{true}}$ per class. (b) Width of
-$\Mee-M_{ee,\mathrm{true}}$ against the true \Mee. (c) Reconstructed \Mee of the X17 rows minus
+\includegraphics[width=\textwidth]{figs/s5_acc_res_cnt.pdf}
+\caption{Resolution after ``pre''. Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); all \Mfour (no window); reconstructed values (energy-loss-corrected momenta) minus the GEANT true values; (a) and (d) per signal class 2--6, (b) direct decay (class~5), X17 and the bump \piz Dalitz pair (class~2) in bins of the true \Mee, (c) all X17 counts. (a) $\Mfour-M_{4,\mathrm{true}}$ per class. (b) Width of
+$\Mee-M_{ee,\mathrm{true}}$ against the true \Mee. (c) Reconstructed \Mee of the X17 counts minus
 17\,\MeVcc. (d) $\Mpipi-M_{\pi\pi,\mathrm{true}}$.}
 \label{fig:s5res}
 \end{figure}
@@ -367,18 +394,99 @@ move the lower edge by $+0.1$ to $+3.2$\,\MeVcc; the direct decay alone ($N_{\ma
 reproduces the fixed window within 0.7\,\MeVcc. The fixed window is therefore kept. It holds 0.851
 of the simulated peak, $2.262\pm0.070$\,nb (direct $1.207\pm0.003$, conversion $1.054\pm0.070$).
 
+\emph{Later (Part~III):} the data $\eta$ peak sits at $0.54388\pm0.00049$\,\GeVcc, lower than the simulated 0.5460, and
+is narrower, $5.44\pm0.60$ against 6.09\,\MeVcc (only $1.1\sigma$; it favours a resolution factor 0.89, which Part~III
+treats as a systematic variant). Part~III scales every simulated \Mfour by $s=0.99615$ (from the two peak positions) and
+every \Mpipi by 0.9952; the K$^0_S$ peak in \Mpipi then agrees with the data in position ($0.9997\pm0.0011$), while the
+data width is 1.12--1.16 times the simulated one.
+
 \textbf{The opening angle separates conversions only weakly.} The true OA of a conversion pair is
 small (median 0.51$^\circ$), but the reconstructed OA is larger by about 1.6$^\circ$ (median
 2.2$^\circ$), because of the OA resolution and the need for two separated tracks. The fraction with
 OA$>2^\circ$ is 0.811 (direct), 0.955 (X17), $0.814\pm0.011$ (bump Dalitz), $0.576\pm0.016$ (bump
 conversion) and $0.567\pm0.030$ (peak conversion). A cut on \Mee separates about as well:
 $\Mee>15$\,\MeVcc keeps 0.50 of the direct decay and 0.02 of the conversion peak.
-OA does not separate X17 from the direct decay at the same reconstructed \Mee.
+OA does not separate X17 from the direct decay at the same reconstructed \Mee (confirmed later by Part~III,
+\S\ref{sec:s5x17}).
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figs_all/ecalacc_energy_cnt.pdf}
+\caption{\textbf{What it shows: half of the lost photons have less than 100\,MeV; inside the modules the simulated ECAL finds
+a cluster for about 65\,\% of them at every energy, but the quality cuts remove almost everything below 120\,MeV.} Selection: SMASH simulation only (standard set, which holds the bump counts in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); Part~III base selection ``pre'', the same cuts as ``pre'' of this part = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), \betanew particle identification (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), corrected momenta of all four tracks, all stored combinations of each event (isBest\,$\ge0$); bump classes 2 and 3 at all \Mfour, \Mee and \Mpipi, only counts whose lost photon has a solution on its circle; (a) in expected raw counts at the data luminosity 6079.2\,\nbinv per 20\,MeV of true photon energy; a photon counts as found if a cluster of the true photon lies in an active module; ECAL quality cuts: identified as a photon (PID~1), $0.8<\beta<1.2$, $E_{\mathrm{cluster}}>100$\,MeV. Later
+finding of Part~III (file \code{figs_all/ecalacc_energy_cnt.pdf} of \code{report_all.pdf}); simulation only. (a) True photon
+energy of the accepted bump counts, classes 2+3 (``pre''): all (magenta) and in an active module (blue), from the photon
+reconstructed on its circle; photons found by the ECAL simulation (any cluster: grey; passing the quality cuts PID~1,
+$0.8<\beta<1.2$, $E_{\mathrm{cluster}}>100$\,MeV: orange), from the cluster truth. (b) Efficiency inside the active modules
+(found / in a module) against the true energy. The text in (b) quotes the simulated energy scale (median
+$E_{\mathrm{cluster}}/E_{\mathrm{true}}=0.931$ with the cuts) and the data scale, about 17\,\% high (Part~II).}
+\label{fig:s5ecalenergy}
+\end{figure}
+
+\notebox{\textbf{Later finding (Part~III, \code{report_all.pdf}, section ``Full reconstruction of the bump with the ECAL
+photon''; package ``ecalacc'' and its independent verification): the lost photon of the bump.} In short: one third of
+the lost photons of the bump hit an active ECAL module, half of all lost photons are below 100\,MeV, and about one bump
+count in ten is fully reconstructed in the simulation.
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \textbf{How.} The simulation does not store the lost photon of a bump combination. The four true charged momenta fix it up
+      to one angle: with the \ee pair it must give $m_{\piz}$, with all four tracks $m_\eta$, so it lies on a known circle.
+      Its position on the circle follows the SMASH $\eta$ spectrum (HGeant decays the $\eta$ by phase space). Every accepted
+      count of classes 2 and 3 (``pre'', 2\,836 simulated entries of the standard set, weights $\times$ V3) thus gets the distribution of
+      its photon direction and energy, which is tested against the ECAL of \S\ref{sec:ecalsim}. Check: the 598 photons that
+      the ECAL simulation did find lie on the predicted circle ($|\Delta\cos|<10^{-3}$ for 99.8\,\%) and 99.5\,\% of them in
+      the predicted active modules; the found share is 0.56--0.68 of the predicted probability in every bin, so the
+      direction distribution along the circle is right.
+\item \textbf{Direction.} Over the whole sphere 9.0\,\% of the lost photons fly below the ECAL band, 54.5\,\% into it and
+      36.5\,\% above it (9.9\,\% backward); 68.9\,\% fly into the tracking range 18--85$^\circ$. $32.7\pm0.4$\,\% hit an active
+      module (40.3\,\% with six working sectors), the same for classes 2 and 3 and flat in \Mpipi (31.3--33.3\,\%).
+\item \textbf{Energy.} The photon is soft: mean true energy 130\,MeV (172\,MeV in the modules), 51\,\% below 100\,MeV
+      (34\,\% in the modules); at the edge it takes the smallest possible energy. Only 21.6\,\% of the counts have their
+      photon in a module with more than 100\,MeV, 13\,\% near the edge.
+\item \textbf{ECAL simulation.} Inside the active modules it finds a cluster of the true photon for 65\,\% of the photons,
+      at every energy (not explained; about 4\,\% of the counts have a cluster from an $e^\pm$ of the converted photon
+      instead). With the quality cuts (neutral, $0.8<\beta<1.2$, $E_{\mathrm{cluster}}>100$\,MeV) 38\,\% remain: none below
+      60\,MeV, 0.16 at 100--120\,MeV, 0.50 at 120--160\,MeV and 0.64--0.75 above. The simulated cluster energy is 7--9\,\% low
+      (median $E_{\mathrm{cluster}}/E_{\mathrm{true}}$ 0.914 for all found photons, 0.931 with the cuts, from the cluster
+      truth), so the 100\,MeV cut sits near 108\,MeV of true energy (in the data, near 85\,MeV: Part~II). The simulation
+      always has a start-detector hit, so the START dependence of the photon $\beta$ cut seen in the data is absent.
+\item \textbf{Fully reconstructed} (tagged with the true photon, $m_{5c}$ in 0.49--0.62\,\GeVcc): $9.8\pm0.6$\,\% of the
+      bump counts, 14.1\,\% with the cluster energies $\times1.285$ (the scale of the data); 18.6\,\% more than 100\,\MeVcc
+      below the edge, 6.9\,\% near it. Of the tagged weight 27.5\,\% lies more than 60\,\MeVcc below the edge (bump:
+      16.5\,\%), 46.7\,\% at $-60\ldots-20$\,\MeVcc (44.9\,\%) and 25.8\,\% above $-20$\,\MeVcc (38.2\,\%): the tag weights the
+      bump differently from the edge, preferentially far below it. The tag is specific to the bump: 12.7\,\% of the bump counts
+      are tagged, 0.8\,\% of class~4 and 1.8\,\% of class~5 (the peak makes about 2.2\,\% of the tagged weight). About
+      390 simulated entries of the standard set are tagged, so the simulated tag has an MC error of 9\,\%.
+\end{itemize}
+\begin{center}\footnotesize
+\begin{tabular}{@{}l r r r r r@{}}
+\toprule
+\% of the accepted bump counts (``pre'') & class 2 & class 3 & 2+3 & 2+3, window B & 2+3, edge \\
+\midrule
+photon in an active ECAL module & 32.9 & 32.3 & $32.7\pm0.4$ & 31.9 & 31.5 \\
+\quad six full sectors & 40.5 & 40.1 & 40.3 & 39.5 & 38.5 \\
+\quad and $E_\gamma^{\mathrm{true}}>100$\,MeV & 21.4 & 21.9 & 21.6 & 19.1 & 13.0 \\
+found by the ECAL simulation (quality cuts) & 12.3 & 12.6 & $12.4\pm0.7$ & 10.5 & 7.6 \\
+fully reconstructed (true photon, $m_{5c}$ window) & 9.9 & 9.6 & $9.8\pm0.6$ & 8.4 & 6.9 \\
+\quad cluster energies $\times1.285$ (data-like) & 14.0 & 14.3 & $14.1\pm0.7$ & 13.0 & 11.1 \\
+\bottomrule
+\end{tabular}\\[2pt]
+{\footnotesize Window B: the bump window of Part~III; edge: $-15\ldots+5$\,\MeVcc from the edge $E(\Mpipi,\Mee)$
+(\S\ref{sec:s5blind}). Errors: MC (simulation statistics).}
+\end{center}}
+
+\emph{Later finding (Part~III, independently verified): the tail of the simulated peak.} The low-side tail of \Mfour in
+Table~\ref{tab:s5res} is the leptons' bremsstrahlung in the detector material (HGeant). The generated four-body mass of the
+direct decay is a sharp line and the converter has no PHOTOS, so the radiation of the decay itself is missing (leading-log
+estimate: about 16--19\,\% more tail counts; result~11, Fig.~\ref{fig:res_peaktail}).
+
 
 %----------------------------------------------------------------------
 \subsection{Cut flow per signal class and background composition}
 \label{sec:s5cut}
 %----------------------------------------------------------------------
+\inshort{inside the windows only the two pion-vertex cuts separate signal from background ($Q$ = 1.04--1.06);
+OA$>2^\circ$ is harmful for the $\eta$ ($Q$ = 0.80--0.82) but useful for X17 (1.114); the physical background has the
+same make-up (\piz Dalitz and conversion pairs) in every \Mfour region.}
 Eight cuts are studied: the four of ``slides'', both pions in the vertex fit,
 $\max|z_\pi-z_{\mathrm{vertex}}|<40$\,mm (written $|\Delta z_\pi|$), $\mathrm{MM}_4<2.85$\,\GeVcc and
 $p_{T,4}>400$\,\MeVc. For each cut we compute the efficiency $\varepsilon_S$ of the signal and
@@ -390,7 +498,7 @@ $Q$ is the factor by which the cut changes $S/\sqrt{B}$ when $B\gg S$; it needs 
 carries information if $Q > 1 + \max(0.02, 2\delta Q)$ and is harmful if $Q$ is below the mirror
 value. ``Alone'' means the cut on ``pre''; ``N$-$1'' means the cut on top of the other three slides
 cuts (for the four other cuts: on top of ``slides''). Errors are from event groups, with pass and
-fail rows of one event correlated.
+fail counts of one event correlated.
 
 \begin{table}[H]
 \centering
@@ -423,7 +531,7 @@ What the numbers say (Table~\ref{tab:s5rank}, Figs.~\ref{fig:s5regions} and~\ref
 \begin{itemize}
 \item \textbf{Inside the windows the cuts hardly separate signal from the simulated background.}
       Only the two pion-vertex cuts have $Q>1$ significantly ($Q$ = 1.04--1.06 in both windows).
-      They select the same rows: given all other cuts, each adds nothing ($Q$ = 0.99--1.02).
+      They select the same counts: given all other cuts, each adds nothing ($Q$ = 0.99--1.02).
       Signal pions come from the primary vertex; 9--15\,\% of the background pion pairs contain a
       $\pi\to\mu$ decay and 28--32\,\% secondary pions.
 \item \textbf{OA$>2^\circ$ is harmful for the $\eta$ windows} ($Q = 0.80$ peak, 0.82 bump): it
@@ -440,21 +548,21 @@ What the numbers say (Table~\ref{tab:s5rank}, Figs.~\ref{fig:s5regions} and~\ref
       in this simulation.
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_cut_regions.pdf}
-\caption{Efficiency of the physical background T2 per \Mfour region. (a) Each cut alone on
+\caption{Efficiency of the physical background T2 per \Mfour region. Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); only the physical background T2 (a true \ee pair from one decay or conversion with any two pions, no fake lepton); efficiency relative to ``pre'' in (a) and relative to the same selection without the cut in (b); \Mfour regions: below 0.4576, bump window 0.4576--0.5255, gap 0.5255--0.5333, peak window 0.5333--0.5587, 0.5587--0.70, 0.70--1.00 and above 1.00\,\GeVcc (no upper limit); the eight cuts, in the order of the figure: $\mathrm{OA}>2^\circ$ (\ee opening angle), $\alpha_{\mathrm{lab}}<50^\circ$ (angle between the \pipi and \ee momenta in the laboratory), $\Mpipi<0.46$\,\GeVcc, $\alpha_\eta>140^\circ$ (the same angle in the rest frame of a hypothetical $\eta$), these four forming ``slides'', then both pions used in the event-vertex fit, $|\Delta z_\pi|<40$\,mm (both pion tracks within 40\,mm of the event vertex along the beam), $\mathrm{MM}_4<2.85$\,\GeVcc (missing mass of \ppee, computed with $T=4530$\,MeV) and $p_{T,4}>400$\,\MeVc (transverse momentum of \ppee). (a) Each cut alone on
 ``pre'', and the four slides cuts together (dashed). (b) N$-$1: each cut on top of the other
 slides cuts (the last four cuts on top of ``slides''). Errors from event groups.}
 \label{fig:s5regions}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_cut_rank.pdf}
 \caption{$Q = \varepsilon_S/\sqrt{\varepsilon_B}$ (left) and $\varepsilon_S$ (right) of the eight cuts
 for the peak, the bump and X17 ($\mathrm{BR}=10^{-5}$): alone (open circles), N$-$1 with respect
-to ``slides'' (squares), N$-$1 with respect to all eight cuts (triangles).}
+to ``slides'' (squares), N$-$1 with respect to all eight cuts (triangles). Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); peak: signal classes 4+5 against T2 in the peak window $0.5333\le\Mfour<0.5587$\,\GeVcc; bump: classes 2+3 against T2 in the bump window $0.4576\le\Mfour<0.5255$\,\GeVcc; X17: X17 counts against T2 plus classes 4+5 in the peak window (in the panel titles S2--S5 are the signal classes 2--5); efficiencies relative to ``pre'' (alone), to ``pre'' plus the other cuts of ``slides'' (squares; the last four cuts on top of all of ``slides'') or to ``pre'' plus the other seven cuts (triangles); the eight cuts, in the order of the figure: $\mathrm{OA}>2^\circ$ (\ee opening angle), $\alpha_{\mathrm{lab}}<50^\circ$ (angle between the \pipi and \ee momenta in the laboratory), $\Mpipi<0.46$\,\GeVcc, $\alpha_\eta>140^\circ$ (the same angle in the rest frame of a hypothetical $\eta$), these four forming ``slides'', then both pions used in the event-vertex fit, $|\Delta z_\pi|<40$\,mm (both pion tracks within 40\,mm of the event vertex along the beam), $\mathrm{MM}_4<2.85$\,\GeVcc (missing mass of \ppee, computed with $T=4530$\,MeV) and $p_{T,4}>400$\,\MeVc (transverse momentum of \ppee).}
 \label{fig:s5rank}
 \end{figure}
 
@@ -494,20 +602,23 @@ cuts 526, 268 and 79. $G_{\mathrm{vec}}$ and $G_{\mathrm{diff}}$ have $N_{\mathr
 \subsection{Optimisation for the \texorpdfstring{$\eta$}{eta} peak and bump}
 \label{sec:s5opt}
 %----------------------------------------------------------------------
+\inshort{frozen PEAK = ``pre'' + $|\Delta z_\pi|<40$\,mm + $\mathrm{MM}_4<2.85$\,\GeVcc, DIRECT = ``pre'' +
+$|\Delta z_\pi|<40$\,mm, BUMP = ``pre''; gains over ``pre'' $+2.67\pm0.44$ (5.1\,\%) and $+1.12\pm0.10$ (4.0\,\%) in
+$F$; the optimisation bias of the freeze rule is below 1\,\%.}
 \textbf{Targets.} PEAK: classes 4+5 in the peak window. DIRECT: class 5 in the peak window, with
-class~4 counted as background. BUMP: classes 2+3 in the bump window. $B$ = all other T1+T2 rows of
+class~4 counted as background. BUMP: classes 2+3 in the bump window. $B$ = all other T1+T2 counts of
 the window; a variant adds T3 and T4.
 
-\textbf{Figure of merit and method.} $F = S/\sqrt{S+B}$ with $S$, $B$ in expected rows at
+\textbf{Figure of merit and method.} $F = S/\sqrt{S+B}$ with $S$, $B$ in expected counts at
 $\Ldata$ (UNCONFIRMED; $F\propto\sqrt{\Ldata}$, the position of the optimum does not depend on it).
 Nine cut variables are scanned on grids that contain every named selection: OA$>$ (10 values),
 $\alpha_{\mathrm{lab}}<$ (10), $\Mpipi>$ (9), $\Mpipi<$ (10), $\alpha_\eta>$ (8), pions in the
 vertex fit (off/on), $|\Delta z_\pi|<40$\,mm (off/on), $\mathrm{MM}_4<$ (8) and $p_{T,4}>$ (6),
-$13\,824\,000$ combinations in all. Each window row gets a grid index per variable; the weights are
+$13\,824\,000$ combinations in all. Each entry of the window gets a grid index per variable; the weights are
 filled into a 9-dimensional histogram and summed cumulatively along every axis. After that each
 cell holds the exact $S$ and $B$ of one combination, and every cell is evaluated (exhaustive
 search, no random sampling). The table reproduces the engine sums for all named selections and
-direct row loops for 30 random cells (relative difference $<10^{-9}$; 378 checks).
+direct loops over the entries for 30 random cells (relative difference $<10^{-9}$; 378 checks).
 
 \textbf{Freeze rule} (declared before the search). A candidate must reach $F\ge0.95\,F_{\mathrm{best}}$ on
 the full sample and on each half (relative to the best of that half). Among the candidates take
@@ -519,7 +630,7 @@ threshold moved by one step) has the highest $F$.
 \caption{Optimisation of the $\eta$ selection (full sample, $\Ldata = 6080.5\,\nbinv$
 UNCONFIRMED; errors: simulation statistics). $|\Delta z_\pi|$ stands for $\max|z_\pi-z_{\mathrm{vertex}}|<40$\,mm.
 The last two rows are differences of $F$ with the event-group error computed on the difference
-itself: the same rows enter both selections, so this error is much smaller than the errors of the
+itself: the same counts enter both selections, so this error is much smaller than the errors of the
 two $F$.}
 \label{tab:s5opt}
 \small
@@ -586,29 +697,29 @@ bump nominal            & 0.732 & 0.783 & 0.977 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figs/s5_opt_eta_profile_peak.pdf}
-\caption{PEAK target: $F/F_{\mathrm{best}}$ against each cut variable. Profile = the best $F$ over
+\includegraphics[width=\textwidth]{figs/s5_opt_eta_profile_peak_cnt.pdf}
+\caption{PEAK target: $F/F_{\mathrm{best}}$ against each cut variable. Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); on top of ``pre'' the nine scanned cuts: \ee opening angle above none or 1--$8^\circ$, angle between the \pipi and \ee momenta in the laboratory below 25--$70^\circ$ or none, \Mpipi above none or 0.28--0.42\,\GeVcc and below 0.38--0.53\,\GeVcc or none, the same angle in the rest frame of a hypothetical $\eta$ above none or 100--$170^\circ$, both pions used in the event-vertex fit off or on, both pion tracks within 40\,mm of the event vertex along the beam off or on, missing mass of \ppee below 2.5--2.9\,\GeVcc or none (computed with $T=4530$\,MeV), transverse momentum of \ppee above none or 100--500\,\MeVc; signal $S$ = classes 4+5 and background $B$ = all other T1+T2 counts of the peak window $0.5333\le\Mfour<0.5587$\,\GeVcc, in expected counts at \Ldata; frozen point (PEAK): the 40\,mm pion cut and $\mathrm{MM}_4<2.85$\,\GeVcc, no other cut; halves A and B = even and odd event groups, each weighted $\times2$. Profile = the best $F$ over
 all other variables at a fixed value (full sample, black; half A and half B relative to their
 own best, dashed). The hatched band is the $\pm1\sigma$ statistical error of the full-sample $F$
 at each profile point; differences between neighbouring points are much more precise, because
-the rows are shared. Green: slice through the frozen point. Grey band: plateau
+the counts are shared. Green: slice through the frozen point. Grey band: plateau
 ($\ge0.95$). Triangle: frozen value. $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED).}
 \label{fig:s5profile}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_opt_eta_composition.pdf}
 \caption{Content of the target window by group, $\sigma$ in nb, for ``pre'', the best cell, the
-frozen cut, the best purity on the plateau and ``slides'' (stacked: T1+T2 groups). T3 (dashed
+frozen cut, the best purity on the plateau and ``slides'' (stacked: T1+T2 groups). Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); panels: PEAK (signal classes 4+5) and DIRECT (signal class~5, class~4 counted as background) in the peak window $0.5333\le\Mfour<0.5587$\,\GeVcc, BUMP (classes 2+3) in the bump window $0.4576\le\Mfour<0.5255$\,\GeVcc; the five bars, all on top of ``pre'': ``pre'' alone; the best cell (PEAK: $0.32<\Mpipi<0.48$\,\GeVcc, $\alpha_\eta>160^\circ$, $\Delta z_\pi<40$\,mm, $\mathrm{MM}_4<2.85$\,\GeVcc; DIRECT: $0.30<\Mpipi<0.53$\,\GeVcc, $\alpha_\eta>150^\circ$, $\Delta z_\pi<40$\,mm, $\mathrm{MM}_4<2.85$\,\GeVcc; BUMP: $\alpha_{\mathrm{lab}}<70^\circ$, $0.30<\Mpipi<0.41$\,\GeVcc, $\Delta z_\pi<40$\,mm); the frozen cut (PEAK: $\Delta z_\pi<40$\,mm and $\mathrm{MM}_4<2.85$\,\GeVcc; DIRECT: $\Delta z_\pi<40$\,mm; BUMP: none); the best purity on the plateau (PEAK: $\Mpipi>0.32$\,\GeVcc, $\Delta z_\pi<40$\,mm, $\mathrm{MM}_4<2.7$\,\GeVcc; DIRECT: $\alpha_{\mathrm{lab}}<40^\circ$, $\Delta z_\pi<40$\,mm, $\mathrm{MM}_4<2.7$\,\GeVcc; BUMP: $\alpha_{\mathrm{lab}}<40^\circ$, $\Mpipi>0.32$\,\GeVcc, $\Delta z_\pi<40$\,mm); ``slides'' ($\mathrm{OA}>2^\circ$, $\alpha_{\mathrm{lab}}<50^\circ$, $\Mpipi<0.46$\,\GeVcc, $\alpha_\eta>140^\circ$). OA is the \ee opening angle, $\alpha_{\mathrm{lab}}$ the angle between the \pipi and \ee momenta in the laboratory, $\alpha_\eta$ the same angle in the rest frame of a hypothetical $\eta$, $\Delta z_\pi$ the larger distance of the two pion tracks from the event vertex along the beam and $\mathrm{MM}_4$ the missing mass of \ppee (computed with $T=4530$\,MeV). T3 (dashed
 line) and T4 (dash-dotted line) are drawn at their own level and are not in the stack. Numbers
 above the bars: purity $S/(S+B)$.}
 \label{fig:s5optcomp}
 \end{figure}
 
-\textbf{Split-half check of the optimisation bias.} The rows are split by event group into two
+\textbf{Split-half check of the optimisation bias.} The entries are split by event group into two
 halves (half A = even group number, half B = odd; each half weighted by 2). The search is run on
 one half and the chosen cell is evaluated on the other. The bias is $F$(optimising half) $-$
 $F$(other half), averaged over both directions, because a single direction also contains the
@@ -635,7 +746,7 @@ the std part of $B$ ($N_{\mathrm{eff}}$ 924) and, for BUMP, the signal itself ($
 \notebox{\textbf{Frozen $\eta$ selections} (\code{plots/eta_sim/}\allowbreak\code{tables/s5_opt_eta_frozen.txt}):
 PEAK = pre + $|\Delta z_\pi|<40$\,mm + $\mathrm{MM}_4<2.85$\,\GeVcc; DIRECT = pre + $|\Delta z_\pi|<40$\,mm;
 BUMP = pre. \textbf{Caveat for data:} $|\Delta z_\pi|$ needs the $z$ of the pion tracks, which the
-compact data rows (\code{ScanEngine.h}) do not have yet. The data-ready alternative on the plateau is
+compact data entries (\code{ScanEngine.h}) do not have yet. The data-ready alternative on the plateau is
 ``pre + pions in vertex fit'' ($F/F_{\mathrm{best}}$ = 0.954, 0.962, 0.980). Without CB the
 simulation-only optimum may be looser than the data optimum, since the CB and its subtraction
 add to the variance and the cuts also reduce the CB.}
@@ -644,11 +755,14 @@ add to the variance and the cuts also reduce the CB.}
 \subsection{A selection aimed at X17 and its expected limit}
 \label{sec:s5x17}
 %----------------------------------------------------------------------
-\textbf{The X17 line.} In the peak window after ``pre'', the reconstructed \Mee of the X17 rows has
+\inshort{the frozen X17 selection (peak window, $15.5\le\Mee<24.5$\,\MeVcc, both pions in the vertex fit) gives an
+expected 90\,\% CL limit of $1.9\times10^{-5}$ (preliminary; phase-space and isotropic X17 assumed), set by the
+simulation error of the background; $5.7\times10^{-6}$ if the background were known exactly.}
+\textbf{The X17 line.} In the peak window after ``pre'', the reconstructed \Mee of the X17 counts has
 a mean of $17.25\pm0.01$\,\MeVcc and a Gaussian core of $\sigma = 4.04\pm0.01$\,\MeVcc; 93.3\,\% lie
 within $\pm2\sigma$. The width depends on the opening angle: 4.5\,\MeVcc for OA$<2^\circ$,
 3.3\,\MeVcc for OA$>8^\circ$; the mean moves from 13.6 (OA$<3^\circ$) to 20.3\,\MeVcc
-(OA$>8^\circ$), so an OA cut reshapes the line. In \Mfour the X17 rows have mean 546.6\,\MeVcc and
+(OA$>8^\circ$), so an OA cut reshapes the line. In \Mfour the X17 counts have mean 546.6\,\MeVcc and
 $\sigma = 5.9$\,\MeVcc; 85.7\,\% of them lie in the peak window.
 
 \textbf{Figure of merit.} The expected 90\,\% CL upper limit on
@@ -659,7 +773,7 @@ for $\mathrm{BR}=0$:
 \qquad \mathrm{UL}_{\mathrm{stat}} = s_{\mathrm{up}}(B)/s_1 .
 \label{eq:s5ul}
 \end{equation}
-Here $s_1$ is the number of selected X17 rows per unit BR and $B$ the background rows (T1 without
+Here $s_1$ is the number of selected X17 counts per unit BR and $B$ the background counts (T1 without
 X17, plus T2), both at \Ldata; $s_{\mathrm{up}}(B)$ is the CLs upper limit on the signal for an
 observed count equal to $B$ (continuous Poisson, about $1.645\sqrt{B}$ for large $B$); and
 $\sigma_{B,\mathrm{MC}}$ is the simulation (event-group) error of $B$. The second term is there
@@ -668,7 +782,7 @@ the limit with the background known exactly: a statistical limit only.
 
 \textbf{Two versions.} The first optimisation (v1, used by the blind test of
 Sect.~\ref{sec:s5blind}) used $\mathrm{UL}_{\mathrm{stat}}$ and also optimised the edges of the
-\Mfour window. A review found two problems: the MC error of $B$ ($\pm307$ rows) is larger than
+\Mfour window. A review found two problems: the MC error of $B$ ($\pm307$ counts) is larger than
 the statistical term, and the \Mfour window was to stay fixed for all parts of the study. The
 optimisation was therefore repeated (v2) with Eq.~(\ref{eq:s5ul}) and the fixed peak window.
 Method: coordinate descent over \Mee window, OA (lower and upper), $\alpha_{\mathrm{lab}}$,
@@ -677,7 +791,7 @@ within 2\,\% of the step minimum is taken. Two different starting points end at 
 
 \begin{table}[H]
 \centering
-\caption{X17 selections after ``pre''. Rows at $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED). UL in
+\caption{X17 selections after ``pre''. Counts at $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED). UL in
 units of $10^{-6}$; ``shape'': binned likelihood of \Mee 2--62\,\MeVcc in the \Mfour window with a
 Gaussian X17 line (background shape from the simulation, normalisation known or free).
 $Z$: Asimov significance for $\mathrm{BR}=10^{-5}$ with $B$ known.}
@@ -689,10 +803,10 @@ $Z$: Asimov significance for $\mathrm{BR}=10^{-5}$ with $B$ known.}
 \midrule
 cuts in addition to ``pre'' & \Mfour 0.5330--0.5555, \Mee 13.0--26.5, pions in vertex fit
                             & \Mfour 0.5333--0.5587, \Mee 15.5--24.5, pions in vertex fit \\
-X17 rows per unit BR, $s_1$  & $2.727\times10^{7}$ & $2.127\times10^{7}$ \\
-X17 rows at $\mathrm{BR}=10^{-5}$ & 272.7 & 212.7 \\
+X17 counts per unit BR, $s_1$  & $2.727\times10^{7}$ & $2.127\times10^{7}$ \\
+X17 counts at $\mathrm{BR}=10^{-5}$ & 272.7 & 212.7 \\
 background $B$ [nb] ($N_{\mathrm{eff}}$) & $1.333\pm0.051$ (696) & $0.878\pm0.039$ (501) \\
-background rows $B\pm\sigma_{B,\mathrm{MC}}$ & $8108\pm307$ & $5342\pm239$ \\
+background counts $B\pm\sigma_{B,\mathrm{MC}}$ & $8108\pm307$ & $5342\pm239$ \\
 $\mathrm{UL}_{\mathrm{stat}}$ (B known exactly) & 5.48 & 5.71 \\
 $\mathrm{UL}$, Eq.~(\ref{eq:s5ul}) (with the MC error of $B$) & 19.3 & 19.3 \\
 shape, $B$ known / normalisation free & 4.85 / 5.40 & 4.96 / 5.54 \\
@@ -708,13 +822,13 @@ $Z$($\mathrm{BR}=10^{-5}$), $B$ known / with $\sigma_{B,\mathrm{MC}}$ & 3.01 / 0
       re-optimisation gains nothing: the v1 cuts give $1.933\times10^{-5}$, the v2 cuts
       $1.931\times10^{-5}$. ``slides'' with the same \Mee window gives $2.15\times10^{-5}$.
 \item \textbf{Where the MC error comes from.} At the v2 optimum the variance of $B$ comes from
-      $G_{\pi^0\mathrm{D}}$ (60\,\%; lep set, $N_{\mathrm{eff}}$ 313), $G_{\mathrm{conv}}$ (24\,\%; 19 std
-      rows, $N_{\mathrm{eff}}$ 18) and $G_\eta$ (12\,\%; $N_{\mathrm{eff}}$ 29). One std row stands for 27.5
-      expected data rows.
+      $G_{\pi^0\mathrm{D}}$ (60\,\%; lep set, $N_{\mathrm{eff}}$ 313), $G_{\mathrm{conv}}$ (24\,\%; 19 standard-set
+      entries, $N_{\mathrm{eff}}$ 18) and $G_\eta$ (12\,\%; $N_{\mathrm{eff}}$ 29). One standard-set entry stands for 27.5
+      expected data counts.
 \item \textbf{Cuts.} The \Mee window keeps 0.62 of X17 and 0.094 of $B$; the pion-vertex cut keeps
       0.93 of X17 and 0.82 of $B$. OA, $\alpha_{\mathrm{lab}}$, \Mpipi and $\alpha_\eta$ cuts do not
       lower the limit: at \Mee 12--22\,\MeVcc the OA medians of X17 (4.9$^\circ$), the direct decay
-      (4.6$^\circ$) and $G_{\pi^0\mathrm{D}}$ (5.2$^\circ$) are about the same.
+      (4.6$^\circ$) and $G_{\pi^0\mathrm{D}}$ (5.2$^\circ$) are about the same. Later confirmed by Part~III (note below).
 \item \textbf{Composition of $B$} (v1): $G_{\pi^0\mathrm{D}}$ 0.56, direct decay (class 5) 0.18,
       $G_{\mathrm{conv}}$ 0.12, $G_\eta$ 0.08, class 4 0.03. The direct decay is an irreducible
       background under the line.
@@ -724,10 +838,10 @@ $Z$($\mathrm{BR}=10^{-5}$), $B$ known / with $\sigma_{B,\mathrm{MC}}$ & 3.01 / 0
       (\Mee 13--27.5 on half A, 15.5--23.5 on half B) is not better determined than in v1.
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figs/s5_opt_x17_shape.pdf}
-\caption{X17 search, expected rows at $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED). (a) \Mee at the v2
+\includegraphics[width=\textwidth]{figs/s5_opt_x17_shape_cnt.pdf}
+\caption{X17 search, expected counts at $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED). Selection: SMASH simulation only, no combinatorial background (standard, lepton and $\eta$ sets in mode~A; PDG branching ratios $\times$ the $\eta$-decay physics weights V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); all panels inside the peak window $0.5333\le\Mfour<0.5587$\,\GeVcc; (a) the frozen X17 selection v2 without its \Mee window: ``pre'' plus both pions used in the event-vertex fit, \Mee 2--62\,\MeVcc in 1\,\MeVcc bins (the frozen window $15.5\le\Mee<24.5$\,\MeVcc is not applied); (b) ``pre'' plus the four ``slides'' cuts instead of the pion-vertex cut: $\mathrm{OA}>2^\circ$ (\ee opening angle), $\alpha_{\mathrm{lab}}<50^\circ$ (angle between the \pipi and \ee momenta in the laboratory), $\Mpipi<0.46$\,\GeVcc and $\alpha_\eta>140^\circ$ (the same angle in the rest frame of a hypothetical $\eta$); \Mee 2--62\,\MeVcc; (c) and (d): the shape fits use \Mee 2--62\,\MeVcc, the counting limits $15.5\le\Mee<24.5$\,\MeVcc; ``opt.'' = v2, ``v1'' = $0.5330\le\Mfour<0.5555$\,\GeVcc, $13.0\le\Mee<26.5$\,\MeVcc and pions in the vertex fit, ``pre + M(ee) 12--22'' = peak window and $12\le\Mee<22$\,\MeVcc only; background $B$ = T1 without X17 plus T2 (one entry adds T3 and T4). (a) \Mee at the v2
 optimum without its \Mee window, stacked background groups, X17 as a Gaussian at the expected limit
 of the shape fit and as the simulated template at $\mathrm{BR}=10^{-5}$. (b) The same for
 ``slides''. (c) Test statistic $q(\mathrm{BR})$ on Asimov background-only data; the expected
@@ -741,35 +855,72 @@ the vertex fit. Expected 90\,\% CL limit by counting $1.9\times10^{-5}$ includin
 the background; $5.7\times10^{-6}$ if the background were known exactly. These numbers assume
 $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED), no CB, the SMASH background and phase space for X17.}
 
+\notebox{\textbf{Later findings (Part~III, \code{report_all.pdf}).}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \textbf{The limit in the data.} Part~III fitted $\Mfour\times\Mee$ with the background measured in every \Mee bin
+      from the \Mfour side bands of the data (decision~2 of \S\ref{sec:resdec}), with the procedure frozen before the X17
+      region was opened. The observed 90\,\% CL$_s$ limit at 17\,\MeVcc is $r<0.114$ times BR$(\eta\to\ppee)$, i.e.\
+      $3.16\times10^{-5}$ with the PDG 2026 value $2.76\times10^{-4}$ (ruled by the analyst, D25; $3.06\times10^{-5}$ with the
+      PDG 2020 value $2.68\times10^{-4}$ that the frozen procedure fixed before the unblinding); the expected limit is
+      $2.68\times10^{-5}$ (68\,\% band 1.54--4.92). The $1.9\times10^{-5}$ above is not like-for-like: it assumed that the
+      data hold all the $\eta$ that SMASH predicts (they hold about 0.4) and it used a counting window.
+\item \textbf{The opening angle of X17} (Fig.~\ref{fig:s5x17oa}; Part~III package e1 and its verification). In the
+      $\eta$ peak band 67\,\% of the simulated X17 pairs (17\,\MeVcc) have OA$<6^\circ$ (62\,\% between 2 and $6^\circ$); in
+      the X17 window 58\,\%, as for the direct decays in the same window (57\,\%). The X17 pairs are fast: median pair
+      momentum 424\,\MeVc, 73\,\% above 325\,\MeVc, the momentum at which a symmetric 17\,\MeVcc pair opens to $6^\circ$. At a
+      fixed \Mee an OA cut therefore acts mainly on the pair momentum (and on the sharing of the energy), not on the origin
+      of the pair. Every usual cut acts on X17 as on the direct decays within 5\,\%; OA$<6^\circ$ keeps only 58\,\% of the
+      X17 and makes a counting limit 20--30\,\% worse (with the background of the data).
+\end{itemize}}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figs_all/e1_x17_oa_v2.pdf}
+\caption{\textbf{What it shows: two thirds of the simulated X17 pairs have OA$<6^\circ$ because they are fast, and pairs of
+the same mass from the direct decay look the same.} Selection: data and SMASH with the same cuts (Part~III's ``pre'' plus the pion-vertex cut) = PT3 trigger (at least two sectors with an inner-TOF hit in coincidence with TOF or RPC, and at least three inner-TOF paddles hit; trigger bit 8192 in the data, bit 8192 set in SMASH), event vertex in the target region ($z>-160$\,mm), \betanew particle identification (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), corrected momenta of all four tracks, all stored combinations of each event (isBest\,$\ge0$), both pions used in the event-vertex fit; $\eta$ peak band $0.5325\le M_4<0.5575$\,\GeVcc; SMASH: masses moved to the data scale of Part~III ($M_4\times0.99615$, $\Mpipi\times0.9952$), weights PDG branching ratios $\times$ V3, mode~A; X17 (class~6, 17\,\MeVcc) at all \Mee in the band; direct decays in the X17 window $15.5\le\Mee<24.5$\,\MeVcc and at all \Mee; data: counts in the X17 window minus the combinatorial background CB $=2\sqrt{N_{++}N_{--}}$ from the like-sign data with the same cuts (10\,\MeVcc cells of $M_4$, shared out over the OA bins by the like-sign share of each 50\,\MeVcc band, $k=1$); (c) simulation only, peak band, all \Mee. Later finding of Part~III (file \code{figs_all/e1_x17_oa_v2.pdf} of
+\code{report_all.pdf}). (a) OA distributions, unit area: X17 (17\,\MeVcc,
+dashed magenta), the direct decays in the X17 window $15.5\le\Mee<24.5$\,\MeVcc (cyan) and at all \Mee (dotted) and, as a
+\emph{data} curve, the data after CB subtraction in the X17 window (blue points). (b) Fraction below an OA cut (same
+curves; the dash-dotted blue line is data). (c) Pair momentum of X17 and of the direct decays (simulation only); dotted:
+325\,\MeVc, where a symmetric 17\,\MeVcc pair has OA $=6^\circ$.}
+\label{fig:s5x17oa}
+\end{figure}
+
 %----------------------------------------------------------------------
 \subsection{Blind test of the signal extraction and of the X17 search}
 \label{sec:s5blind}
 %----------------------------------------------------------------------
+\inshort{the template fit and the calibrated Gaussian fit recover the peak within $+1$ to $+6$\,\%, linear side
+bands lose it; for the bump the side band with the simulated shape is closest; the X17 estimators are linear, but
+only those whose error includes the background uncertainty give valid limits. Later finding (Part~III): this test
+favoured the template fits; with the template noise of a real analysis they come out about 10\,\% low, and the
+leak-corrected peak side bands and the bump edge step are the estimators that hold (note at the end of the $\eta$
+results).}
 The extraction methods planned for the data were tested on simulated pseudo-data whose true
 content was hidden from the analyst until the procedure was frozen.
 
 \textbf{Preparation.}
 \begin{enumerate}
-\item \textbf{Split.} The rows are split by event group: half A (even group number) gives the
-      templates, half B (odd) gives the pseudo-data. Every row of an event goes to the same half.
+\item \textbf{Split.} The entries are split by event group: half A (even group number) gives the
+      templates, half B (odd) gives the pseudo-data. Every entry of an event goes to the same half.
 \item \textbf{Templates}: half A with weights $\times2$, histograms of \Mfour (1\,\MeVcc bins) per
       component and selection (PEAK, DIRECT, BUMP of Sect.~\ref{sec:s5opt} and the v1 X17 selection),
       exact window sums, and \Mee and $\Mfour\times\Mee$ for X17.
 \item \textbf{$\eta$ pseudo-data}: 200 toys at $L_{\mathrm{toy}} = \Lsim/2 = 110.525\,\nbinv$ from a
-      Poisson bootstrap of half B per event group. An event with largest row weight $w_g$ enters
-      $n\sim\mathrm{Poisson}(w_g)$ times; in each copy one uniform $u$ is drawn and each row with
-      $w_r/w_g>u$ is kept, so that every row has the expected multiplicity $w_r$. Only T1+T2 rows
+      Poisson bootstrap of half B per event group. An event with largest entry weight $w_g$ enters
+      $n\sim\mathrm{Poisson}(w_g)$ times; in each copy one uniform $u$ is drawn and each entry with
+      $w_r/w_g>u$ is kept, so that every entry has the expected multiplicity $w_r$. Only T1+T2 entries
       are used. A check with 4000 toys gave toy variance / predicted variance = 0.95--1.06; the sum
       of the squared pulls of the variances over the 21 regions was 36.8. Repeated with eight further
       random seeds, this sum is 9.1--35.7, on average $20.7\pm10.1$ over all nine runs (21 expected; the
-      spread is wider than for 21 independent entries because the selections share rows), and the
+      spread is wider than for 21 independent entries because the selections share entries), and the
       variance ratio stays within 0.94--1.06: the bootstrap reproduces the variances, the value 36.8 is
       a fluctuation.
 \item \textbf{X17 pseudo-data}: 1500 toys at \Ldata (UNCONFIRMED), parametric: in each cell of
       $\Mfour\times\Mee$ signal and background are drawn as Poisson numbers around the half-B
       expectation ($\times2\times\Ldata/\Lsim$). BR $\in\{0, 1, 3, 10, 30\}\times10^{-6}$, 300 toys
       each, shuffled, with random ids.
-\item \textbf{Sealed key}: true rows per toy, group and region; the expectation of half B per
+\item \textbf{Sealed key}: true counts per toy, group and region; the expectation of half B per
       toy, called $\mu$, is the quantity a measurement would estimate.
 \end{enumerate}
 For the weight rules~v2 the $\eta$ and X17 toys were drawn again with the same seed. Because
@@ -777,7 +928,8 @@ the weights changed, the random draws differ from those of rules~v1, so the bias
 moved within their statistical errors (by up to 2.3 standard deviations).
 
 \textbf{Methods} (frozen before any yield was computed on the pseudo-data). Peak yield: M1 =
-Gaussian (fixed at 0.5460\,\GeVcc, 6.7\,\MeVcc) + second-order polynomial, calibrated with the
+Gaussian (fixed at 0.5460\,\GeVcc, 6.7\,\MeVcc; later, Part~III: the data peak is $5.44\pm0.60$\,\MeVcc wide,
+\S\ref{sec:s5acc}) + second-order polynomial, calibrated with the
 response to the half-A peak template; M2 = template fit (free normalisations of peak, bump and
 background templates, binned Poisson likelihood with the template variance added); M2b = M2
 with the background split into $G_\eta$ and the rest; M2d = M2 with the peak split into class 5
@@ -793,10 +945,10 @@ the direct-decay normalisation constrained to $1\pm0.10$; X5 = counting with $B$
 X4 and X5 were added after the X1 results were seen (declared, before their own results). An
 example toy with the fits is shown in Fig.~\ref{fig:s5toy}.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figs/s5_blind_ana_toy0_PEAK.pdf}
-\caption{One $\eta$ toy (pseudo-data, $L = 110.5\,\nbinv$, PEAK selection). Left: \Mfour with
+\includegraphics[width=\textwidth]{figs/s5_blind_ana_toy0_PEAK_cnt.pdf}
+\caption{One $\eta$ toy (pseudo-data, $L = 110.5\,\nbinv$, PEAK selection). Selection: SMASH simulation only, no combinatorial background (mode~A, weights $\times$ V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); pseudo-data = Poisson bootstrap of half~B (odd event groups) of the T1+T2 counts after ``pre'' with $0.30\le\Mfour<1.20$\,\GeVcc; templates from half~A (even event groups), scaled to 110.5\,\nbinv; frozen PEAK selection = ``pre'' plus both pion tracks within 40\,mm of the event vertex along the beam ($\Delta z_\pi<40$\,mm) and missing mass of \ppee below 2.85\,\GeVcc ($\mathrm{MM}_4$, computed with $T=4530$\,MeV); 2\,\MeVcc bins; fit ranges M2 0.400--0.700, M1 0.526--0.614 and B1 0.400--0.620\,\GeVcc; shaded: bump window $0.4576\le\Mfour<0.5255$\,\GeVcc and peak window $0.5333\le\Mfour<0.5587$\,\GeVcc (simulation mass scale). Left: \Mfour with
 the components of the template fit M2. Right: zoom with the Gaussian + polynomial fit M1 and the
 bump fit B1, with the bump and peak windows.}
 \label{fig:s5toy}
@@ -804,7 +956,7 @@ bump fit B1, with the bump and peak windows.}
 
 \textbf{What a bias means here.} The templates (half A) and the pseudo-data (half B) are two
 statistically independent copies of the same model. The truth of half B differs from half A by
-MC fluctuations: peak (PEAK selection) $241.4$ against $224.1\pm10.3$ rows (+7.7\,\%), bump (BUMP)
+MC fluctuations: peak (PEAK selection) $241.4$ against $224.1\pm10.3$ counts (+7.7\,\%), bump (BUMP)
 1095.6 against $1046.1\pm35.7$ (+4.7\,\%), class 5 (DIRECT) 128.88 against $128.00\pm0.48$, class 4
 (DIRECT) 118.5 against $106.2\pm10.5$ (+11.5\,\%). All toys share this difference. A method bias
 can therefore be resolved only beyond the common MC error, which is $\pm$11--15\,\% for the peak and
@@ -821,7 +973,7 @@ $|Y-\mu|\le\sigma_{\mathrm{tot}}$ (nominal 0.683).}
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}l l r r c c@{}}
 \toprule
-yield, selection ($\mu$) & method & bias [rows] & relative & pull & coverage \\
+yield, selection ($\mu$) & method & bias [counts] & relative & pull & coverage \\
 \midrule
 peak, PEAK (241.4)  & M1 Gauss + pol2   & $+7.4\pm2.9\pm31.3$  & $+3.1$\,\%  & $+0.17$ / 0.96 & 0.72 \\
                     & M2 template fit   & $+3.4\pm2.0\pm27.5$  & $+1.4$\,\%  & $+0.08$ / 0.80 & 0.77 \\
@@ -844,7 +996,7 @@ direct, DIRECT (128.9) & M2d (cl.\ 4 constr.) & $+26.6\pm2.2\pm31.0$ & $+20.6$\,
 \begin{itemize}
 \item \textbf{Peak.} The template fit M2 and the calibrated Gaussian fit M1 find the peak within
       +1 to +6\,\% in all three selections, well inside the common MC error. Per toy they differ by
-      about 12\,\% (rms 29 rows), so a difference of that size between them in data is normal.
+      about 12\,\% (rms 29 counts), so a difference of that size between them in data is normal.
       M2b is 3--8\,\% above M2 every time.
 \item \textbf{Linear side bands (M3) lose the peak}, because the background is convex under it and
       17\,\% of the signal leaks into the side bands. Two independent realisations of the MC noise
@@ -857,25 +1009,109 @@ direct, DIRECT (128.9) & M2d (cl.\ 4 constr.) & $+26.6\pm2.2\pm31.0$ & $+20.6$\,
       statistical error.
 \item \textbf{Direct decay alone.} \Mfour cannot separate class 5 from class 4. M2d gives
       class 4 = 105.4 (truth 118.5) and therefore class 5 too high by the same amount
-      ($26.6 = 13.5 + 13.1$ rows). The split is limited by the simulation statistics of the
-      conversion peak ($N_{\mathrm{eff}}\approx100$ in a half).
+      ($26.6 = 13.5 + 13.1$ counts). The split is limited by the simulation statistics of the
+      conversion peak ($N_{\mathrm{eff}}\approx100$ in a half). \emph{Later (Part~III):} its X17 fit of
+      $\Mfour\times\Mee$, run on the X17 toys of this section, gave the direct-decay yield 55\,\% too high (11\,168 against
+      7\,200 at $\mathrm{BR}=0$); the cause is the same, the heavy entries of the simulated parent sample (Fig.~\ref{fig:s5side}).
 \item \textbf{Errors.} The event-group errors describe the spread of the toys: the ratio rms/error
       is 0.93--1.08 for M1, M3, B1, B3 and D5 and 0.90--1.06 for the template fits and B4, so the
       errors are adequate. The common MC error is not in the per-toy error and must be added.
 \end{itemize}
 
-\begin{figure}[H]
+\notebox{\textbf{Later finding (Part~III, \code{report_all.pdf}, section ``Validation of the estimators on simulation''):
+the recommendations of this test do not hold with realistic template noise} (Fig.~\ref{fig:res_stress}). Part~III ran
+about 160\,000 estimator chains on pseudo-data at the data luminosity, with a CB built from the like-sign pairs of the data,
+in several truth scenarios and template configurations.
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \textbf{The split of this test moves the results by itself.} Templates from half A and truth from half B is the
+      configuration used here. The two halves of the smoothed simulated background differ by 5--10\,\% per 50\,\MeVcc band;
+      this single difference moves the $\eta$ scale by $+32$\,\% (and by $-37$\,\% with the halves swapped) and B4 by
+      $+27$/$-31$\,\%. The template-to-truth difference then has four times the variance of the real analysis. The common
+      MC error of this section ($\pm$11--15\,\% peak, $\pm$4.5--5\,\% bump) is this kind of effect.
+\item \textbf{Realistic template noise biases every template fit low.} With the truth from the full sample and the
+      templates from bootstrap copies, the template fits give the $\eta$ scale $-10.1$\,\%, the bump $-11.6$\,\%, the peak
+      $-6.6$\,\% and the branching ratio of the direct decay $+14.8$\,\%. The cause is the noise of the raw signal templates
+      (effective 10--200 entries per histogram): a fit that scales a noisy template is pulled towards zero (errors in the
+      regressor). Estimators that do not scale a signal template are not attenuated: B4 $-1.4$\,\%, peak side bands
+      $-0.5$\,\%. Template noise alone gives $\chi^2/\mathrm{ndf}$ = 2--3 for a perfect model (2.83 for the main template
+      fit, 2.10 for the background fit).
+\item \textbf{The peak.} Part~III's main estimator is a side band like M3, but with the ratio of the background in the
+      window and in the side bands taken from the smoothed simulation (fitted to the data) and with the leak of the peak
+      into the side bands corrected. M3c over-corrected here because its curvature came from the noisy raw templates.
+\end{itemize}}
+
+\notebox{\textbf{Later finding (Part~III), continued: the bump and the fits with several scales.}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \textbf{The bump.} The edge step B3 (here unbiased, 15--17\,\% error) became the basis of Part~III's bump measurement (the per-slice step is now its cross-check, D37): it closes
+      within 2\,\% on 16\,000 pseudo-data sets, and the quadratic background term that moves B4 by $+150$\,\% moves it by
+      only $-2.1$\,\%. It is limited by the simulation statistics (MC error 11\,\%; taking the simulated step from the bump
+      classes alone, without a smoothing model, gives about 6.6\,\%). B4 ($+3.9$\,\% here) is NOT DETERMINED in the data: its
+      background has to be carried down 40--120\,\MeVcc from above the peak.
+\end{itemize}}
+
+\notebox{\begin{itemize}\setlength{\itemsep}{0pt}
+\item \textbf{The edge in the distance to it, $u$} (Part~III, package ``edgeu'', verified). The largest \Mfour that
+      $\eta\to\pipi\piz$, $\piz\to\ee\gamma$ can give with the photon lost, $E(\Mpipi,\Mee)$, depends on both pair masses;
+      in $u=\Mfour-E(\Mpipi,\Mee)$ all edges fall on $u=0$ (Fig.~\ref{fig:s5edgeu}). In the simulated truth every bump count
+      lies below its exact edge (largest excess $-0.48$\,\MeVcc for class~2, $-0.51$ for class~3); without the \Mee term
+      3.8\,\% of class~2 would lie above it. The reconstructed $u$ is smeared by 6.7\,\MeVcc at the edge (Gaussian core of a
+      fit on $\pm40$\,\MeVcc; 5.8--7.1\,\MeVcc depending on the fit method), almost all from the \Mfour error (the edge
+      function adds 1.2\,\MeVcc). The simulated non-$\eta$ backgrounds show no step at $u=0$ (\piz Dalitz and vector-meson
+      pairs $12\pm140$, conversion pairs $59\pm148$ counts); the other $\eta$ counts give a raw step of $123\pm53$ counts
+      (2.3$\sigma$) without any visible structure, treated as template noise. The $e^-e^-$ like-sign counts of the data step
+      at $u=0$ ($73.5\pm15.7$, $4.7\sigma$).
+\end{itemize}}
+
+\notebox{\begin{itemize}\setlength{\itemsep}{0pt}
+\item[] Part~III (package ``eestep'', D39, approved by the analyst on 15 November 2026)
+      traced this step to lepton pairs from the two photons of the \piz in $\eta\to\pipi\piz$ (a Dalitz lepton and a
+      conversion lepton of the other photon, or two conversion leptons): a kinematic toy of $4\times10^5$ decays per topology
+      gives them exactly the bump's edge (true $u$ never above 0; median \Mee near it 113--121\,\MeVcc). The standard set (the
+      only one with $\eta\to\pipi\piz$) contains such pairs, mostly $e^-e^-$, at large \Mee (around 100\,\MeVcc) and wide
+      opening angles (around $40^\circ$); part of the $e^-e^-$ ones carry a Compton or knock-on electron of a photon, which is
+      always negative and has no positive counterpart. They serve only to identify the origin of the data step: the
+      simulation does not model the like-sign or combinatorial background, so no like-sign rate of the data is compared with
+      it, and no SMASH number enters a correction or the CB (the CB is kept, D39).
+      Charge flips are rare: a true \ee pair appears as a like-sign entry in 0.04\,\% (standard set), 0.01\,\% (lepton set) and
+      0.008\,\% ($\eta$ set) of the cases; per true $e^+$ a negative charge is reconstructed for 1.7\,\% below 100\,MeV$/c$,
+      0.46\,\% at 100--200, 0.10\,\% at 200--300 and at most 0.06\,\% above. An independent verifier confirmed the mechanism
+      (also for the Compton electrons, which have the same edge). In the data the one fit in $u$ gives
+      $0.426\pm0.020\pm0.034\pm0.030$ of SMASH (class-2 angle corrected with per-count QED weights, D38; the peak-tail term of
+      D40 in the systematic error), with MC error 7.0\,\% (simulated step from the bump classes alone) against 4.7\,\%
+      statistical; it is Part~III's bump measurement, and the per-slice edge is its cross-check (D37). D37--D40 were approved
+      by the analyst on 15 November 2026.
+\item \textbf{Fits with several scales} suffer the same attenuation: Part~III's flexible fit with a free scale per channel
+      biases class~2 by $-20$\,\% and class~4 by $-58$\,\% on pseudo-data; the common $\eta$ scale it finds in the data goes
+      from 0.46 to 0.57 after the template-noise correction.
+\end{itemize}}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figs_all/edgeu_kinematics_cnt.pdf}
+\caption{\textbf{What it shows: the edge of the bump depends on \Mpipi and \Mee, and once both are taken into account no
+simulated bump count lies above it; the reconstructed distance to the edge, $u$, is smeared by 6.7\,\MeVcc.} Selection: SMASH simulation only (mode~A, weights PDG branching ratios $\times$ V3, no QED angle correction of class~2); Part~III's ``pre'' plus the pion-vertex cut = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), \betanew particle identification (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), corrected momenta of all four tracks, all stored combinations of each event (isBest\,$\ge0$), both pions used in the event-vertex fit; masses on the data scale of Part~III, $M_4'=0.99615\,M_4$, $\Mpipi'=0.9952\,\Mpipi$; expected raw counts at 6079.2\,\nbinv; (a) the edge function only, no counts; (b)--(d) classes 2 and 3 with $0.30\le\Mpipi'<0.40$\,\GeVcc; (c) class~2 with reconstructed $20\le\Mee<135$\,\MeVcc ($u$ is not defined above the \piz mass); (d) classes 2+3 with $u_{\mathrm{true}}>-15$\,\MeVcc and reconstructed $\Mee<135$\,\MeVcc. Later finding
+of Part~III (file \code{figs_all/edgeu_kinematics_cnt.pdf} of \code{report_all.pdf}). (a) The edge $E(\Mpipi,\Mee)$ for $\Mee=0$, 20, 50,
+100\,\MeVcc; green: the $\eta$ peak; dotted: the \Mpipi slices of the per-slice edge fit; no bump above
+$\Mpipi=0.4116$\,\GeVcc. (b) Simulated truth $u_{\mathrm{true}}$ for class~2 (orange) and class~3 (magenta); dashed: class~2
+with the edge at $\Mee=0$, which puts counts above $u=0$. (c) Reconstructed $u$ of class~2 with $\Mee\ge20$\,\MeVcc, with the
+\Mee term (orange) and without it (dashed). (d) $u_{\mathrm{reco}}-u_{\mathrm{true}}$ near the edge (classes 2+3,
+$u_{\mathrm{true}}>-15$\,\MeVcc): template width 6.70\,\MeVcc (Gaussian fit on $\pm40$\,\MeVcc; 5.8--7.1\,\MeVcc depending on
+the fit method); dashed: the width $\times0.893$ favoured by the data peak (Part~III).}
+\label{fig:s5edgeu}
+\end{figure}
+
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_blind_eval_eta_bias.pdf}
-\caption{Blind test, $\eta$ yields. Top: relative bias $(\langle Y\rangle-\mu)/\mu$ per method and
+\caption{Blind test, $\eta$ yields. Selection: SMASH simulation only, no combinatorial background (mode~A, weights $\times$ V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); 200 pseudo-data sets at $L=110.525$\,\nbinv, pseudo-data = Poisson bootstrap of half~B (odd event groups) of the T1+T2 counts after ``pre'' with $0.30\le\Mfour<1.20$\,\GeVcc; templates from half~A (even event groups); markers for the three frozen selections: PEAK = ``pre'' plus both pion tracks within 40\,mm of the event vertex along the beam ($\Delta z_\pi<40$\,mm) and missing mass of \ppee below 2.85\,\GeVcc ($\mathrm{MM}_4$, computed with $T=4530$\,MeV); DIRECT = ``pre'' plus the 40\,mm pion cut only; BUMP = ``pre'' only; yields: peak = classes 4+5 in the peak window $0.5333\le\Mfour<0.5587$\,\GeVcc, bump = classes 2+3 in the bump window $0.4576\le\Mfour<0.5255$\,\GeVcc, direct = class~5 in the peak window ($\mu$ = their half-B expectation). D5 (shown with DIRECT) uses instead the counts of ``pre'' with both pions used in the event-vertex fit, split at $\Mee=10$\,\MeVcc. Side bands: M3 and M3c 0.5255--0.5333 and 0.5587--0.5665\,\GeVcc, B4 0.5665--0.700\,\GeVcc. Top: relative bias $(\langle Y\rangle-\mu)/\mu$ per method and
 selection; thick bars: toy statistics, thin bars: including the common MC terms. Bottom: pull
 $(Y-\mu)/\sigma_{\mathrm{tot}}$, marker = mean, bar = rms.}
 \label{fig:s5bias}
 \end{figure}
 
 \textbf{X17 results} (Table~\ref{tab:s5blindx}, Figs.~\ref{fig:s5side} and~\ref{fig:s5x17lin}).
-Each std row of half B stands for about 55 expected data rows. The background of every X17 toy
-is therefore the unsmoothed half-B content, with single-bin spikes of 50--200 rows that all toys
+Each standard-set entry of half B stands for about 55 expected data counts. The background of every X17 toy
+is therefore the unsmoothed half-B content, with single-bin spikes of 50--200 counts that all toys
 share and that differ from half A (Fig.~\ref{fig:s5side}).
 \begin{itemize}
 \item Every estimator follows the injected BR with a slope of 0.98--1.02.
@@ -915,19 +1151,19 @@ X5 counting                   & $-11.7\pm0.2$ & $0.999\pm0.008$ & 21.1 (19.7--22
 \end{tabular}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.75\textwidth]{figs/s5_blind_ana_x17_sideband.pdf}
+\includegraphics[width=0.75\textwidth]{figs/s5_blind_ana_x17_sideband_cnt.pdf}
 \caption{\Mee side band (above the X17 window) of three X17 toys against the half-A template
-(grey boxes). All toys show the same spikes, which come from single heavy rows of half B.
+(grey boxes). Selection: SMASH simulation only, no combinatorial background (mode~A, weights $\times$ V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); X17 selection v1 of the blind test = ``pre'' plus both pions used in the event-vertex fit and $0.5330\le\Mfour<0.5555$\,\GeVcc; side band $26.5\le\Mee<45$\,\MeVcc in 0.5\,\MeVcc bins, above the v1 X17 window $13.0\le\Mee<26.5$\,\MeVcc; toys: Poisson draws around the half-B expectation of T1 (without X17) plus T2, plus X17 at a hidden BR, scaled to \Ldata; template: half~A, direct decay plus all other background. All toys show the same spikes, which come from single heavy entries of half B.
 $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED).}
 \label{fig:s5side}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figs/s5_blind_eval_x17_linearity.pdf}
-\caption{Blind test, X17. Left: extracted against injected BR (mean $\pm$ rms over 300 toys) with
+\caption{Blind test, X17. Selection: SMASH simulation only, no combinatorial background (mode~A, weights $\times$ V3); base selection ``pre'' = simulated PT3 trigger (bit 8192 set), event vertex in the target region ($z>-160$\,mm), particle identification by \betanew with the simulation polygons (pions within $3\sigma$, leptons within $5\sigma$ and with a RICH ring), energy-loss-corrected momenta of all four tracks, all stored \ppee combinations per event (isBest\,$\ge0$); 1500 pseudo-data sets at \Ldata (300 for each injected BR of 0, 1, 3, 10 and $30\times10^{-6}$; Poisson draws around the half-B expectation); X17 selection v1 of the blind test = ``pre'' plus both pions used in the event-vertex fit and $0.5330\le\Mfour<0.5555$\,\GeVcc; estimators on \Mee: X1, X2 and X4 fit $13.0\le\Mee<26.5$\,\MeVcc, X3 fits $8\le\Mee<40$\,\MeVcc, X5 counts in $13.0\le\Mee<26.5$\,\MeVcc. Left: extracted against injected BR (mean $\pm$ rms over 300 toys) with
 straight-line fits. Right: mean offset; thick bars: error of the mean, thin bars: mean quoted
 error. Dotted: the offset predicted for X5. $\Ldata = 6080.5\,\nbinv$ (UNCONFIRMED).}
 \label{fig:s5x17lin}
@@ -938,17 +1174,23 @@ the methods behave in data.
 \begin{itemize}
 \item Templates and pseudo-data come from the same SMASH model; there is no CB and no data/SMASH
       shape difference (0.87--1.36 above 0.56\,\GeVcc in earlier comparisons). Template fits are
-      favoured by construction. $L_{\mathrm{toy}}$ is 55 times below \Ldata.
+      favoured by construction. $L_{\mathrm{toy}}$ is 55 times below \Ldata. \emph{Later (Part~III):} without any
+      adjustment data/SMASH is 0.74--1.27 across \Mfour (one common scale leaves $\chi^2/\mathrm{ndf}=12$); and the
+      template noise of the halves favours or disfavours the fits by itself (note above).
+\item \emph{Later (Parts~II, III):} the simulation has no collisions outside the liquid-hydrogen cell (no target walls,
+      no beam halo). In the data the target walls give 13--15\,\% of the counts after CB subtraction in
+      0.40--0.70\,\GeVcc, with a softer \Mfour spectrum than the hydrogen, but only $3^{+4}_{-3}$\,\% of the $\eta$; the
+      pseudo-data of this test contain no such component (\S\ref{sec:resnotdet}).
 \item \textbf{The test was not blind by construction.} The frozen tables that the analyst read
       contain full-sample (A+B) numbers; together with the half-A templates they give the half-B
       truth (for example the PEAK yield 241.4 and the X17 background of half B). No sign was found
       that these numbers were used, and the sealed key was not read before the results were
       written, but the leak was possible.
-\item The bootstrap repeats identical rows; how often a row recurs across toys reveals its set and
+\item The bootstrap repeats identical entries; how often an entry recurs across toys reveals its set and
       therefore class 4 (std) against class 5 ($\eta$ set). This was not exploited, but it is a
       second possible leak.
 \item The X17 part used the v1 selection, whose \Mfour window was optimised (partly on a step of
-      4 to 8 std rows); the fixed window raises $\mathrm{UL}_{\mathrm{stat}}$ by 3\,\%.
+      4 to 8 standard-set entries); the fixed window raises $\mathrm{UL}_{\mathrm{stat}}$ by 3\,\%.
 \end{itemize}
 
 %----------------------------------------------------------------------
@@ -960,31 +1202,47 @@ the methods behave in data.
       windows but do not improve the windows themselves; OA$>2^\circ$ and $\alpha_\eta>140^\circ$ cost
       signal (conversions, bump). Their use in data must be justified by the CB and checked there.
       The pion-vertex cuts are the only ones with a gain inside the windows (4--6\,\%); the frozen
-      PEAK and DIRECT cuts need the pion track $z$ in the data compact rows, otherwise ``pre + pions
-      in vertex fit'' is the alternative.
+      PEAK and DIRECT cuts need the pion track $z$ in the compact data entries, otherwise ``pre + pions
+      in vertex fit'' is the alternative. \emph{Later (Parts~II, III):} checked in the data: the CB is small
+      (CB$/N$ = 0.07--0.10 in the peak window), OA$>2^\circ$ keeps 0.78 of the peak and lowers the precision in every
+      selection, the kinematic cuts add nothing once the vertex cut is in, and the frozen PEAK gains as much as the best
+      rule tuned blind on the data. The usual cuts are not applied (Part~III, D34).
 \item \textbf{Peak extraction.} Template fit (M2) and Gaussian + polynomial with calibration (M1)
       close within a few per cent in simulation; a difference of about 12\,\% between them is normal.
-      Linear side bands under the peak lose 20--45\,\% and should not be used.
+      Linear side bands under the peak lose 13--46\,\% (about 30\,\% on average) and should not be used.
+      \emph{Superseded (Part~III):} with realistic template noise the template fits come out about 10\,\% low; the main
+      estimator is a side band with the background ratio from the smoothed simulation and the leak of the peak corrected.
 \item \textbf{Bump.} Side band with the simulated background shape (B4) and template fit; the
-      parametric fit tends to be high.
+      parametric fit tends to be high. \emph{Superseded (Part~III):} the bump is measured through the edge step (B3);
+      B4 is not determined in the data. Part~III also measures the step in the distance to the edge, $u$ (0.426 of
+      SMASH), its bump measurement; the per-slice step is the cross-check (D37, approved by the analyst on 15 November 2026).
 \item \textbf{Direct decay alone.} The split of the peak into class 5 and class 4 is limited by the
-      307 std rows of class 4; the quoted error must include the simulation statistics.
+      307 standard-set entries of class 4; the quoted error must include the simulation statistics.
 \item \textbf{Simulation statistics.} The std set limits the bump and conversion templates
       ($N_{\mathrm{eff}}$ 270--1332) and the X17 background. The common MC error must be added to every
-      yield.
+      yield. \emph{Confirmed later (Part~III):} its template-statistics error is 1.6--3.6 times the statistical error for
+      the template fits, about 2 for the bump edge and 1--8 for its flexible fit; the effective number of simulated
+      entries per histogram of its main fit is 1\,782--7\,141, and the rms of its simulation replicas equals the event-group
+      error (ratio 0.989--1.016).
 \item \textbf{X17.} With the background taken from this simulation the expected limit is about
       $2\times10^{-5}$ (at $\Ldata$ UNCONFIRMED), set by the simulation statistics of the background;
       $5.7\times10^{-6}$ would need the background known exactly. Any X17 estimate must carry the
       background uncertainty in its error. A larger std production or a background determined from
-      data side bands would be needed to approach the statistical limit.
+      data side bands would be needed to approach the statistical limit. \emph{Later (Part~III):} done with the
+      background from the data side bands: observed limit $3.16\times10^{-5}$ (PDG 2026; the frozen PDG 2020 value:
+      footnote~\ref{fn:x17pdg}), expected $2.68\times10^{-5}$ (\S\ref{sec:s5x17}).
 \end{enumerate}
 
 \tipbox{\textbf{Open points of this section.} (i) $\Ldata$ is UNCONFIRMED. (ii) The absolute
 efficiencies rest on $N_{\mathrm{direct}} = 100\times1\,181\,801$ (representativeness of the 1000
-generator files UNVERIFIED). (iii) The X17 \Mpipi distribution and decay angle are assumed
-(phase space, isotropic). (iv) The blind test should be repeated with cut definitions only, with
-hidden per-toy signal scales and with pseudo-data that do not repeat identical rows; a version with
-a CB-like component and a reweighted background shape would test the methods closer to data.
-(v) The pion-vertex variables were not compared between simulation and data. (vi) The beam
-energy (4530 in the analysis, 4500\,MeV in SMASH) does not affect \Mfour, \Mee and \Mpipi, but does
-affect $\mathrm{MM}_4$.}
+generator files UNVERIFIED; later, Part~III: a 40-file count gives $1.0690\pm0.0035$\,mb). (iii) The X17 \Mpipi
+distribution and decay angle are assumed (phase space, isotropic). (iv) The blind test should be repeated with cut
+definitions only, with hidden per-toy signal scales and with pseudo-data that do not repeat identical entries; a version with
+a CB-like component and a reweighted background shape would test the methods closer to data (later, Part~III: done with
+realistic template noise and a CB from the data, note in \S\ref{sec:s5blind}).
+(v) The pion-vertex variables were not compared between simulation and data (later, Part~II: the pion-vertex cut is as
+efficient in the data as in the simulation). (vi) The beam energy (4530 in the analysis, 4500\,MeV in SMASH) does not affect
+\Mfour, \Mee and \Mpipi, but does affect $\mathrm{MM}_4$ (later: about 0.3\,\% on the $\mathrm{MM}_4$ cut,
+App.~\ref{sec:beamT}). (vii) Later (Part~III): the simulated ECAL finds a cluster for only about 65\,\% of the lost bump
+photons inside its active modules (about 4\,\% of the counts have a cluster from an $e^\pm$ of the converted photon instead;
+the rest is not explained), and its cluster energy is 7--9\,\% low (\S\ref{sec:s5acc}).}
