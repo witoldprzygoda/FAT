@@ -128,7 +128,9 @@ jest jeszcze skalibrowana. Okna masy π⁰ mogą więc obejmować tylko część
 ## 6. Własne rozkłady
 
 Główne ntuple to `pippimepem_nt` (pędy zrekonstruowane) i `pippimepem_nt_cor`
-(z poprawką strat energii). Mają te same nazwy pól. Każdy wiersz to jedna
+(z poprawką strat energii). Mają te same nazwy pól; w symulacji obie mają
+dodatkowo pola z przyrostkiem `_sim` (rozdział 8), w `pippimepem_nt_cor` jest
+ich więcej. Każdy wiersz to jedna
 zapisana w PAT kombinacja π⁺π⁻e⁺e⁻, która przeszła cięcia: wierzchołek
 (`eVertReco_z > −500`) i trigger PT3. Na START nie ma cięcia; `start_iteration`
 jest tylko zapisane.
@@ -212,22 +214,24 @@ przepuszcza wiersze z NaN.
 
 ## 8. Symulacja
 
-Ta sama analiza działa na symulacji SMASH: na zbiorze standardowym i na zbiorze
-leptonowym (zbiór η jest przewidziany w kodzie, ale jego plików jeszcze nie ma).
-Wszystko, co dotyczy symulacji, włączają klucze konfiguracji, których wartości
-domyślne odpowiadają danym, więc wyniki dla danych się nie zmieniają.
+Ta sama analiza działa na symulacji SMASH: na zbiorze standardowym, leptonowym
+i η. Wszystko, co dotyczy symulacji, włączają klucze konfiguracji, których
+wartości domyślne odpowiadają danym, więc wyniki dla danych się nie zmieniają.
 
 | Konfiguracja | Zbiór (lista) | Kanał |
 |---|---|---|
 | `config_sim_std.json`, `config_sim_std_epep.json`, `config_sim_std_emem.json` | standardowy (`sim_std.list`) | π⁺π⁻e⁺e⁻, π⁺π⁻e⁺e⁺, π⁺π⁻e⁻e⁻ |
 | `config_sim_lep.json`, `config_sim_lep_epep.json`, `config_sim_lep_emem.json` | leptonowy (`sim_lep.list`) | jak wyżej |
+| `config_sim_eta.json`, `config_sim_eta_epep.json`, `config_sim_eta_emem.json` | η (`sim_eta.list`) | jak wyżej |
 
 Każda lista zawiera jedną ścieżkę pliku. Wyniki trafiają do
 `/hdd3/przygoda/HADES/FAT_out/sim/pippimepem_betanew/output_<zbiór>_<kanał>.root`.
 Względem konfiguracji danych zmieniają się trzy pola:
 
 - `"kinematics": {"simulated": true}` to główny przełącznik: program czyta
-  prawdę z GEANT o czterech śladach i zapisuje ją w `scan_nt`;
+  prawdę z GEANT o czterech śladach i zapisuje ją w `scan_nt`; cząstki
+  dostają też pędy prawdziwe, z których powstają histogramy i pola
+  z przyrostkiem `_sim` (opis niżej);
 - `"simulation": {"set": 1, "pdg_br": true, "br_eta_pipiee": 2.68e-4, "br_x17": 0.0}`
   podaje numer zbioru (1 standardowy, 2 leptonowy, 3 η) i stosunki
   rozgałęzień użyte w wagach;
@@ -280,7 +284,7 @@ Inne zasady skryptu:
   zostaje (kody 130, 143, 129). Długie przebiegi najlepiej uruchamiać przez
   `nohup` z wyjściem do pliku dziennika.
 
-**Dodatkowe pola `scan_nt`.** Do 145 pól danych dochodzi 88 pól:
+**Dodatkowe pola `scan_nt`.** Do 145 pól danych dochodzi 99 pól:
 
 | Pola | Zawartość |
 |---|---|
@@ -292,6 +296,7 @@ Inne zasady skryptu:
 | `sim_flags` | bity ostrzeżeń (tabela niżej) |
 | `sim_tmpl` | wzorzec: 1 sygnał, 2 tło fizyczne, 3 fałszywy lepton, 4 leptony z różnych źródeł (opis niżej) |
 | `m4_true`, `mee_true`, `mpipi_true` | prawdziwe M(π⁺π⁻e⁺e⁻), M(e⁺e⁻), M(π⁺π⁻) w GeV/c² z pędów GEANT i mas nominalnych; −1, gdy któryś ślad jest inną cząstką |
+| `oa_sim`, `m_ee_sim`, `mm_epem_sim`; `m_pippim_sim`, `mm_pippim_sim`; `m_pippimepem_sim`, `oa_pippim_epem_lab_sim`, `oa_pippim_epem_eta_rest_sim`, `mm_pippimepem_sim`, `pt4_sim`, `y4_cms_sim` | zmienne cięć policzone z pędów prawdziwych (`oa_sim` to prawdziwy kąt OA(e⁺e⁻)); −1, gdy na którymś z użytych miejsc jest inna cząstka, tak jak w `m4_true`: pierwsza grupa używa obu miejsc leptonów, druga obu miejsc pionów, trzecia wszystkich czterech |
 
 Reguły klas, przynależności i wag są w `src/sim_truth.h` (wersja reguł 2 z 13
 listopada 2026 r.; wersja 1 była liczbowo taka sama jak wzorcowy `simrules.h`,
@@ -308,6 +313,73 @@ się na mion, 2 garb (η → π⁺π⁻π⁰, π⁰ → e⁺e⁻γ), 3 garb z ko
 z π⁰, 4 pik z konwersją fotonu (η → π⁺π⁻γ), 5 pik η → π⁺π⁻e⁺e⁻ (zbiór η),
 6 X17 (zbiór η), 7 piony z parą e⁺e⁻ z jednego źródła, 8 leptony z różnych
 źródeł.
+
+**Kinematyka symulowana (przyrostek `_sim`).** W symulacji każda z czterech
+cząstek ma oprócz pędu zrekonstruowanego i poprawionego także pęd prawdziwy:
+pęd GEANT śladu na danym miejscu (`<x>_sim_px`, `_py`, `_pz`) z masą hipotezy
+tego miejsca (e±, π±). Wiązka i tarcza mają pęd prawdziwy równy
+zrekonstruowanemu, więc z pędów prawdziwych liczone są też masy niezmiennicze,
+masy brakujące i wielkości w układzie środka masy. Ślad bez prawdy z GEANT
+(`sim_id` ≤ 0 albo pęd, który nie jest liczbą) daje −1 we wszystkich
+wielkościach, do których wchodzi; w obecnych plikach symulacji takich śladów
+nie ma. W danych tych pól i histogramów nie ma, a pozostałe wyniki są takie
+same jak bez nich.
+
+Gdy na miejscu jest inna cząstka niż w hipotezie (np. mion na miejscu pionu),
+pola i histogramy `_sim` stosują jedną z dwóch umów:
+
+| Gdzie | Wiersz z cząstką spoza hipotezy |
+|---|---|
+| 11 pól `_sim` w `scan_nt` | −1, tak jak `m4_true`, `mee_true` i `mpipi_true`; w pozostałych wierszach `m_pippimepem_sim`, `m_ee_sim` i `m_pippim_sim` mają dokładnie te same wartości co te trzy pola |
+| pola `_sim` w `pippimepem_nt` i `pippimepem_nt_cor`, histogramy `_sim` | wartość liczona z masą hipotezy i pędem prawdziwym tej cząstki (umowa dawnej gałęzi `pp45_pippimepem_sim`) |
+
+Pola `_sim` w ntuplach głównych (zapisane w każdym wierszu, −1 bez wartości):
+
+- `pippimepem_nt`: `m_epemg_sim`, `m_pippimepemg_sim`, `mm_pippimepemg_sim`,
+  `m_pippim_gg_sim`;
+- `pippimepem_nt_cor`: te same cztery oraz `ep_p_sim`, `em_p_sim`,
+  `pip_p_sim`, `pim_p_sim`, `m_ee_sim`, `m_pippim_sim`, `m_pippimepem_sim`,
+  `mm_epem_sim`, `mm_pippim_sim`, `mm_pippimepem_sim`, `y_cms_sim`, `pt_sim`,
+  `theta_cms_sim`.
+
+Histogramów `_sim` jest 24, w katalogach `leptons_sim`, `pions_sim`,
+`compound_sim`, `slices_sim`, `missing_masses_sim`, `dilepton_sim` i `cms_sim`:
+pędy czterech cząstek, M(e⁺e⁻), M(π⁺π⁻), M(π⁺π⁻e⁺e⁻) przed selekcją i po niej,
+M(π⁺π⁻e⁺e⁻) w plasterkach MM, masy brakujące, M(e⁺e⁻) bez okna OA i w oknie
+oraz wielkości pary e⁺e⁻ w układzie środka masy. Mają te same przedziały co
+ich odpowiedniki bez przyrostka i obejmują te same wiersze (`sim_own_A == 1`,
+bez wag). O selekcji π⁺π⁻e⁺e⁻ i o plasterku MM rozstrzygają wielkości
+poprawione, a o oknie 2° ≤ OA ≤ 6° kąt zrekonstruowany; do histogramu trafia
+wartość prawdziwa tego samego wiersza. Wersji z cięciem `cut_2d` z dawnej
+gałęzi nie ma, bo tego cięcia nie ma już w kodzie.
+
+W polach `_sim` wartość −1 oznacza brak wielkości prawdziwej. W `y_cms_sim`
+i `y4_cms_sim` −1 może być też prawdziwą pospiesznością; rozstrzygają wtedy
+pola `sim_id` śladów.
+
+**Foton z ECAL w symulacji.** Foton w układach e⁺e⁻γ (jeden klaster) i γγ
+(dwa klastry) ma pęd prawdziwy tylko wtedy, gdy cząstką GEANT przypisaną do
+wybranego klastra jest foton (`neutr_sim_id_1`, w układzie γγ także
+`neutr_sim_id_2`, równe 1); jego pędem prawdziwym jest `neutr_sim_px`, `_py`,
+`_pz` tego klastra. W przeciwnym razie (klaster od neutronu, protonu, pionu,
+elektronu itp.) pola `m_epemg_sim`, `m_pippimepemg_sim`, `mm_pippimepemg_sim`
+i `m_pippim_gg_sim` mają wartość −1; w układzie γγ fotonami muszą być oba
+klastry. Masa M(γγ) nie ma pola `_sim`.
+
+Na próbkach po 150 000 wierszy PAT z każdego zbioru (kanał e⁺e⁻) wybrany
+klaster jest fotonem w 78% wierszy z jednym klastrem w zbiorze standardowym
+i leptonowym oraz w 49% w zbiorze η; pozostałe klastry pochodzą głównie od e±,
+protonów, neutronów i pionów, a w zbiorze η najczęściej od neutronów (24%
+wierszy). W układzie γγ oba klastry są fotonami w 40–53% wierszy. Gdy para
+e⁺e⁻ i foton pochodzą z tego samego rozpadu Dalitza π⁰, M(e⁺e⁻γ) z pędów
+prawdziwych jest równe masie π⁰, z którą wykonano rozpad: 0.134976 GeV/c²
+w rozpadach wykonanych przez HGeant (zbiór standardowy i η) i 0.138000 GeV/c²
+w rozpadach wymuszonych w zbiorze leptonowym, które PLUTO wykonuje z masą π⁰
+z SMASH. Tak samo M(e⁺e⁻γ) rozpadu Dalitza η wynosi 0.54745 GeV/c² w HGeant
+(4456 z 4466 wierszy zbioru standardowego) i 0.548000 GeV/c² w PLUTO, a
+M(π⁺π⁻e⁺e⁻γ) wierszy garbu (`sim_cls` = 2) z fotonem z tego samego π⁰
+wynosi 0.54745 GeV/c², czyli tyle, ile wynosi masa η w HGeant (PDG:
+0.547862 GeV/c²).
 
 **Wagi i przynależność.** Do widm bierz wiersze z `sim_own_A == 1` (wariant:
 `sim_own_B == 1`) z wagą `sim_w`; wiersze z zerem dostarcza drugi zbiór.

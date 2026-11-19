@@ -201,6 +201,27 @@ public:
     }
 
     /**
+     * @brief Check whether a kinematic representation is set
+     * @param type Momentum representation to check
+     * @return true if vec(type) returns it without throwing
+     *
+     * Same "not set" sentinel as vec(): E == 0. A compound built with
+     * operator+ / operator- has CORRECTED or SIMULATED only if both operands
+     * have it, so this tells e.g. whether a missing mass carries truth.
+     */
+    bool hasKinematics(KinematicType type) const {
+        switch (type) {
+            case KinematicType::RECONSTRUCTED:
+                return true;
+            case KinematicType::CORRECTED:
+                return p4_corrected_.E() != 0;
+            case KinematicType::SIMULATED:
+                return p4_simulated_.E() != 0;
+        }
+        return false;
+    }
+
+    /**
      * @brief Get mutable reference to four-momentum
      * @warning Use sparingly; prefer immutable interface
      */
@@ -625,10 +646,14 @@ namespace ParticleFactory {
         double E = T_kin + Physics::MASS_PROTON;
         double p = sqrt(E*E - Physics::MASS_PROTON*Physics::MASS_PROTON);
         PParticle beam(Physics::MASS_PROTON, "beam");
-        // Synthetic particle — no measurement, so RECONSTRUCTED == CORRECTED.
-        // Setting both lets composite-system CORRECTED arithmetic propagate cleanly.
+        // Synthetic particle — no measurement, so REC == COR == SIM.
+        // Setting all three lets composite-system arithmetic propagate cleanly
+        // for any KinematicType requested downstream (e.g. missing-mass with SIM).
+        // In data the four tracks have no SIMULATED kinematics, so a missing
+        // mass built from them carries no SIMULATED part either.
         beam.setFromCartesian(0, 0, p, KinematicType::RECONSTRUCTED);
         beam.setFromCartesian(0, 0, p, KinematicType::CORRECTED);
+        beam.setFromCartesian(0, 0, p, KinematicType::SIMULATED);
         return beam;
     }
 
@@ -637,8 +662,11 @@ namespace ParticleFactory {
      */
     inline PParticle createTargetProton() {
         PParticle target(Physics::MASS_PROTON, "target");
+        // SetVectM with p=0 still sets E = m (proton rest mass), so the
+        // "not set" sentinel (E == 0) won't fire downstream.
         target.setFromCartesian(0, 0, 0, KinematicType::RECONSTRUCTED);
         target.setFromCartesian(0, 0, 0, KinematicType::CORRECTED);
+        target.setFromCartesian(0, 0, 0, KinematicType::SIMULATED);
         return target;
     }
 }

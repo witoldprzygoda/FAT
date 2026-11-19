@@ -219,4 +219,100 @@ inline void setupHistograms(Manager& mgr) {
     std::cout << "  Created " << mgr.histogramCount() << " histograms\n";
 }
 
+/**
+ * @brief Define the SIMULATED (GEANT truth) histograms, suffix "_sim"
+ * @param mgr Manager object for histogram creation
+ *
+ * Called by main() only in simulation (kinematics.simulated), after
+ * setupHistograms(); in data these histograms do not exist. Same binning as
+ * the RECONSTRUCTED / CORRECTED histograms of the same name. main.cc fills
+ * them with the SIMULATED kinematics of the PParticles (hypothesis mass of
+ * the slot with the GEANT momentum of its track), for the same rows and with
+ * the same (unit) weight as the other histograms. The selection and the MM
+ * slice decisions are those of the CORRECTED kinematics (same population as
+ * the "_cor" histograms), as on pp45_pippimepem_sim. The cut_2d versions of
+ * that branch are not defined: cut_2d no longer exists.
+ * Convention of pp45_pippimepem_sim: a row with a misidentified slot is
+ * filled too, with the hypothesis mass of that slot (no m4_true rule, unlike
+ * the _sim columns of scan_nt).
+ */
+inline void setupSimHistograms(Manager& mgr) {
+    std::cout << "Setting up SIMULATED (_sim) histograms...\n";
+    const size_t n_before = mgr.histogramCount();
+
+    // Lepton momentum (SIMULATED)
+    mgr.create1D("ep_p_sim", "e^{+} momentum (sim);p [MeV/c];Counts",
+                 100, 0, 2000, "leptons_sim");
+    mgr.create1D("em_p_sim", "e^{-} momentum (sim);p [MeV/c];Counts",
+                 100, 0, 2000, "leptons_sim");
+
+    // Pion momentum (SIMULATED)
+    mgr.create1D("pip_p_sim", "#pi^{+} momentum (sim);p [MeV/c];Counts",
+                 100, 0, 2000, "pions_sim");
+    mgr.create1D("pim_p_sim", "#pi^{-} momentum (sim);p [MeV/c];Counts",
+                 100, 0, 2000, "pions_sim");
+
+    // Compound invariant masses (SIMULATED)
+    mgr.create1D("mass_ee_sim", "e^{+}e^{-} invariant mass (sim);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "compound_sim");
+    mgr.create1D("mass_pippim_sim", "#pi^{+}#pi^{-} invariant mass (sim);M_{#pi^{+}#pi^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 2.0, "compound_sim");
+    mgr.create1D("mass_pippimepem_sim",
+                 "#pi^{+}#pi^{-}e^{+}e^{-} invariant mass (sim);M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 2.0, "compound_sim");
+    mgr.create1D("mass_pippimepem_selected_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) after selection (cor);M_{#pi^{+}#pi^{-}e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 2.0, "compound_sim");
+
+    // Slice histograms (SIMULATED values; selection and MM slice from CORRECTED)
+    mgr.create1D("mass_pippimepem_slice_20_22_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) sel cor, MM_{cor} in [2.0,2.2];M [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "slices_sim");
+    mgr.create1D("mass_pippimepem_slice_22_24_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) sel cor, MM_{cor} in [2.2,2.4];M [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "slices_sim");
+    mgr.create1D("mass_pippimepem_slice_24_26_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) sel cor, MM_{cor} in [2.4,2.6];M [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "slices_sim");
+    mgr.create1D("mass_pippimepem_slice_26_28_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) sel cor, MM_{cor} in [2.6,2.8];M [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "slices_sim");
+    mgr.create1D("mass_pippimepem_slice_28_30_sim",
+                 "M(#pi^{+}#pi^{-}e^{+}e^{-}) (sim) sel cor, MM_{cor} in [2.8,3.0];M [GeV/c^{2}];Counts",
+                 100, 0.0, 2.0, "slices_sim");
+
+    // Missing masses (SIMULATED)
+    mgr.create1D("mm_epem_sim", "MM(e^{+}e^{-}) (sim);MM [GeV/c^{2}];Counts",
+                 200, 0.0, 4.0, "missing_masses_sim");
+    mgr.create1D("mm_pippim_sim", "MM(#pi^{+}#pi^{-}) (sim);MM [GeV/c^{2}];Counts",
+                 200, 0.0, 4.0, "missing_masses_sim");
+    mgr.create1D("mm_pippimepem_sim", "MM(#pi^{+}#pi^{-}e^{+}e^{-}) (sim);MM [GeV/c^{2}];Counts",
+                 200, 0.0, 4.0, "missing_masses_sim");
+    mgr.create2D("mm_vs_m_pippimepem_sim",
+                 "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} (sim);MM [GeV/c^{2}];M [GeV/c^{2}]",
+                 1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses_sim");
+    mgr.create2D("mm_vs_m_pippimepem_selected_sim",
+                 "MM vs M of #pi^{+}#pi^{-}e^{+}e^{-} (sim) after selection (cor);MM [GeV/c^{2}];M [GeV/c^{2}]",
+                 1000, 0.0, 4.0, 1000, 0.0, 2.0, "missing_masses_sim");
+
+    // Dilepton spectra (SIMULATED). The 2-6 deg window of mass_ee_after_oa_sim
+    // is the RECONSTRUCTED OA decision (oa_pass), as for the other histograms.
+    mgr.create1D("mass_ee_before_oa_sim", "M_{ee} before OA cut (sim);M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "dilepton_sim");
+    mgr.create1D("mass_ee_after_oa_sim", "M_{ee} (sim), 2#circ #leq OA #leq 6#circ;M_{e^{+}e^{-}} [GeV/c^{2}];Counts",
+                 200, 0.0, 1.0, "dilepton_sim");
+
+    // CMS frame observables (SIMULATED)
+    mgr.create1D("rapidity_cms_sim", "Dilepton rapidity in CMS (sim);y_{CMS};Counts",
+                 100, -2.0, 2.0, "cms_sim");
+    mgr.create1D("pt_cms_sim", "Dilepton transverse momentum (sim);p_{T} [MeV/c];Counts",
+                 100, 0, 1500, "cms_sim");
+    mgr.create1D("theta_cms_sim", "Dilepton polar angle in CMS (sim);#theta_{CMS} [deg];Counts",
+                 90, 0, 180, "cms_sim");
+    mgr.create2D("rapidity_vs_mass_sim", "y_{CMS} vs M_{ee} (sim);M_{e^{+}e^{-}} [GeV/c^{2}];y_{CMS}",
+                 100, 0.0, 1.0, 100, -2.0, 2.0, "cms_sim");
+
+    std::cout << "  Created " << (mgr.histogramCount() - n_before) << " SIMULATED histograms\n";
+}
+
 #endif // SETUP_HISTOGRAMS_H

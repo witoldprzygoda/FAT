@@ -120,7 +120,8 @@ std::string verifyOutputFile(const std::string& output, Manager& manager) {
 // ============================================================================
 // SIMULATION SETTINGS (kinematics.simulated)
 // ============================================================================
-// Read once in main(); processEvent uses them for the truth columns of scan_nt.
+// Read once in main(); processEvent uses them for the truth columns of scan_nt
+// and for the SIMULATED kinematics of the PParticles (_sim histograms and columns).
 
 struct SimSettings {
     bool enabled = false;                     // kinematics.simulated
@@ -165,6 +166,46 @@ int geantIdOfLeptonPrefix(const std::string& prefix) {
     if (prefix.compare(0, 2, "em") == 0) return 3;
     return 0;
 }
+
+// SIMULATED (GEANT truth) kinematics of one slot (convention of
+// pp45_pippimepem_sim): the hypothesis mass of the PParticle (e+-, pi+-) with
+// the true 3-momentum <prefix>sim_px/py/pz [MeV/c] of the GEANT track matched
+// to the slot. The prefix goes through the lepton prefix mapping (ep_ -> ep1_
+// in the like-sign trees), as in readSimTracks. Returns false and leaves
+// SIMULATED unset when the slot has no truth (sim_id <= 0 or a non-finite
+// momentum component); quantities built from it are then written as -1.
+bool setSimulatedFromTruth(PParticle& particle, NTupleReader& reader, const std::string& prefix) {
+    const double id = reader[prefix + "sim_id"];
+    const double px = reader[prefix + "sim_px"];
+    const double py = reader[prefix + "sim_py"];
+    const double pz = reader[prefix + "sim_pz"];
+    if (!(id > 0) || !std::isfinite(px) || !std::isfinite(py) || !std::isfinite(pz)) return false;
+    particle.setFromCartesian(px, py, pz, KinematicType::SIMULATED);
+    return true;
+}
+
+// SIMULATED kinematics of a selected ECAL cluster: the GEANT truth of the
+// particle matched to cluster <slot> (neutr_sim_id_<slot>,
+// neutr_sim_px/py/pz_<slot> [MeV/c]), set only if that particle is a photon
+// (GEANT id 1) with a finite momentum. Otherwise SIMULATED stays unset and every
+// _sim quantity built with this photon is written as -1. (pp45_pippimepem_sim
+// mirrored the reconstructed cluster instead: its trees had no photon truth.)
+bool setPhotonSimulatedFromTruth(PParticle& gamma, NTupleReader& reader, int slot) {
+    const std::string idx = "_" + std::to_string(slot);
+    const double id = reader["neutr_sim_id" + idx];
+    const double px = reader["neutr_sim_px" + idx];
+    const double py = reader["neutr_sim_py" + idx];
+    const double pz = reader["neutr_sim_pz" + idx];
+    if (id != 1 || !std::isfinite(px) || !std::isfinite(py) || !std::isfinite(pz)) return false;
+    gamma.setFromCartesian(px, py, pz, KinematicType::SIMULATED);
+    return true;
+}
+
+// SIMULATED quantities with the -1 convention for "no truth": the PParticle
+// (or compound) has no SIMULATED kinematics. Only called in simulation.
+bool hasSim(const PParticle& p) { return p.hasKinematics(KinematicType::SIMULATED); }
+double simMomentum(const PParticle& p) { return hasSim(p) ? p.momentum(KinematicType::SIMULATED) : -1.0; }
+double simMassGeV(const PParticle& p)  { return hasSim(p) ? p.massGeV(KinematicType::SIMULATED)  : -1.0; }
 
 // ============================================================================
 // READER VARIABLES USED BY processEvent
@@ -244,6 +285,15 @@ std::vector<std::string> requiredReaderVariables(const AnalysisConfig& config) {
         }
         for (const std::string prefix : {"ep", "em"}) {
             vars.push_back(prefix + "_rich_sim_geanttrack");
+        }
+        // GEANT truth of the ECAL clusters 1 and 2: SIMULATED photon(s) of the
+        // e+e-gamma (one cluster) and gamma gamma (two clusters) compounds
+        if (config.isEcalEnabled()) {
+            for (int i = 1; i <= 2; ++i) {
+                for (const char* name : {"id", "px", "py", "pz"}) {
+                    vars.push_back(std::string("neutr_sim_") + name + "_" + std::to_string(i));
+                }
+            }
         }
     }
 
@@ -384,6 +434,28 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     piminus.setFromSpherical(reader["pim_p_corr_pim"], reader["pim_theta"], reader["pim_phi"],
                              KinematicType::CORRECTED);
 
+    // SIMULATED (GEANT truth), simulation only: each slot gets its hypothesis
+    // mass with the true 3-momentum <x>_sim_px/py/pz [MeV/c] of the GEANT track
+    // matched to it (setSimulatedFromTruth). operator+ / operator- carry the
+    // truth into every compound, missing mass (beam and target have SIMULATED
+    // set in ParticleFactory) and boosted system. A slot holding another
+    // particle (misidentified track) keeps the hypothesis mass. Two conventions
+    // follow from it:
+    //   - the _sim histograms and the _sim columns of pippimepem_nt and
+    //     pippimepem_nt_cor (as on pp45_pippimepem_sim) use these values for
+    //     every row, also with a misidentified slot (hypothesis mass);
+    //   - the 11 _sim columns of scan_nt follow the m4_true rule of
+    //     src/sim_truth.h: -1 when a slot used by the quantity holds a
+    //     particle other than its hypothesis (see the scan_nt block).
+    // In data SIMULATED is never set nor requested: every *_sim value below
+    // stays -1 and no _sim histogram is filled.
+    if (sim.enabled) {
+        setSimulatedFromTruth(positron, reader, "ep_");
+        setSimulatedFromTruth(electron, reader, "em_");
+        setSimulatedFromTruth(piplus,   reader, "pip_");
+        setSimulatedFromTruth(piminus,  reader, "pim_");
+    }
+
     // Lepton momentum histograms (RECONSTRUCTED + CORRECTED)
     hfill("ep_p", positron.momentum());
     hfill("em_p", electron.momentum());
@@ -395,6 +467,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     hfill("pim_p", piminus.momentum());
     hfill("pip_p_cor", piplus.momentum(KinematicType::CORRECTED));
     hfill("pim_p_cor", piminus.momentum(KinematicType::CORRECTED));
+
+    // SIMULATED per-particle momenta (-1 = no truth). The _sim histograms exist
+    // only in simulation (setupSimHistograms); a value without truth is not filled.
+    const double ep_p_sim  = sim.enabled ? simMomentum(positron) : -1.0;
+    const double em_p_sim  = sim.enabled ? simMomentum(electron) : -1.0;
+    const double pip_p_sim = sim.enabled ? simMomentum(piplus)   : -1.0;
+    const double pim_p_sim = sim.enabled ? simMomentum(piminus)  : -1.0;
+    if (sim.enabled) {
+        if (hasSim(positron)) hfill("ep_p_sim",  ep_p_sim);
+        if (hasSim(electron)) hfill("em_p_sim",  em_p_sim);
+        if (hasSim(piplus))   hfill("pip_p_sim", pip_p_sim);
+        if (hasSim(piminus))  hfill("pim_p_sim", pim_p_sim);
+    }
 
     // Momentum correction: delta_p = p_corrected - p_reconstructed
     double ep_p_rec = positron.momentum(KinematicType::RECONSTRUCTED);
@@ -444,7 +529,22 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     hfill("mass_pippim_cor", m_pippim_cor);
     hfill("mass_pippimepem_cor", m_pippimepem_cor);
 
-    // Beam + target for missing mass calculations (synthetic — REC == COR)
+    // SIMULATED truth: GEANT momenta propagated by operator+ to the compounds.
+    // sim_ee / sim_pipi / sim_4: the compound has truth (always false in data).
+    const bool sim_ee   = sim.enabled && hasSim(epem);
+    const bool sim_pipi = sim.enabled && hasSim(pippim);
+    const bool sim_4    = sim.enabled && hasSim(pippimepem);
+    const double m_ee_sim         = sim_ee   ? simMassGeV(epem)       : -1.0;
+    const double m_pippim_sim     = sim_pipi ? simMassGeV(pippim)     : -1.0;
+    const double m_pippimepem_sim = sim_4    ? simMassGeV(pippimepem) : -1.0;
+    // True e+e- opening angle (the reconstructed one is direction-only, REC == COR)
+    const double oa_sim = sim_ee ? Physics::openingAngle(positron, electron, KinematicType::SIMULATED) : -1.0;
+
+    if (sim_ee)   hfill("mass_ee_before_oa_sim", m_ee_sim);
+    if (sim_pipi) hfill("mass_pippim_sim", m_pippim_sim);
+    if (sim_4)    hfill("mass_pippimepem_sim", m_pippimepem_sim);
+
+    // Beam + target for missing mass calculations (synthetic — REC == COR == SIM)
     PParticle beam = ParticleFactory::createBeamProton(config.getBeamKineticEnergy());
     PParticle target = ParticleFactory::createTargetProton();
     PParticle initial = beam + target;
@@ -472,6 +572,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     hfill("mm_pippimepem_cor", mm_pippimepem_cor);
     hfill("mm_vs_m_pippimepem_cor", mm_pippimepem_cor, m_pippimepem_cor);
 
+    // SIMULATED missing masses (beam and target carry SIMULATED, so a missing
+    // mass has truth whenever the subtracted compound has)
+    const double mm_epem_sim       = sim_ee   ? simMassGeV(miss_epem)       : -1.0;
+    const double mm_pippim_sim     = sim_pipi ? simMassGeV(miss_pippim)     : -1.0;
+    const double mm_pippimepem_sim = sim_4    ? simMassGeV(miss_pippimepem) : -1.0;
+
+    if (sim_ee)   hfill("mm_epem_sim", mm_epem_sim);
+    if (sim_pipi) hfill("mm_pippim_sim", mm_pippim_sim);
+    if (sim_4) {
+        hfill("mm_pippimepem_sim", mm_pippimepem_sim);
+        hfill("mm_vs_m_pippimepem_sim", mm_pippimepem_sim, m_pippimepem_sim);
+    }
+
     // Boost compound systems to beam-target CMS frame.
     EventFrames frames;
     frames.setBeamFrameFromKineticEnergy(config.getBeamKineticEnergy());
@@ -489,6 +602,11 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double pt_cor = epem_cms_cor.vec(KinematicType::CORRECTED).Pt();
     double theta_cms_cor = epem_cms_cor.theta(KinematicType::CORRECTED);
 
+    // SIMULATED CMS-frame observables (the beam frame is synthetic, the same for all)
+    const double y_cms_sim     = sim_ee ? epem_cms.rapidity(KinematicType::SIMULATED)  : -1.0;
+    const double pt_sim        = sim_ee ? epem_cms.vec(KinematicType::SIMULATED).Pt()  : -1.0;
+    const double theta_cms_sim = sim_ee ? epem_cms.theta(KinematicType::SIMULATED)     : -1.0;
+
     // Lab-frame opening angle between the (π+π-) and (e+e-) momenta — REC + COR.
     double oa_pippim_epem_lab     = Physics::openingAngle(pippim, epem);
     double oa_pippim_epem_lab_cor = Physics::openingAngle(pippim, epem,
@@ -503,6 +621,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     double oa_pippim_epem_eta_rest_cor = Physics::openingAngleInMassConstrainedRestFrame(
                                             pippim, epem, MASS_ETA,
                                             KinematicType::CORRECTED);
+    // SIMULATED versions (scan_nt only)
+    const double oa_pippim_epem_lab_sim = sim_4
+        ? Physics::openingAngle(pippim, epem, KinematicType::SIMULATED) : -1.0;
+    const double oa_pippim_epem_eta_rest_sim = sim_4
+        ? Physics::openingAngleInMassConstrainedRestFrame(pippim, epem, MASS_ETA,
+                                                          KinematicType::SIMULATED) : -1.0;
 
     // Control histograms — filled BEFORE the 4-body selection so the cut
     // boundaries (oa_pippim_epem_lab < 50, oa_pippim_epem_eta_rest > 140) can
@@ -540,6 +664,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     PParticle pippimepem_cms = frames.getFrame("beam").boost(pippimepem);  // boosts both kinematics
     double y4_cms     = pippimepem_cms.rapidity();
     double y4_cms_cor = pippimepem_cms.rapidity(KinematicType::CORRECTED);
+    const double pt4_sim    = sim_4 ? pippimepem.vec(KinematicType::SIMULATED).Pt()      : -1.0;
+    const double y4_cms_sim = sim_4 ? pippimepem_cms.rapidity(KinematicType::SIMULATED) : -1.0;
 
     if (sel_pass) {
         hfill("mass_pippimepem_selected", m_pippimepem);
@@ -558,11 +684,32 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
         hfill("mass_pippimepem_selected_cor", m_pippimepem_cor);
         hfill("mm_vs_m_pippimepem_selected_cor", mm_pippimepem_cor, m_pippimepem_cor);
 
-        if (cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
-        if (cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor)) hfill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
+        // Each slice cut is evaluated once (as before); its decision is reused
+        // for the SIMULATED block below, so the cut-flow counters are unchanged.
+        const bool slice_cor_20_22 = cuts.passRangeCut("mm_slice_20_22", mm_pippimepem_cor);
+        if (slice_cor_20_22) hfill("mass_pippimepem_slice_20_22_cor", m_pippimepem_cor);
+        const bool slice_cor_22_24 = cuts.passRangeCut("mm_slice_22_24", mm_pippimepem_cor);
+        if (slice_cor_22_24) hfill("mass_pippimepem_slice_22_24_cor", m_pippimepem_cor);
+        const bool slice_cor_24_26 = cuts.passRangeCut("mm_slice_24_26", mm_pippimepem_cor);
+        if (slice_cor_24_26) hfill("mass_pippimepem_slice_24_26_cor", m_pippimepem_cor);
+        const bool slice_cor_26_28 = cuts.passRangeCut("mm_slice_26_28", mm_pippimepem_cor);
+        if (slice_cor_26_28) hfill("mass_pippimepem_slice_26_28_cor", m_pippimepem_cor);
+        const bool slice_cor_28_30 = cuts.passRangeCut("mm_slice_28_30", mm_pippimepem_cor);
+        if (slice_cor_28_30) hfill("mass_pippimepem_slice_28_30_cor", m_pippimepem_cor);
+
+        // === SIMULATED selection block (as on pp45_pippimepem_sim): the selection
+        // and slice decisions are those of CORRECTED (same rows as the _cor
+        // histograms), the values are the truth of those rows.
+        if (sim_4) {
+            hfill("mass_pippimepem_selected_sim", m_pippimepem_sim);
+            hfill("mm_vs_m_pippimepem_selected_sim", mm_pippimepem_sim, m_pippimepem_sim);
+
+            if (slice_cor_20_22) hfill("mass_pippimepem_slice_20_22_sim", m_pippimepem_sim);
+            if (slice_cor_22_24) hfill("mass_pippimepem_slice_22_24_sim", m_pippimepem_sim);
+            if (slice_cor_24_26) hfill("mass_pippimepem_slice_24_26_sim", m_pippimepem_sim);
+            if (slice_cor_26_28) hfill("mass_pippimepem_slice_26_28_sim", m_pippimepem_sim);
+            if (slice_cor_28_30) hfill("mass_pippimepem_slice_28_30_sim", m_pippimepem_sim);
+        }
     }
 
     // === ETA / f1 candidates from ECAL (REC + COR) ===============================
@@ -578,15 +725,20 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     // Photon has no measured correction (gamma is mirrored REC≡COR), so M(gg)
     // is identical between REC and COR. M(epemg) and the compounds with pippim,
     // however, DO differ between REC and COR via the lepton/pion momenta.
-    double m_epemg_rec        = -1.0,   m_epemg_cor        = -1.0;
-    double m_pippimepemg_rec  = -1.0,   m_pippimepemg_cor  = -1.0;
-    double mm_pippimepemg_rec = -1.0,   mm_pippimepemg_cor = -1.0;  // beam+target − pippimepemg
+    // Simulation: the photon gets the GEANT truth of its cluster
+    // (setPhotonSimulatedFromTruth), only if the cluster's particle is a true
+    // photon; the leptons / pions keep the hypothesis-mass convention of
+    // pp45_pippimepem_sim. The _sim compounds are -1 when there is no compound,
+    // the cluster is not a true photon, or a lepton / pion has no truth.
+    double m_epemg_rec        = -1.0,   m_epemg_cor        = -1.0,   m_epemg_sim        = -1.0;
+    double m_pippimepemg_rec  = -1.0,   m_pippimepemg_cor  = -1.0,   m_pippimepemg_sim  = -1.0;
+    double mm_pippimepemg_rec = -1.0,   mm_pippimepemg_cor = -1.0,   mm_pippimepemg_sim = -1.0;  // beam+target − pippimepemg
     bool   pippimepemg_pass_rec = false, pippimepemg_pass_cor = false;
     bool   pippimepemg_pass_narrow_rec = false, pippimepemg_pass_narrow_cor = false;
     bool   eta_dalitz_pass_rec  = false, eta_dalitz_pass_cor  = false;
 
     double m_gg             = -1.0;     // gamma is REC≡COR — single value
-    double m_pippim_gg_rec  = -1.0,   m_pippim_gg_cor   = -1.0;
+    double m_pippim_gg_rec  = -1.0,   m_pippim_gg_cor   = -1.0,   m_pippim_gg_sim   = -1.0;
     bool   eta_gg_pass      = false;    // M(gg) in eta window — REC and COR agree
 
     if (config.isEcalEnabled()) {
@@ -607,6 +759,8 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                                            gamma.cluster_theta,
                                            gamma.cluster_phi,
                                            KinematicType::CORRECTED);
+                    // Simulation: GEANT truth of cluster 1, if it is a true photon
+                    if (sim.enabled) setPhotonSimulatedFromTruth(gamma, reader, 1);
                     PParticle epemg      = epem   + gamma;
                     PParticle pippimepemg = pippim + epemg;
                     m_epemg_rec       = epemg.massGeV(KinematicType::RECONSTRUCTED);
@@ -618,6 +772,12 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                     PParticle miss_pippimepemg = initial - pippimepemg;
                     mm_pippimepemg_rec = miss_pippimepemg.massGeV(KinematicType::RECONSTRUCTED);
                     mm_pippimepemg_cor = miss_pippimepemg.massGeV(KinematicType::CORRECTED);
+
+                    if (sim.enabled) {
+                        m_epemg_sim        = simMassGeV(epemg);
+                        m_pippimepemg_sim  = simMassGeV(pippimepemg);
+                        mm_pippimepemg_sim = simMassGeV(miss_pippimepemg);
+                    }
 
                     pippimepemg_pass_rec        = cuts.passRangeCut("pi0_mass_window",        m_epemg_rec);
                     pippimepemg_pass_cor        = cuts.passRangeCut("pi0_mass_window",        m_epemg_cor);
@@ -645,11 +805,18 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
                                         KinematicType::CORRECTED);
                     g2.setFromSpherical(g2.cluster_energy, g2.cluster_theta, g2.cluster_phi,
                                         KinematicType::CORRECTED);
+                    // Simulation: GEANT truth of clusters 1 and 2 (each only if a
+                    // true photon; the gg compound has SIMULATED only if both are)
+                    if (sim.enabled) {
+                        setPhotonSimulatedFromTruth(g1, reader, 1);
+                        setPhotonSimulatedFromTruth(g2, reader, 2);
+                    }
                     PParticle gg         = g1 + g2;
                     PParticle pippim_gg  = pippim + gg;
                     m_gg            = gg.massGeV(KinematicType::CORRECTED);   // REC≡COR
                     m_pippim_gg_rec = pippim_gg.massGeV(KinematicType::RECONSTRUCTED);
                     m_pippim_gg_cor = pippim_gg.massGeV(KinematicType::CORRECTED);
+                    if (sim.enabled) m_pippim_gg_sim = simMassGeV(pippim_gg);
 
                     hfill("mass_gg_cor", m_gg);              // control plot
                     eta_gg_pass = cuts.passRangeCut("eta_mass_window", m_gg);
@@ -734,6 +901,19 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt["m_pippim_gg"]        = m_pippim_gg_rec;
     nt["eta_gg_pass"]        = eta_gg_pass         ? 1.0f : 0.0f;
 
+    // Simulation only: SIMULATED ECAL-derived compounds (photon = GEANT truth
+    // of the cluster if it is a true photon, leptons / pions with their
+    // SIMULATED kinematics), written in every row (-1 without compound, true
+    // photon or truth). Not written in data. Convention of pp45_pippimepem_sim:
+    // a misidentified lepton / pion slot enters with its hypothesis mass (no
+    // m4_true rule here, unlike the _sim columns of scan_nt).
+    if (sim.enabled) {
+        nt["m_epemg_sim"]        = m_epemg_sim;
+        nt["m_pippimepemg_sim"]  = m_pippimepemg_sim;
+        nt["mm_pippimepemg_sim"] = mm_pippimepemg_sim;
+        nt["m_pippim_gg_sim"]    = m_pippim_gg_sim;
+    }
+
     nt.fill();
 
     // === Mirror ntuple: same field names, compound observables from CORRECTED ===
@@ -812,12 +992,44 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     nt_cor["m_pippim_gg"]        = m_pippim_gg_cor;
     nt_cor["eta_gg_pass"]        = eta_gg_pass         ? 1.0f : 0.0f;
 
+    // Simulation only (as on pp45_pippimepem_sim): SIMULATED truth of the
+    // ECAL-derived compounds, per-particle momenta, compound masses, missing
+    // masses and CMS observables, written in every row (-1 without truth; the
+    // ECAL compounds also -1 if the cluster is not a true photon). Not written
+    // in data. Convention of pp45_pippimepem_sim: a misidentified slot enters
+    // with its hypothesis mass (no m4_true rule here, unlike scan_nt).
+    if (sim.enabled) {
+        nt_cor["m_epemg_sim"]        = m_epemg_sim;
+        nt_cor["m_pippimepemg_sim"]  = m_pippimepemg_sim;
+        nt_cor["mm_pippimepemg_sim"] = mm_pippimepemg_sim;
+        nt_cor["m_pippim_gg_sim"]    = m_pippim_gg_sim;
+
+        nt_cor["ep_p_sim"]  = ep_p_sim;
+        nt_cor["em_p_sim"]  = em_p_sim;
+        nt_cor["pip_p_sim"] = pip_p_sim;
+        nt_cor["pim_p_sim"] = pim_p_sim;
+
+        nt_cor["m_ee_sim"]         = m_ee_sim;
+        nt_cor["m_pippim_sim"]     = m_pippim_sim;
+        nt_cor["m_pippimepem_sim"] = m_pippimepem_sim;
+
+        nt_cor["mm_epem_sim"]       = mm_epem_sim;
+        nt_cor["mm_pippim_sim"]     = mm_pippim_sim;
+        nt_cor["mm_pippimepem_sim"] = mm_pippimepem_sim;
+
+        nt_cor["y_cms_sim"]     = y_cms_sim;
+        nt_cor["pt_sim"]        = pt_sim;
+        nt_cor["theta_cms_sim"] = theta_cms_sim;
+    }
+
     nt_cor.fill();
 
     // No OA cut on the event: only the 2-6 deg window spectrum is filled separately
     if (oa_pass) {
         hfill("mass_ee_after_oa", m_ee);
         hfill("mass_ee_after_oa_cor", m_ee_cor);
+        // SIMULATED M(ee) of the rows in the reconstructed 2-6 deg window
+        if (sim_ee) hfill("mass_ee_after_oa_sim", m_ee_sim);
     }
     // CMS histograms (after OA cut)
     hfill("rapidity_cms", y_cms);
@@ -830,9 +1042,17 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
     hfill("theta_cms_cor", theta_cms_cor);
     hfill("rapidity_vs_mass_cor", m_ee_cor, y_cms_cor);
 
+    if (sim_ee) {
+        hfill("rapidity_cms_sim", y_cms_sim);
+        hfill("pt_cms_sim", pt_sim);
+        hfill("theta_cms_sim", theta_cms_sim);
+        hfill("rapidity_vs_mass_sim", m_ee_sim, y_cms_sim);
+    }
+
     // Dilepton invariant mass (after all cuts)
     hfill("mass_ee", m_ee);
     hfill("mass_ee_cor", m_ee_cor);
+    if (sim_ee) hfill("mass_ee_sim", m_ee_sim);
 
     // Photon and forward-candidate values for scan_nt (written at the end of
     // processEvent). -1 = absent slot; n_gam stays -1 when ECAL is off in the config.
@@ -1229,6 +1449,35 @@ void processEvent(NTupleReader& reader, Manager& mgr, CutManager& cuts,
             sn["m4_true"]       = truth.m4;                            // true M(pi+pi-e+e-) [GeV/c^2], -1 misidentified
             sn["mee_true"]      = truth.mee;                           // true M(e+e-)
             sn["mpipi_true"]    = truth.mpipi;                         // true M(pi+pi-)
+
+            // SIMULATED kinematics of the PParticles (_sim mirror of the cut
+            // variables above), with the m4_true rule of TrueMasses in
+            // src/sim_truth.h: a value is written only if every slot it uses
+            // holds the particle of its hypothesis (lepton slots: GEANT ids
+            // q1, q2; pion slots: 8, 9), otherwise -1 (also -1 without truth).
+            // Lepton-pair quantities need the two lepton slots, pion-pair
+            // quantities the two pion slots, four-body quantities all four.
+            // Where written, m_pippimepem_sim / m_ee_sim / m_pippim_sim equal
+            // m4_true / mee_true / mpipi_true. (The _sim columns of
+            // pippimepem_nt / _cor and the _sim histograms keep the hypothesis
+            // mass for misidentified slots, as on pp45_pippimepem_sim.)
+            const int id_ok[4] = {sim.q1, sim.q2, 8, 9};
+            bool slot_ok[4];
+            for (int i = 0; i < 4; ++i) slot_ok[i] = (trk[i].id == id_ok[i]);
+            const bool ok_ee   = slot_ok[0] && slot_ok[1];
+            const bool ok_pipi = slot_ok[2] && slot_ok[3];
+            const bool ok_4    = ok_ee && ok_pipi;
+            sn["oa_sim"]                      = ok_ee   ? oa_sim                      : -1.0;  // true OA(e+e-)
+            sn["m_pippimepem_sim"]            = ok_4    ? m_pippimepem_sim            : -1.0;
+            sn["m_ee_sim"]                    = ok_ee   ? m_ee_sim                    : -1.0;
+            sn["m_pippim_sim"]                = ok_pipi ? m_pippim_sim                : -1.0;
+            sn["oa_pippim_epem_lab_sim"]      = ok_4    ? oa_pippim_epem_lab_sim      : -1.0;
+            sn["oa_pippim_epem_eta_rest_sim"] = ok_4    ? oa_pippim_epem_eta_rest_sim : -1.0;
+            sn["mm_pippimepem_sim"]           = ok_4    ? mm_pippimepem_sim           : -1.0;
+            sn["mm_pippim_sim"]               = ok_pipi ? mm_pippim_sim               : -1.0;
+            sn["mm_epem_sim"]                 = ok_ee   ? mm_epem_sim                 : -1.0;
+            sn["pt4_sim"]                     = ok_4    ? pt4_sim                     : -1.0;
+            sn["y4_cms_sim"]                  = ok_4    ? y4_cms_sim                  : -1.0;
         }
 
         sn.fill();
@@ -1337,6 +1586,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Simulation: set " << set << ", lepton slots GEANT ids " << sim.q1 << ", "
                   << sim.q2 << ", rules version " << simtruth::kRulesVersion
                   << "; truth columns, classes and weights go to scan_nt;"
+                  << " SIMULATED kinematics (GEANT momenta) give the _sim histograms and columns;"
                   << " histograms take only the rows the set owns (partition mode A).\n";
 
         // scan_nt stores pat_entry (entry of the row in its PAT file) as a
@@ -1415,6 +1665,7 @@ int main(int argc, char* argv[]) {
     }
     try {
         setupHistograms(manager);
+        if (sim.enabled) setupSimHistograms(manager);   // _sim histograms: simulation only
         setupNtuples(manager, config);
         setupCuts(cuts);
     } catch (const std::exception& e) {
